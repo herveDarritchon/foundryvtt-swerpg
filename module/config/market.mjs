@@ -45,27 +45,106 @@ export const EXCLUDED_ITEM_TYPES = Object.freeze({
 /* -------------------------------------------- */
 
 /**
+ * @typedef {Object} RarityRules
+ * @property {number} obtainmentProbability  Base chance (0–100%) of obtaining the item immediately.
+ * @property {{ days: number, descriptionKey: string }} supplyDelay  Narrative delay when not immediately available.
+ * @property {string} narrativeReasonKey  i18n key explaining the availability situation.
+ */
+
+/**
  * @typedef {Object} AvailabilityStatus
  * @property {string}      id             The canonical availability key
  * @property {string}      label          Localization key
  * @property {boolean}     purchasable    Whether items with this status can be purchased normally
  * @property {number|null} priceModifier  Price multiplier modifier (fraction), or null if no price applies
+ * @property {RarityRules} rarityRules    Narrative rarity rules for obtainability and supply delay
  */
 
 /**
  * Possible availability statuses for a Market item.
  * The `priceModifier` is applied additively in the pricing formula.
  * `null` means no valid price exists (item cannot be purchased at any price).
+ * Each entry carries `rarityRules` describing obtainability probability and supply delay.
  * @enum {AvailabilityStatus}
  */
 export const AVAILABILITY_STATUS = Object.freeze({
-  available: { id: 'available', label: 'MARKET.Availability.Available', purchasable: true, priceModifier: 0 },
-  common: { id: 'common', label: 'MARKET.Availability.Common', purchasable: true, priceModifier: 0 },
-  rare: { id: 'rare', label: 'MARKET.Availability.Rare', purchasable: true, priceModifier: 0.25 },
-  veryRare: { id: 'veryRare', label: 'MARKET.Availability.VeryRare', purchasable: false, priceModifier: 0.5 },
-  restricted: { id: 'restricted', label: 'MARKET.Availability.Restricted', purchasable: false, priceModifier: 1.0 },
-  blackMarket: { id: 'blackMarket', label: 'MARKET.Availability.BlackMarket', purchasable: false, priceModifier: 1.5 },
-  unavailable: { id: 'unavailable', label: 'MARKET.Availability.Unavailable', purchasable: false, priceModifier: null },
+  available: Object.freeze({
+    id: 'available',
+    label: 'MARKET.Availability.Available',
+    purchasable: true,
+    priceModifier: 0,
+    rarityRules: Object.freeze({
+      obtainmentProbability: 100,
+      supplyDelay: Object.freeze({ days: 0, descriptionKey: '' }),
+      narrativeReasonKey: 'MARKET.Rarity.Reason.ReadilyAvailable',
+    }),
+  }),
+  common: Object.freeze({
+    id: 'common',
+    label: 'MARKET.Availability.Common',
+    purchasable: true,
+    priceModifier: 0,
+    rarityRules: Object.freeze({
+      obtainmentProbability: 100,
+      supplyDelay: Object.freeze({ days: 0, descriptionKey: '' }),
+      narrativeReasonKey: 'MARKET.Rarity.Reason.ReadilyAvailable',
+    }),
+  }),
+  rare: Object.freeze({
+    id: 'rare',
+    label: 'MARKET.Availability.Rare',
+    purchasable: true,
+    priceModifier: 0.25,
+    rarityRules: Object.freeze({
+      obtainmentProbability: 70,
+      supplyDelay: Object.freeze({ days: 2, descriptionKey: 'MARKET.Rarity.Delay.FewDays' }),
+      narrativeReasonKey: 'MARKET.Rarity.Reason.LimitedStock',
+    }),
+  }),
+  veryRare: Object.freeze({
+    id: 'veryRare',
+    label: 'MARKET.Availability.VeryRare',
+    purchasable: false,
+    priceModifier: 0.5,
+    rarityRules: Object.freeze({
+      obtainmentProbability: 40,
+      supplyDelay: Object.freeze({ days: 5, descriptionKey: 'MARKET.Rarity.Delay.Week' }),
+      narrativeReasonKey: 'MARKET.Rarity.Reason.HardToFind',
+    }),
+  }),
+  restricted: Object.freeze({
+    id: 'restricted',
+    label: 'MARKET.Availability.Restricted',
+    purchasable: false,
+    priceModifier: 1.0,
+    rarityRules: Object.freeze({
+      obtainmentProbability: 30,
+      supplyDelay: Object.freeze({ days: 7, descriptionKey: 'MARKET.Rarity.Delay.Week' }),
+      narrativeReasonKey: 'MARKET.Rarity.Reason.RiskyDelivery',
+    }),
+  }),
+  blackMarket: Object.freeze({
+    id: 'blackMarket',
+    label: 'MARKET.Availability.BlackMarket',
+    purchasable: false,
+    priceModifier: 1.5,
+    rarityRules: Object.freeze({
+      obtainmentProbability: 20,
+      supplyDelay: Object.freeze({ days: 7, descriptionKey: 'MARKET.Rarity.Delay.Week' }),
+      narrativeReasonKey: 'MARKET.Rarity.Reason.RiskyDelivery',
+    }),
+  }),
+  unavailable: Object.freeze({
+    id: 'unavailable',
+    label: 'MARKET.Availability.Unavailable',
+    purchasable: false,
+    priceModifier: null,
+    rarityRules: Object.freeze({
+      obtainmentProbability: 0,
+      supplyDelay: Object.freeze({ days: 0, descriptionKey: '' }),
+      narrativeReasonKey: 'MARKET.Rarity.Reason.Unavailable',
+    }),
+  }),
 })
 
 /* -------------------------------------------- */
@@ -173,16 +252,17 @@ export const DEFAULT_MARKET_CONFIG = Object.freeze({
  * @property {string[]} allowedAvailability Availability keys allowed; items with other keys are hidden
  * @property {number}   priceModifier       Flat additive fractional modifier applied on top of item modifiers
  * @property {string}   uiVariant           CSS modifier class applied to the market UI for visual distinction
+ * @property {boolean}  negotiationAllowed  Whether price negotiation is allowed in this market type
  */
 
 /**
  * Canonical registry of market types available in V1.
  *
  * Rules per type:
- * - `standard`    : all purchasable types, all normal availability statuses, no extra price modifier.
- * - `local`       : all purchasable types, only available/common items, -10% price discount (proximity bonus).
- * - `specialized` : all purchasable types, rare/veryRare items unlocked, +25% price premium.
- * - `black-market`: all purchasable types, restricted/blackMarket/illegal items visible, +50% price premium.
+ * - `standard`    : all purchasable types, all normal availability statuses, no extra price modifier, negotiation allowed.
+ * - `local`       : all purchasable types, only available/common items, -10% price discount (proximity bonus), negotiation allowed.
+ * - `specialized` : all purchasable types, rare/veryRare items unlocked, +25% price premium, negotiation allowed.
+ * - `black-market`: all purchasable types, restricted/blackMarket/illegal items visible, +50% price premium, negotiation allowed (risky).
  *
  * Consumers must iterate this registry — never hardcode market type keys.
  * @enum {MarketTypeDefinition}
@@ -196,6 +276,7 @@ export const MARKET_TYPES = Object.freeze({
     allowedAvailability: Object.freeze(['available', 'common', 'rare']),
     priceModifier: 0,
     uiVariant: 'market--standard',
+    negotiationAllowed: true,
   }),
   local: Object.freeze({
     id: 'local',
@@ -205,6 +286,7 @@ export const MARKET_TYPES = Object.freeze({
     allowedAvailability: Object.freeze(['available', 'common']),
     priceModifier: -0.1,
     uiVariant: 'market--local',
+    negotiationAllowed: true,
   }),
   specialized: Object.freeze({
     id: 'specialized',
@@ -214,6 +296,7 @@ export const MARKET_TYPES = Object.freeze({
     allowedAvailability: Object.freeze(['available', 'common', 'rare', 'veryRare']),
     priceModifier: 0.25,
     uiVariant: 'market--specialized',
+    negotiationAllowed: true,
   }),
   'black-market': Object.freeze({
     id: 'black-market',
@@ -223,6 +306,7 @@ export const MARKET_TYPES = Object.freeze({
     allowedAvailability: Object.freeze(['available', 'common', 'rare', 'veryRare', 'restricted', 'blackMarket']),
     priceModifier: 0.5,
     uiVariant: 'market--black-market',
+    negotiationAllowed: true,
   }),
 })
 

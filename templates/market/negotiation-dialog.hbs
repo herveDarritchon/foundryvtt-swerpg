@@ -1,0 +1,115 @@
+{{!-- Negotiation Dialog — Market Phase 7.1 --}}
+<div class="market-negotiation-dialog__body" data-application-part="form">
+  <div class="negotiation-item-info">
+    <p class="negotiation-item-name">{{entry.name}}</p>
+    <p class="negotiation-base-price">
+      {{localize "MARKET.Negotiation.Dialog.OriginalPrice"}}: <strong>{{entry.originalPrice}}</strong>
+    </p>
+    <p class="negotiation-difficulty">
+      {{localize "MARKET.Negotiation.Dialog.Difficulty"}}: <strong>{{difficulty}}</strong>
+      <i class="fa-solid fa-dice" aria-hidden="true"></i>
+    </p>
+  </div>
+
+  <div class="negotiation-form">
+    <div class="form-group">
+      <label for="negotiation-skill" class="negotiation-form-label">
+        {{localize "MARKET.Negotiation.Dialog.SkillLabel"}}
+      </label>
+      <select
+        id="negotiation-skill"
+        class="negotiation-skill-select"
+        aria-label="{{localize 'MARKET.Negotiation.Dialog.SkillLabel'}}"
+      >
+        {{#each skillOptions as |opt|}}
+          <option value="{{opt.value}}" {{#if opt.selected}}selected{{/if}}>
+            {{localize opt.label}}
+          </option>
+        {{/each}}
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="negotiation-ranks" class="negotiation-form-label">
+        {{localize "MARKET.Negotiation.Dialog.SuccessRanksLabel"}}
+      </label>
+      <input
+        id="negotiation-ranks"
+        type="number"
+        class="negotiation-ranks-input"
+        min="0"
+        max="6"
+        value="{{formState.successRanks}}"
+        aria-label="{{localize 'MARKET.Negotiation.Dialog.SuccessRanksLabel'}}"
+      />
+    </div>
+
+    <div class="form-group negotiation-disaster-group">
+      <label class="negotiation-form-label negotiation-disaster-label"
+        data-tooltip="{{localize 'MARKET.Negotiation.Dialog.DisasterTooltip'}}">
+        <input
+          type="checkbox"
+          class="negotiation-disaster-check"
+          {{#if formState.isDisaster}}checked{{/if}}
+          aria-label="{{localize 'MARKET.Negotiation.Dialog.DisasterLabel'}}"
+        />
+        {{localize "MARKET.Negotiation.Dialog.DisasterLabel"}}
+        <i class="fa-solid fa-skull" aria-hidden="true"></i>
+      </label>
+    </div>
+  </div>
+
+  <div class="negotiation-result {{negotiationResult.outcome}}">
+    {{#if (eq negotiationResult.outcome "success")}}
+      <div class="negotiation-result-icon"><i class="fa-solid fa-circle-check" aria-hidden="true"></i></div>
+      <div class="negotiation-result-text">
+        <p class="negotiation-result-outcome">{{localize "MARKET.Negotiation.Outcome.Success"}}</p>
+        <p class="negotiation-result-price">
+          {{localize "MARKET.Negotiation.Dialog.NegotiatedPrice"}}:
+          <strong class="negotiation-price--success">{{negotiationResult.finalPrice}}</strong>
+          <span class="negotiation-price-diff">(−{{negotiationResult.originalPrice}})</span>
+        </p>
+      </div>
+    {{else if (eq negotiationResult.outcome "disaster")}}
+      <div class="negotiation-result-icon"><i class="fa-solid fa-circle-xmark" aria-hidden="true"></i></div>
+      <div class="negotiation-result-text">
+        <p class="negotiation-result-outcome">{{localize "MARKET.Negotiation.Outcome.Disaster"}}</p>
+        <p class="negotiation-result-price">
+          {{localize "MARKET.Negotiation.Dialog.NegotiatedPrice"}}:
+          <strong class="negotiation-price--disaster">{{negotiationResult.finalPrice}}</strong>
+          <span class="negotiation-price-diff">(+{{entry.originalPrice}})</span>
+        </p>
+      </div>
+    {{else}}
+      <div class="negotiation-result-icon"><i class="fa-solid fa-circle-minus" aria-hidden="true"></i></div>
+      <div class="negotiation-result-text">
+        <p class="negotiation-result-outcome">{{localize "MARKET.Negotiation.Outcome.Failure"}}</p>
+        <p class="negotiation-result-price">
+          {{localize "MARKET.Negotiation.Dialog.NegotiatedPrice"}}:
+          <strong>{{negotiationResult.finalPrice}}</strong>
+        </p>
+      </div>
+    {{/if}}
+  </div>
+
+  <div class="negotiation-actions">
+    <button
+      type="button"
+      class="negotiation-btn negotiation-btn--confirm"
+      data-action="confirmNegotiation"
+      aria-label="{{localize 'MARKET.Negotiation.Dialog.Confirm'}}"
+    >
+      <i class="fa-solid fa-coins" aria-hidden="true"></i>
+      {{localize "MARKET.Negotiation.Dialog.Confirm"}}
+    </button>
+    <button
+      type="button"
+      class="negotiation-btn negotiation-btn--cancel"
+      data-action="cancelNegotiation"
+      aria-label="{{localize 'MARKET.Negotiation.Dialog.Cancel'}}"
+    >
+      <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      {{localize "MARKET.Negotiation.Dialog.Cancel"}}
+    </button>
+  </div>
+</div>

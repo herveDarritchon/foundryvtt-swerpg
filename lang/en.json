@@ -1545,7 +1545,8 @@
         "InsufficientCredits": "Insufficient credits to purchase this item.",
         "ItemNotFound": "This item no longer exists and cannot be purchased.",
         "WriteFailed": "The purchase could not be completed due to a write error."
-      }
+      },
+      "NegotiateButton": "Negotiate price"
     },
     "Toolbar": {
       "Search": {
@@ -1599,6 +1600,95 @@
       "BlackMarket": {
         "Label": "Black Market",
         "Description": "Restricted and illegal items available, but at a steep price."
+      }
+    },
+    "Negotiation": {
+      "Dialog": {
+        "Title": "Price Negotiation",
+        "OriginalPrice": "Original price",
+        "Difficulty": "Difficulty",
+        "SkillLabel": "Skill",
+        "SuccessRanksLabel": "Success ranks",
+        "DisasterLabel": "Disaster",
+        "DisasterTooltip": "Check if the roll produced a Disaster result — the vendor is offended and raises the price.",
+        "NegotiatedPrice": "Negotiated price",
+        "Confirm": "Buy at this price",
+        "Cancel": "Cancel"
+      },
+      "Skill": {
+        "Negotiation": "Negotiation",
+        "Persuasion": "Persuasion",
+        "Deception": "Deception"
+      },
+      "Outcome": {
+        "Success": "Success! The vendor agrees to a lower price.",
+        "Failure": "No deal. The price remains unchanged.",
+        "Disaster": "Disaster! The vendor is offended and raises the price.",
+        "SuccessNotification": "Negotiation successful! New price: {price} credits.",
+        "DisasterNotification": "Negotiation backfired! The vendor raised the price."
+      }
+    },
+    "Rarity": {
+      "Reason": {
+        "ReadilyAvailable": "Readily available",
+        "LimitedStock": "Limited stock — may take a few days",
+        "ResupplyPending": "Resupply pending",
+        "HardToFind": "Hard to find",
+        "ExtremelyRare": "Extremely rare — long wait expected",
+        "RiskyDelivery": "Risky delivery — black-market handling",
+        "Unavailable": "Not available at this market"
+      },
+      "Delay": {
+        "FewDays": "In a few days",
+        "Week": "In about a week"
+      }
+    },
+    "Consequence": {
+      "Dialog": {
+        "Title": "Purchase Consequences",
+        "Intro": "This purchase may have narrative consequences. The GM may accept or reject each one.",
+        "Confirm": "Proceed with purchase",
+        "Cancel": "Abort purchase"
+      },
+      "Type": {
+        "ImperialSuspicion": "Imperial Suspicion",
+        "BlackMarketDebt": "Black-Market Debt",
+        "Complication": "Complication"
+      },
+      "ImperialSuspicion": {
+        "Description": "This purchase involves restricted items. An Imperial agent may have noticed."
+      },
+      "BlackMarketDebt": {
+        "Description": "Buying on the black market creates a debt toward the vendor. Accept the obligation?"
+      },
+      "Complication": {
+        "Description": "This very rare or illegal item may trigger a narrative complication (Disadvantage or Disaster)."
+      },
+      "Badge": {
+        "Automatic": "Automatic"
+      },
+      "Accept": {
+        "Label": "Accept",
+        "Tooltip": "Accept this consequence"
+      }
+    },
+    "Badge": {
+      "AriaLabel": "Item badges",
+      "ImperialSuspicion": {
+        "Tooltip": "Restricted — Imperial agents may be watching"
+      },
+      "BlackMarket": {
+        "Tooltip": "Black-market item"
+      },
+      "ImmediateAccess": {
+        "Tooltip": "Immediately available"
+      },
+      "SupplyDelay": {
+        "Tooltip": "Supply delay",
+        "Days": "days"
+      },
+      "Negotiable": {
+        "Tooltip": "Price negotiable"
       }
     }
   }

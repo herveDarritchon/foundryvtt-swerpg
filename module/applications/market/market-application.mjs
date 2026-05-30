@@ -2,8 +2,13 @@ import { createMarketEntry, resolveMarketCatalogVisibility } from '../../lib/mar
 import { loadMarketCatalog } from '../../lib/market/catalog-loader.mjs'
 import { validatePurchase } from '../../lib/market/purchase.mjs'
 import { readMarketConfig } from '../../lib/market/market-settings.mjs'
+import { evaluateObtainability } from '../../lib/market/rarity-engine.mjs'
+import { CONSEQUENCE_TYPES } from '../../lib/market/consequences.mjs'
 import { PURCHASABLE_ITEM_TYPES, SOURCE_TYPES, DEFAULT_MARKET_CONTEXT, MARKET_TYPES, DEFAULT_MARKET_TYPE } from '../../config/market.mjs'
+import { RESTRICTED_RESTRICTION_LEVELS, BLACK_MARKET_AVAILABILITY_KEYS } from '../../lib/market/consequences.mjs'
 import { loadCompendiumItems } from './compendium-source-adapter.mjs'
+import NegotiationDialog from './negotiation-dialog.mjs'
+import ConsequencesDialog from './consequences-dialog.mjs'
 import { logger } from '../../utils/logger.mjs'
 
 const { api } = foundry.applications
@@ -158,6 +163,7 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
       openItem: MarketApplicationV2.#onOpenItem,
       resetCatalog: MarketApplicationV2.#onResetCatalog,
       buyItem: MarketApplicationV2.#onBuyItem,
+      negotiateItem: MarketApplicationV2.#onNegotiateItem,
       changeMarket: MarketApplicationV2.#onChangeMarket,
     },
   }
@@ -366,13 +372,22 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
     // 4. Sort globally across all types
     const sorted = sortEntries(filtered, sortBy, sortDirection)
 
-    // 5. Annotate each entry with canBuy based on buyer affordability
+    // 5. Annotate each entry with canBuy, obtainability, and narrative badges
     const annotated = sorted.map((entry) => {
       const validation = validatePurchase({ actor: buyer, entry })
+      const obtainability = evaluateObtainability({ rarity: entry.rarity, marketType: activeMarketType })
+      const marketDef = MARKET_TYPES[activeMarketType]
+      const isNegotiable = marketDef?.negotiationAllowed === true
+      const isImperialSuspicion = RESTRICTED_RESTRICTION_LEVELS.includes(entry.restrictionLevel ?? '')
+      const isBlackMarket = activeMarketType === 'black-market' || BLACK_MARKET_AVAILABILITY_KEYS.includes(entry.availability ?? '')
       return {
         ...entry,
         canBuy: buyer !== null && validation.canPurchase,
         buyBlockedReason: buyer !== null && !validation.canPurchase ? validation.reason : null,
+        obtainability,
+        isNegotiable,
+        isImperialSuspicion,
+        isBlackMarket,
       }
     })
 
@@ -461,8 +476,84 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
   }
 
   /**
+   * Initiate the negotiation flow for a market entry.
+   * Shows the negotiation dialog, then proceeds to the standard buy flow with the negotiated price.
+   *
+   * @this {MarketApplicationV2}
+   * @param {PointerEvent} _event   The initiating click event
+   * @param {HTMLElement}  target   The element bearing data-action="negotiateItem"
+   * @returns {Promise<void>}
+   */
+  static async #onNegotiateItem(_event, target) {
+    const row = target.closest('[data-uuid]')
+    const uuid = row?.dataset?.uuid
+    if (!uuid) {
+      logger.warn('[Market] negotiateItem action triggered without a data-uuid attribute')
+      return
+    }
+
+    const buyer = this._buyerActor
+    if (!buyer) {
+      ui.notifications.warn(game.i18n.localize('MARKET.Purchase.Error.MissingActor'))
+      return
+    }
+
+    let item
+    try {
+      item = await fromUuid(uuid)
+    } catch (err) {
+      logger.warn(`[Market] Could not resolve UUID "${uuid}" for negotiation: ${err.message}`)
+      ui.notifications.error(game.i18n.localize('MARKET.Purchase.Error.ItemNotFound'))
+      return
+    }
+
+    if (!item) {
+      logger.warn(`[Market] Item with UUID "${uuid}" no longer exists (negotiation).`)
+      ui.notifications.error(game.i18n.localize('MARKET.Purchase.Error.ItemNotFound'))
+      return
+    }
+
+    let entry
+    try {
+      const rawItem = itemToRawItem(item)
+      const activeMarketType = this._viewState.activeMarketType ?? DEFAULT_MARKET_TYPE
+      entry = createMarketEntry(rawItem, { sourceType: 'world', sourceId: item.uuid ?? '' }, { ...DEFAULT_MARKET_CONTEXT, marketType: activeMarketType })
+    } catch (err) {
+      logger.warn(`[Market] Could not build market entry for "${uuid}" (negotiation): ${err.message}`)
+      ui.notifications.error(game.i18n.localize('MARKET.Purchase.Error.ItemNotFound'))
+      return
+    }
+
+    const negotiationResult = await NegotiationDialog.prompt({ entry, buyer })
+    if (!negotiationResult?.confirmed) {
+      logger.debug('[Market] Negotiation cancelled by user', { uuid })
+      return
+    }
+
+    // Build a negotiated entry with the adjusted price
+    const negotiatedEntry = {
+      ...entry,
+      priceResult: {
+        ...entry.priceResult,
+        finalPrice: negotiationResult.finalPrice,
+      },
+    }
+
+    // Show outcome notification
+    const i18n = game.i18n
+    if (negotiationResult.outcome === 'success') {
+      ui.notifications.info(i18n.format('MARKET.Negotiation.Outcome.SuccessNotification', { price: negotiationResult.finalPrice }))
+    } else if (negotiationResult.outcome === 'disaster') {
+      ui.notifications.warn(i18n.localize('MARKET.Negotiation.Outcome.DisasterNotification'))
+    }
+
+    await MarketApplicationV2.#executePurchase.call(this, { item, entry: negotiatedEntry, buyer })
+  }
+
+  /**
    * Initiate the purchase flow for a market entry.
-   * Validates solvability, shows a confirmation dialog, then executes the purchase.
+   * Validates solvability, shows a consequences dialog (if any), shows a confirmation dialog,
+   * then executes the purchase.
    *
    * @this {MarketApplicationV2}
    * @param {PointerEvent} _event   The initiating click event
@@ -503,17 +594,41 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
     let entry
     try {
       const rawItem = itemToRawItem(item)
-      entry = createMarketEntry(rawItem, { sourceType: 'world', sourceId: item.uuid ?? '' }, { ...DEFAULT_MARKET_CONTEXT })
+      const activeMarketType = this._viewState.activeMarketType ?? DEFAULT_MARKET_TYPE
+      entry = createMarketEntry(rawItem, { sourceType: 'world', sourceId: item.uuid ?? '' }, { ...DEFAULT_MARKET_CONTEXT, marketType: activeMarketType })
     } catch (err) {
       logger.warn(`[Market] Could not build market entry for "${uuid}": ${err.message}`)
       ui.notifications.error(game.i18n.localize('MARKET.Purchase.Error.ItemNotFound'))
       return
     }
 
+    await MarketApplicationV2.#executePurchase.call(this, { item, entry, buyer })
+  }
+
+  /**
+   * Shared purchase execution logic used by both buyItem and negotiateItem.
+   * Shows consequences dialog, confirmation dialog, then mutates the actor inventory.
+   *
+   * @this {MarketApplicationV2}
+   * @param {object} params
+   * @param {Item}   params.item     The resolved Foundry Item document.
+   * @param {import('../../lib/market/market-entry.mjs').MarketEntry} params.entry  The market entry (may have negotiated price).
+   * @param {Actor}  params.buyer    The buyer actor.
+   * @returns {Promise<void>}
+   */
+  static async #executePurchase({ item, entry, buyer }) {
     const validation = validatePurchase({ actor: buyer, entry })
     if (!validation.canPurchase) {
       const msgKey = validation.messageKey ?? 'MARKET.Purchase.Error.InsufficientCredits'
       ui.notifications.warn(game.i18n.localize(msgKey))
+      return
+    }
+
+    // Show consequences dialog if there are narrative consequences
+    const activeMarketType = this._viewState.activeMarketType ?? DEFAULT_MARKET_TYPE
+    const consequencesResult = await ConsequencesDialog.prompt({ entry, marketType: activeMarketType, buyer })
+    if (!consequencesResult?.confirmed) {
+      logger.debug('[Market] Purchase aborted via consequences dialog', { uuid: entry.uuid })
       return
     }
 
@@ -556,6 +671,11 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
       const itemData = item.toObject()
       await buyer.createEmbeddedDocuments('Item', [itemData])
 
+      // Phase 7.4: Store accepted consequences as actor flags (black-market debt)
+      if (consequencesResult.acceptedTypes.includes(CONSEQUENCE_TYPES.blackMarketDebt)) {
+        await MarketApplicationV2.#storeMarketDebt({ buyer, entry, finalPrice: finalValidation.finalPrice })
+      }
+
       ui.notifications.info(
         i18n.format('MARKET.Purchase.Success', {
           name: entry.name,
@@ -567,16 +687,44 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
       logger.info('[Market] Purchase completed', {
         actorId: buyer.id,
         actorName: buyer.name,
-        itemUuid: uuid,
+        itemUuid: entry.uuid,
         itemName: entry.name,
         price: finalValidation.finalPrice,
         creditsAfter: finalValidation.creditsAfter,
+        acceptedConsequences: consequencesResult.acceptedTypes,
       })
 
       await this.render()
     } catch (err) {
       logger.error('[Market] Purchase failed during mutation', err)
       ui.notifications.error(game.i18n.localize('MARKET.Purchase.Error.WriteFailed'))
+    }
+  }
+
+  /**
+   * Store a black-market debt as an actor flag (Phase 7.4).
+   * Uses `flags.swerpg.marketDebts` to accumulate debts.
+   * The GM can consult these via the optional Market Debts panel.
+   *
+   * @param {object} params
+   * @param {Actor}  params.buyer       The buyer actor.
+   * @param {import('../../lib/market/market-entry.mjs').MarketEntry} params.entry  The purchased entry.
+   * @param {number} params.finalPrice  The price paid.
+   * @returns {Promise<void>}
+   */
+  static async #storeMarketDebt({ buyer, entry, finalPrice }) {
+    try {
+      const existing = buyer.getFlag('swerpg', 'marketDebts') ?? []
+      const debt = {
+        itemName: entry.name,
+        itemUuid: entry.uuid,
+        amount: finalPrice,
+        date: new Date().toISOString(),
+      }
+      await buyer.setFlag('swerpg', 'marketDebts', [...existing, debt])
+      logger.debug('[Market] Black-market debt stored', { actorId: buyer.id, debt })
+    } catch (err) {
+      logger.warn('[Market] Could not store market debt flag', err)
     }
   }
 

@@ -1441,7 +1441,8 @@
         "InsufficientCredits": "Crédits insuffisants pour acheter cet article.",
         "ItemNotFound": "Cet article n'existe plus et ne peut pas être acheté.",
         "WriteFailed": "L'achat n'a pas pu être finalisé en raison d'une erreur d'écriture."
-      }
+      },
+      "NegotiateButton": "Négocier le prix"
     },
     "Toolbar": {
       "Search": {
@@ -1495,6 +1496,95 @@
       "BlackMarket": {
         "Label": "Marché noir",
         "Description": "Articles restreints et illégaux disponibles, mais à un prix élevé."
+      }
+    },
+    "Negotiation": {
+      "Dialog": {
+        "Title": "Négociation de prix",
+        "OriginalPrice": "Prix initial",
+        "Difficulty": "Difficulté",
+        "SkillLabel": "Compétence",
+        "SuccessRanksLabel": "Rangs de succès",
+        "DisasterLabel": "Désastre",
+        "DisasterTooltip": "Cochez si le jet a produit un Désastre — le vendeur est offensé et augmente le prix.",
+        "NegotiatedPrice": "Prix négocié",
+        "Confirm": "Acheter à ce prix",
+        "Cancel": "Annuler"
+      },
+      "Skill": {
+        "Negotiation": "Négociation",
+        "Persuasion": "Persuasion",
+        "Deception": "Tromperie"
+      },
+      "Outcome": {
+        "Success": "Succès ! Le vendeur accepte un prix réduit.",
+        "Failure": "Échec. Le prix reste inchangé.",
+        "Disaster": "Désastre ! Le vendeur est offensé et augmente le prix.",
+        "SuccessNotification": "Négociation réussie ! Nouveau prix : {price} crédits.",
+        "DisasterNotification": "La négociation a mal tourné ! Le vendeur a augmenté le prix."
+      }
+    },
+    "Rarity": {
+      "Reason": {
+        "ReadilyAvailable": "Facilement disponible",
+        "LimitedStock": "Stock limité — peut prendre quelques jours",
+        "ResupplyPending": "Réapprovisionnement en cours",
+        "HardToFind": "Difficile à trouver",
+        "ExtremelyRare": "Extrêmement rare — longue attente prévue",
+        "RiskyDelivery": "Livraison risquée — circuit marché noir",
+        "Unavailable": "Indisponible sur ce marché"
+      },
+      "Delay": {
+        "FewDays": "Dans quelques jours",
+        "Week": "Dans environ une semaine"
+      }
+    },
+    "Consequence": {
+      "Dialog": {
+        "Title": "Conséquences narratives",
+        "Intro": "Cet achat peut avoir des conséquences narratives. Le MJ peut accepter ou rejeter chacune.",
+        "Confirm": "Confirmer l'achat",
+        "Cancel": "Annuler l'achat"
+      },
+      "Type": {
+        "ImperialSuspicion": "Suspicion impériale",
+        "BlackMarketDebt": "Dette marché noir",
+        "Complication": "Complication"
+      },
+      "ImperialSuspicion": {
+        "Description": "Cet achat implique des articles restreints. Un agent impérial a peut-être remarqué."
+      },
+      "BlackMarketDebt": {
+        "Description": "Acheter au marché noir crée une dette envers le vendeur. Accepter l'obligation ?"
+      },
+      "Complication": {
+        "Description": "Cet article très rare ou illégal peut déclencher une complication narrative (Désavantage ou Désastre)."
+      },
+      "Badge": {
+        "Automatic": "Automatique"
+      },
+      "Accept": {
+        "Label": "Accepter",
+        "Tooltip": "Accepter cette conséquence"
+      }
+    },
+    "Badge": {
+      "AriaLabel": "Badges de l'objet",
+      "ImperialSuspicion": {
+        "Tooltip": "Restreint — des agents impériaux observent peut-être"
+      },
+      "BlackMarket": {
+        "Tooltip": "Article de marché noir"
+      },
+      "ImmediateAccess": {
+        "Tooltip": "Disponible immédiatement"
+      },
+      "SupplyDelay": {
+        "Tooltip": "Délai d'approvisionnement",
+        "Days": "jours"
+      },
+      "Negotiable": {
+        "Tooltip": "Prix négociable"
       }
     }
   }
