@@ -1486,7 +1486,7 @@ describe('MarketApplicationV2', () => {
         getFlag: vi.fn((_scope, _key) => existingDebts),
         setFlag: vi.fn().mockResolvedValue(undefined),
       }
-      const item = makeItem({ uuid: 'Item.cheap', type: 'weapon', price: 100, rarity: 0 })
+      const item = makeItem({ uuid: 'Item.cheap', type: 'weapon', price: 100, rarity: 0, availability: 'blackMarket' })
       item.toObject = vi.fn(() => ({ type: 'weapon', name: item.name, system: item.system }))
       globalThis.fromUuid = vi.fn().mockResolvedValue(item)
 
@@ -1506,12 +1506,12 @@ describe('MarketApplicationV2', () => {
       await action.call(app, {}, target)
 
       // setFlag must have been called with the new debt
-      expect(actor.setFlag).toHaveBeenCalledWith('swerpg', 'marketDebts', expect.any(Array))
+      expect(actor.setFlag).toHaveBeenCalledWith('swerpg', 'marketConsequences', expect.any(Array))
       const [_scope, _key, debts] = actor.setFlag.mock.calls[0]
       expect(debts).toHaveLength(1)
       expect(debts[0]).toMatchObject({
-        itemUuid: 'Item.cheap',
-        amount: expect.any(Number),
+        type: 'blackMarketDebt',
+        metadata: { amount: expect.any(Number) },
       })
 
       delete globalThis.fromUuid
@@ -1562,7 +1562,7 @@ describe('MarketApplicationV2', () => {
         getFlag: vi.fn().mockReturnValue([existingDebt]),
         setFlag: vi.fn().mockResolvedValue(undefined),
       }
-      const item = makeItem({ uuid: 'Item.new', type: 'weapon', price: 100, rarity: 0 })
+      const item = makeItem({ uuid: 'Item.new', type: 'weapon', price: 100, rarity: 0, availability: 'blackMarket' })
       item.toObject = vi.fn(() => ({ type: 'weapon', name: item.name, system: item.system }))
       globalThis.fromUuid = vi.fn().mockResolvedValue(item)
 
@@ -1584,7 +1584,7 @@ describe('MarketApplicationV2', () => {
       // Must include the old debt plus the new one
       expect(debts).toHaveLength(2)
       expect(debts[0]).toMatchObject({ itemUuid: 'Item.old' })
-      expect(debts[1]).toMatchObject({ itemUuid: 'Item.new' })
+      expect(debts[1]).toMatchObject({ type: 'blackMarketDebt' })
 
       delete globalThis.fromUuid
       delete globalThis.foundry.applications.api.DialogV2.confirm
