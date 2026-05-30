@@ -693,6 +693,7 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
           price: finalValidation.finalPrice,
           quantity: 1,
           creditsAfter: finalValidation.creditsAfter,
+          itemId: item.id,
         })
       } catch (auditErr) {
         logger.warn('[Market] Could not record item purchase audit entry', auditErr)

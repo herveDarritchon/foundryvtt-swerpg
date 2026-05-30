@@ -849,4 +849,81 @@ describe('audit log integration: item.purchase audit → filter → CSV', () => 
     const csv = buildCsvContent(actor)
     expect(csv).toContain('-100')
   })
+
+  it('item purchase with itemId and creditsDelta flows through audit log filter and CSV', () => {
+    const actor = {
+      id: 'actor-1',
+      name: 'Test Character',
+      type: 'character',
+      isOwner: true,
+      system: { progression: {} },
+      flags: {
+        swerpg: {
+          logs: [
+            {
+              id: 'p1',
+              timestamp: 100,
+              type: 'item.purchase',
+              userName: 'GM',
+              xpDelta: 0,
+              creditDelta: -100,
+              data: {
+                itemName: 'Blaster Pistol',
+                itemType: 'weapon',
+                price: 100,
+                quantity: 1,
+                itemId: 'item-uuid-abc123',
+              },
+              snapshot: { creditsBefore: 250, creditsAfter: 150, creditsDelta: 100 },
+            },
+          ],
+        },
+      },
+      testUserPermission: vi.fn(() => true),
+    }
+
+    // Verify filter "purchases" returns the entry with itemId
+    const entries = buildAuditLogEntries(actor, 'purchases')
+    expect(entries).toHaveLength(1)
+    expect(entries[0].data.itemId).toBe('item-uuid-abc123')
+
+    // Verify description contains item name and price
+    const description = buildAuditLogDescription(entries[0])
+    expect(description).toContain('Blaster Pistol')
+    expect(description).toContain('100')
+
+    // Verify CSV contains the creditDelta value and item name
+    const csv = buildCsvContent(actor)
+    expect(csv).toContain('-100')
+    expect(csv).toContain('Blaster Pistol')
+  })
+
+  it('handles logs without itemId gracefully in filter and description', () => {
+    const actor = {
+      id: 'actor-1',
+      name: 'Test Character',
+      type: 'character',
+      isOwner: true,
+      system: { progression: {} },
+      flags: {
+        swerpg: {
+          logs: [
+            {
+              id: 'p1',
+              timestamp: 100,
+              type: 'item.purchase',
+              xpDelta: 0,
+              data: { itemName: 'Blaster', itemType: 'weapon', price: 100, quantity: 1 },
+              snapshot: { creditsBefore: 250, creditsAfter: 150 },
+            },
+          ],
+        },
+      },
+      testUserPermission: vi.fn(() => true),
+    }
+
+    const entries = buildAuditLogEntries(actor, 'purchases')
+    expect(entries).toHaveLength(1)
+    expect(entries[0].data.itemId).toBeUndefined()
+  })
 })
