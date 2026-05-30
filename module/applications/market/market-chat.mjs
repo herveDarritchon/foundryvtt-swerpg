@@ -80,7 +80,7 @@ export async function buildPurchaseChatData({ buyer, entry, outcome = null, cons
   return {
     content,
     speaker: ChatMessage.getSpeaker({ actor: buyer }),
-    type: CONST.CHAT_MESSAGE_TYPES?.IC ?? CONST.CHAT_MESSAGE_STYLES?.IC ?? 0,
+    type: 'ic',
     flavor: game.i18n.localize('MARKET.Chat.PurchaseTitle'),
   }
 }
