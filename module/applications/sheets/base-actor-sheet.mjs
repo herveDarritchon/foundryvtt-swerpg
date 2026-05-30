@@ -83,30 +83,37 @@ export default class SwerpgBaseActorSheet extends HBMixin(BaseActorSheetV2) {
     actions: {
       id: 'actions',
       template: 'systems/swerpg/templates/sheets/actor/actions.hbs',
+      scrollable: ['.scrollable'],
     },
     inventory: {
       id: 'inventory',
       template: 'systems/swerpg/templates/sheets/actor/inventory.hbs',
+      scrollable: ['.scrollable'],
     },
     skills: {
       id: 'skills',
       template: 'systems/swerpg/templates/sheets/actor/skills.hbs',
+      scrollable: ['.scrollable'],
     },
     talents: {
       id: 'talents',
       template: 'systems/swerpg/templates/sheets/actor/talents.hbs',
+      scrollable: ['.scrollable'],
     },
     effects: {
       id: 'effects',
       template: 'systems/swerpg/templates/sheets/actor/effects.hbs',
+      scrollable: ['.scrollable'],
     },
     biography: {
       id: 'biography',
       template: undefined, // Defined during _initializeActorSheetClass
+      scrollable: ['.scrollable'],
     },
     commitments: {
       id: 'commitments',
       template: undefined, // Defined during _initializeActorSheetClass
+      scrollable: ['.scrollable'],
     },
   }
 

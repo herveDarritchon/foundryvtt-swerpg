@@ -51,6 +51,7 @@
   --profile-size: 200px;
   --margin-size: 1rem;
   --margin-half: calc(var(--margin-size) / 2);
+  --tabs-rail-offset: 36px; // Width of the tab rail that protrudes right
 
   overflow: visible;
 
@@ -61,7 +62,8 @@
     gap: var(--margin-size);
     height: calc(100% - var(--header-height));
     padding: 0 var(--margin-size) var(--margin-size);
-    overflow: visible;
+    overflow-x: visible;
+    overflow-y: clip;
   }
 
   &.minimized,
@@ -80,7 +82,8 @@
     flex-direction: column;
     justify-content: flex-start;
     gap: 1rem;
-    height: 100%;
+    min-height: 0;
+    overflow: hidden;
   }
 
   .tab {
@@ -88,6 +91,13 @@
     flex: 1;
     padding: 1.5rem 0 1rem;
     gap: 1.5rem;
+
+    &.scrollable {
+      overflow-y: auto;
+      min-height: 0;
+      padding-inline-end: calc(var(--tabs-rail-offset) + 8px); // Reserve space for scrollbar + gutter
+      scrollbar-gutter: stable; // Prevent layout shift when scrollbar appears/disappears
+    }
   }
 
   a.button.icon {

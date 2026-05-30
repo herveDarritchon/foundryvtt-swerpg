@@ -54,7 +54,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
   static DEFAULT_OPTIONS = {
     position: {
       width: 950,
-      height: 'auto',
+      height: 750,
     },
     window: {
       minimizable: true,

@@ -1488,6 +1488,7 @@ input[type='range'] {
   --profile-size: 200px;
   --margin-size: 1rem;
   --margin-half: calc(var(--margin-size) / 2);
+  --tabs-rail-offset: 36px;
   overflow: visible;
   /* ----------------------------------------- */
   /*  General Styles                           */
@@ -1545,7 +1546,8 @@ input[type='range'] {
   gap: var(--margin-size);
   height: calc(100% - var(--header-height));
   padding: 0 var(--margin-size) var(--margin-size);
-  overflow: visible;
+  overflow-x: visible;
+  overflow-y: clip;
 }
 .swerpg.sheet.actor.minimized,
 .swerpg.sheet.actor.minimizing,
@@ -1563,13 +1565,20 @@ input[type='range'] {
   flex-direction: column;
   justify-content: flex-start;
   gap: 1rem;
-  height: 100%;
+  min-height: 0;
+  overflow: hidden;
 }
 .swerpg.sheet.actor .tab {
   position: relative;
   flex: 1;
   padding: 1.5rem 0 1rem;
   gap: 1.5rem;
+}
+.swerpg.sheet.actor .tab.scrollable {
+  overflow-y: auto;
+  min-height: 0;
+  padding-inline-end: calc(var(--tabs-rail-offset) + 8px);
+  scrollbar-gutter: stable;
 }
 .swerpg.sheet.actor a.button.icon {
   flex: none;
