@@ -47,6 +47,10 @@ describe('character-audit-log application', () => {
         'SWERPG.AUDIT_LOG.FILTER.CHARACTERISTICS': 'Characteristics',
         'SWERPG.AUDIT_LOG.FILTER.DETAILS': 'Core choices',
         'SWERPG.AUDIT_LOG.FILTER.ADVANCEMENT': 'Advancement',
+        'SWERPG.AUDIT_LOG.FILTER.PURCHASES': 'Purchases',
+        'SWERPG.AUDIT_LOG.TYPE.ITEM_PURCHASE': 'Item purchased',
+        'SWERPG.AUDIT_LOG.UNKNOWN_ITEM': 'Unknown item',
+        'SWERPG.AUDIT_LOG.DESCRIPTION.ITEM_PURCHASE': 'Purchased {itemName} ({itemType}) for {price} credits',
         'SWERPG.AUDIT_LOG.TYPE.SKILL_TRAIN': 'Skill purchase',
         'SWERPG.AUDIT_LOG.TYPE.SPECIALIZATION_REMOVE': 'Specialization removed',
         'SWERPG.AUDIT_LOG.TYPE.TALENT_NODE_PURCHASE': 'Talent node purchase',
@@ -557,5 +561,115 @@ describe('audit log CSV export', () => {
       const csv = buildCsvContent(actor)
       expect(csv).toContain('unknown-player')
     })
+  })
+})
+
+/* ============================================ */
+/*  item.purchase family and descriptions       */
+/* ============================================ */
+
+describe('audit log item.purchase', () => {
+  let buildAuditLogEntries
+  let buildAuditLogDescription
+
+  beforeEach(async () => {
+    setupFoundryMock({
+      translations: {
+        'SWERPG.AUDIT_LOG.FILTER.ALL': 'All',
+        'SWERPG.AUDIT_LOG.FILTER.PURCHASES': 'Purchases',
+        'SWERPG.AUDIT_LOG.FILTER.TALENTS': 'Talents',
+        'SWERPG.AUDIT_LOG.TYPE.ITEM_PURCHASE': 'Item purchased',
+        'SWERPG.AUDIT_LOG.TYPE.UNKNOWN': 'Unknown event',
+        'SWERPG.AUDIT_LOG.UNKNOWN_ITEM': 'Unknown item',
+        'SWERPG.AUDIT_LOG.UNKNOWN_VALUE': 'Unknown value',
+        'SWERPG.AUDIT_LOG.DESCRIPTION.ITEM_PURCHASE': 'Purchased {itemName} ({itemType}) for {price} credits',
+        'SWERPG.AUDIT_LOG.DESCRIPTION.UNKNOWN': 'Unrecognized event ({type})',
+      },
+    })
+    ;({ buildAuditLogEntries, buildAuditLogDescription } = await import('../../module/applications/character-audit-log.mjs'))
+  })
+
+  afterEach(() => {
+    vi.resetModules()
+    vi.clearAllMocks()
+    teardownFoundryMock()
+  })
+
+  function createActorWithLog(logs) {
+    return {
+      id: 'actor-1',
+      name: 'Test Character',
+      type: 'character',
+      isOwner: true,
+      system: { progression: {} },
+      flags: { swerpg: { logs } },
+      testUserPermission: vi.fn(() => true),
+    }
+  }
+
+  it('getAuditLogFamily returns purchases for item.purchase', () => {
+    const actor = createActorWithLog([
+      { id: 'p1', timestamp: 100, type: 'item.purchase', xpDelta: 0, data: { itemName: 'Blaster', itemType: 'weapon', price: 100, quantity: 1 } },
+    ])
+
+    const entries = buildAuditLogEntries(actor, 'purchases')
+    expect(entries).toHaveLength(1)
+    expect(entries[0].family).toBe('purchases')
+  })
+
+  it('item.purchase is excluded from talents filter', () => {
+    const actor = createActorWithLog([
+      { id: 'p1', timestamp: 100, type: 'item.purchase', xpDelta: 0, data: { itemName: 'Blaster', itemType: 'weapon', price: 100, quantity: 1 } },
+    ])
+
+    const entries = buildAuditLogEntries(actor, 'talents')
+    expect(entries).toHaveLength(0)
+  })
+
+  it('item.purchase is included in all filter', () => {
+    const actor = createActorWithLog([
+      { id: 'p1', timestamp: 100, type: 'item.purchase', xpDelta: 0, data: { itemName: 'Blaster', itemType: 'weapon', price: 100, quantity: 1 } },
+    ])
+
+    const entries = buildAuditLogEntries(actor, 'all')
+    expect(entries).toHaveLength(1)
+    expect(entries[0].type).toBe('item.purchase')
+  })
+
+  it('buildAuditLogDescription formats item.purchase correctly', () => {
+    const description = buildAuditLogDescription({
+      type: 'item.purchase',
+      data: { itemName: 'Blaster Pistol', itemType: 'weapon', price: 100, quantity: 1 },
+    })
+
+    expect(description).toBe('Purchased Blaster Pistol (weapon) for 100 credits')
+  })
+
+  it('buildAuditLogDescription uses UNKNOWN_ITEM fallback when itemName is missing', () => {
+    const description = buildAuditLogDescription({
+      type: 'item.purchase',
+      data: { itemType: 'weapon', price: 100, quantity: 1 },
+    })
+
+    expect(description).toContain('Unknown item')
+  })
+
+  it('buildAuditLogDescription defaults quantity to 1 when absent', () => {
+    const description = buildAuditLogDescription({
+      type: 'item.purchase',
+      data: { itemName: 'Blaster Pistol', itemType: 'weapon', price: 100 },
+    })
+
+    expect(description).toBe('Purchased Blaster Pistol (weapon) for 100 credits')
+  })
+
+  it('typeLabel for item.purchase is not the unknown fallback', () => {
+    const actor = createActorWithLog([
+      { id: 'p1', timestamp: 100, type: 'item.purchase', xpDelta: 0, data: { itemName: 'Blaster', itemType: 'weapon', price: 100, quantity: 1 } },
+    ])
+
+    const entries = buildAuditLogEntries(actor, 'all')
+    expect(entries[0].typeLabel).toBe('Item purchased')
+    expect(entries[0].typeLabel).not.toBe('Unknown event')
   })
 })

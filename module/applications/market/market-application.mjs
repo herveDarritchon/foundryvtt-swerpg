@@ -694,6 +694,20 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
         finalPrice: finalValidation.finalPrice,
       })
 
+      // Record item purchase in audit log (non-blocking)
+      try {
+        const { recordItemPurchase } = await import('../../utils/audit-log.mjs')
+        await recordItemPurchase(buyer, {
+          itemName: entry.name,
+          itemType: item.type,
+          price: finalValidation.finalPrice,
+          quantity: 1,
+          creditsAfter: finalValidation.creditsAfter,
+        })
+      } catch (auditErr) {
+        logger.warn('[Market] Could not record item purchase audit entry', auditErr)
+      }
+
       ui.notifications.info(
         i18n.format('MARKET.Purchase.Success', {
           name: entry.name,
