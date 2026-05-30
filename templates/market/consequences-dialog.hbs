@@ -1,0 +1,76 @@
+{{!-- Consequences Dialog — Market Phase 7.3 --}}
+<div class="market-consequences-dialog__body" data-application-part="form">
+  <div class="consequences-intro">
+    <p class="consequences-intro-text">
+      {{localize "MARKET.Consequence.Dialog.Intro"}}
+    </p>
+    {{#if entry.name}}
+      <p class="consequences-item-name">
+        <strong>{{entry.name}}</strong>
+      </p>
+    {{/if}}
+  </div>
+
+  <div class="consequences-list">
+    {{#each consequences as |consequence|}}
+      <div class="consequence-item consequence-item--{{consequence.type}}
+        {{#if consequence.isAutomatic}}consequence-item--automatic{{/if}}
+        {{#if consequence.playerChoice}}consequence-item--player-choice{{/if}}"
+      >
+        <div class="consequence-icon">
+          {{#if (eq consequence.type "imperialSuspicion")}}
+            <i class="fa-solid fa-eye" aria-hidden="true" data-tooltip="{{localize 'MARKET.Consequence.Type.ImperialSuspicion'}}"></i>
+          {{else if (eq consequence.type "blackMarketDebt")}}
+            <i class="fa-solid fa-skull-crossbones" aria-hidden="true" data-tooltip="{{localize 'MARKET.Consequence.Type.BlackMarketDebt'}}"></i>
+          {{else if (eq consequence.type "complication")}}
+            <i class="fa-solid fa-triangle-exclamation" aria-hidden="true" data-tooltip="{{localize 'MARKET.Consequence.Type.Complication'}}"></i>
+          {{/if}}
+        </div>
+
+        <div class="consequence-body">
+          <p class="consequence-description">{{localize consequence.descriptionKey}}</p>
+          {{#if consequence.isAutomatic}}
+            <span class="consequence-badge consequence-badge--automatic">{{localize "MARKET.Consequence.Badge.Automatic"}}</span>
+          {{/if}}
+        </div>
+
+        {{#if consequence.playerChoice}}
+          <div class="consequence-choice">
+            <label class="consequence-accept-label"
+              data-tooltip="{{localize 'MARKET.Consequence.Accept.Tooltip'}}">
+              <input
+                type="checkbox"
+                class="consequence-accept-check"
+                data-consequence-type="{{consequence.type}}"
+                {{#if consequence.isAccepted}}checked{{/if}}
+                aria-label="{{localize 'MARKET.Consequence.Accept.Label'}}"
+              />
+              {{localize "MARKET.Consequence.Accept.Label"}}
+            </label>
+          </div>
+        {{/if}}
+      </div>
+    {{/each}}
+  </div>
+
+  <div class="consequences-actions">
+    <button
+      type="button"
+      class="consequences-btn consequences-btn--confirm"
+      data-action="confirmConsequences"
+      aria-label="{{localize 'MARKET.Consequence.Dialog.Confirm'}}"
+    >
+      <i class="fa-solid fa-check" aria-hidden="true"></i>
+      {{localize "MARKET.Consequence.Dialog.Confirm"}}
+    </button>
+    <button
+      type="button"
+      class="consequences-btn consequences-btn--cancel"
+      data-action="cancelConsequences"
+      aria-label="{{localize 'MARKET.Consequence.Dialog.Cancel'}}"
+    >
+      <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      {{localize "MARKET.Consequence.Dialog.Cancel"}}
+    </button>
+  </div>
+</div>

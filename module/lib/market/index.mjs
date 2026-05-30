@@ -14,3 +14,14 @@ export {
   SETTING_MARKET_ALLOWED_ITEM_TYPES,
   SETTING_MARKET_DEDUP_STRATEGY,
 } from './market-settings.mjs'
+export {
+  computeNegotiatedPrice,
+  rarityToDifficulty,
+  NEGOTIATION_SKILLS,
+  NEGOTIATION_DISCOUNT_PER_SUCCESS,
+  NEGOTIATION_MAX_DISCOUNT,
+  NEGOTIATION_DISASTER_PENALTY,
+  NEGOTIATION_RARITY_TO_DIFFICULTY,
+} from './negotiation.mjs'
+export { evaluateObtainability, RARITY_OBTAINABILITY_BANDS, BLACK_MARKET_TYPE_KEY as RARITY_BLACK_MARKET_TYPE_KEY } from './rarity-engine.mjs'
+export { evaluateMarketConsequences, CONSEQUENCE_TYPES, RESTRICTED_RESTRICTION_LEVELS, BLACK_MARKET_AVAILABILITY_KEYS } from './consequences.mjs'
