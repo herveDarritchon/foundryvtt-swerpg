@@ -342,6 +342,14 @@
   "SWERPG.SETTINGS.MARKET_ALLOWED_ITEM_TYPES_HINT": "JSON array of item type keys visible in the Market (e.g. [\"weapon\",\"armor\",\"gear\"]). All purchasable types are allowed by default.",
   "SWERPG.SETTINGS.MARKET_DEDUP_STRATEGY_NAME": "Market deduplication strategy",
   "SWERPG.SETTINGS.MARKET_DEDUP_STRATEGY_HINT": "How to handle duplicate items across sources. Options: prefer-compendium, prefer-newest, keep-all.",
+  "SWERPG.SETTINGS.MARKET_EXCLUDED_ITEMS_NAME": "Market manually excluded items",
+  "SWERPG.SETTINGS.MARKET_EXCLUDED_ITEMS_HINT": "JSON array of item UUIDs manually excluded from the Market by the GM.",
+  "SWERPG.SETTINGS.MARKET_TYPE_MODIFIERS_NAME": "Market per-type price modifiers",
+  "SWERPG.SETTINGS.MARKET_TYPE_MODIFIERS_HINT": "JSON object mapping item types to their fractional price modifier (e.g. {\"weapon\":{\"priceModifier\":0.1}}).",
+  "SWERPG.SETTINGS.MARKET_GLOBAL_PRICE_MOD_NAME": "Market global price modifier",
+  "SWERPG.SETTINGS.MARKET_GLOBAL_PRICE_MOD_HINT": "Global percentage modifier applied to all Market item prices (e.g. 10 = +10%, -5 = -5%).",
+  "SWERPG.SETTINGS.MARKET_LOCATION_CONFIGS_NAME": "Market location configurations",
+  "SWERPG.SETTINGS.MARKET_LOCATION_CONFIGS_HINT": "JSON object mapping location names to their rarity and market-type configuration.",
   "ADVERSARY.ThreatMinion": "Minion",
   "ADVERSARY.ThreatNormal": "Normal",
   "ADVERSARY.ThreatElite": "Elite",
@@ -1700,6 +1708,84 @@
       },
       "Negotiable": {
         "Tooltip": "Price negotiable"
+      }
+    },
+    "Settings": {
+      "Title": "Market Configuration",
+      "Subtitle": "Configure sources, prices, exclusions, and locations for the Market.",
+      "MenuName": "Market Configuration",
+      "MenuHint": "Configure which items appear in the Market, their prices, and location-based rarity.",
+      "MenuLabel": "Configure Market",
+      "Save": "Save Settings",
+      "Cancel": "Cancel",
+      "Close": "Close",
+      "SavedSuccess": "Market settings saved successfully.",
+      "SaveError": "Failed to save Market settings.",
+      "Tabs": {
+        "Sources": "Sources & Types",
+        "Prices": "Price Modifiers",
+        "Exclusions": "Exclusions",
+        "Locations": "Locations & Rarity",
+        "Diagnostic": "Diagnostic"
+      },
+      "Sources": {
+        "EnabledSources": "Enabled Sources",
+        "EnabledSourcesHint": "Select which item sources are scanned by the Market.",
+        "AllowedTypes": "Allowed Item Types",
+        "AllowedTypesHint": "Select which item types can appear in the Market.",
+        "DedupStrategy": "Deduplication Strategy",
+        "DedupStrategyHint": "How to handle items that appear in multiple sources.",
+        "DedupPreferCompendium": "Prefer Compendium (recommended)",
+        "DedupPreferNewest": "Prefer Newest",
+        "DedupKeepAll": "Keep All Duplicates"
+      },
+      "Prices": {
+        "Global": "Global Price Modifier",
+        "GlobalHint": "Apply a percentage modifier to all Market item prices. Positive values raise prices; negative values lower them.",
+        "GlobalLabel": "Global modifier",
+        "TypeModifiers": "Per-Type Price Modifiers",
+        "TypeModifiersHint": "Set an additional percentage modifier per item type. These stack with the global modifier.",
+        "TypeColumn": "Item Type",
+        "ModifierColumn": "Modifier"
+      },
+      "Exclusions": {
+        "ManuallyExcluded": "Manually Excluded Items",
+        "ManuallyExcludedHint": "Items listed here will never appear in the Market catalogue, regardless of source or type.",
+        "AddItem": "Add Excluded Item",
+        "AddItemTitle": "Add Item to Exclusion List",
+        "AddItemHint": "Enter the UUID of the item to exclude from the Market.",
+        "UuidLabel": "Item UUID",
+        "RemoveItem": "Remove from exclusion list",
+        "AlreadyExcluded": "This item is already excluded from the Market.",
+        "Empty": "No items are manually excluded."
+      },
+      "Locations": {
+        "ConfiguredLocations": "Configured Market Locations",
+        "ConfiguredLocationsHint": "Define locations with custom rarity modifiers for the Market.",
+        "AddLocation": "Add Location",
+        "AddLocationTitle": "Add Market Location",
+        "NameLabel": "Location Name",
+        "NamePlaceholder": "e.g. Mos Eisley",
+        "RemoveLocation": "Remove location",
+        "AlreadyExists": "A location named \"{name}\" already exists.",
+        "Empty": "No locations configured."
+      },
+      "Diagnostic": {
+        "CatalogScan": "Catalog Scan",
+        "CatalogScanHint": "Scan the Market catalogue with the current configuration and display the number of visible items.",
+        "ScanCatalog": "Scan Current Catalog",
+        "ScanResult": "Visible items in current catalog:",
+        "ScanError": "Catalog scan failed — check the browser console for details.",
+        "ExportTitle": "Export Configuration",
+        "ExportHint": "Export the full Market configuration as JSON (copied to clipboard).",
+        "Export": "Export Configuration",
+        "ExportCopied": "Market configuration copied to clipboard.",
+        "ResetTitle": "Reset to Defaults",
+        "ResetHint": "This will erase all custom Market settings and restore the system defaults. This action cannot be undone.",
+        "ResetDefaults": "Reset to Defaults",
+        "ResetConfirm": "Reset all settings",
+        "ResetContent": "Are you sure you want to reset all Market settings to their defaults? This will remove all exclusions, price modifiers, and location configurations.",
+        "ResetSuccess": "Market settings reset to defaults."
       }
     }
   }

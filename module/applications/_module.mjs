@@ -2,6 +2,7 @@
 export { default as ActionConfig } from './config/action.mjs'
 export { default as CharacterAuditLogApp } from './character-audit-log.mjs'
 export { default as MarketApplicationV2 } from './market/market-application.mjs'
+export { default as MarketSettingsPanel } from './settings/market-settings-panel.mjs'
 export { default as SkillConfig } from './config/skill.mjs'
 export { default as SpecializationTreeApp } from './specialization-tree-app.mjs'
 

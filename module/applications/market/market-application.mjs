@@ -1,7 +1,7 @@
 import { createMarketEntry, resolveMarketCatalogVisibility } from '../../lib/market/market-entry.mjs'
 import { loadMarketCatalog } from '../../lib/market/catalog-loader.mjs'
 import { validatePurchase } from '../../lib/market/purchase.mjs'
-import { readMarketConfig } from '../../lib/market/market-settings.mjs'
+import { readMarketConfig, readMarketExcludedItems } from '../../lib/market/market-settings.mjs'
 import { evaluateObtainability } from '../../lib/market/rarity-engine.mjs'
 import { CONSEQUENCE_TYPES, evaluateMarketConsequences } from '../../lib/market/consequences.mjs'
 import { serializeConsequence } from '../../lib/market/consequence-persistence.mjs'
@@ -332,6 +332,7 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
     const activeMarketType = this._viewState.activeMarketType ?? DEFAULT_MARKET_TYPE
     const marketContext = { ...DEFAULT_MARKET_CONTEXT, marketType: activeMarketType }
     const marketConfig = readMarketConfig('swerpg')
+    const excludedIds = readMarketExcludedItems('swerpg')
 
     // 1. Load world items
     const worldItems = Array.from(game.items).map((item) => itemToRawItem(item))
@@ -344,7 +345,7 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
       logger.warn('[Market] Could not load compendium items', err)
     }
 
-    // 3. Delegate to domain loader (handles eligibility, config filtering, dedup)
+    // 3. Delegate to domain loader (handles eligibility, config filtering, dedup, exclusions)
     let allEntries
     try {
       allEntries = loadMarketCatalog({
@@ -352,6 +353,7 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
         compendiumItems,
         config: marketConfig,
         marketContext,
+        excludedIds,
       })
     } catch (err) {
       logger.error('[Market] Catalog loading failed', err)

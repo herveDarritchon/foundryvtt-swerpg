@@ -2,6 +2,7 @@ import * as chat from '../../chat.mjs'
 import { OggDudeDataImporter } from '../../settings/OggDudeDataImporter.mjs'
 import { logger } from '../../utils/logger.mjs'
 import { registerMarketSettings } from '../../lib/market/market-settings.mjs'
+import MarketSettingsPanel from './market-settings-panel.mjs'
 
 export const registerSystemSettings = function () {
   /**
@@ -39,6 +40,17 @@ export const registerSystemSettings = function () {
       label: game.i18n.localize('SETTINGS.OggDudeDataImporter.label'),
       icon: 'fa-solid fa-book-journal-whills',
       type: OggDudeDataImporter,
+      scope: 'world',
+      config: true,
+      restricted: true,
+    })
+
+    game.settings.registerMenu('swerpg', 'marketSettingsPanel', {
+      name: game.i18n.localize('MARKET.Settings.MenuName'),
+      hint: game.i18n.localize('MARKET.Settings.MenuHint'),
+      label: game.i18n.localize('MARKET.Settings.MenuLabel'),
+      icon: 'fa-solid fa-store',
+      type: MarketSettingsPanel,
       scope: 'world',
       config: true,
       restricted: true,
@@ -92,7 +104,7 @@ export const registerSystemSettings = function () {
     default: 0,
   })
 
-  // Market configuration settings
+  // Market configuration settings (Phase 1–9)
   registerMarketSettings(SYSTEM.id)
 
   // Audit Log max entries setting

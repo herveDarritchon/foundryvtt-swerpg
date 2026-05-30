@@ -1,0 +1,36 @@
+{{#if (eq activeTab "diagnostic")}}
+<section class="market-settings-panel__section market-settings-panel__section--diagnostic" data-application-part="diagnostic">
+  <h3>{{localize "MARKET.Settings.Diagnostic.CatalogScan"}}</h3>
+  <p class="notes">{{localize "MARKET.Settings.Diagnostic.CatalogScanHint"}}</p>
+
+  <div class="market-settings-panel__diagnostic-row">
+    <button type="button" data-action="scanCatalog" class="market-settings-panel__scan-btn">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      {{localize "MARKET.Settings.Diagnostic.ScanCatalog"}}
+    </button>
+    {{#if (notNull lastScanCount)}}
+      <span class="market-settings-panel__scan-result">
+        {{localize "MARKET.Settings.Diagnostic.ScanResult"}} <strong>{{lastScanCount}}</strong>
+      </span>
+    {{/if}}
+  </div>
+
+  <h3>{{localize "MARKET.Settings.Diagnostic.ExportTitle"}}</h3>
+  <p class="notes">{{localize "MARKET.Settings.Diagnostic.ExportHint"}}</p>
+  <div class="market-settings-panel__diagnostic-row">
+    <button type="button" data-action="exportConfig" class="market-settings-panel__export-btn">
+      <i class="fa-solid fa-file-export"></i>
+      {{localize "MARKET.Settings.Diagnostic.Export"}}
+    </button>
+  </div>
+
+  <h3>{{localize "MARKET.Settings.Diagnostic.ResetTitle"}}</h3>
+  <p class="notes hint warning">{{localize "MARKET.Settings.Diagnostic.ResetHint"}}</p>
+  <div class="market-settings-panel__diagnostic-row">
+    <button type="button" data-action="resetDefaults" class="market-settings-panel__reset-btn danger">
+      <i class="fa-solid fa-rotate-left"></i>
+      {{localize "MARKET.Settings.Diagnostic.ResetDefaults"}}
+    </button>
+  </div>
+</section>
+{{/if}}

@@ -311,6 +311,14 @@
   "SWERPG.AUDIT_LOG.EXPORT_FAILED": "Échec de l'export du journal d'évolution du personnage.",
   "SWERPG.SETTINGS.AUDIT_LOG_MAX_ENTRIES_NAME": "Nombre max d'entrées du journal",
   "SWERPG.SETTINGS.AUDIT_LOG_MAX_ENTRIES_HINT": "Nombre maximum d'entrées dans le journal d'évolution du personnage (100-5000). Les plus anciennes sont supprimées en premier lorsque la limite est dépassée.",
+  "SWERPG.SETTINGS.MARKET_EXCLUDED_ITEMS_NAME": "Objets exclus manuellement du marché",
+  "SWERPG.SETTINGS.MARKET_EXCLUDED_ITEMS_HINT": "Tableau JSON d'UUIDs d'objets manuellement exclus du marché par le MJ.",
+  "SWERPG.SETTINGS.MARKET_TYPE_MODIFIERS_NAME": "Modificateurs de prix par type pour le marché",
+  "SWERPG.SETTINGS.MARKET_TYPE_MODIFIERS_HINT": "Objet JSON associant les types d'objets à leur modificateur de prix fractionnaire (ex. {\"weapon\":{\"priceModifier\":0.1}}).",
+  "SWERPG.SETTINGS.MARKET_GLOBAL_PRICE_MOD_NAME": "Modificateur de prix global du marché",
+  "SWERPG.SETTINGS.MARKET_GLOBAL_PRICE_MOD_HINT": "Modificateur de pourcentage global appliqué à tous les prix du marché (ex. 10 = +10%, -5 = -5%).",
+  "SWERPG.SETTINGS.MARKET_LOCATION_CONFIGS_NAME": "Configurations des lieux du marché",
+  "SWERPG.SETTINGS.MARKET_LOCATION_CONFIGS_HINT": "Objet JSON associant les noms de lieux à leur configuration de rareté et de type de marché.",
   "SWERPG.SETTINGS.MARKET_ENABLED_SOURCES_NAME": "Sources actives du marché",
   "SWERPG.SETTINGS.MARKET_ENABLED_SOURCES_HINT": "Tableau JSON des types de sources actives dans le marché (ex. [\"compendium\",\"world\"]). Toutes les sources sont activées par défaut.",
   "SWERPG.SETTINGS.MARKET_ALLOWED_ITEM_TYPES_NAME": "Types d'objets autorisés dans le marché",
@@ -1596,6 +1604,84 @@
       },
       "Negotiable": {
         "Tooltip": "Prix négociable"
+      }
+    },
+    "Settings": {
+      "Title": "Configuration du marché",
+      "Subtitle": "Configurez les sources, prix, exclusions et lieux du marché.",
+      "MenuName": "Configuration du marché",
+      "MenuHint": "Configurez les articles visibles dans le marché, leurs prix et la rareté selon les lieux.",
+      "MenuLabel": "Configurer le marché",
+      "Save": "Enregistrer",
+      "Cancel": "Annuler",
+      "Close": "Fermer",
+      "SavedSuccess": "Configuration du marché enregistrée avec succès.",
+      "SaveError": "Erreur lors de l'enregistrement de la configuration du marché.",
+      "Tabs": {
+        "Sources": "Sources & Types",
+        "Prices": "Modificateurs de prix",
+        "Exclusions": "Exclusions",
+        "Locations": "Lieux & Rareté",
+        "Diagnostic": "Diagnostic"
+      },
+      "Sources": {
+        "EnabledSources": "Sources actives",
+        "EnabledSourcesHint": "Sélectionnez les sources d'objets scannées par le marché.",
+        "AllowedTypes": "Types d'objets autorisés",
+        "AllowedTypesHint": "Sélectionnez les types d'objets pouvant apparaître dans le marché.",
+        "DedupStrategy": "Stratégie de déduplication",
+        "DedupStrategyHint": "Comment gérer les objets présents dans plusieurs sources.",
+        "DedupPreferCompendium": "Préférer le compendium (recommandé)",
+        "DedupPreferNewest": "Préférer le plus récent",
+        "DedupKeepAll": "Conserver tous les doublons"
+      },
+      "Prices": {
+        "Global": "Modificateur de prix global",
+        "GlobalHint": "Applique un modificateur de pourcentage à tous les prix du marché. Les valeurs positives augmentent les prix ; les valeurs négatives les réduisent.",
+        "GlobalLabel": "Modificateur global",
+        "TypeModifiers": "Modificateurs de prix par type",
+        "TypeModifiersHint": "Définissez un modificateur de pourcentage supplémentaire par type d'objet. Ces modificateurs s'ajoutent au modificateur global.",
+        "TypeColumn": "Type d'objet",
+        "ModifierColumn": "Modificateur"
+      },
+      "Exclusions": {
+        "ManuallyExcluded": "Objets exclus manuellement",
+        "ManuallyExcludedHint": "Les objets listés ici n'apparaîtront jamais dans le catalogue du marché, quelle que soit leur source ou leur type.",
+        "AddItem": "Ajouter un objet exclu",
+        "AddItemTitle": "Ajouter un objet à la liste d'exclusion",
+        "AddItemHint": "Saisissez l'UUID de l'objet à exclure du marché.",
+        "UuidLabel": "UUID de l'objet",
+        "RemoveItem": "Retirer de la liste d'exclusion",
+        "AlreadyExcluded": "Cet objet est déjà exclu du marché.",
+        "Empty": "Aucun objet exclu manuellement."
+      },
+      "Locations": {
+        "ConfiguredLocations": "Lieux de marché configurés",
+        "ConfiguredLocationsHint": "Définissez des lieux avec des modificateurs de rareté personnalisés pour le marché.",
+        "AddLocation": "Ajouter un lieu",
+        "AddLocationTitle": "Ajouter un lieu de marché",
+        "NameLabel": "Nom du lieu",
+        "NamePlaceholder": "ex. Mos Eisley",
+        "RemoveLocation": "Supprimer le lieu",
+        "AlreadyExists": "Un lieu nommé \"{name}\" existe déjà.",
+        "Empty": "Aucun lieu configuré."
+      },
+      "Diagnostic": {
+        "CatalogScan": "Analyse du catalogue",
+        "CatalogScanHint": "Scanne le catalogue du marché avec la configuration actuelle et affiche le nombre d'articles visibles.",
+        "ScanCatalog": "Analyser le catalogue",
+        "ScanResult": "Articles visibles dans le catalogue actuel :",
+        "ScanError": "L'analyse du catalogue a échoué — vérifiez la console du navigateur.",
+        "ExportTitle": "Exporter la configuration",
+        "ExportHint": "Exporte la configuration complète du marché au format JSON (copié dans le presse-papiers).",
+        "Export": "Exporter la configuration",
+        "ExportCopied": "Configuration du marché copiée dans le presse-papiers.",
+        "ResetTitle": "Réinitialiser les paramètres",
+        "ResetHint": "Cela effacera tous les paramètres personnalisés du marché et restaurera les valeurs par défaut. Cette action est irréversible.",
+        "ResetDefaults": "Réinitialiser",
+        "ResetConfirm": "Réinitialiser tous les paramètres",
+        "ResetContent": "Êtes-vous sûr de vouloir réinitialiser tous les paramètres du marché ? Cela supprimera toutes les exclusions, les modificateurs de prix et les configurations de lieux.",
+        "ResetSuccess": "Paramètres du marché réinitialisés."
       }
     }
   }

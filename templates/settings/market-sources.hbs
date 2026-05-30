@@ -1,0 +1,51 @@
+{{#if (eq activeTab "sources")}}
+<section class="market-settings-panel__section market-settings-panel__section--sources" data-application-part="sources">
+  <h3>{{localize "MARKET.Settings.Sources.EnabledSources"}}</h3>
+  <p class="notes">{{localize "MARKET.Settings.Sources.EnabledSourcesHint"}}</p>
+  <div class="form-group market-settings-panel__checkboxes">
+    {{#each sourceTypes}}
+      <label class="checkbox">
+        <input type="checkbox"
+               name="enabledSource"
+               value="{{this.id}}"
+               {{#if (includes ../config.enabledSources this.id)}}checked{{/if}} />
+        {{localize this.label}}
+      </label>
+    {{/each}}
+  </div>
+
+  <h3>{{localize "MARKET.Settings.Sources.AllowedTypes"}}</h3>
+  <p class="notes">{{localize "MARKET.Settings.Sources.AllowedTypesHint"}}</p>
+  <div class="form-group market-settings-panel__checkboxes">
+    {{#each purchasableTypes}}
+      <label class="checkbox">
+        <input type="checkbox"
+               name="allowedItemType"
+               value="{{this.id}}"
+               {{#if (includes ../config.allowedItemTypes this.id)}}checked{{/if}} />
+        <i class="{{this.icon}}"></i>
+        {{localize this.label}}
+      </label>
+    {{/each}}
+  </div>
+
+  <h3>{{localize "MARKET.Settings.Sources.DedupStrategy"}}</h3>
+  <p class="notes">{{localize "MARKET.Settings.Sources.DedupStrategyHint"}}</p>
+  <div class="form-group">
+    <select name="dedupStrategy">
+      {{#each dedupOptions}}
+        <option value="{{this.value}}" {{#if (eq this.value ../config.dedupStrategy)}}selected{{/if}}>
+          {{localize this.label}}
+        </option>
+      {{/each}}
+    </select>
+  </div>
+
+  <div class="market-settings-panel__actions">
+    <button type="button" data-action="saveSettings" class="market-settings-panel__save-btn">
+      <i class="fa-solid fa-floppy-disk"></i>
+      {{localize "MARKET.Settings.Save"}}
+    </button>
+  </div>
+</section>
+{{/if}}

@@ -264,4 +264,85 @@ describe('loadMarketCatalog', () => {
 
     expect(result).toHaveLength(4)
   })
+
+  test('excludes items whose UUID is in excludedIds', () => {
+    const worldItems = [
+      makeWorldItem({ uuid: 'world.1', name: 'Blaster', type: 'weapon', basePrice: 500 }),
+      makeWorldItem({ uuid: 'world.2', name: 'Light Armor', type: 'armor', basePrice: 300 }),
+    ]
+
+    const result = loadMarketCatalog({
+      worldItems,
+      compendiumItems: [],
+      config: DEFAULT_MARKET_CONFIG,
+      marketContext: DEFAULT_MARKET_CONTEXT,
+      excludedIds: ['world.1'],
+    })
+
+    expect(result).toHaveLength(1)
+    expect(result[0].name).toBe('Light Armor')
+  })
+
+  test('excludes compendium items by UUID', () => {
+    const compendiumItems = [
+      makeCompendiumItem({ uuid: 'pack.1', name: 'Rifle', type: 'weapon', basePrice: 1000, _sourceId: 'swerpg.weapons' }),
+      makeCompendiumItem({ uuid: 'pack.2', name: 'Medpac', type: 'gear', basePrice: 25, _sourceId: 'swerpg.gear' }),
+    ]
+
+    const result = loadMarketCatalog({
+      worldItems: [],
+      compendiumItems,
+      config: DEFAULT_MARKET_CONFIG,
+      marketContext: DEFAULT_MARKET_CONTEXT,
+      excludedIds: ['pack.1'],
+    })
+
+    expect(result).toHaveLength(1)
+    expect(result[0].name).toBe('Medpac')
+  })
+
+  test('excludes no items when excludedIds is empty', () => {
+    const worldItems = [makeWorldItem({ uuid: 'world.1', name: 'Blaster', type: 'weapon', basePrice: 500 })]
+
+    const result = loadMarketCatalog({
+      worldItems,
+      compendiumItems: [],
+      config: DEFAULT_MARKET_CONFIG,
+      marketContext: DEFAULT_MARKET_CONTEXT,
+      excludedIds: [],
+    })
+
+    expect(result).toHaveLength(1)
+  })
+
+  test('excludes all items when all UUIDs are in excludedIds', () => {
+    const worldItems = [
+      makeWorldItem({ uuid: 'world.1', name: 'Blaster', type: 'weapon', basePrice: 500 }),
+      makeWorldItem({ uuid: 'world.2', name: 'Light Armor', type: 'armor', basePrice: 300 }),
+    ]
+
+    const result = loadMarketCatalog({
+      worldItems,
+      compendiumItems: [],
+      config: DEFAULT_MARKET_CONFIG,
+      marketContext: DEFAULT_MARKET_CONTEXT,
+      excludedIds: ['world.1', 'world.2'],
+    })
+
+    expect(result).toHaveLength(0)
+  })
+
+  test('ignores UUIDs in excludedIds that do not match any item', () => {
+    const worldItems = [makeWorldItem({ uuid: 'world.1', name: 'Blaster', type: 'weapon', basePrice: 500 })]
+
+    const result = loadMarketCatalog({
+      worldItems,
+      compendiumItems: [],
+      config: DEFAULT_MARKET_CONFIG,
+      marketContext: DEFAULT_MARKET_CONTEXT,
+      excludedIds: ['nonexistent.uuid'],
+    })
+
+    expect(result).toHaveLength(1)
+  })
 })
