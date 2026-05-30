@@ -104,6 +104,50 @@ describe('market config — ADR-0018 contractual constants', () => {
       }
     })
 
+    test('each status has rarityRules with required shape', () => {
+      for (const status of Object.values(AVAILABILITY_STATUS)) {
+        expect(status).toHaveProperty('rarityRules')
+        const { rarityRules } = status
+        expect(rarityRules).toHaveProperty('obtainmentProbability')
+        expect(rarityRules).toHaveProperty('supplyDelay')
+        expect(rarityRules).toHaveProperty('narrativeReasonKey')
+        expect(typeof rarityRules.obtainmentProbability).toBe('number')
+        expect(rarityRules.obtainmentProbability).toBeGreaterThanOrEqual(0)
+        expect(rarityRules.obtainmentProbability).toBeLessThanOrEqual(100)
+        expect(typeof rarityRules.narrativeReasonKey).toBe('string')
+        expect(rarityRules.narrativeReasonKey.length).toBeGreaterThan(0)
+        expect(rarityRules.supplyDelay).toHaveProperty('days')
+        expect(typeof rarityRules.supplyDelay.days).toBe('number')
+        expect(rarityRules.supplyDelay.days).toBeGreaterThanOrEqual(0)
+      }
+    })
+
+    test('rarityRules is frozen on each status', () => {
+      for (const status of Object.values(AVAILABILITY_STATUS)) {
+        expect(Object.isFrozen(status.rarityRules)).toBe(true)
+        expect(Object.isFrozen(status.rarityRules.supplyDelay)).toBe(true)
+      }
+    })
+
+    test('available and common have obtainmentProbability=100 (always immediate)', () => {
+      expect(AVAILABILITY_STATUS.available.rarityRules.obtainmentProbability).toBe(100)
+      expect(AVAILABILITY_STATUS.common.rarityRules.obtainmentProbability).toBe(100)
+    })
+
+    test('blackMarket has obtainmentProbability < 100 (never immediate)', () => {
+      expect(AVAILABILITY_STATUS.blackMarket.rarityRules.obtainmentProbability).toBeLessThan(100)
+    })
+
+    test('unavailable has obtainmentProbability=0', () => {
+      expect(AVAILABILITY_STATUS.unavailable.rarityRules.obtainmentProbability).toBe(0)
+    })
+
+    test('narrativeReasonKey uses MARKET.Rarity.Reason namespace', () => {
+      for (const status of Object.values(AVAILABILITY_STATUS)) {
+        expect(status.rarityRules.narrativeReasonKey.startsWith('MARKET.Rarity.Reason.')).toBe(true)
+      }
+    })
+
     test('each status id matches its registry key', () => {
       for (const [key, status] of Object.entries(AVAILABILITY_STATUS)) {
         expect(status.id).toBe(key)
@@ -317,6 +361,7 @@ describe('MARKET_TYPES — V1 registry', () => {
       expect(def).toHaveProperty('allowedAvailability')
       expect(def).toHaveProperty('priceModifier')
       expect(def).toHaveProperty('uiVariant')
+      expect(def).toHaveProperty('negotiationAllowed')
       expect(typeof def.id).toBe('string')
       expect(typeof def.label).toBe('string')
       expect(typeof def.description).toBe('string')
@@ -324,9 +369,24 @@ describe('MARKET_TYPES — V1 registry', () => {
       expect(Array.isArray(def.allowedAvailability)).toBe(true)
       expect(typeof def.priceModifier).toBe('number')
       expect(typeof def.uiVariant).toBe('string')
+      expect(typeof def.negotiationAllowed).toBe('boolean')
       // Each definition id must match its registry key
       expect(def.id).toBe(key)
     }
+  })
+
+  test('all market types allow negotiation', () => {
+    for (const def of Object.values(MARKET_TYPES)) {
+      expect(def.negotiationAllowed).toBe(true)
+    }
+  })
+
+  test('standard allows negotiation', () => {
+    expect(MARKET_TYPES.standard.negotiationAllowed).toBe(true)
+  })
+
+  test('black-market allows negotiation', () => {
+    expect(MARKET_TYPES['black-market'].negotiationAllowed).toBe(true)
   })
 
   test('each market type definition is frozen', () => {
