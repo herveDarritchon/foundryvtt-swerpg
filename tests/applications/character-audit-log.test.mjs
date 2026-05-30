@@ -144,6 +144,9 @@ describe('character-audit-log application', () => {
     expect(entries[0].description).toBe('Removed specialization Bodyguard')
     expect(entries[1].formattedXpDelta).toBe('-10 XP')
     expect(entries[1].xpDeltaClass).toBe('is-spend')
+    expect(entries[1].formattedDelta).toBe('-10 XP')
+    expect(entries[1].deltaClass).toBe('is-spend')
+    expect(entries[1].hasDelta).toBe(true)
 
     const filtered = buildAuditLogEntries(actor, 'skills')
     expect(filtered).toHaveLength(1)
@@ -671,5 +674,50 @@ describe('audit log item.purchase', () => {
     const entries = buildAuditLogEntries(actor, 'all')
     expect(entries[0].typeLabel).toBe('Item purchased')
     expect(entries[0].typeLabel).not.toBe('Unknown event')
+  })
+
+  it('item.purchase formattedDelta shows credits not XP', () => {
+    const actor = createActorWithLog([
+      {
+        id: 'p1',
+        timestamp: 100,
+        type: 'item.purchase',
+        xpDelta: 0,
+        creditDelta: -150,
+        data: { itemName: 'Blaster', itemType: 'weapon', price: 150, quantity: 1 },
+      },
+    ])
+
+    const entries = buildAuditLogEntries(actor, 'all')
+    expect(entries[0].formattedDelta).toBe('-150 cr')
+    expect(entries[0].deltaClass).toBe('is-spend')
+    expect(entries[0].hasDelta).toBe(true)
+    expect(entries[0].formattedDelta).not.toContain('XP')
+  })
+
+  it('item.purchase with zero creditDelta has is-neutral class and hasDelta false', () => {
+    const actor = createActorWithLog([
+      { id: 'p1', timestamp: 100, type: 'item.purchase', xpDelta: 0, creditDelta: 0, data: { itemName: 'Free Item', itemType: 'gear', price: 0, quantity: 1 } },
+    ])
+
+    const entries = buildAuditLogEntries(actor, 'all')
+    expect(entries[0].deltaClass).toBe('is-neutral')
+    expect(entries[0].hasDelta).toBe(false)
+  })
+
+  it('item.purchase formattedXpDelta still shows XP for backward compat', () => {
+    const actor = createActorWithLog([
+      {
+        id: 'p1',
+        timestamp: 100,
+        type: 'item.purchase',
+        xpDelta: 0,
+        creditDelta: -100,
+        data: { itemName: 'Blaster', itemType: 'weapon', price: 100, quantity: 1 },
+      },
+    ])
+
+    const entries = buildAuditLogEntries(actor, 'all')
+    expect(entries[0].formattedXpDelta).toBe('0 XP')
   })
 })

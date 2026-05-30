@@ -151,6 +151,16 @@ function formatAuditLogDelta(xpDelta) {
 }
 
 /**
+ * Format a credit delta value as a signed string with the "cr" suffix.
+ * @param creditDelta
+ */
+function formatAuditLogCreditDelta(creditDelta) {
+  const value = Number(creditDelta) || 0
+  const sign = value > 0 ? '+' : ''
+  return `${sign}${value} cr`
+}
+
+/**
  * Return the localized label for the given audit entry type, falling back to the UNKNOWN key.
  * @param type
  */
@@ -304,6 +314,10 @@ export function buildAuditLogEntries(actor, filter = AUDIT_LOG_FAMILIES.all) {
     .map((entry) => {
       const family = getAuditLogFamily(entry.type)
       const xpDelta = Number(entry.xpDelta) || 0
+      const isPurchaseEntry = entry.type === 'item.purchase'
+      const creditDelta = Number(entry.creditDelta) || 0
+      const deltaValue = isPurchaseEntry ? creditDelta : xpDelta
+      const formattedDelta = isPurchaseEntry ? formatAuditLogCreditDelta(creditDelta) : formatAuditLogDelta(xpDelta)
 
       return {
         ...entry,
@@ -312,6 +326,9 @@ export function buildAuditLogEntries(actor, filter = AUDIT_LOG_FAMILIES.all) {
         typeLabel: getAuditLogTypeLabel(entry.type),
         description: buildAuditLogDescription(entry),
         formattedTimestamp: formatAuditLogTimestamp(entry.timestamp),
+        formattedDelta,
+        deltaClass: deltaValue > 0 ? 'is-gain' : deltaValue < 0 ? 'is-spend' : 'is-neutral',
+        hasDelta: deltaValue !== 0,
         formattedXpDelta: formatAuditLogDelta(xpDelta),
         xpDeltaClass: xpDelta > 0 ? 'is-gain' : xpDelta < 0 ? 'is-spend' : 'is-neutral',
         hasXpDelta: xpDelta !== 0,
