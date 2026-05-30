@@ -10,7 +10,6 @@ import { RESTRICTED_RESTRICTION_LEVELS, BLACK_MARKET_AVAILABILITY_KEYS } from '.
 import { loadCompendiumItems } from './compendium-source-adapter.mjs'
 import NegotiationDialog from './negotiation-dialog.mjs'
 import ConsequencesDialog from './consequences-dialog.mjs'
-import { buildPurchaseChatData } from './market-chat.mjs'
 import { logger } from '../../utils/logger.mjs'
 
 const { api } = foundry.applications
@@ -685,15 +684,6 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
         }
       }
 
-      // Phase 7b: Produce a ChatMessage documenting the purchase
-      await MarketApplicationV2.#sendPurchaseChatMessage({
-        buyer,
-        entry,
-        negotiationOutcome: null,
-        consequencesAccepted: consequencesResult.acceptedTypes,
-        finalPrice: finalValidation.finalPrice,
-      })
-
       // Record item purchase in audit log (non-blocking)
       try {
         const { recordItemPurchase } = await import('../../utils/audit-log.mjs')
@@ -761,36 +751,6 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
       logger.info('[Market] Consequence stored', { actorId: buyer.id, consequenceType: consequence.type })
     } catch (err) {
       logger.warn('[Market] Could not store market consequence flag', err)
-    }
-  }
-
-  /**
-   * Create a ChatMessage documenting a completed market purchase.
-   * Errors are logged as warnings — a chat failure must never block the purchase.
-   *
-   * @param {object}   params
-   * @param {Actor}    params.buyer                  The buyer actor.
-   * @param {import('../../lib/market/market-entry.mjs').MarketEntry} params.entry  The purchased entry.
-   * @param {object|null} params.negotiationOutcome  NegotiationResult if negotiation was used.
-   * @param {string[]} params.consequencesAccepted   Accepted consequence type keys.
-   * @param {number}   params.finalPrice             Price paid.
-   * @returns {Promise<void>}
-   */
-  static async #sendPurchaseChatMessage({ buyer, entry, negotiationOutcome, consequencesAccepted, finalPrice }) {
-    try {
-      const data = await buildPurchaseChatData({
-        buyer,
-        entry,
-        outcome: negotiationOutcome,
-        consequencesAccepted,
-        negotiatedPrice: finalPrice,
-      })
-      if (data) {
-        await ChatMessage.create(data)
-        logger.debug('[Market] Purchase chat message created', { actorId: buyer.id, itemName: entry.name })
-      }
-    } catch (err) {
-      logger.warn('[Market] Could not create purchase chat message', err)
     }
   }
 
