@@ -482,7 +482,7 @@ describe('audit log CSV export', () => {
       const csv = buildCsvContent(actor)
       const lines = csv.split('\n')
       expect(lines).toHaveLength(1)
-      expect(lines[0]).toBe('timestamp,date,userName,type,typeLabel,description,xpDelta,actorName,playerName')
+      expect(lines[0]).toBe('timestamp,date,userName,type,typeLabel,description,xpDelta,creditDelta,actorName,playerName')
     })
 
     it('includes all entries regardless of any filter', () => {
@@ -563,6 +563,62 @@ describe('audit log CSV export', () => {
 
       const csv = buildCsvContent(actor)
       expect(csv).toContain('unknown-player')
+    })
+
+    it('includes creditDelta for item.purchase entries', () => {
+      const actor = createActor({
+        flags: {
+          swerpg: {
+            logs: [
+              {
+                id: 'purchase-1',
+                timestamp: 1000,
+                type: 'item.purchase',
+                userName: 'GM',
+                xpDelta: 0,
+                creditDelta: -150,
+                data: { itemName: 'Blaster Pistol', itemType: 'weapon', price: 150, quantity: 1 },
+              },
+            ],
+          },
+        },
+      })
+
+      const csv = buildCsvContent(actor)
+      const lines = csv.split('\n')
+
+      expect(lines[0]).toContain('creditDelta')
+      expect(lines[1]).toContain('-150')
+    })
+
+    it('defaults creditDelta to 0 for entries that have no creditDelta field', () => {
+      const actor = createActor({
+        flags: {
+          swerpg: {
+            logs: [
+              {
+                id: 'purchase-zero',
+                timestamp: 100,
+                type: 'item.purchase',
+                userName: 'GM',
+                xpDelta: 0,
+                // creditDelta intentionally absent
+                data: { itemName: 'Free Item', itemType: 'gear', price: 0, quantity: 1 },
+              },
+            ],
+          },
+        },
+      })
+
+      const csv = buildCsvContent(actor)
+      const lines = csv.split('\n')
+
+      // Header must include creditDelta
+      expect(lines[0]).toContain('creditDelta')
+      // The data row must contain the literal token 0 as the creditDelta value
+      // Row: timestamp,date,userName,type,typeLabel,description,xpDelta,creditDelta,actorName,playerName
+      // xpDelta=0, creditDelta=0 — verify both appear and no negative value is present for creditDelta
+      expect(lines[1]).toContain(',0,0,')
     })
   })
 })
@@ -719,5 +775,78 @@ describe('audit log item.purchase', () => {
 
     const entries = buildAuditLogEntries(actor, 'all')
     expect(entries[0].formattedXpDelta).toBe('0 XP')
+  })
+})
+
+/* ============================================ */
+/*  Integration: Market → Audit → CSV          */
+/* ============================================ */
+
+describe('audit log integration: item.purchase audit → filter → CSV', () => {
+  let buildAuditLogEntries
+  let buildAuditLogDescription
+  let buildCsvContent
+
+  beforeEach(async () => {
+    setupFoundryMock({
+      translations: {
+        'SWERPG.AUDIT_LOG.FILTER.ALL': 'All',
+        'SWERPG.AUDIT_LOG.FILTER.PURCHASES': 'Purchases',
+        'SWERPG.AUDIT_LOG.TYPE.ITEM_PURCHASE': 'Item purchased',
+        'SWERPG.AUDIT_LOG.TYPE.UNKNOWN': 'Unknown event',
+        'SWERPG.AUDIT_LOG.UNKNOWN_ITEM': 'Unknown item',
+        'SWERPG.AUDIT_LOG.UNKNOWN_VALUE': 'Unknown value',
+        'SWERPG.AUDIT_LOG.DESCRIPTION.ITEM_PURCHASE': 'Purchased {itemName} ({itemType}) for {price} credits',
+        'SWERPG.AUDIT_LOG.DESCRIPTION.UNKNOWN': 'Unknown event ({type})',
+      },
+    })
+    ;({ buildAuditLogEntries, buildAuditLogDescription, buildCsvContent } = await import('../../module/applications/character-audit-log.mjs'))
+  })
+
+  afterEach(() => {
+    vi.resetModules()
+    vi.clearAllMocks()
+    teardownFoundryMock()
+  })
+
+  it('item purchase flows through audit log filter and CSV export', () => {
+    const actor = {
+      id: 'actor-1',
+      name: 'Test Character',
+      type: 'character',
+      isOwner: true,
+      system: { progression: {} },
+      flags: {
+        swerpg: {
+          logs: [
+            {
+              id: 'p1',
+              timestamp: 100,
+              type: 'item.purchase',
+              userName: 'GM',
+              xpDelta: 0,
+              creditDelta: -100,
+              data: { itemName: 'Blaster', itemType: 'weapon', price: 100, quantity: 1 },
+              snapshot: { creditsBefore: 250, creditsAfter: 150 },
+            },
+          ],
+        },
+      },
+      testUserPermission: vi.fn(() => true),
+    }
+
+    // Verify filter "Purchases" returns the entry with correct family
+    const entries = buildAuditLogEntries(actor, 'purchases')
+    expect(entries).toHaveLength(1)
+    expect(entries[0].family).toBe('purchases')
+
+    // Verify description contains item name and price
+    const description = buildAuditLogDescription(entries[0])
+    expect(description).toContain('Blaster')
+    expect(description).toContain('100')
+
+    // Verify CSV contains the creditDelta value
+    const csv = buildCsvContent(actor)
+    expect(csv).toContain('-100')
   })
 })

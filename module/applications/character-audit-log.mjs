@@ -4,7 +4,7 @@ const { api } = foundry.applications
 
 const AUDIT_LOG_PATH = 'flags.swerpg.logs'
 
-const CSV_COLUMNS = Object.freeze(['timestamp', 'date', 'userName', 'type', 'typeLabel', 'description', 'xpDelta', 'actorName', 'playerName'])
+const CSV_COLUMNS = Object.freeze(['timestamp', 'date', 'userName', 'type', 'typeLabel', 'description', 'xpDelta', 'creditDelta', 'actorName', 'playerName'])
 
 const AUDIT_LOG_FAMILIES = Object.freeze({
   all: 'all',
@@ -514,8 +514,20 @@ export function buildCsvContent(actor) {
     const description = buildAuditLogDescription(entry)
     const formattedDate = formatAuditLogTimestamp(entry.timestamp)
     const xpDelta = Number(entry.xpDelta) || 0
+    const creditDelta = Number(entry.creditDelta) || 0
 
-    const row = [entry.timestamp ?? '', formattedDate, entry.userName ?? '', entry.type ?? '', typeLabel, description, xpDelta, actorName, ownerName]
+    const row = [
+      entry.timestamp ?? '',
+      formattedDate,
+      entry.userName ?? '',
+      entry.type ?? '',
+      typeLabel,
+      description,
+      xpDelta,
+      creditDelta,
+      actorName,
+      ownerName,
+    ]
 
     return row.map(escapeCsvCell).join(',')
   })
