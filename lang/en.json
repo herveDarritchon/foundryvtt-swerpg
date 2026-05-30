@@ -1559,7 +1559,9 @@
         "AllSources": "All sources",
         "AffordableOnly": "Affordable only",
         "AffordableOnlyLabel": "Show only items within budget",
-        "AffordableOnlyTooltip": "Show only items the buyer can currently afford"
+        "AffordableOnlyTooltip": "Show only items the buyer can currently afford",
+        "RestrictionLabel": "Restriction Level",
+        "AllRestrictions": "All Restrictions"
       },
       "Sort": {
         "Label": "Sort by",
@@ -1574,6 +1576,11 @@
         "Label": "Reset",
         "Tooltip": "Reset filters and search"
       }
+    },
+    "Restriction": {
+      "Restricted": "Restricted",
+      "Illegal": "Illegal",
+      "Licensed": "Licensed"
     },
     "MarketType": {
       "SelectorLabel": "Market type",
