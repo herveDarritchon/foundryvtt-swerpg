@@ -3,12 +3,14 @@ import { loadMarketCatalog } from '../../lib/market/catalog-loader.mjs'
 import { validatePurchase } from '../../lib/market/purchase.mjs'
 import { readMarketConfig } from '../../lib/market/market-settings.mjs'
 import { evaluateObtainability } from '../../lib/market/rarity-engine.mjs'
-import { CONSEQUENCE_TYPES } from '../../lib/market/consequences.mjs'
+import { CONSEQUENCE_TYPES, evaluateMarketConsequences } from '../../lib/market/consequences.mjs'
+import { serializeConsequence } from '../../lib/market/consequence-persistence.mjs'
 import { PURCHASABLE_ITEM_TYPES, SOURCE_TYPES, DEFAULT_MARKET_CONTEXT, MARKET_TYPES, DEFAULT_MARKET_TYPE } from '../../config/market.mjs'
 import { RESTRICTED_RESTRICTION_LEVELS, BLACK_MARKET_AVAILABILITY_KEYS } from '../../lib/market/consequences.mjs'
 import { loadCompendiumItems } from './compendium-source-adapter.mjs'
 import NegotiationDialog from './negotiation-dialog.mjs'
 import ConsequencesDialog from './consequences-dialog.mjs'
+import { buildPurchaseChatData } from './market-chat.mjs'
 import { logger } from '../../utils/logger.mjs'
 
 const { api } = foundry.applications
@@ -671,10 +673,24 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
       const itemData = item.toObject()
       await buyer.createEmbeddedDocuments('Item', [itemData])
 
-      // Phase 7.4: Store accepted consequences as actor flags (black-market debt)
-      if (consequencesResult.acceptedTypes.includes(CONSEQUENCE_TYPES.blackMarketDebt)) {
-        await MarketApplicationV2.#storeMarketDebt({ buyer, entry, finalPrice: finalValidation.finalPrice })
+      // Phase 7a: Store all accepted consequences as actor flags (generalised from blackMarketDebt only)
+      // Re-evaluate consequences to get full objects for serialization.
+      const allConsequences = evaluateMarketConsequences({ entry, marketType: activeMarketType, actor: buyer })
+      for (const acceptedType of consequencesResult.acceptedTypes) {
+        const consequence = allConsequences.find((c) => c.type === acceptedType)
+        if (consequence) {
+          await MarketApplicationV2.#storeMarketConsequence({ buyer, consequence, finalPrice: finalValidation.finalPrice })
+        }
       }
+
+      // Phase 7b: Produce a ChatMessage documenting the purchase
+      await MarketApplicationV2.#sendPurchaseChatMessage({
+        buyer,
+        entry,
+        negotiationOutcome: null,
+        consequencesAccepted: consequencesResult.acceptedTypes,
+        finalPrice: finalValidation.finalPrice,
+      })
 
       ui.notifications.info(
         i18n.format('MARKET.Purchase.Success', {
@@ -702,29 +718,63 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
   }
 
   /**
-   * Store a black-market debt as an actor flag (Phase 7.4).
-   * Uses `flags.swerpg.marketDebts` to accumulate debts.
-   * The GM can consult these via the optional Market Debts panel.
+   * Store a single accepted market consequence as an actor flag (Phase 7a).
+   * Uses `flags.swerpg.marketConsequences` (array) to accumulate all consequence types.
+   * Supersedes the former `#storeMarketDebt` which only handled blackMarketDebt.
    *
    * @param {object} params
-   * @param {Actor}  params.buyer       The buyer actor.
-   * @param {import('../../lib/market/market-entry.mjs').MarketEntry} params.entry  The purchased entry.
-   * @param {number} params.finalPrice  The price paid.
+   * @param {Actor}  params.buyer         The buyer actor.
+   * @param {import('../../lib/market/consequences.mjs').MarketConsequence} params.consequence  The accepted consequence.
+   * @param {number} params.finalPrice    The price paid (stored in metadata for debt-type consequences).
    * @returns {Promise<void>}
    */
-  static async #storeMarketDebt({ buyer, entry, finalPrice }) {
+  static async #storeMarketConsequence({ buyer, consequence, finalPrice }) {
     try {
-      const existing = buyer.getFlag('swerpg', 'marketDebts') ?? []
-      const debt = {
-        itemName: entry.name,
-        itemUuid: entry.uuid,
-        amount: finalPrice,
-        date: new Date().toISOString(),
-      }
-      await buyer.setFlag('swerpg', 'marketDebts', [...existing, debt])
-      logger.debug('[Market] Black-market debt stored', { actorId: buyer.id, debt })
+      const existing = buyer.getFlag('swerpg', 'marketConsequences') ?? []
+      const serialized = serializeConsequence(
+        {
+          ...consequence,
+          metadata: {
+            ...consequence.metadata,
+            ...(consequence.type === CONSEQUENCE_TYPES.blackMarketDebt ? { amount: finalPrice } : {}),
+          },
+        },
+        { actorId: buyer.id },
+      )
+      await buyer.setFlag('swerpg', 'marketConsequences', [...existing, serialized])
+      logger.info('[Market] Consequence stored', { actorId: buyer.id, consequenceType: consequence.type })
     } catch (err) {
-      logger.warn('[Market] Could not store market debt flag', err)
+      logger.warn('[Market] Could not store market consequence flag', err)
+    }
+  }
+
+  /**
+   * Create a ChatMessage documenting a completed market purchase.
+   * Errors are logged as warnings — a chat failure must never block the purchase.
+   *
+   * @param {object}   params
+   * @param {Actor}    params.buyer                  The buyer actor.
+   * @param {import('../../lib/market/market-entry.mjs').MarketEntry} params.entry  The purchased entry.
+   * @param {object|null} params.negotiationOutcome  NegotiationResult if negotiation was used.
+   * @param {string[]} params.consequencesAccepted   Accepted consequence type keys.
+   * @param {number}   params.finalPrice             Price paid.
+   * @returns {Promise<void>}
+   */
+  static async #sendPurchaseChatMessage({ buyer, entry, negotiationOutcome, consequencesAccepted, finalPrice }) {
+    try {
+      const data = await buildPurchaseChatData({
+        buyer,
+        entry,
+        outcome: negotiationOutcome,
+        consequencesAccepted,
+        negotiatedPrice: finalPrice,
+      })
+      if (data) {
+        await ChatMessage.create(data)
+        logger.debug('[Market] Purchase chat message created', { actorId: buyer.id, itemName: entry.name })
+      }
+    } catch (err) {
+      logger.warn('[Market] Could not create purchase chat message', err)
     }
   }
 

@@ -229,6 +229,35 @@ describe('evaluateMarketConsequences', () => {
       expect(types).toContain(CONSEQUENCE_TYPES.blackMarketDebt)
       expect(types).toContain(CONSEQUENCE_TYPES.complication)
     })
+
+    it('item with rarity=8 includes complication', () => {
+      const result = evaluateMarketConsequences({
+        entry: makeEntry({ rarity: 8 }),
+        marketType: 'standard',
+      })
+      const types = result.map((c) => c.type)
+      expect(types).toContain(CONSEQUENCE_TYPES.complication)
+    })
+
+    it('black-market + restricted item produces imperialSuspicion + blackMarketDebt + complication', () => {
+      const result = evaluateMarketConsequences({
+        entry: makeEntry({ availability: 'blackMarket', restrictionLevel: 'restricted', rarity: 3 }),
+        marketType: 'black-market',
+        actor: makeActor(),
+      })
+      const types = result.map((c) => c.type)
+      expect(types).toContain(CONSEQUENCE_TYPES.imperialSuspicion)
+      expect(types).toContain(CONSEQUENCE_TYPES.blackMarketDebt)
+      expect(types).toContain(CONSEQUENCE_TYPES.complication)
+    })
+
+    it('returns empty array when no consequences apply (standard market, common item, low rarity)', () => {
+      const result = evaluateMarketConsequences({
+        entry: makeEntry({ availability: 'common', restrictionLevel: '', rarity: 2 }),
+        marketType: 'standard',
+      })
+      expect(result).toEqual([])
+    })
   })
 
   /* -------------------------------------------- */
