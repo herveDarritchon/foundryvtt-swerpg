@@ -3,6 +3,7 @@ export { computeMarketPrice } from './pricing.mjs'
 export { calculateItemPrice } from './price-engine.mjs'
 export { resolveMarketSources, filterDuplicates, filterByActiveConfig, DEDUP_STRATEGIES } from './source-resolver.mjs'
 export { createMarketEntry, resolveMarketCatalogVisibility } from './market-entry.mjs'
+export { isItemVisibleForMarket } from './market-visibility.mjs'
 export { loadMarketCatalog } from './catalog-loader.mjs'
 export { validatePurchase } from './purchase.mjs'
 export {

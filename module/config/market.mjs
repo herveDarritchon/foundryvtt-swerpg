@@ -245,14 +245,15 @@ export const DEFAULT_MARKET_CONFIG = Object.freeze({
 
 /**
  * @typedef {Object} MarketTypeDefinition
- * @property {string}   id                  Canonical market type key
- * @property {string}   label               Localization key
- * @property {string}   description         Short description localization key
- * @property {string[]} allowedItemTypes    Item type keys visible in this market (['*'] = all purchasable)
- * @property {string[]} allowedAvailability Availability keys allowed; items with other keys are hidden
- * @property {number}   priceModifier       Flat additive fractional modifier applied on top of item modifiers
- * @property {string}   uiVariant           CSS modifier class applied to the market UI for visual distinction
- * @property {boolean}  negotiationAllowed  Whether price negotiation is allowed in this market type
+ * @property {string}   id                        Canonical market type key
+ * @property {string}   label                     Localization key
+ * @property {string}   description               Short description localization key
+ * @property {string[]} allowedItemTypes          Item type keys visible in this market (['*'] = all purchasable)
+ * @property {string[]} allowedAvailability       Availability keys allowed; items with other keys are hidden
+ * @property {string[]} allowedRestrictionLevels  Restriction level keys allowed; ['*'] means all levels allowed
+ * @property {number}   priceModifier             Flat additive fractional modifier applied on top of item modifiers
+ * @property {string}   uiVariant                 CSS modifier class applied to the market UI for visual distinction
+ * @property {boolean}  negotiationAllowed        Whether price negotiation is allowed in this market type
  */
 
 /**
@@ -274,6 +275,7 @@ export const MARKET_TYPES = Object.freeze({
     description: 'MARKET.MarketType.Standard.Description',
     allowedItemTypes: Object.freeze(['*']),
     allowedAvailability: Object.freeze(['available', 'common', 'rare']),
+    allowedRestrictionLevels: Object.freeze(['none']),
     priceModifier: 0,
     uiVariant: 'market--standard',
     negotiationAllowed: true,
@@ -284,6 +286,7 @@ export const MARKET_TYPES = Object.freeze({
     description: 'MARKET.MarketType.Local.Description',
     allowedItemTypes: Object.freeze(['*']),
     allowedAvailability: Object.freeze(['available', 'common']),
+    allowedRestrictionLevels: Object.freeze(['none']),
     priceModifier: -0.1,
     uiVariant: 'market--local',
     negotiationAllowed: true,
@@ -294,6 +297,7 @@ export const MARKET_TYPES = Object.freeze({
     description: 'MARKET.MarketType.Specialized.Description',
     allowedItemTypes: Object.freeze(['*']),
     allowedAvailability: Object.freeze(['available', 'common', 'rare', 'veryRare']),
+    allowedRestrictionLevels: Object.freeze(['none', 'restricted', 'military']),
     priceModifier: 0.25,
     uiVariant: 'market--specialized',
     negotiationAllowed: true,
@@ -304,6 +308,7 @@ export const MARKET_TYPES = Object.freeze({
     description: 'MARKET.MarketType.BlackMarket.Description',
     allowedItemTypes: Object.freeze(['*']),
     allowedAvailability: Object.freeze(['available', 'common', 'rare', 'veryRare', 'restricted', 'blackMarket']),
+    allowedRestrictionLevels: Object.freeze(['*']),
     priceModifier: 0.5,
     uiVariant: 'market--black-market',
     negotiationAllowed: true,
