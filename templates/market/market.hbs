@@ -1,6 +1,30 @@
 {{!-- Market Catalogue — part: catalog --}}
 <div class="market-catalog scrollable {{catalog.activeMarketDef.uiVariant}}" data-application-part="catalog">
 
+  {{!-- Mode toggle (buy / sell) --}}
+  <div class="market-mode-toggle">
+    <button
+      type="button"
+      class="market-mode-toggle__btn {{#if (eq mode 'buy')}}is-active{{/if}}"
+      data-action="toggleMode"
+      data-mode="buy"
+      aria-pressed="{{#if (eq mode 'buy')}}true{{else}}false{{/if}}"
+    >
+      <i class="fa-solid fa-cart-shopping" aria-hidden="true"></i>
+      {{localize "MARKET.Mode.Buy"}}
+    </button>
+    <button
+      type="button"
+      class="market-mode-toggle__btn {{#if (eq mode 'sell')}}is-active{{/if}}"
+      data-action="toggleMode"
+      data-mode="sell"
+      aria-pressed="{{#if (eq mode 'sell')}}true{{else}}false{{/if}}"
+    >
+      <i class="fa-solid fa-hand-holding-dollar" aria-hidden="true"></i>
+      {{localize "MARKET.Mode.Sell"}}
+    </button>
+  </div>
+
   {{!-- Market type selector --}}
   <div class="market-selector">
     <label for="market-type-select" class="sr-only">{{localize "MARKET.MarketType.SelectorLabel"}}</label>

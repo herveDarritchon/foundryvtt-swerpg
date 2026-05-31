@@ -11,6 +11,8 @@ import { loadCompendiumItems } from './compendium-source-adapter.mjs'
 import NegotiationDialog from './negotiation-dialog.mjs'
 import ConsequencesDialog from './consequences-dialog.mjs'
 import { logger } from '../../utils/logger.mjs'
+import { validateSale } from '../../lib/market/sell-validation.mjs'
+import { computeResalePrice } from '../../lib/market/sell-valuation.mjs'
 
 const { api } = foundry.applications
 
@@ -26,6 +28,7 @@ const { api } = foundry.applications
  * @property {string} sortBy             Sort field key: 'name' | 'price' | 'rarity'
  * @property {'asc'|'desc'} sortDirection  Sort direction
  * @property {string} activeMarketType   Active market type key (key of MARKET_TYPES)
+ * @property {'buy'|'sell'} mode         Current market mode: buy catalogue or sell inventory
  */
 
 /**
@@ -51,6 +54,7 @@ const DEFAULT_VIEW_STATE = Object.freeze({
   sortBy: MARKET_SORT_FIELDS.name,
   sortDirection: 'asc',
   activeMarketType: DEFAULT_MARKET_TYPE,
+  mode: 'buy',
 })
 
 /* -------------------------------------------- */
@@ -166,6 +170,8 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
       buyItem: MarketApplicationV2.#onBuyItem,
       negotiateItem: MarketApplicationV2.#onNegotiateItem,
       changeMarket: MarketApplicationV2.#onChangeMarket,
+      toggleMode: MarketApplicationV2.#onToggleMode,
+      sellItem: MarketApplicationV2.#onSellItem,
     },
   }
 
@@ -174,6 +180,10 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
     catalog: {
       template: 'systems/swerpg/templates/market/market.hbs',
       scrollable: ['.market-catalog'],
+    },
+    inventory: {
+      template: 'systems/swerpg/templates/market/market-inventory.hbs',
+      scrollable: ['.market-inventory'],
     },
   }
 
@@ -217,25 +227,33 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
 
   /** @override */
   async _preparePartContext(partId, context) {
-    if (partId === 'catalog') {
-      const buyer = this._buyerActor
-      const buyerCredits = buyer?.system?.creditBudget?.availableCredits ?? buyer?.system?.credits ?? null
+    const buyer = this._buyerActor
+    const buyerCredits = buyer?.system?.creditBudget?.availableCredits ?? buyer?.system?.credits ?? null
+    const mode = this._viewState.mode ?? 'buy'
 
+    context.viewState = { ...this._viewState }
+    context.mode = mode
+    context.buyer = buyer
+      ? {
+          id: buyer.id,
+          name: buyer.name,
+          credits: buyerCredits,
+        }
+      : null
+
+    if (partId === 'catalog') {
       context.catalog = await this.#prepareCatalog(buyer, buyerCredits)
-      context.viewState = { ...this._viewState }
       context.sortOptions = this.#buildSortOptions()
       context.typeFilterOptions = this.#buildTypeFilterOptions()
       context.sourceFilterOptions = this.#buildSourceFilterOptions()
       context.restrictionFilterOptions = this.#buildRestrictionFilterOptions()
       context.marketTypeOptions = this.#buildMarketTypeOptions()
-      context.buyer = buyer
-        ? {
-            id: buyer.id,
-            name: buyer.name,
-            credits: buyerCredits,
-          }
-        : null
     }
+
+    if (partId === 'inventory') {
+      context.inventory = buyer ? this.#prepareInventory(buyer) : { items: [] }
+    }
+
     return context
   }
 
@@ -756,6 +774,207 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
   }
 
   /* -------------------------------------------- */
+  /*  Inventory helpers                           */
+  /* -------------------------------------------- */
+
+  /**
+   * Build the inventory context for the sell mode.
+   * Filters actor items to only include sellable types and annotates them with resale estimates.
+   *
+   * @param {Actor} actor  The seller actor.
+   * @returns {{ items: Array<object> }}
+   */
+  #prepareInventory(actor) {
+    const sellableItems = []
+
+    for (const item of actor.items) {
+      if (!(item.type in PURCHASABLE_ITEM_TYPES)) continue
+      const basePrice = item.system?._source?.price ?? item.system?.price ?? 0
+      const valuation = computeResalePrice({ basePrice, negotiationOutcome: 'failure' })
+      const typeConfig = PURCHASABLE_ITEM_TYPES[item.type]
+
+      sellableItems.push({
+        id: item.id,
+        name: item.name,
+        img: item.img ?? '',
+        type: item.type,
+        typeLabel: typeConfig?.label ?? item.type,
+        basePrice,
+        resaleEstimate: valuation.resalePrice,
+        resaleFraction: Math.round(valuation.fraction * 100),
+      })
+    }
+
+    sellableItems.sort((a, b) => a.name.localeCompare(b.name))
+
+    return { items: sellableItems }
+  }
+
+  /* -------------------------------------------- */
+  /*  Actions (sell mode)                         */
+  /* -------------------------------------------- */
+
+  /**
+   * Toggle the market between buy and sell mode and re-render.
+   *
+   * @this {MarketApplicationV2}
+   * @param {PointerEvent} _event   The initiating click event
+   * @param {HTMLElement}  target   The element bearing data-action="toggleMode"
+   * @returns {Promise<void>}
+   */
+  static async #onToggleMode(_event, target) {
+    const nextMode = target.dataset?.mode ?? (this._viewState.mode === 'buy' ? 'sell' : 'buy')
+    if (nextMode !== 'buy' && nextMode !== 'sell') {
+      logger.warn('[Market] toggleMode received unknown mode', { mode: nextMode })
+      return
+    }
+    this._viewState = { ...this._viewState, mode: nextMode }
+    logger.debug('[Market] Mode toggled', { mode: nextMode })
+    await this.render()
+  }
+
+  /**
+   * Execute the sale flow for an item in the seller's inventory.
+   * Pipeline: validate → confirm dialog → optional negotiation → delete item + credit actor → audit log.
+   *
+   * @this {MarketApplicationV2}
+   * @param {PointerEvent} _event   The initiating click event
+   * @param {HTMLElement}  target   The element bearing data-action="sellItem" and data-item-id
+   * @returns {Promise<void>}
+   */
+  static async #onSellItem(_event, target) {
+    const seller = this._buyerActor
+    if (!seller) {
+      ui.notifications.warn(game.i18n.localize('MARKET.Purchase.Error.MissingActor'))
+      return
+    }
+
+    const itemId = target.dataset?.itemId
+    if (!itemId) {
+      logger.warn('[Market] sellItem action triggered without a data-item-id attribute')
+      return
+    }
+
+    const item = seller.items.get(itemId)
+    if (!item) {
+      ui.notifications.error(game.i18n.localize('MARKET.Sale.Error.ItemNotFound'))
+      return
+    }
+
+    // Validate sale eligibility
+    const validation = validateSale({ actor: seller, item })
+    if (!validation.canSell) {
+      ui.notifications.warn(game.i18n.localize(validation.messageKey))
+      return
+    }
+
+    // Compute base resale estimate (25% — may be improved by negotiation)
+    const baseValuation = computeResalePrice({ basePrice: validation.basePrice, negotiationOutcome: 'failure' })
+
+    // Confirmation dialog
+    const i18n = game.i18n
+    const currentCredits = seller.system?.creditBudget?.availableCredits ?? seller.system?.credits ?? 0
+    const creditsAfterBase = currentCredits + baseValuation.resalePrice
+
+    const confirmed = await foundry.applications.api.DialogV2.confirm({
+      window: {
+        title: i18n.format('MARKET.Sell.Confirm.Title', { name: item.name }),
+      },
+      content: `<p>${i18n.format('MARKET.Sell.Confirm.Content', {
+        name: item.name,
+        price: baseValuation.resalePrice,
+        credits: currentCredits,
+        remaining: creditsAfterBase,
+      })}</p>`,
+      yes: {
+        label: i18n.format('MARKET.Sell.Confirm.Sell', { price: baseValuation.resalePrice }),
+        icon: 'fa-solid fa-coins',
+      },
+      no: {
+        label: i18n.localize('MARKET.Sell.Confirm.Cancel'),
+        icon: 'fa-solid fa-xmark',
+      },
+    })
+
+    if (!confirmed) return
+
+    // Optional negotiation
+    const offerNegotiation = await foundry.applications.api.DialogV2.confirm({
+      window: {
+        title: i18n.localize('MARKET.Sell.Negotiate.Title'),
+      },
+      content: `<p>${i18n.localize('MARKET.Sell.Negotiate.Offer')}</p>`,
+      yes: {
+        label: i18n.localize('MARKET.Sell.Negotiate.Accept'),
+        icon: 'fa-solid fa-handshake',
+      },
+      no: {
+        label: i18n.localize('MARKET.Sell.Negotiate.Skip'),
+        icon: 'fa-solid fa-xmark',
+      },
+    })
+
+    let finalValuation = baseValuation
+    if (offerNegotiation) {
+      const negotiationResult = await NegotiationDialog.prompt({ entry: { name: item.name, rarity: item.system?.rarity ?? 0 }, buyer: seller })
+
+      if (negotiationResult?.confirmed) {
+        finalValuation = computeResalePrice({
+          basePrice: validation.basePrice,
+          negotiationOutcome: negotiationResult.outcome,
+        })
+      }
+    }
+
+    // Execute sale: delete item then credit actor
+    try {
+      await seller.deleteEmbeddedDocuments('Item', [item.id])
+      const newCredits = currentCredits + finalValuation.resalePrice
+      await seller.update({ 'system.credits': newCredits })
+
+      // Record in audit log (non-blocking)
+      try {
+        const { recordItemSale } = await import('../../utils/audit-log.mjs')
+        await recordItemSale(seller, {
+          itemName: item.name,
+          itemType: item.type,
+          basePrice: validation.basePrice,
+          resalePrice: finalValuation.resalePrice,
+          fraction: finalValuation.fraction,
+          negotiationOutcome: finalValuation.outcome,
+          creditsAfter: newCredits,
+          itemId: item.id,
+        })
+      } catch (auditErr) {
+        logger.warn('[Market] Could not record item sale audit entry', auditErr)
+      }
+
+      ui.notifications.info(
+        i18n.format('MARKET.Sale.Success', {
+          name: item.name,
+          price: finalValuation.resalePrice,
+          remaining: newCredits,
+        }),
+      )
+
+      logger.info('[Market] Item sale completed', {
+        actorId: seller.id,
+        actorName: seller.name,
+        itemId: item.id,
+        itemName: item.name,
+        basePrice: validation.basePrice,
+        resalePrice: finalValuation.resalePrice,
+        creditsAfter: newCredits,
+      })
+
+      await this.render()
+    } catch (err) {
+      logger.error('[Market] Sale failed', err)
+      ui.notifications.error(game.i18n.localize('MARKET.Sale.Error.WriteFailed'))
+    }
+  }
+
+  /* -------------------------------------------- */
   /*  Event Listeners                             */
   /* -------------------------------------------- */
 
@@ -764,6 +983,13 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
     super._onRender?.(context, options)
     const html = this.element
     if (!html) return
+
+    // Show the active mode part, hide the other
+    const mode = this._viewState.mode ?? 'buy'
+    const catalogPart = html.querySelector('[data-application-part="catalog"]')
+    const inventoryPart = html.querySelector('[data-application-part="inventory"]')
+    if (catalogPart) catalogPart.hidden = mode !== 'buy'
+    if (inventoryPart) inventoryPart.hidden = mode !== 'sell'
 
     // Market type selector — updates activeMarketType and re-renders catalogue
     const marketTypeSelect = html.querySelector('.market-selector__select')
