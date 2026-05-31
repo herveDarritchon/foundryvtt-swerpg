@@ -1544,6 +1544,24 @@
         "DisasterNotification": "La négociation a mal tourné ! Le vendeur a augmenté le prix."
       }
     },
+    "AvailabilityCheck": {
+      "Dialog": {
+        "Title": "Vérification de disponibilité"
+      },
+      "RollTitle": "Vérification de disponibilité : {skill}",
+      "Item": "Article",
+      "Skill": "Compétence requise",
+      "Difficulty": "Difficulté",
+      "RollButton": "Lancer le test",
+      "CancelButton": "Annuler l'achat",
+      "FailedNotification": "Impossible d'obtenir {item} : test de {skill} échoué.",
+      "Description": {
+        "Rarity": "Cet article est rare. Vous devez réussir un test de Négociation pour l'obtenir.",
+        "Restricted": "Cet article est restreint. Vous devez réussir un test de Pègre pour le trouver.",
+        "Military": "Cet article est militaire. Vous devez réussir un test de Pègre pour l'acquérir.",
+        "Illegal": "Cet article est illégal. Vous devez réussir un test de Pègre pour le sécuriser."
+      }
+    },
     "Rarity": {
       "Reason": {
         "ReadilyAvailable": "Facilement disponible",

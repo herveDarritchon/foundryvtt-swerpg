@@ -27,3 +27,10 @@ export {
 export { evaluateObtainability, RARITY_OBTAINABILITY_BANDS, BLACK_MARKET_TYPE_KEY as RARITY_BLACK_MARKET_TYPE_KEY } from './rarity-engine.mjs'
 export { evaluateMarketConsequences, CONSEQUENCE_TYPES, RESTRICTED_RESTRICTION_LEVELS, BLACK_MARKET_AVAILABILITY_KEYS } from './consequences.mjs'
 export { serializeConsequence, deserializeConsequences, getMarketConsequences, clearMarketConsequence } from './consequence-persistence.mjs'
+export {
+  isAvailabilityCheckRequired,
+  resolveAvailabilityCheck,
+  AVAILABILITY_CHECK_RARITY_THRESHOLD,
+  AVAILABILITY_CHECK_RESTRICTED_LEVELS,
+  AVAILABILITY_CHECK_SKILLS,
+} from './availability-check.mjs'
