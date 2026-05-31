@@ -263,3 +263,115 @@ structurées dans `actor.flags.swerpg.logs`.
 Les entrées `specialization.remove` ne peuvent pas être testées facilement via l'UI car la suppression d'une
 spécialisation n'est pas encore exposée dans l'interface.  
 Les entrées `xp.remove` (diminution de `gained`) ne se produisent pas dans l'UI standard — uniquement via script direct.
+
+---
+
+## 14. Achats Market (item.purchase)
+
+Tests du flux Market → Audit Log : chaque achat d'item via le Market doit créer une entrée `item.purchase`
+dans `actor.flags.swerpg.logs`, envoyer un message chat, et apparaître dans le filtre `Purchases`.
+
+### Prérequis spécifiques
+
+- Market activé dans les settings système (`game.settings.get('swerpg', 'marketEnabled')` = true)
+- Personnage `character` avec 500+ crédits
+- Au moins un item achetable dans le compendium Market (arme, armure ou équipement)
+
+---
+
+### 14.1. Achat arme simple (item.purchase)
+
+| Action                                                                                                         | Résultat attendu                                                                                         |
+| -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| Ouvrir le Market depuis la fiche personnage (bouton Market ou via `game.system.api.methods.openMarket(actor)`) | Fenêtre Market ouverte, catalogue d'items visible                                                        |
+| Chercher "Blaster Pistol" (prix ~100 crédits)                                                                  | L'item apparaît dans la liste                                                                            |
+| Cliquer "Acheter"                                                                                              | Notification succès ; solde crédits mis à jour (500 → 400)                                               |
+| Exécuter dans la console F12 : `game.actors.getName("NomDuPJ").flags.swerpg.logs`                              | Le tableau contient une entrée `type: "item.purchase"`                                                   |
+| Inspecter l'entrée `item.purchase`                                                                             | `data.itemName = "Blaster Pistol"`, `data.itemType = "weapon"`, `data.price = 100`, `creditDelta = -100` |
+| Vérifier `snapshot`                                                                                            | `snapshot.creditsBefore = 500`, `snapshot.creditsAfter = 400`, `snapshot.creditsDelta = 100`             |
+| Vérifier que l'item est dans l'inventaire du personnage                                                        | L'item apparaît dans les embedded documents de l'acteur                                                  |
+
+### 14.2. Message chat après achat
+
+| Action                        | Résultat attendu                                                                                     |
+| ----------------------------- | ---------------------------------------------------------------------------------------------------- |
+| Effectuer un achat (cf. 14.1) | Un message chat apparaît dans le chat log                                                            |
+| Inspecter le message chat     | `flags.swerpg.auditChat = true`, `flags.swerpg.auditType = "item.purchase"`                          |
+| Vérifier la variante visuelle | Le message a la classe CSS `audit-entry--add` (variante verte)                                       |
+| Vérifier le contenu           | Contient le nom de l'item et les montants de crédits (metaLeft = prix, metaRight = crédits restants) |
+
+### 14.3. Achat armure
+
+| Action                                               | Résultat attendu                                            |
+| ---------------------------------------------------- | ----------------------------------------------------------- |
+| Acheter une armure (ex: "Padded Armor", ~75 crédits) | Entrée `item.purchase` créée avec `data.itemType = "armor"` |
+| Vérifier `creditDelta`                               | `-75` (négatif, représente une dépense)                     |
+
+### 14.4. Achats multiples successifs
+
+| Action                                             | Résultat attendu                                                         |
+| -------------------------------------------------- | ------------------------------------------------------------------------ |
+| Achat #1 : Blaster Pistol (100 crédits, reste 400) | Entrée audit créée                                                       |
+| Achat #2 : Vibroblade (75 crédits, reste 325)      | Deuxième entrée audit créée                                              |
+| Vérifier `flags.swerpg.logs`                       | 2 entrées `item.purchase` dans le tableau, ordre chronologique croissant |
+| Ouvrir Character Audit Log                         | 2 entrées visibles, ordre chronologique inversé (plus récent d'abord)    |
+| Vérifier les `creditDelta` respectifs              | -100 et -75                                                              |
+| Vérifier les `snapshot.creditsAfter`               | 400 puis 325                                                             |
+
+### 14.5. Rejet achat (crédits insuffisants)
+
+| Action                                 | Résultat attendu                                                |
+| -------------------------------------- | --------------------------------------------------------------- |
+| Personnage à 50 crédits                | Solde initial vérifié                                           |
+| Tenter d'acheter un item à 100 crédits | Notification erreur "Insufficient credits" (ou équivalent i18n) |
+| Vérifier `flags.swerpg.logs`           | **Aucune** nouvelle entrée `item.purchase` créée                |
+| Vérifier l'inventaire                  | L'item n'est **pas** ajouté à l'inventaire                      |
+
+### 14.6. Filtre "Purchases" dans Character Audit Log
+
+| Action                                                       | Résultat attendu                                               |
+| ------------------------------------------------------------ | -------------------------------------------------------------- |
+| Effectuer 1 achat Market + 1 achat de rang de compétence     | 2 entrées de types différents dans les logs                    |
+| Ouvrir Character Audit Log (bouton dans la fiche personnage) | La fenêtre s'ouvre avec le filtre "All" actif                  |
+| Cliquer sur le filtre "Purchases"                            | Seule(s) les entrées `item.purchase` sont affichées            |
+| Cliquer sur le filtre "Skills"                               | L'entrée `skill.train` est affichée, l'achat Market est masqué |
+| Cliquer sur le filtre "All"                                  | Toutes les entrées sont à nouveau visibles                     |
+
+### 14.7. Export CSV avec achats Market
+
+| Action                                         | Résultat attendu                                                                                                         |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| Effectuer un achat Market                      | Entrée `item.purchase` dans les logs                                                                                     |
+| Ouvrir Character Audit Log et cliquer "Export" | Un fichier CSV est téléchargé                                                                                            |
+| Ouvrir le CSV dans un tableur                  | L'en-tête contient la colonne `creditDelta`                                                                              |
+| Localiser la ligne `item.purchase`             | `creditDelta` = valeur négative (ex: `-100`), `type` = `item.purchase`, description contient le nom de l'item et le prix |
+| Vérifier les autres colonnes                   | `xpDelta = 0` (les achats Market ne dépensent pas d'XP)                                                                  |
+
+### 14.8. Persistance après rechargement
+
+| Action                                    | Résultat attendu                                                                         |
+| ----------------------------------------- | ---------------------------------------------------------------------------------------- |
+| Effectuer un achat Market                 | Entrée créée dans `flags.swerpg.logs`                                                    |
+| Recharger la page (F5 ou Ctrl+R)          | La page se reconnecte au monde                                                           |
+| Inspecter `flags.swerpg.logs` de l'acteur | L'entrée `item.purchase` est **persistée** (les flags Foundry survivent au rechargement) |
+| Ouvrir Character Audit Log                | L'entrée apparaît toujours dans la liste                                                 |
+
+---
+
+### 14.9. Checklist de validation
+
+| Point              | Critère                                                                                | Statut |
+| ------------------ | -------------------------------------------------------------------------------------- | ------ |
+| Entrée audit créée | `flags.swerpg.logs` contient `type="item.purchase"` avec `itemId`, `itemName`, `price` | ✓/✗    |
+| Snapshot crédits   | `snapshot.creditsBefore`, `creditsAfter`, `creditsDelta` cohérents                     | ✓/✗    |
+| creditDelta        | `entry.creditDelta = -(price * quantity)`                                              | ✓/✗    |
+| Message chat       | `flags.swerpg.auditChat = true`, `auditType = "item.purchase"`, variante `add` (verte) | ✓/✗    |
+| Filtre UI          | Filtre "Purchases" isole les entrées, filtre "Skills" les masque                       | ✓/✗    |
+| Export CSV         | Colonne `creditDelta` présente et valeur correcte, `xpDelta = 0`                       | ✓/✗    |
+| Solde crédits      | Barre personnage mise à jour immédiatement après achat                                 | ✓/✗    |
+| Persistance        | Entrée survit au rechargement de page                                                  | ✓/✗    |
+| Rejet              | Achat refusé (crédits insuffisants) ne crée **pas** d'entrée audit                     | ✓/✗    |
+
+Tous les 9 points doivent être ✓ pour valider la feature Audit Log Market Purchases.
+
+**Date test** : **\_** **Testeur** : **\_** **Résultat** : ✓ PASS / ✗ FAIL
