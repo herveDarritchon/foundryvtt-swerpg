@@ -290,6 +290,7 @@
   "SWERPG.AUDIT_LOG.FILTER.DETAILS": "Core choices",
   "SWERPG.AUDIT_LOG.FILTER.ADVANCEMENT": "Advancement",
   "SWERPG.AUDIT_LOG.FILTER.PURCHASES": "Purchases",
+  "SWERPG.AUDIT_LOG.FILTER.SALES": "Sales",
   "SWERPG.AUDIT_LOG.TYPE.SKILL_TRAIN": "Skill purchase",
   "SWERPG.AUDIT_LOG.TYPE.SKILL_FORGET": "Skill refund",
   "SWERPG.AUDIT_LOG.TYPE.CHARACTERISTIC_INCREASE": "Characteristic increase",
@@ -309,6 +310,7 @@
   "SWERPG.AUDIT_LOG.TYPE.TALENT_NODE_FORGET_FAILED": "Talent node forget failed",
   "SWERPG.AUDIT_LOG.TYPE.ADVANCEMENT_LEVEL": "Level change",
   "SWERPG.AUDIT_LOG.TYPE.ITEM_PURCHASE": "Item purchased",
+  "SWERPG.AUDIT_LOG.TYPE.ITEM_SALE": "Item sold",
   "SWERPG.AUDIT_LOG.TYPE.UNKNOWN": "Unknown event",
   "SWERPG.AUDIT_LOG.NONE": "None",
   "SWERPG.AUDIT_LOG.UNKNOWN_VALUE": "Unknown value",
@@ -334,8 +336,10 @@
   "SWERPG.AUDIT_LOG.DESCRIPTION.TALENT_NODE_FORGET_FAILED": "Talent node forget failed: {reasonCode} (node {nodeId})",
   "SWERPG.AUDIT_LOG.DESCRIPTION.ADVANCEMENT_LEVEL": "Level {oldLevel} -> {newLevel}",
   "SWERPG.AUDIT_LOG.DESCRIPTION.ITEM_PURCHASE": "Purchased {itemName} ({itemType}) for {price} credits",
+  "SWERPG.AUDIT_LOG.DESCRIPTION.ITEM_SALE": "Sold {itemName} ({itemType}) for {resalePrice} credits ({fraction}% of base price)",
   "SWERPG.AUDIT_LOG.META.PRICE": "{price} credits",
   "SWERPG.AUDIT_LOG.META.CREDITS_REMAINING": "{credits} credits remaining",
+  "SWERPG.AUDIT_LOG.META.SOLD_FOR": "Sold for {price} credits",
   "SWERPG.AUDIT_LOG.DESCRIPTION.UNKNOWN": "Unrecognized event ({type})",
   "SWERPG.AUDIT_LOG.EXPORT": "Export",
   "SWERPG.AUDIT_LOG.EXPORT_TOOLTIP": "Export the complete history as a CSV file",
@@ -1715,6 +1719,44 @@
       "Negotiable": {
         "Tooltip": "Price negotiable"
       }
+    },
+    "Mode": {
+      "Buy": "Buy",
+      "Sell": "Sell"
+    },
+    "Sell": {
+      "Confirm": {
+        "Title": "Sell {name}",
+        "Content": "Confirm sale of {name} for {price} credits. Current credits: {credits} → {remaining} after sale.",
+        "Sell": "Sell for {price} credits",
+        "Cancel": "Cancel"
+      },
+      "Negotiate": {
+        "Title": "Improve Resale Price",
+        "Offer": "Attempt to negotiate a better resale price? (Uses Negotiation, Persuasion, or Deception skill)",
+        "Accept": "Attempt Negotiation",
+        "Skip": "Keep Base Price (25%)"
+      }
+    },
+    "Sale": {
+      "Success": "Sold {name} for {price} credits. Credits remaining: {remaining}.",
+      "Error": {
+        "MissingActor": "No seller actor found.",
+        "MissingItem": "Item not found.",
+        "UnsellableType": "This item type cannot be sold.",
+        "NotInInventory": "Item is not in your inventory.",
+        "InvalidPrice": "Item has no valid base price.",
+        "ItemNotFound": "Item was not found in your inventory.",
+        "WriteFailed": "Failed to complete the sale. Check the console for details."
+      }
+    },
+    "Inventory": {
+      "Description": "Select items from your inventory to sell.",
+      "BasePrice": "Base Price",
+      "ResaleEstimate": "Resale (25%)",
+      "SellAriaLabel": "Sell",
+      "SellButton": "Sell",
+      "Empty": "Your inventory contains no sellable items."
     },
     "Settings": {
       "Title": "Market Configuration",

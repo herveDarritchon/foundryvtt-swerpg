@@ -316,6 +316,7 @@ export {
   recordTalentNodePurchase,
   recordTalentNodeOperation,
   recordItemPurchase,
+  recordItemSale,
 }
 
 /* -------------------------------------------- */
@@ -529,6 +530,52 @@ async function recordItemPurchase(actor, { itemName, itemType, price, quantity =
   await writeLogEntries(actor, [entry])
 }
 
+/**
+ * Record an item sale audit entry when an item is sold via Market.
+ * Non-blocking: failures are caught internally without throwing.
+ *
+ * @param {object} actor The actor document instance.
+ * @param {object} saleData
+ * @param {string} saleData.itemName
+ * @param {string} saleData.itemType
+ * @param {number} saleData.basePrice
+ * @param {number} saleData.resalePrice
+ * @param {number} saleData.fraction
+ * @param {string} [saleData.negotiationOutcome='failure']
+ * @param {number} saleData.creditsAfter
+ * @param {string} [saleData.itemId]
+ */
+async function recordItemSale(actor, { itemName, itemType, basePrice, resalePrice, fraction, negotiationOutcome = 'failure', creditsAfter, itemId }) {
+  const ts = Date.now()
+  const creditsBefore = actor.system?.creditBudget?.availableCredits ?? actor.system?.credits ?? null
+  const creditsDelta = creditsBefore !== null && creditsAfter !== null ? creditsAfter - creditsBefore : null
+  const snapshot = { creditsBefore, creditsAfter, creditsDelta }
+  const user = game.users?.get(game.user?.id) ?? null
+
+  const entry = {
+    ...makeEntry({
+      type: 'item.sale',
+      data: {
+        itemName,
+        itemType,
+        basePrice,
+        resalePrice,
+        fraction,
+        negotiationOutcome,
+        itemId,
+      },
+      xpDelta: 0,
+      ts,
+      userId: game.user?.id,
+      user,
+      snapshot,
+    }),
+    creditDelta: resalePrice,
+  }
+
+  await writeLogEntries(actor, [entry])
+}
+
 /* -------------------------------------------- */
 /*  Émission de messages chat depuis l'audit    */
 /* -------------------------------------------- */
@@ -682,6 +729,18 @@ function _buildChatContext(actor, entry) {
       context.nextValue = `${data.itemName ?? ''} (${data.itemType ?? ''})`
       context.variant = 'add'
       context.metaLeft = game.i18n.format('SWERPG.AUDIT_LOG.META.PRICE', { price: data.price ?? 0 })
+      if (snapshot.creditsAfter !== undefined && snapshot.creditsAfter !== null) {
+        context.metaRight = game.i18n.format('SWERPG.AUDIT_LOG.META.CREDITS_REMAINING', { credits: snapshot.creditsAfter })
+      }
+      context.hasMeta = true
+      break
+    }
+
+    case 'item.sale': {
+      context.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.ITEM_SALE')
+      context.nextValue = `${data.itemName ?? ''} (${data.itemType ?? ''})`
+      context.variant = 'gain'
+      context.metaLeft = game.i18n.format('SWERPG.AUDIT_LOG.META.SOLD_FOR', { price: data.resalePrice ?? 0 })
       if (snapshot.creditsAfter !== undefined && snapshot.creditsAfter !== null) {
         context.metaRight = game.i18n.format('SWERPG.AUDIT_LOG.META.CREDITS_REMAINING', { credits: snapshot.creditsAfter })
       }

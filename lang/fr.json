@@ -265,6 +265,7 @@
   "SWERPG.AUDIT_LOG.FILTER.DETAILS": "Choix fondamentaux",
   "SWERPG.AUDIT_LOG.FILTER.ADVANCEMENT": "Avancement",
   "SWERPG.AUDIT_LOG.FILTER.PURCHASES": "Achats",
+  "SWERPG.AUDIT_LOG.FILTER.SALES": "Ventes",
   "SWERPG.AUDIT_LOG.TYPE.SKILL_TRAIN": "Achat de compétence",
   "SWERPG.AUDIT_LOG.TYPE.SKILL_FORGET": "Remboursement de compétence",
   "SWERPG.AUDIT_LOG.TYPE.CHARACTERISTIC_INCREASE": "Augmentation de caractéristique",
@@ -284,6 +285,7 @@
   "SWERPG.AUDIT_LOG.TYPE.TALENT_NODE_FORGET_FAILED": "Échec d'oubli de nœud de talent",
   "SWERPG.AUDIT_LOG.TYPE.ADVANCEMENT_LEVEL": "Changement de niveau",
   "SWERPG.AUDIT_LOG.TYPE.ITEM_PURCHASE": "Article acheté",
+  "SWERPG.AUDIT_LOG.TYPE.ITEM_SALE": "Article vendu",
   "SWERPG.AUDIT_LOG.TYPE.UNKNOWN": "Événement inconnu",
   "SWERPG.AUDIT_LOG.NONE": "Aucun",
   "SWERPG.AUDIT_LOG.UNKNOWN_VALUE": "Valeur inconnue",
@@ -309,8 +311,10 @@
   "SWERPG.AUDIT_LOG.DESCRIPTION.TALENT_NODE_FORGET_FAILED": "Échec d'oubli de nœud de talent : {reasonCode} (nœud {nodeId})",
   "SWERPG.AUDIT_LOG.DESCRIPTION.ADVANCEMENT_LEVEL": "Niveau {oldLevel} -> {newLevel}",
   "SWERPG.AUDIT_LOG.DESCRIPTION.ITEM_PURCHASE": "Achat de {itemName} ({itemType}) pour {price} crédits",
+  "SWERPG.AUDIT_LOG.DESCRIPTION.ITEM_SALE": "Vente de {itemName} ({itemType}) pour {resalePrice} crédits ({fraction}% du prix de base)",
   "SWERPG.AUDIT_LOG.META.PRICE": "{price} crédits",
   "SWERPG.AUDIT_LOG.META.CREDITS_REMAINING": "{credits} crédits restants",
+  "SWERPG.AUDIT_LOG.META.SOLD_FOR": "Vendu pour {price} crédits",
   "SWERPG.AUDIT_LOG.DESCRIPTION.UNKNOWN": "Événement non interprété ({type})",
   "SWERPG.AUDIT_LOG.EXPORT": "Exporter",
   "SWERPG.AUDIT_LOG.EXPORT_TOOLTIP": "Exporter l'historique complet au format CSV",
@@ -1611,6 +1615,44 @@
       "Negotiable": {
         "Tooltip": "Prix négociable"
       }
+    },
+    "Mode": {
+      "Buy": "Acheter",
+      "Sell": "Vendre"
+    },
+    "Sell": {
+      "Confirm": {
+        "Title": "Vendre {name}",
+        "Content": "Confirmer la vente de {name} pour {price} crédits. Crédits actuels : {credits} → {remaining} après vente.",
+        "Sell": "Vendre pour {price} crédits",
+        "Cancel": "Annuler"
+      },
+      "Negotiate": {
+        "Title": "Améliorer le prix de revente",
+        "Offer": "Tenter de négocier un meilleur prix ? (Utilise Négociation, Persuasion ou Tromperie)",
+        "Accept": "Tenter une négociation",
+        "Skip": "Garder le prix de base (25%)"
+      }
+    },
+    "Sale": {
+      "Success": "{name} vendu pour {price} crédits. Crédits restants : {remaining}.",
+      "Error": {
+        "MissingActor": "Aucun vendeur trouvé.",
+        "MissingItem": "Article non trouvé.",
+        "UnsellableType": "Ce type d'article ne peut pas être vendu.",
+        "NotInInventory": "L'article n'est pas dans votre inventaire.",
+        "InvalidPrice": "L'article n'a pas de prix de base valide.",
+        "ItemNotFound": "L'article n'a pas été trouvé dans votre inventaire.",
+        "WriteFailed": "Impossible de compléter la vente. Consultez la console pour plus de détails."
+      }
+    },
+    "Inventory": {
+      "Description": "Sélectionnez des articles de votre inventaire à vendre.",
+      "BasePrice": "Prix de base",
+      "ResaleEstimate": "Revente (25%)",
+      "SellAriaLabel": "Vendre",
+      "SellButton": "Vendre",
+      "Empty": "Votre inventaire ne contient aucun article vendable."
     },
     "Settings": {
       "Title": "Configuration du marché",

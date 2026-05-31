@@ -15,6 +15,7 @@ const AUDIT_LOG_FAMILIES = Object.freeze({
   details: 'details',
   advancement: 'advancement',
   purchases: 'purchases',
+  sales: 'sales',
   other: 'other',
 })
 
@@ -27,6 +28,7 @@ const AUDIT_LOG_FILTER_ORDER = Object.freeze([
   AUDIT_LOG_FAMILIES.details,
   AUDIT_LOG_FAMILIES.advancement,
   AUDIT_LOG_FAMILIES.purchases,
+  AUDIT_LOG_FAMILIES.sales,
 ])
 
 const AUDIT_LOG_FILTER_LABELS = Object.freeze({
@@ -38,6 +40,7 @@ const AUDIT_LOG_FILTER_LABELS = Object.freeze({
   [AUDIT_LOG_FAMILIES.details]: 'SWERPG.AUDIT_LOG.FILTER.DETAILS',
   [AUDIT_LOG_FAMILIES.advancement]: 'SWERPG.AUDIT_LOG.FILTER.ADVANCEMENT',
   [AUDIT_LOG_FAMILIES.purchases]: 'SWERPG.AUDIT_LOG.FILTER.PURCHASES',
+  [AUDIT_LOG_FAMILIES.sales]: 'SWERPG.AUDIT_LOG.FILTER.SALES',
 })
 
 const AUDIT_LOG_TYPE_LABELS = Object.freeze({
@@ -60,6 +63,7 @@ const AUDIT_LOG_TYPE_LABELS = Object.freeze({
   'talent-node-forget-failed': 'SWERPG.AUDIT_LOG.TYPE.TALENT_NODE_FORGET_FAILED',
   'advancement.level': 'SWERPG.AUDIT_LOG.TYPE.ADVANCEMENT_LEVEL',
   'item.purchase': 'SWERPG.AUDIT_LOG.TYPE.ITEM_PURCHASE',
+  'item.sale': 'SWERPG.AUDIT_LOG.TYPE.ITEM_SALE',
 })
 
 /**
@@ -107,6 +111,8 @@ export function getAuditLogFamily(type) {
       return AUDIT_LOG_FAMILIES.advancement
     case 'item.purchase':
       return AUDIT_LOG_FAMILIES.purchases
+    case 'item.sale':
+      return AUDIT_LOG_FAMILIES.sales
     default:
       return AUDIT_LOG_FAMILIES.other
   }
@@ -293,6 +299,13 @@ export function buildAuditLogDescription(entry) {
         price: data.price ?? 0,
         quantity: data.quantity ?? 1,
       })
+    case 'item.sale':
+      return game.i18n.format('SWERPG.AUDIT_LOG.DESCRIPTION.ITEM_SALE', {
+        itemName: getAuditLogName(data.itemName, 'SWERPG.AUDIT_LOG.UNKNOWN_ITEM'),
+        itemType: data.itemType ?? '',
+        resalePrice: data.resalePrice ?? 0,
+        fraction: Math.round((data.fraction ?? 0) * 100),
+      })
     default:
       return game.i18n.format('SWERPG.AUDIT_LOG.DESCRIPTION.UNKNOWN', {
         type: getAuditLogName(entry?.type, 'SWERPG.AUDIT_LOG.UNKNOWN_VALUE'),
@@ -314,10 +327,10 @@ export function buildAuditLogEntries(actor, filter = AUDIT_LOG_FAMILIES.all) {
     .map((entry) => {
       const family = getAuditLogFamily(entry.type)
       const xpDelta = Number(entry.xpDelta) || 0
-      const isPurchaseEntry = entry.type === 'item.purchase'
+      const isCreditEntry = entry.type === 'item.purchase' || entry.type === 'item.sale'
       const creditDelta = Number(entry.creditDelta) || 0
-      const deltaValue = isPurchaseEntry ? creditDelta : xpDelta
-      const formattedDelta = isPurchaseEntry ? formatAuditLogCreditDelta(creditDelta) : formatAuditLogDelta(xpDelta)
+      const deltaValue = isCreditEntry ? creditDelta : xpDelta
+      const formattedDelta = isCreditEntry ? formatAuditLogCreditDelta(creditDelta) : formatAuditLogDelta(xpDelta)
 
       return {
         ...entry,
