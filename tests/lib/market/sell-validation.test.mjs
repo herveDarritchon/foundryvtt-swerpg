@@ -96,6 +96,39 @@ describe('validateSale', () => {
   })
 
   /* -------------------------------------------- */
+  /*  Source price precedence                     */
+  /* -------------------------------------------- */
+
+  describe('source price precedence', () => {
+    it('reads item.system._source.price when available (prefers source over derived)', () => {
+      // Simulates an item with a rarity-adjusted derived price (e.g. rarity 2: 250 * 27 = 6750)
+      const item = {
+        id: 'item-1',
+        uuid: 'Item.item-1',
+        type: 'gear',
+        system: {
+          price: 6750, // derived price (250 * (2+1)^3)
+          _source: {
+            price: 250, // original source price
+          },
+        },
+      }
+      const actor = makeActorWithItem(item)
+      const result = validateSale({ actor, item })
+      expect(result.canSell).toBe(true)
+      expect(result.basePrice).toBe(250) // must read from _source, not derived
+    })
+
+    it('falls back to system.price if _source.price is absent', () => {
+      const item = makeItem({ price: 100 })
+      const actor = makeActorWithItem(item)
+      const result = validateSale({ actor, item })
+      expect(result.canSell).toBe(true)
+      expect(result.basePrice).toBe(100)
+    })
+  })
+
+  /* -------------------------------------------- */
   /*  Missing actor                               */
   /* -------------------------------------------- */
 
