@@ -1758,6 +1758,31 @@
         "Skip": "Keep Base Price (25%)"
       }
     },
+    "CommerceOutcome": {
+      "Success": "No complications — transaction completed as agreed.",
+      "AppliedModifier": "Price adjusted by {modifier}",
+      "Advantage": {
+        "Discount": "The vendor offers a discount.",
+        "GoodCondition": "Merchandise is in excellent condition."
+      },
+      "Threat": {
+        "PriceIncrease": "The vendor drives a harder bargain.",
+        "Delay": "The transaction will take longer to complete.",
+        "VendorTalkative": "The vendor is unusually talkative.",
+        "Surveillance": "You notice someone watching the transaction."
+      },
+      "Triumph": {
+        "LastingContact": "You establish a lasting contact with the vendor.",
+        "SuperiorItem": "The item offered is of superior quality.",
+        "BonusInfo": "You receive valuable information as a bonus."
+      },
+      "Disaster": {
+        "Scam": "The vendor attempts to scam you.",
+        "Ambush": "Armed thugs attempt to ambush you.",
+        "TrackedItem": "The item is secretly tracked.",
+        "ImperialIntervention": "Imperial agents take interest in your purchase."
+      }
+    },
     "Sale": {
       "Success": "Sold {name} for {price} credits. Credits remaining: {remaining}.",
       "Error": {

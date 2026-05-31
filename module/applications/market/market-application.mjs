@@ -14,6 +14,7 @@ import NegotiationDialog from './negotiation-dialog.mjs'
 import ConsequencesDialog from './consequences-dialog.mjs'
 import AvailabilityCheckDialog from './availability-check-dialog.mjs'
 import { resolveAvailabilityCheck } from '../../lib/market/availability-check.mjs'
+import { computeCommerceOutcome } from '../../lib/market/commerce-outcomes.mjs'
 import { logger } from '../../utils/logger.mjs'
 import { validateSale } from '../../lib/market/sell-validation.mjs'
 import { computeResalePrice } from '../../lib/market/sell-valuation.mjs'
@@ -673,6 +674,34 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
       }
 
       logger.info('[Market] Availability check passed — proceeding with purchase', { uuid, skillKey: checkSpec.skillKey })
+
+      // Apply commerce outcome if the check result carries narrative dice data (Tranche 2).
+      // Non-blocking: if testResult is absent or malformed, the purchase proceeds unchanged.
+      const testResult = checkResult?.testResult ?? null
+      if (testResult) {
+        try {
+          const commerceOutcome = computeCommerceOutcome(testResult)
+          const basePrice = entry.priceResult.finalPrice
+          const modifiedPrice = Math.max(0, Math.floor(basePrice * (1 + commerceOutcome.priceModifier)))
+          entry = {
+            ...entry,
+            priceResult: {
+              ...entry.priceResult,
+              finalPrice: modifiedPrice,
+              appliedOutcome: commerceOutcome,
+            },
+          }
+          logger.info('[Market] Commerce outcome applied', {
+            uuid,
+            outcomeLabel: commerceOutcome.outcomeLabel,
+            priceModifier: commerceOutcome.priceModifier,
+            basePrice,
+            modifiedPrice,
+          })
+        } catch (outcomeErr) {
+          logger.warn('[Market] Could not apply commerce outcome — proceeding with base price', outcomeErr)
+        }
+      }
     }
 
     await MarketApplicationV2.#executePurchase.call(this, { item, entry, buyer })
@@ -764,6 +793,7 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
           quantity: 1,
           creditsAfter: finalValidation.creditsAfter,
           itemId: item.id,
+          outcome: entry.priceResult?.appliedOutcome ?? null,
         })
       } catch (auditErr) {
         logger.warn('[Market] Could not record item purchase audit entry', auditErr)

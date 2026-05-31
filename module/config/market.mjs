@@ -322,6 +322,24 @@ export const MARKET_TYPES = Object.freeze({
  */
 export const DEFAULT_MARKET_TYPE = 'standard'
 
+/* -------------------------------------------- */
+
+/**
+ * Price modifiers (as fractions) applied by commerce test outcomes.
+ * Used by `computeCommerceOutcome` in `module/lib/market/commerce-outcomes.mjs`.
+ *
+ * - advantage: −10% (vendor discount)
+ * - threat:    +10% (vendor harder bargain)
+ * - disaster:  +10% (scam / inflated price)
+ *
+ * @type {Readonly<Record<'advantage'|'threat'|'disaster', number>>}
+ */
+export const COMMERCE_OUTCOME_PRICE_MODIFIERS = Object.freeze({
+  advantage: -0.1,
+  threat: 0.1,
+  disaster: 0.1,
+})
+
 /**
  * Default market context applied when none is provided to the price engine.
  * Uses deterministic fallback values that produce no price modification beyond item data.
