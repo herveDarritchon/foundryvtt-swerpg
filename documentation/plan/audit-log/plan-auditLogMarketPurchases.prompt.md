@@ -327,3 +327,32 @@ Qui peut voir les achats dans l'audit log ? Même GM + joueur propriétaire ?
 3. **Créer issues GitHub** : Break down par issue, estimer, assigner
 4. **Implémenter par ordre** : 1 → 2 → 3 → 4 → 5 → 6 → 7
 5. **Review + merge** : PR par issue avec tests, doc, i18n
+
+---
+
+## Statut Clôture (Issues #489–#492)
+
+### Tâches Complètes
+
+| #   | Tâche                                                                         | Issue | Status |
+| --- | ----------------------------------------------------------------------------- | ----- | ------ |
+| 1   | Nouveau type audit-log `item.purchase` + `recordItemPurchase()`               | #489  | ✅     |
+| 2   | Famille de filtre `purchases` et mappage `getAuditLogFamily()`                | #489  | ✅     |
+| 3   | Message chat pour achat d'item (`sendChatForAuditEntries`)                    | #490  | ✅     |
+| 4   | Description localisée `item.purchase` (`buildAuditLogDescription`)            | #490  | ✅     |
+| 5   | Intégration Market → Audit Log (`recordItemPurchase` dans `#executePurchase`) | #490  | ✅     |
+| 6   | Clés i18n complètes (EN + FR)                                                 | #491  | ✅     |
+| 7   | Tests E2E regression + Documentation tests manuels                            | #492  | ✅     |
+
+### Artefacts de validation
+
+- ✅ `e2e/regression/specs/05-market-audit-log.spec.ts` — 4 scénarios E2E Tier 1
+- ✅ `documentation/tests/manuel/audit-log/README.md §14` — 9 cas de test manuels avec checklist
+- ✅ Zéro modification du Market flow existant (injection audit post-achat non bloquante)
+
+### Déploiement
+
+Feature complète et prête pour merge vers `develop` / release.
+
+**Date clôture** : 31 mai 2026
+**Référence plan validation** : `documentation/plan/audit-log/plan-marketAuditLogValidationE2e.prompt.md`
