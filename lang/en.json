@@ -1648,6 +1648,24 @@
         "DisasterNotification": "Negotiation backfired! The vendor raised the price."
       }
     },
+    "AvailabilityCheck": {
+      "Dialog": {
+        "Title": "Availability Check"
+      },
+      "RollTitle": "Availability Check: {skill}",
+      "Item": "Item",
+      "Skill": "Required Skill",
+      "Difficulty": "Difficulty",
+      "RollButton": "Roll Check",
+      "CancelButton": "Cancel Purchase",
+      "FailedNotification": "Failed to obtain {item}: {skill} check required.",
+      "Description": {
+        "Rarity": "This item is rare. You must succeed at a Negotiation check to obtain it.",
+        "Restricted": "This item is restricted. You must succeed at a Streetwise check to find it.",
+        "Military": "This item is military-grade. You must succeed at a Streetwise check to acquire it.",
+        "Illegal": "This item is illegal. You must succeed at a Streetwise check to secure it."
+      }
+    },
     "Rarity": {
       "Reason": {
         "ReadilyAvailable": "Readily available",

@@ -1,0 +1,44 @@
+{{!-- Availability Check Dialog — Market Phase availability-check --}}
+<div class="market-availability-check-dialog__body" data-application-part="form">
+
+  <p class="availability-check__narrative">
+    {{localize checkSpec.descriptionKey}}
+  </p>
+
+  <div class="availability-check__specs">
+    <div class="availability-check__spec-row">
+      <strong>{{localize 'MARKET.AvailabilityCheck.Item'}}:</strong>
+      <span>{{entry.name}}</span>
+    </div>
+    <div class="availability-check__spec-row">
+      <strong>{{localize 'MARKET.AvailabilityCheck.Skill'}}:</strong>
+      <span>{{checkSpec.skillName}}</span>
+    </div>
+    <div class="availability-check__spec-row">
+      <strong>{{localize 'MARKET.AvailabilityCheck.Difficulty'}}:</strong>
+      <span>{{checkSpec.difficulty}}</span>
+    </div>
+  </div>
+
+  <div class="availability-check__actions">
+    <button
+      type="button"
+      class="availability-check-btn availability-check-btn--roll"
+      data-action="rollCheck"
+      aria-label="{{localize 'MARKET.AvailabilityCheck.RollButton'}}"
+    >
+      <i class="fas fa-dice" aria-hidden="true"></i>
+      {{localize 'MARKET.AvailabilityCheck.RollButton'}}
+    </button>
+    <button
+      type="button"
+      class="availability-check-btn availability-check-btn--cancel"
+      data-action="cancelCheck"
+      aria-label="{{localize 'MARKET.AvailabilityCheck.CancelButton'}}"
+    >
+      <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      {{localize 'MARKET.AvailabilityCheck.CancelButton'}}
+    </button>
+  </div>
+
+</div>

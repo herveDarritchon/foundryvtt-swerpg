@@ -12,6 +12,8 @@ import { RESTRICTED_RESTRICTION_LEVELS, BLACK_MARKET_AVAILABILITY_KEYS } from '.
 import { loadCompendiumItems } from './compendium-source-adapter.mjs'
 import NegotiationDialog from './negotiation-dialog.mjs'
 import ConsequencesDialog from './consequences-dialog.mjs'
+import AvailabilityCheckDialog from './availability-check-dialog.mjs'
+import { resolveAvailabilityCheck } from '../../lib/market/availability-check.mjs'
 import { logger } from '../../utils/logger.mjs'
 import { validateSale } from '../../lib/market/sell-validation.mjs'
 import { computeResalePrice } from '../../lib/market/sell-valuation.mjs'
@@ -647,6 +649,30 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
       logger.warn(`[Market] Could not build market entry for "${uuid}": ${err.message}`)
       ui.notifications.error(game.i18n.localize('MARKET.Purchase.Error.ItemNotFound'))
       return
+    }
+
+    // Availability check: items with high rarity or restricted status require a skill test before purchase.
+    const checkSpec = resolveAvailabilityCheck({
+      rarity: entry.rarity,
+      restrictionLevel: entry.restrictionLevel,
+    })
+
+    if (checkSpec.required) {
+      const checkResult = await AvailabilityCheckDialog.prompt({ entry, buyer, checkSpec })
+
+      if (!checkResult?.passed) {
+        logger.debug('[Market] Availability check not passed — purchase aborted', { uuid, checkSpec })
+        const skillName = SYSTEM.SKILLS[checkSpec.skillKey]?.name ?? checkSpec.skillKey
+        ui.notifications.warn(
+          game.i18n.format('MARKET.AvailabilityCheck.FailedNotification', {
+            skill: skillName,
+            item: entry.name,
+          }),
+        )
+        return
+      }
+
+      logger.info('[Market] Availability check passed — proceeding with purchase', { uuid, skillKey: checkSpec.skillKey })
     }
 
     await MarketApplicationV2.#executePurchase.call(this, { item, entry, buyer })
