@@ -129,6 +129,10 @@ test.describe('[regression] 05 — Market → Audit Log integration', () => {
     await createActor(page, actorName, 'character')
 
     // Act : créer directement un message chat de type audit (simule sendChatForAuditEntries)
+    // Switch to chat tab first so _shouldShowNotifications() returns false (chat active = no popup
+    // overlay), avoiding a Foundry v14 race condition in #postNotification where the notification
+    // element gets orphaned when the sidebar re-renders during the 100ms entry animation.
+    await page.evaluate(() => (ui.sidebar as any)?.changeTab?.('chat', 'primary'))
     const result = await page.evaluate(async (name: string) => {
       const actor = game?.actors?.getName(name)
       if (!actor) return { error: `Actor "${name}" not found` }
