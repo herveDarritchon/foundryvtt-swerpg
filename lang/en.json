@@ -1633,7 +1633,10 @@
         "DisasterTooltip": "Check if the roll produced a Disaster result — the vendor is offended and raises the price.",
         "NegotiatedPrice": "Negotiated price",
         "Confirm": "Buy at this price",
-        "Cancel": "Cancel"
+        "Cancel": "Cancel",
+        "TitleSell": "Negotiate Sale Price",
+        "ConfirmSell": "Sell at this price",
+        "NegotiatedPriceSell": "Sale Price"
       },
       "Skill": {
         "Negotiation": "Negotiation",
