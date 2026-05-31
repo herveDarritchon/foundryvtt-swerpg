@@ -1,5 +1,5 @@
-{{!-- Market Catalogue — part: catalog --}}
-<div class="market-catalog scrollable {{catalog.activeMarketDef.uiVariant}}" data-application-part="catalog">
+{{!-- Market — part: catalog (buy/sell) --}}
+<div class="market-catalog scrollable {{#unless (eq mode 'sell')}}{{catalog.activeMarketDef.uiVariant}}{{/unless}}" data-application-part="catalog">
 
   {{!-- Mode toggle (buy / sell) --}}
   <div class="market-mode-toggle">
@@ -24,6 +24,84 @@
       {{localize "MARKET.Mode.Sell"}}
     </button>
   </div>
+
+{{#if (eq mode 'sell')}}
+
+  {{!-- Sell / Inventory mode --}}
+  <div class="market-inventory">
+
+    {{#if buyer}}
+
+      <div class="market-buyer-bar">
+        <span class="market-buyer-bar__name">{{buyer.name}}</span>
+        <span class="market-buyer-bar__credits">
+          {{localize "MARKET.Buyer.Credits"}}: <strong>{{buyer.credits}}</strong>
+        </span>
+      </div>
+
+      <div class="market-selector">
+        <p class="market-selector__description">{{localize "MARKET.Inventory.Description"}}</p>
+      </div>
+
+      {{#if inventory.items.length}}
+        <table class="market-inventory__table">
+          <thead>
+            <tr>
+              <th class="market-col--icon" aria-label="{{localize 'MARKET.Catalog.Column.Name'}}"></th>
+              <th class="market-col--name">{{localize "MARKET.Catalog.Column.Name"}}</th>
+              <th class="market-col--type">{{localize "MARKET.Catalog.Column.Type"}}</th>
+              <th class="market-col--price">{{localize "MARKET.Inventory.BasePrice"}}</th>
+              <th class="market-col--price">{{localize "MARKET.Inventory.ResaleEstimate"}}</th>
+              <th class="market-col--sell" aria-label="{{localize 'MARKET.Inventory.SellButton'}}"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each inventory.items as |item|}}
+              <tr class="market-item" data-item-id="{{item.id}}">
+                <td class="market-col--icon">
+                  {{#if item.img}}
+                    <img class="market-item__icon" src="{{item.img}}" alt="{{item.name}}" />
+                  {{/if}}
+                </td>
+                <td class="market-col--name">{{item.name}}</td>
+                <td class="market-col--type">{{localize item.typeLabel}}</td>
+                <td class="market-col--price">{{item.basePrice}}</td>
+                <td class="market-col--price">
+                  <span class="market-resale-estimate">{{item.resaleEstimate}} ({{item.resaleFraction}}%)</span>
+                </td>
+                <td class="market-col--sell">
+                  <button
+                    type="button"
+                    class="market-item__sell"
+                    data-action="sellItem"
+                    data-item-id="{{item.id}}"
+                    data-tooltip="{{localize 'MARKET.Inventory.SellAriaLabel'}} {{item.name}}"
+                    aria-label="{{localize 'MARKET.Inventory.SellAriaLabel'}} {{item.name}}"
+                  >
+                    <i class="fa-solid fa-hand-holding-dollar" aria-hidden="true"></i>
+                  </button>
+                </td>
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      {{else}}
+        <div class="market-empty">
+          <p>{{localize "MARKET.Inventory.Empty"}}</p>
+        </div>
+      {{/if}}
+
+    {{else}}
+      <div class="market-buyer-bar market-buyer-bar--empty">
+        <span>{{localize "MARKET.Buyer.SelectCharacter"}}</span>
+      </div>
+    {{/if}}
+
+  </div>
+
+{{else}}
+
+  {{!-- Buy / Catalogue mode --}}
 
   {{!-- Market type selector --}}
   <div class="market-selector">
@@ -272,4 +350,6 @@
       </tbody>
     </table>
   {{/if}}
+
+{{/if}}
 </div>

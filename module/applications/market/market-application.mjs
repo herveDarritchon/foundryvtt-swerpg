@@ -179,11 +179,7 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
   static PARTS = {
     catalog: {
       template: 'systems/swerpg/templates/market/market.hbs',
-      scrollable: ['.market-catalog'],
-    },
-    inventory: {
-      template: 'systems/swerpg/templates/market/market-inventory.hbs',
-      scrollable: ['.market-inventory'],
+      scrollable: ['.market-catalog', '.market-inventory'],
     },
   }
 
@@ -248,9 +244,6 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
       context.sourceFilterOptions = this.#buildSourceFilterOptions()
       context.restrictionFilterOptions = this.#buildRestrictionFilterOptions()
       context.marketTypeOptions = this.#buildMarketTypeOptions()
-    }
-
-    if (partId === 'inventory') {
       context.inventory = buyer ? this.#prepareInventory(buyer) : { items: [] }
     }
 
@@ -787,7 +780,7 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
   #prepareInventory(actor) {
     const sellableItems = []
 
-    for (const item of actor.items) {
+    for (const item of actor.items ?? []) {
       if (!(item.type in PURCHASABLE_ITEM_TYPES)) continue
       const basePrice = item.system?._source?.price ?? item.system?.price ?? 0
       const valuation = computeResalePrice({ basePrice, negotiationOutcome: 'failure' })
@@ -983,13 +976,6 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
     super._onRender?.(context, options)
     const html = this.element
     if (!html) return
-
-    // Show the active mode part, hide the other
-    const mode = this._viewState.mode ?? 'buy'
-    const catalogPart = html.querySelector('[data-application-part="catalog"]')
-    const inventoryPart = html.querySelector('[data-application-part="inventory"]')
-    if (catalogPart) catalogPart.hidden = mode !== 'buy'
-    if (inventoryPart) inventoryPart.hidden = mode !== 'sell'
 
     // Market type selector — updates activeMarketType and re-renders catalogue
     const marketTypeSelect = html.querySelector('.market-selector__select')
