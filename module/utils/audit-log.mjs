@@ -499,8 +499,11 @@ async function recordTalentNodePurchase(actor, purchaseData) {
  * @param {number} [purchaseData.quantity=1]
  * @param {number} purchaseData.creditsAfter
  * @param {string} [purchaseData.itemId] The ID of the purchased item document (optional, for audit traceability).
+ * @param {import('../lib/market/commerce-outcomes.mjs').CommerceOutcome|null} [purchaseData.outcome=null]
+ *   Optional commerce outcome from a narrative dice test. When present, the audit entry
+ *   carries `priceModifier`, `narrativeKeys`, and `outcomeLabel` for chat display.
  */
-async function recordItemPurchase(actor, { itemName, itemType, price, quantity = 1, creditsAfter, itemId }) {
+async function recordItemPurchase(actor, { itemName, itemType, price, quantity = 1, creditsAfter, itemId, outcome = null }) {
   const ts = Date.now()
   const creditsBefore = actor.system?.creditBudget?.availableCredits ?? actor.system?.credits ?? null
   const creditsDelta = creditsBefore !== null && creditsAfter !== null ? creditsBefore - creditsAfter : null
@@ -525,6 +528,7 @@ async function recordItemPurchase(actor, { itemName, itemType, price, quantity =
       snapshot,
     }),
     creditDelta,
+    ...(outcome !== null ? { outcome } : {}),
   }
 
   await writeLogEntries(actor, [entry])
@@ -729,6 +733,21 @@ function _buildChatContext(actor, entry) {
       context.nextValue = `${data.itemName ?? ''} (${data.itemType ?? ''})`
       context.variant = 'add'
       context.metaLeft = game.i18n.format('SWERPG.AUDIT_LOG.META.PRICE', { price: data.price ?? 0 })
+
+      // Enrich with commerce outcome narrative when present (from availability check narrative dice)
+      const outcome = entry.outcome ?? null
+      if (outcome) {
+        if (outcome.priceModifier !== 0) {
+          const modifierPct = Math.round(outcome.priceModifier * 100)
+          const modifierStr = modifierPct > 0 ? `+${modifierPct}%` : `${modifierPct}%`
+          context.metaRight = game.i18n.format('MARKET.CommerceOutcome.AppliedModifier', { modifier: modifierStr })
+        }
+        if (outcome.narrativeKeys?.length > 0) {
+          const narratives = outcome.narrativeKeys.map((k) => game.i18n.localize(k)).join('; ')
+          context.description = narratives
+        }
+      }
+
       if (snapshot.creditsAfter !== undefined && snapshot.creditsAfter !== null) {
         context.metaRight = game.i18n.format('SWERPG.AUDIT_LOG.META.CREDITS_REMAINING', { credits: snapshot.creditsAfter })
       }

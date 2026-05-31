@@ -1654,6 +1654,31 @@
         "Skip": "Garder le prix de base (25%)"
       }
     },
+    "CommerceOutcome": {
+      "Success": "Pas de complications — transaction complétée comme prévu.",
+      "AppliedModifier": "Prix ajusté de {modifier}",
+      "Advantage": {
+        "Discount": "Le vendeur propose une réduction.",
+        "GoodCondition": "La marchandise est en excellent état."
+      },
+      "Threat": {
+        "PriceIncrease": "Le vendeur impose des conditions plus dures.",
+        "Delay": "La transaction prendra plus de temps.",
+        "VendorTalkative": "Le vendeur est inhabituellement bavard.",
+        "Surveillance": "Vous remarquez quelqu'un observant la transaction."
+      },
+      "Triumph": {
+        "LastingContact": "Vous établissez un contact durable avec le vendeur.",
+        "SuperiorItem": "L'article proposé est de qualité supérieure.",
+        "BonusInfo": "Vous recevez une information précieuse en bonus."
+      },
+      "Disaster": {
+        "Scam": "Le vendeur tente de vous arnaquer.",
+        "Ambush": "Des truands armés vous tendent une embuscade.",
+        "TrackedItem": "L'article est subtilement suivi.",
+        "ImperialIntervention": "Des agents impériaux s'intéressent à votre achat."
+      }
+    },
     "Sale": {
       "Success": "{name} vendu pour {price} crédits. Crédits restants : {remaining}.",
       "Error": {
