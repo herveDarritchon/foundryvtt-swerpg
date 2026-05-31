@@ -451,6 +451,39 @@
 }
 
 /* ----------------------------------------- */
+/*  Restriction Badge                        */
+/* ----------------------------------------- */
+
+.market-entry__restriction-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.8em;
+  padding: 0.15rem 0.4rem;
+  border-radius: 0.25rem;
+  background: rgba(255, 149, 0, 0.1);
+  border: 1px solid rgba(255, 149, 0, 0.3);
+  color: #ff9500;
+  vertical-align: middle;
+
+  &[data-restriction='military'] {
+    background: rgba(218, 165, 32, 0.1);
+    border-color: rgba(218, 165, 32, 0.3);
+    color: #daa520;
+  }
+
+  &[data-restriction='illegal'] {
+    background: rgba(220, 53, 69, 0.1);
+    border-color: rgba(220, 53, 69, 0.3);
+    color: #dc3545;
+  }
+}
+
+.market-entry__restriction-text {
+  font-weight: 500;
+}
+
+/* ----------------------------------------- */
 /*  Negotiation Dialog                       */
 /* ----------------------------------------- */
 

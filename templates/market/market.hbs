@@ -261,6 +261,23 @@
             </td>
             <td class="market-col--name">
               {{entry.name}}
+              {{!-- Restriction badge (visible in specialized/black-market for restricted items) --}}
+              {{#if entry.isRestricted}}
+                <span class="market-entry__restriction-badge"
+                      data-restriction="{{entry.restrictionLevel}}"
+                      data-tooltip="{{localize entry.restrictionLabel}}"
+                      role="img"
+                      aria-label="{{localize entry.restrictionLabel}}">
+                  {{#if (eq entry.restrictionLevel 'restricted')}}
+                    <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+                  {{else if (eq entry.restrictionLevel 'military')}}
+                    <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+                  {{else if (eq entry.restrictionLevel 'illegal')}}
+                    <i class="fa-solid fa-skull-crossbones" aria-hidden="true"></i>
+                  {{/if}}
+                  <span class="market-entry__restriction-text">{{localize entry.restrictionLabel}}</span>
+                </span>
+              {{/if}}
               {{!-- Narrative badges --}}
               <span class="market-badges" aria-label="{{localize 'MARKET.Badge.AriaLabel'}}">
                 {{#if entry.isImperialSuspicion}}

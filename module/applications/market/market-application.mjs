@@ -1,4 +1,5 @@
-import { createMarketEntry, resolveMarketCatalogVisibility } from '../../lib/market/market-entry.mjs'
+import { createMarketEntry } from '../../lib/market/market-entry.mjs'
+import { isItemVisibleForMarket } from '../../lib/market/market-visibility.mjs'
 import { loadMarketCatalog } from '../../lib/market/catalog-loader.mjs'
 import { validatePurchase } from '../../lib/market/purchase.mjs'
 import { readMarketConfig, readMarketExcludedItems } from '../../lib/market/market-settings.mjs'
@@ -6,6 +7,7 @@ import { evaluateObtainability } from '../../lib/market/rarity-engine.mjs'
 import { CONSEQUENCE_TYPES, evaluateMarketConsequences } from '../../lib/market/consequences.mjs'
 import { serializeConsequence } from '../../lib/market/consequence-persistence.mjs'
 import { PURCHASABLE_ITEM_TYPES, SOURCE_TYPES, DEFAULT_MARKET_CONTEXT, MARKET_TYPES, DEFAULT_MARKET_TYPE } from '../../config/market.mjs'
+import { RESTRICTION_LEVELS } from '../../config/system.mjs'
 import { RESTRICTED_RESTRICTION_LEVELS, BLACK_MARKET_AVAILABILITY_KEYS } from '../../lib/market/consequences.mjs'
 import { loadCompendiumItems } from './compendium-source-adapter.mjs'
 import NegotiationDialog from './negotiation-dialog.mjs'
@@ -293,17 +295,42 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
   }
 
   /**
-   * Build the list of restriction level filter options.
-   * First entry is the "all restrictions" placeholder.
+   * Build the list of restriction level filter options, adapted to the active market type.
+   *
+   * - standard/local: only the "All restrictions" option (all restricted items are hidden automatically)
+   * - specialized: "All", "Legal only", "Restricted", "Military"
+   * - black-market: "All", "Legal only", "Restricted", "Military", "Illegal"
+   *
    * @returns {Array<{value: string, label: string}>}
    */
   #buildRestrictionFilterOptions() {
+    const marketDef = MARKET_TYPES[this._viewState.activeMarketType] ?? MARKET_TYPES[DEFAULT_MARKET_TYPE]
+    const allowedRestrictionLevels = marketDef.allowedRestrictionLevels ?? []
+
     const allOption = { value: '', label: 'MARKET.Toolbar.Filter.AllRestrictions' }
-    const restrictionOptions = [
-      { value: 'restricted', label: 'MARKET.Restriction.Restricted' },
-      { value: 'illegal', label: 'MARKET.Restriction.Illegal' },
-      { value: 'licensed', label: 'MARKET.Restriction.Licensed' },
-    ]
+
+    // Standard/local: only 'none' is allowed — return just the "All" option since restricted items
+    // are hidden automatically; the dropdown would be meaningless with only one filter choice.
+    if (allowedRestrictionLevels.length === 1 && allowedRestrictionLevels[0] === 'none') {
+      return [allOption]
+    }
+
+    // Wildcard ('*') means all restriction levels are allowed — expand to all known levels
+    const levelsToShow = allowedRestrictionLevels.includes('*')
+      ? Object.keys(RESTRICTION_LEVELS).filter((rl) => rl !== 'none')
+      : allowedRestrictionLevels.filter((rl) => rl !== 'none' && rl !== '*')
+
+    // Build restriction-level-specific options
+    const restrictionOptions = levelsToShow.map((rl) => ({
+      value: rl,
+      label: RESTRICTION_LEVELS[rl]?.label ?? `MARKET.Restriction.${rl}`,
+    }))
+
+    // Prepend "Legal only" option when any restricted level is visible
+    if (restrictionOptions.length > 0) {
+      restrictionOptions.unshift({ value: 'none', label: 'MARKET.Restriction.LegalOnly' })
+    }
+
     return [allOption, ...restrictionOptions]
   }
 
@@ -370,9 +397,10 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
       allEntries = []
     }
 
-    // 4. Apply market-type visibility rules (hide items whose availability is not allowed in this market)
+    // 4. Apply market-type visibility rules (hide items whose availability or restriction level is not
+    //    allowed in this market). isItemVisibleForMarket combines both availability and restriction axes.
     const visibleEntries = allEntries.filter((entry) => {
-      const { visible } = resolveMarketCatalogVisibility(entry, activeMarketType)
+      const { visible } = isItemVisibleForMarket(entry, activeMarketType)
       return visible
     })
 
@@ -394,6 +422,9 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
       const isNegotiable = marketDef?.negotiationAllowed === true
       const isImperialSuspicion = RESTRICTED_RESTRICTION_LEVELS.includes(entry.restrictionLevel ?? '')
       const isBlackMarket = activeMarketType === 'black-market' || BLACK_MARKET_AVAILABILITY_KEYS.includes(entry.availability ?? '')
+      const restrictionLevel = entry.restrictionLevel ?? 'none'
+      const isRestricted = restrictionLevel !== 'none'
+      const restrictionLabel = RESTRICTION_LEVELS[restrictionLevel]?.label ?? null
       return {
         ...entry,
         canBuy: buyer !== null && validation.canPurchase,
@@ -402,6 +433,8 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
         isNegotiable,
         isImperialSuspicion,
         isBlackMarket,
+        isRestricted,
+        restrictionLabel,
       }
     })
 

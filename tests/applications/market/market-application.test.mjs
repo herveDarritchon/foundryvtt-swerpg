@@ -1419,6 +1419,236 @@ describe('MarketApplicationV2', () => {
   })
 
   /* -------------------------------------------- */
+  /*  Restriction filtering in catalog            */
+  /* -------------------------------------------- */
+
+  describe('restriction level filtering in catalog', () => {
+    it('standard market hides items with restrictionLevel=restricted', async () => {
+      const legal = makeItem({ type: 'weapon', name: 'Legal Blaster', restrictionLevel: 'none', availability: 'available' })
+      const restricted = makeItem({ type: 'weapon', name: 'Restricted Blaster', restrictionLevel: 'restricted', availability: 'available' })
+      globalThis.game.items = makeItemsCollection([legal, restricted])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, activeMarketType: 'standard' }
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.catalog.totalCount).toBe(1)
+      expect(context.catalog.items[0].name).toBe('Legal Blaster')
+    })
+
+    it('standard market hides items with restrictionLevel=military', async () => {
+      const legal = makeItem({ type: 'weapon', name: 'Legal Blaster', restrictionLevel: 'none', availability: 'available' })
+      const military = makeItem({ type: 'weapon', name: 'Military Rifle', restrictionLevel: 'military', availability: 'available' })
+      globalThis.game.items = makeItemsCollection([legal, military])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, activeMarketType: 'standard' }
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.catalog.totalCount).toBe(1)
+      expect(context.catalog.items[0].name).toBe('Legal Blaster')
+    })
+
+    it('standard market hides items with restrictionLevel=illegal', async () => {
+      const legal = makeItem({ type: 'weapon', name: 'Legal Blaster', restrictionLevel: 'none', availability: 'available' })
+      const illegal = makeItem({ type: 'weapon', name: 'Illegal Weapon', restrictionLevel: 'illegal', availability: 'available' })
+      globalThis.game.items = makeItemsCollection([legal, illegal])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, activeMarketType: 'standard' }
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.catalog.totalCount).toBe(1)
+      expect(context.catalog.items[0].name).toBe('Legal Blaster')
+    })
+
+    it('specialized market shows restricted items (badge annotated)', async () => {
+      const restricted = makeItem({ type: 'weapon', name: 'Restricted Blaster', restrictionLevel: 'restricted', availability: 'available' })
+      globalThis.game.items = makeItemsCollection([restricted])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, activeMarketType: 'specialized' }
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.catalog.totalCount).toBe(1)
+      expect(context.catalog.items[0].isRestricted).toBe(true)
+    })
+
+    it('specialized market shows military items', async () => {
+      const military = makeItem({ type: 'weapon', name: 'Military Rifle', restrictionLevel: 'military', availability: 'available' })
+      globalThis.game.items = makeItemsCollection([military])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, activeMarketType: 'specialized' }
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.catalog.totalCount).toBe(1)
+      expect(context.catalog.items[0].isRestricted).toBe(true)
+    })
+
+    it('specialized market hides illegal items', async () => {
+      const illegal = makeItem({ type: 'weapon', name: 'Illegal Weapon', restrictionLevel: 'illegal', availability: 'available' })
+      globalThis.game.items = makeItemsCollection([illegal])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, activeMarketType: 'specialized' }
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.catalog.totalCount).toBe(0)
+    })
+
+    it('black-market shows all restriction levels', async () => {
+      const legal = makeItem({ type: 'weapon', name: 'Legal Blaster', restrictionLevel: 'none', availability: 'available' })
+      const restricted = makeItem({ type: 'weapon', name: 'Restricted Blaster', restrictionLevel: 'restricted', availability: 'available' })
+      const military = makeItem({ type: 'weapon', name: 'Military Rifle', restrictionLevel: 'military', availability: 'available' })
+      const illegal = makeItem({ type: 'weapon', name: 'Illegal Weapon', restrictionLevel: 'illegal', availability: 'available' })
+      globalThis.game.items = makeItemsCollection([legal, restricted, military, illegal])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, activeMarketType: 'black-market' }
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.catalog.totalCount).toBe(4)
+    })
+
+    it('annotates isRestricted=false on legal items', async () => {
+      const legal = makeItem({ type: 'weapon', name: 'Legal Blaster', restrictionLevel: 'none', availability: 'available' })
+      globalThis.game.items = makeItemsCollection([legal])
+
+      const app = new MarketApplicationV2()
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.catalog.items[0].isRestricted).toBe(false)
+    })
+
+    it('annotates isRestricted=true on restricted items in black-market', async () => {
+      const restricted = makeItem({ type: 'weapon', name: 'Restricted Blaster', restrictionLevel: 'restricted', availability: 'available' })
+      globalThis.game.items = makeItemsCollection([restricted])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, activeMarketType: 'black-market' }
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.catalog.items[0].isRestricted).toBe(true)
+    })
+
+    it('annotates restrictionLabel on restricted items', async () => {
+      const restricted = makeItem({ type: 'weapon', name: 'Restricted Blaster', restrictionLevel: 'restricted', availability: 'available' })
+      globalThis.game.items = makeItemsCollection([restricted])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, activeMarketType: 'black-market' }
+      const context = await app._preparePartContext('catalog', {})
+
+      // restrictionLabel should be a non-empty i18n key string
+      expect(context.catalog.items[0].restrictionLabel).toBeTruthy()
+      expect(typeof context.catalog.items[0].restrictionLabel).toBe('string')
+    })
+
+    it('local market hides restricted items (same as standard)', async () => {
+      const restricted = makeItem({ type: 'weapon', name: 'Restricted Blaster', restrictionLevel: 'restricted', availability: 'available' })
+      globalThis.game.items = makeItemsCollection([restricted])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, activeMarketType: 'local' }
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.catalog.totalCount).toBe(0)
+    })
+  })
+
+  /* -------------------------------------------- */
+  /*  Adaptive restriction filter dropdown        */
+  /* -------------------------------------------- */
+
+  describe('#buildRestrictionFilterOptions (via _preparePartContext)', () => {
+    it('standard market returns only the "All" option', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, activeMarketType: 'standard' }
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.restrictionFilterOptions).toHaveLength(1)
+      expect(context.restrictionFilterOptions[0].value).toBe('')
+    })
+
+    it('local market returns only the "All" option', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, activeMarketType: 'local' }
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.restrictionFilterOptions).toHaveLength(1)
+      expect(context.restrictionFilterOptions[0].value).toBe('')
+    })
+
+    it('specialized market returns "All", "Legal only", "Restricted", "Military" options', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, activeMarketType: 'specialized' }
+      const context = await app._preparePartContext('catalog', {})
+
+      const values = context.restrictionFilterOptions.map((o) => o.value)
+      expect(values).toContain('')
+      expect(values).toContain('none')
+      expect(values).toContain('restricted')
+      expect(values).toContain('military')
+      expect(values).not.toContain('illegal')
+      expect(context.restrictionFilterOptions).toHaveLength(4)
+    })
+
+    it('black-market returns "All", "Legal only", "Restricted", "Military", "Illegal" options', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, activeMarketType: 'black-market' }
+      const context = await app._preparePartContext('catalog', {})
+
+      const values = context.restrictionFilterOptions.map((o) => o.value)
+      expect(values).toContain('')
+      expect(values).toContain('none')
+      expect(values).toContain('restricted')
+      expect(values).toContain('military')
+      expect(values).toContain('illegal')
+      expect(context.restrictionFilterOptions).toHaveLength(5)
+    })
+
+    it('each option has value and label', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, activeMarketType: 'black-market' }
+      const context = await app._preparePartContext('catalog', {})
+
+      for (const opt of context.restrictionFilterOptions) {
+        expect(opt).toHaveProperty('value')
+        expect(opt).toHaveProperty('label')
+        expect(typeof opt.label).toBe('string')
+      }
+    })
+
+    it('changing market type updates dropdown options without clearing filterRestriction from vueState', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      // Set a restriction filter while in black-market
+      app._viewState = { ...app._viewState, activeMarketType: 'black-market', filterRestriction: 'military' }
+      const bmContext = await app._preparePartContext('catalog', {})
+      expect(bmContext.restrictionFilterOptions).toHaveLength(5)
+
+      // Switch to standard — filter state is preserved in _viewState
+      app._viewState = { ...app._viewState, activeMarketType: 'standard' }
+      const stdContext = await app._preparePartContext('catalog', {})
+      expect(stdContext.restrictionFilterOptions).toHaveLength(1)
+      // filterRestriction remains set in _viewState (not cleared)
+      expect(app._viewState.filterRestriction).toBe('military')
+    })
+  })
+
+  /* -------------------------------------------- */
   /*  Consequence integration (Phase 7)           */
   /* -------------------------------------------- */
 
