@@ -375,3 +375,31 @@ dans `actor.flags.swerpg.logs`, envoyer un message chat, et apparaître dans le 
 Tous les 9 points doivent être ✓ pour valider la feature Audit Log Market Purchases.
 
 **Date test** : **\_** **Testeur** : **\_** **Résultat** : ✓ PASS / ✗ FAIL
+
+---
+
+## 15. Vérification smoke rapide du flux complet (< 2 minutes)
+
+**But** : Valider rapidement que le circuit Market → audit log → chat → filtrage → export fonctionne de bout en bout.
+
+**Prérequis** :
+
+- Personnage actif avec ≥ 500 crédits
+- Market ouvert et chargé
+- Console F12 disponible
+- Character Audit Log accessible
+
+| Étape | Action                                                                      | Résultat attendu                                                               |
+| ----- | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| 1     | Ouvrir Market, acheter 1 item (ex : « Blaster Pistol » 100 crédits)         | Notification succès, solde mis à jour (500 → 400)                              |
+| 2     | Exécuter en console : `game.actors.getName("NomDuPJ").flags.swerpg.logs[0]` | Entrée `type='item.purchase'`, `creditDelta=-100`, `snapshot.creditsAfter=400` |
+| 3     | Aller au chat log et chercher le dernier message du Market                  | Message avec classe CSS `audit-entry--add` (fond vert), contient nom item      |
+| 4     | Ouvrir Character Audit Log (bouton fiche personnage), filtrer « Purchases » | Seule l'entrée achat Market visible, autres entrées (skills, XP) masquées      |
+| 5     | Cliquer « Exporter CSV »                                                    | Fichier CSV téléchargé, contient ligne `item.purchase` avec `creditDelta=-100` |
+
+**Verdict** :
+
+- Si toutes les étapes réussissent → flux complet OK
+- Si une étape échoue → noter laquelle et relancer le test après correction
+
+**Temps estimé** : 1–2 minutes
