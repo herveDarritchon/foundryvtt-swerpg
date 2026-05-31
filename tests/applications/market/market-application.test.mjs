@@ -91,6 +91,29 @@ describe('MarketApplicationV2', () => {
         'MARKET.Toolbar.Sort.Rarity': 'Rarity',
         'MARKET.Toolbar.Reset.Label': 'Reset',
         'MARKET.Toolbar.Reset.Tooltip': 'Reset filters and search',
+        'MARKET.Mode.Buy': 'Buy',
+        'MARKET.Mode.Sell': 'Sell',
+        'MARKET.Inventory.Description': 'Select items from your inventory to sell.',
+        'MARKET.Inventory.BasePrice': 'Base Price',
+        'MARKET.Inventory.ResaleEstimate': 'Resale (25%)',
+        'MARKET.Inventory.SellButton': 'Sell',
+        'MARKET.Inventory.SellAriaLabel': 'Sell',
+        'MARKET.Inventory.Empty': 'Your inventory contains no sellable items.',
+        'MARKET.Sell.Confirm.Title': 'Sell {name}',
+        'MARKET.Sell.Confirm.Content': 'Confirm sale of {name} for {price} credits. Current credits: {credits} → {remaining} after sale.',
+        'MARKET.Sell.Confirm.Sell': 'Sell for {price} credits',
+        'MARKET.Sell.Confirm.Cancel': 'Cancel',
+        'MARKET.Sell.Negotiate.Title': 'Improve Resale Price',
+        'MARKET.Sell.Negotiate.Offer': 'Attempt to negotiate a better resale price?',
+        'MARKET.Sell.Negotiate.Accept': 'Attempt Negotiation',
+        'MARKET.Sell.Negotiate.Skip': 'Keep Base Price (25%)',
+        'MARKET.Sale.Success': 'Sold {name} for {price} credits. Credits remaining: {remaining}.',
+        'MARKET.Sale.Error.ItemNotFound': 'Item was not found in your inventory.',
+        'MARKET.Sale.Error.WriteFailed': 'Failed to complete the sale. Check the console for details.',
+        'MARKET.Sale.Error.UnsellableType': 'This item type cannot be sold.',
+        'MARKET.Sale.Error.InvalidPrice': 'Item has no valid base price.',
+        'MARKET.Sale.Error.NotInInventory': 'Item is not in your inventory.',
+        'MARKET.Sale.Error.MissingActor': 'No seller actor found.',
       },
     })
     ;({ default: MarketApplicationV2 } = await import('../../../module/applications/market/market-application.mjs'))
@@ -1645,6 +1668,457 @@ describe('MarketApplicationV2', () => {
       expect(stdContext.restrictionFilterOptions).toHaveLength(1)
       // filterRestriction remains set in _viewState (not cleared)
       expect(app._viewState.filterRestriction).toBe('military')
+    })
+  })
+
+  /* -------------------------------------------- */
+  /*  Mode toggle (buy / sell)                    */
+  /* -------------------------------------------- */
+
+  describe('_viewState.mode default', () => {
+    it('starts in buy mode', () => {
+      const app = new MarketApplicationV2()
+      expect(app._viewState.mode).toBe('buy')
+    })
+  })
+
+  describe('static configuration — sell mode actions', () => {
+    it('declares the toggleMode action', () => {
+      expect(MarketApplicationV2.DEFAULT_OPTIONS.actions).toHaveProperty('toggleMode')
+    })
+
+    it('declares the sellItem action', () => {
+      expect(MarketApplicationV2.DEFAULT_OPTIONS.actions).toHaveProperty('sellItem')
+    })
+  })
+
+  describe('toggleMode action', () => {
+    it('switches from buy to sell and calls render', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      app.render = vi.fn().mockResolvedValue(undefined)
+
+      const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.toggleMode
+      const target = { dataset: { mode: 'sell' } }
+
+      await action.call(app, {}, target)
+
+      expect(app._viewState.mode).toBe('sell')
+      expect(app.render).toHaveBeenCalled()
+    })
+
+    it('switches from sell to buy and calls render', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, mode: 'sell' }
+      app.render = vi.fn().mockResolvedValue(undefined)
+
+      const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.toggleMode
+      const target = { dataset: { mode: 'buy' } }
+
+      await action.call(app, {}, target)
+
+      expect(app._viewState.mode).toBe('buy')
+      expect(app.render).toHaveBeenCalled()
+    })
+
+    it('toggles buy→sell when no data-mode attribute is provided', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      app.render = vi.fn().mockResolvedValue(undefined)
+
+      const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.toggleMode
+      // dataset without mode — action should invert the current mode
+      const target = { dataset: {} }
+
+      await action.call(app, {}, target)
+
+      expect(app._viewState.mode).toBe('sell')
+      expect(app.render).toHaveBeenCalled()
+    })
+
+    it('does not update state for an unknown mode value', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      app.render = vi.fn().mockResolvedValue(undefined)
+
+      const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.toggleMode
+      const target = { dataset: { mode: 'unknown' } }
+
+      await action.call(app, {}, target)
+
+      expect(app._viewState.mode).toBe('buy')
+      expect(app.render).not.toHaveBeenCalled()
+    })
+
+    it('preserves other viewState fields when toggling mode', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, search: 'blaster', filterType: 'weapon' }
+      app.render = vi.fn().mockResolvedValue(undefined)
+
+      const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.toggleMode
+      await action.call(app, {}, { dataset: { mode: 'sell' } })
+
+      expect(app._viewState.mode).toBe('sell')
+      expect(app._viewState.search).toBe('blaster')
+      expect(app._viewState.filterType).toBe('weapon')
+    })
+  })
+
+  /* -------------------------------------------- */
+  /*  #prepareInventory via _preparePartContext    */
+  /* -------------------------------------------- */
+
+  describe('_preparePartContext — inventory', () => {
+    it('exposes context.mode from _viewState', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.mode).toBe('buy')
+    })
+
+    it('exposes context.mode as sell when _viewState.mode is sell', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, mode: 'sell' }
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.mode).toBe('sell')
+    })
+
+    it('exposes empty inventory when no buyer is set', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.inventory).toBeDefined()
+      expect(context.inventory.items).toHaveLength(0)
+    })
+
+    it('exposes sellable items when buyer is set', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const sellableItem = {
+        id: 'item-1',
+        name: 'Blaster Pistol',
+        img: 'icons/blaster.webp',
+        type: 'weapon',
+        system: { price: 400, _source: { price: 400 } },
+      }
+      const actor = {
+        id: 'actor-1',
+        name: 'Test',
+        system: { credits: 500 },
+        items: makeItemsCollection([sellableItem]),
+      }
+
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.inventory.items).toHaveLength(1)
+      const entry = context.inventory.items[0]
+      expect(entry.id).toBe('item-1')
+      expect(entry.name).toBe('Blaster Pistol')
+      expect(entry.type).toBe('weapon')
+      expect(entry.basePrice).toBe(400)
+    })
+
+    it('excludes items with non-purchasable types (e.g. talent)', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const talentItem = {
+        id: 'talent-1',
+        name: 'Force Sensitive',
+        img: '',
+        type: 'talent',
+        system: { price: 0 },
+      }
+      const actor = {
+        id: 'actor-1',
+        name: 'Test',
+        system: { credits: 500 },
+        items: makeItemsCollection([talentItem]),
+      }
+
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.inventory.items).toHaveLength(0)
+    })
+
+    it('includes only weapon, armor, and gear types', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const items = [
+        { id: 'w1', name: 'Blaster', img: '', type: 'weapon', system: { price: 100 } },
+        { id: 'a1', name: 'Armor', img: '', type: 'armor', system: { price: 200 } },
+        { id: 'g1', name: 'Medpac', img: '', type: 'gear', system: { price: 50 } },
+        { id: 't1', name: 'Force Power', img: '', type: 'talent', system: { price: 0 } },
+        { id: 'c1', name: 'Bounty Hunter', img: '', type: 'career', system: { price: 0 } },
+      ]
+      const actor = {
+        id: 'actor-1',
+        name: 'Test',
+        system: { credits: 500 },
+        items: makeItemsCollection(items),
+      }
+
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+      const context = await app._preparePartContext('catalog', {})
+
+      // Only weapon, armor, gear are sellable
+      expect(context.inventory.items).toHaveLength(3)
+      const types = context.inventory.items.map((i) => i.type)
+      expect(types).toContain('weapon')
+      expect(types).toContain('armor')
+      expect(types).toContain('gear')
+      expect(types).not.toContain('talent')
+      expect(types).not.toContain('career')
+    })
+
+    it('computes resaleEstimate as 25% of basePrice (floored)', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const item = { id: 'w1', name: 'Blaster', img: '', type: 'weapon', system: { price: 400 } }
+      const actor = {
+        id: 'actor-1',
+        name: 'Test',
+        system: { credits: 500 },
+        items: makeItemsCollection([item]),
+      }
+
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+      const context = await app._preparePartContext('catalog', {})
+
+      const entry = context.inventory.items[0]
+      expect(entry.resaleEstimate).toBe(Math.floor(400 * 0.25)) // 100
+      expect(entry.resaleFraction).toBe(25)
+    })
+
+    it('uses _source.price over system.price when available', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      // _source.price is 300, but post-derivation system.price is 999
+      const item = { id: 'w1', name: 'Blaster', img: '', type: 'weapon', system: { price: 999, _source: { price: 300 } } }
+      const actor = {
+        id: 'actor-1',
+        name: 'Test',
+        system: { credits: 500 },
+        items: makeItemsCollection([item]),
+      }
+
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+      const context = await app._preparePartContext('catalog', {})
+
+      const entry = context.inventory.items[0]
+      expect(entry.basePrice).toBe(300)
+      expect(entry.resaleEstimate).toBe(Math.floor(300 * 0.25)) // 75
+    })
+
+    it('sorts inventory items by name ascending', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const items = [
+        { id: 'z1', name: 'Z-6 Blaster', img: '', type: 'weapon', system: { price: 100 } },
+        { id: 'a1', name: 'A-300 Rifle', img: '', type: 'weapon', system: { price: 150 } },
+        { id: 'm1', name: 'Medpac', img: '', type: 'gear', system: { price: 50 } },
+      ]
+      const actor = {
+        id: 'actor-1',
+        name: 'Test',
+        system: { credits: 500 },
+        items: makeItemsCollection(items),
+      }
+
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+      const context = await app._preparePartContext('catalog', {})
+
+      const names = context.inventory.items.map((i) => i.name)
+      expect(names).toEqual([...names].sort((a, b) => a.localeCompare(b)))
+    })
+
+    it('exposes typeLabel from PURCHASABLE_ITEM_TYPES config', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const item = { id: 'w1', name: 'Blaster', img: '', type: 'weapon', system: { price: 100 } }
+      const actor = {
+        id: 'actor-1',
+        name: 'Test',
+        system: { credits: 500 },
+        items: makeItemsCollection([item]),
+      }
+
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+      const context = await app._preparePartContext('catalog', {})
+
+      const entry = context.inventory.items[0]
+      // typeLabel must be the i18n key from PURCHASABLE_ITEM_TYPES config
+      expect(entry.typeLabel).toBe('MARKET.ItemType.Weapon')
+    })
+  })
+
+  /* -------------------------------------------- */
+  /*  sellItem action                             */
+  /* -------------------------------------------- */
+
+  describe('sellItem action', () => {
+    it('shows a warn notification when no buyer actor is set', async () => {
+      const app = new MarketApplicationV2()
+      const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.sellItem
+      const target = { dataset: { itemId: 'item-1' } }
+
+      await action.call(app, {}, target)
+
+      expect(globalThis.ui.notifications.warn).toHaveBeenCalledWith('MARKET.Purchase.Error.MissingActor')
+    })
+
+    it('logs a warning and returns when no data-item-id is present', async () => {
+      const actor = { id: 'actor-1', name: 'Test', system: { credits: 500 } }
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+
+      const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.sellItem
+      const target = { dataset: {} }
+
+      await expect(action.call(app, {}, target)).resolves.toBeUndefined()
+      // No notification should be fired (only a logger.warn)
+      expect(globalThis.ui.notifications.warn).not.toHaveBeenCalled()
+      expect(globalThis.ui.notifications.error).not.toHaveBeenCalled()
+    })
+
+    it('shows an error notification when item is not found in seller inventory', async () => {
+      const actor = {
+        id: 'actor-1',
+        name: 'Test',
+        system: { credits: 500 },
+        items: { get: vi.fn(() => undefined) },
+      }
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+
+      const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.sellItem
+      const target = { dataset: { itemId: 'nonexistent-item' } }
+
+      await action.call(app, {}, target)
+
+      // ui.notifications.error receives the localized string (localize() translates the key)
+      expect(globalThis.ui.notifications.error).toHaveBeenCalledWith('Item was not found in your inventory.')
+    })
+
+    it('shows a warn notification when validateSale returns canSell=false', async () => {
+      const unsellableItem = {
+        id: 'talent-1',
+        name: 'Force Power',
+        type: 'talent',
+        system: { price: 0 },
+      }
+      const actor = {
+        id: 'actor-1',
+        name: 'Test',
+        system: { credits: 500 },
+        items: { get: vi.fn(() => unsellableItem) },
+      }
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+
+      const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.sellItem
+      const target = { dataset: { itemId: 'talent-1' } }
+
+      await action.call(app, {}, target)
+
+      // validateSale returns canSell=false for talent type
+      expect(globalThis.ui.notifications.warn).toHaveBeenCalled()
+    })
+
+    it('does not execute sale when confirmation dialog is cancelled', async () => {
+      const item = {
+        id: 'w1',
+        name: 'Blaster',
+        type: 'weapon',
+        system: { price: 100 },
+      }
+      const itemsArray = [item]
+      const actor = {
+        id: 'actor-1',
+        name: 'Test',
+        system: { credits: 500 },
+        items: {
+          get: vi.fn((id) => itemsArray.find((i) => i.id === id)),
+          some: vi.fn((fn) => itemsArray.some(fn)),
+        },
+        deleteEmbeddedDocuments: vi.fn().mockResolvedValue([]),
+        update: vi.fn().mockResolvedValue(undefined),
+      }
+      globalThis.foundry.applications.api.DialogV2.confirm = vi.fn().mockResolvedValue(false)
+
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+
+      const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.sellItem
+      const target = { dataset: { itemId: 'w1' } }
+
+      await action.call(app, {}, target)
+
+      expect(actor.deleteEmbeddedDocuments).not.toHaveBeenCalled()
+      expect(actor.update).not.toHaveBeenCalled()
+
+      delete globalThis.foundry.applications.api.DialogV2.confirm
+    })
+
+    it('deletes item and credits actor when sale is confirmed', async () => {
+      const item = {
+        id: 'w1',
+        name: 'Blaster',
+        type: 'weapon',
+        system: { price: 100 },
+      }
+      const itemsArray = [item]
+      const actor = {
+        id: 'actor-1',
+        name: 'Test',
+        system: { credits: 500 },
+        items: {
+          get: vi.fn((id) => itemsArray.find((i) => i.id === id)),
+          some: vi.fn((fn) => itemsArray.some(fn)),
+        },
+        deleteEmbeddedDocuments: vi.fn().mockResolvedValue([]),
+        update: vi.fn().mockResolvedValue(undefined),
+      }
+      // Confirm sale, skip negotiation
+      globalThis.foundry.applications.api.DialogV2.confirm = vi.fn().mockResolvedValueOnce(true).mockResolvedValueOnce(false)
+
+      const app = new MarketApplicationV2()
+      app.render = vi.fn().mockResolvedValue(undefined)
+      app.setBuyerActor(actor)
+
+      const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.sellItem
+      const target = { dataset: { itemId: 'w1' } }
+
+      await action.call(app, {}, target)
+
+      expect(actor.deleteEmbeddedDocuments).toHaveBeenCalledWith('Item', ['w1'])
+      // Credits: 500 + Math.floor(100 * 0.25) = 525
+      expect(actor.update).toHaveBeenCalledWith({ 'system.credits': 525 })
+      expect(globalThis.ui.notifications.info).toHaveBeenCalled()
+
+      delete globalThis.foundry.applications.api.DialogV2.confirm
     })
   })
 
