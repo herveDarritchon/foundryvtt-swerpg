@@ -77,7 +77,7 @@ export function validateSale({ actor, item } = {}) {
     }
   }
 
-  const basePrice = item.system?.price ?? 0
+  const basePrice = item.system?._source?.price ?? item.system?.price ?? 0
   if (typeof basePrice !== 'number' || !Number.isFinite(basePrice) || basePrice < 0) {
     return {
       canSell: false,
