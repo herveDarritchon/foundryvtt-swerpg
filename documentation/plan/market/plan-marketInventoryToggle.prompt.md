@@ -23,10 +23,10 @@ Fait partie de l'épique **Vente d'items via le Market** (Issue #478).
 
 ### Fichiers modifiés/créés
 
-| Fichier | Action | Description |
-|---------|--------|-------------|
+| Fichier                                             | Action  | Description                                                                                            |
+| --------------------------------------------------- | ------- | ------------------------------------------------------------------------------------------------------ |
 | `module/applications/market/market-application.mjs` | Modifié | Ajout `mode` dans `_viewState`, `#prepareInventory`, `#onToggleMode`, `#onSellItem`, `PARTS.inventory` |
-| `templates/market/market-inventory.hbs` | Créé | Template pour la liste inventaire vendable avec toggle buy/sell |
+| `templates/market/market-inventory.hbs`             | Créé    | Template pour la liste inventaire vendable avec toggle buy/sell                                        |
 
 ### Changements dans MarketApplicationV2
 
@@ -35,7 +35,7 @@ Fait partie de l'épique **Vente d'items via le Market** (Issue #478).
 ```javascript
 const DEFAULT_VIEW_STATE = Object.freeze({
   // ...existing fields...
-  mode: 'buy',  // 'buy' | 'sell'
+  mode: 'buy', // 'buy' | 'sell'
 })
 ```
 
@@ -96,6 +96,7 @@ Structure :
 5. **No buyer state** — message quand aucun personnage sélectionné
 
 Accessibilité :
+
 - `aria-pressed` sur les boutons toggle
 - `aria-label` sur boutons sell (nom de l'item)
 - `data-tooltip` pour infobulles
@@ -114,15 +115,15 @@ context.inventory = {
       type: 'weapon',
       typeLabel: 'SWERPG.ItemType.Weapon',
       basePrice: 400,
-      resaleEstimate: 100,   // Math.floor(400 * 0.25)
-      resaleFraction: 25,    // Math.round(0.25 * 100)
+      resaleEstimate: 100, // Math.floor(400 * 0.25)
+      resaleFraction: 25, // Math.round(0.25 * 100)
     },
     // ...
-  ]
+  ],
 }
 ```
 
-### _viewState shape complète
+### \_viewState shape complète
 
 ```javascript
 {
@@ -206,6 +207,7 @@ context.inventory = {
 **Fichiers** : `lang/en.json`, `lang/fr.json`
 
 Clés nécessaires :
+
 - `MARKET.Mode.Buy` / `MARKET.Mode.Sell`
 - `MARKET.Inventory.Description`
 - `MARKET.Inventory.BasePrice` / `MARKET.Inventory.ResaleEstimate`
@@ -220,6 +222,7 @@ Clés nécessaires :
 **Fichiers** : Tests unitaires pour `#prepareInventory` et tests d'intégration pour le flow toggle
 
 **Couverture** :
+
 - ✓ Toggle buy → sell → buy ne perd pas le state
 - ✓ `#prepareInventory` filtre correctement par `PURCHASABLE_ITEM_TYPES`
 - ✓ Items non vendables exclus
@@ -239,9 +242,9 @@ Clés nécessaires :
 
 ## Découpage en issues GitHub
 
-| #   | Titre                                                           | Périmètre                                        | Dépendances | Story Points |
-| --- | --------------------------------------------------------------- | ------------------------------------------------ | ----------- | ------------ |
-| 501 | **feat: PART inventory + mode buy/sell toggle dans Market**     | Tous les fichiers et actions énumérées ci-dessus | #499        | 8            |
+| #   | Titre                                                       | Périmètre                                        | Dépendances | Story Points |
+| --- | ----------------------------------------------------------- | ------------------------------------------------ | ----------- | ------------ |
+| 501 | **feat: PART inventory + mode buy/sell toggle dans Market** | Tous les fichiers et actions énumérées ci-dessus | #499        | 8            |
 
 **Total estimation** : 8 SP (~1 jour de développement)
 
@@ -268,6 +271,7 @@ Le template `market.hbs` doit conditionner l'affichage : `{{#if (eq mode 'sell')
 ### 5. CSS
 
 Styles pour :
+
 - `.market-mode-toggle` — flexbox row avec gap
 - `.market-mode-toggle__btn` — boutons toggle avec état `.is-active`
 - `.market-inventory__table` — même style que `.market-catalog__table`
@@ -292,22 +296,21 @@ Styles pour :
 
 Tous les éléments de l'issue sont présents dans la codebase :
 
-| Composant | Fichier | Status |
-|-----------|---------|--------|
-| `_viewState.mode` | `market-application.mjs` L62 | ✅ |
-| `#onToggleMode` | `market-application.mjs` L907-916 | ✅ |
-| `#onSellItem` | `market-application.mjs` L927+ | ✅ |
-| `#prepareInventory(actor)` | `market-application.mjs` L869-893 | ✅ |
-| Template inventory | `templates/market/market-inventory.hbs` (96 lignes) | ✅ |
-| Actions enregistrées | `DEFAULT_OPTIONS.actions` L178-179 | ✅ |
-| Filtrage PURCHASABLE_ITEM_TYPES | `#prepareInventory` L873 | ✅ |
-| Estimation 25% via computeResalePrice | `#prepareInventory` L875 | ✅ |
-| Import sell-valuation | L20 | ✅ |
-| Import sell-validation | L19 | ✅ |
+| Composant                             | Fichier                                             | Status |
+| ------------------------------------- | --------------------------------------------------- | ------ |
+| `_viewState.mode`                     | `market-application.mjs` L62                        | ✅     |
+| `#onToggleMode`                       | `market-application.mjs` L907-916                   | ✅     |
+| `#onSellItem`                         | `market-application.mjs` L927+                      | ✅     |
+| `#prepareInventory(actor)`            | `market-application.mjs` L869-893                   | ✅     |
+| Template inventory                    | `templates/market/market-inventory.hbs` (96 lignes) | ✅     |
+| Actions enregistrées                  | `DEFAULT_OPTIONS.actions` L178-179                  | ✅     |
+| Filtrage PURCHASABLE_ITEM_TYPES       | `#prepareInventory` L873                            | ✅     |
+| Estimation 25% via computeResalePrice | `#prepareInventory` L875                            | ✅     |
+| Import sell-valuation                 | L20                                                 | ✅     |
+| Import sell-validation                | L19                                                 | ✅     |
 
 ### Prochaines étapes
 
 1. **Vérifier tests existants** pour le toggle mode et l'inventaire
 2. **Valider i18n** : confirmer que les clés `MARKET.Mode.*`, `MARKET.Inventory.*`, `MARKET.Sell.*` sont présentes dans `lang/en.json` et `lang/fr.json`
 3. **Fermer issue #501** avec référence aux fichiers livrés
-

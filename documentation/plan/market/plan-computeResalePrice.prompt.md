@@ -23,10 +23,10 @@ Fait partie de l'épique **Vente d'items via le Market** (Issue #478).
 ### Constantes (ADR-0018)
 
 ```javascript
-export const SELL_BASE_FRACTION       = 0.25  // 25% — défaut / échec négociation
-export const SELL_NEGOTIATED_FRACTION = 0.50  // 50% — succès négociation
-export const SELL_MAX_FRACTION        = 0.75  // 75% — triomphe
-export const SELL_DISASTER_FRACTION   = 0.10  // 10% — désastre
+export const SELL_BASE_FRACTION = 0.25 // 25% — défaut / échec négociation
+export const SELL_NEGOTIATED_FRACTION = 0.5 // 50% — succès négociation
+export const SELL_MAX_FRACTION = 0.75 // 75% — triomphe
+export const SELL_DISASTER_FRACTION = 0.1 // 10% — désastre
 ```
 
 ### Signature fonction
@@ -132,7 +132,7 @@ graph LR
 - ✓ Result object contains basePrice, fraction, outcome
 - ✓ Unknown outcome → defaults to 25%
 - ✓ basePrice = 0 → resalePrice = 0
-- ✓ Flooring works correctly (e.g., 33 * 0.25 = 8.25 → 8)
+- ✓ Flooring works correctly (e.g., 33 \* 0.25 = 8.25 → 8)
 - ✓ Flooring on all outcomes (success, triumph, disaster)
 - ✓ TypeError on negative basePrice
 - ✓ TypeError on NaN
@@ -187,9 +187,9 @@ graph LR
 
 ## Découpage en issues GitHub
 
-| #   | Titre                                                                  | Périmètre                                       | Dépendances | Story Points |
-| --- | ---------------------------------------------------------------------- | ----------------------------------------------- | ----------- | ------------ |
-| 499 | **feat: Pure domain `computeResalePrice` — sell-valuation module**     | Module + tests + ADR-0018 conformity validation | —           | 5            |
+| #   | Titre                                                              | Périmètre                                       | Dépendances | Story Points |
+| --- | ------------------------------------------------------------------ | ----------------------------------------------- | ----------- | ------------ |
+| 499 | **feat: Pure domain `computeResalePrice` — sell-valuation module** | Module + tests + ADR-0018 conformity validation | —           | 5            |
 
 **Total estimation** : 5 SP (~demi-jour)
 
@@ -198,6 +198,7 @@ graph LR
 ### 1. Placement du module
 
 Le module `sell-valuation.mjs` vit dans `module/lib/market/` (pas en `module/models/` ni `module/config/`) car :
+
 - C'est une fonction **pure domaine**, pas une couche de présentation ou configuration
 - Zéro dépendance Foundry → acceptable en `lib/`
 - Composable par la couche **adapter** (Market application, hooks, etc.)
@@ -205,6 +206,7 @@ Le module `sell-valuation.mjs` vit dans `module/lib/market/` (pas en `module/mod
 ### 2. Réutilisabilité
 
 Cette fonction peut être appelée par :
+
 - Market app lors du click "Sell"
 - Tests d'intégration Tier 2 (chat message validation)
 - Reports/analytics sur les prix de revente
@@ -212,6 +214,7 @@ Cette fonction peut être appelée par :
 ### 3. Évolution futur
 
 Si des **multiplicateurs dynamiques** (rareté, condition item, négociation avancée) sont ajoutés :
+
 - Ajouter paramètres optionnels à `computeResalePrice`
 - Garder fallback sur les fractions actuelles
 - Tester backward compatibility
@@ -276,5 +279,3 @@ Voir fichiers sources pour confirmation exacte. Tous les AC répertoriés dans c
 1. **Exécuter tests** : `pnpm vitest run tests/lib/market/sell-valuation.test.mjs`
 2. **Confirmer zéro dépendance Foundry** : `grep -r "import.*from.*foundry" module/lib/market/sell-valuation.mjs` → doit être vide
 3. **Fermer issue #499** : Si tout passe, fermer avec statut ✅ Done
-
-
