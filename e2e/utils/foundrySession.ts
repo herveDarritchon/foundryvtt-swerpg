@@ -78,7 +78,7 @@ async function dismissFoundryLaunchDialogs(page: Page): Promise<void> {
   // Poll for blocking dialogs for up to 8 seconds after the launch click.
   // Each iteration checks for known dialogs and dismisses them; if neither appears
   // within the poll window, we assume no dialog is blocking the launch.
-  const deadline = Date.now() + 8000
+  let deadline = Date.now() + 8000
   while (Date.now() < deadline) {
     // Check for "World Data Migration" dialog
     const migrationDialog = page.locator('dialog, [role="dialog"]').filter({ hasText: /World Data Migration/i })
@@ -95,8 +95,10 @@ async function dismissFoundryLaunchDialogs(page: Page): Promise<void> {
       const beginBtn = migrationDialog.getByRole('button', { name: /Begin Migration/i })
       await beginBtn.click()
       console.log('[enterWorld] Migration confirmée ✔')
-      // Reset deadline after handling to allow time for any subsequent dialog
-      // (do NOT break here — loop continues to catch the backup sub-dialog if it appears)
+      // Wait for dialog to close before looping — avoids re-detecting the same dialog
+      await migrationDialog.waitFor({ state: 'hidden', timeout: 30000 }).catch(() => {})
+      // Reset deadline to allow time for any subsequent dialog (e.g. backup sub-dialog)
+      deadline = Date.now() + 8000
       continue
     }
 
