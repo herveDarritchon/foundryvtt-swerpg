@@ -257,6 +257,7 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
           id: buyer.id,
           name: buyer.name,
           credits: buyerCredits,
+          formattedCredits: buyerCredits !== null ? buyerCredits.toLocaleString() : '—',
         }
       : null
 

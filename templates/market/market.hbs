@@ -35,7 +35,9 @@
       <div class="market-buyer-bar">
         <span class="market-buyer-bar__name">{{buyer.name}}</span>
         <span class="market-buyer-bar__credits">
-          {{localize "MARKET.Buyer.Credits"}}: <strong>{{buyer.credits}}</strong>
+          <i class="fa-solid fa-coins market-buyer-bar__credits-icon" aria-hidden="true"></i>
+          <span class="market-buyer-bar__credits-label">{{localize "MARKET.Buyer.Credits"}}</span>
+          <strong class="market-buyer-bar__credits-amount">{{buyer.formattedCredits}}</strong>
         </span>
       </div>
 
@@ -182,7 +184,9 @@
     <div class="market-buyer-bar">
       <span class="market-buyer-bar__name">{{buyer.name}}</span>
       <span class="market-buyer-bar__credits">
-        {{localize "MARKET.Buyer.Credits"}}: <strong>{{buyer.credits}}</strong>
+        <i class="fa-solid fa-coins market-buyer-bar__credits-icon" aria-hidden="true"></i>
+        <span class="market-buyer-bar__credits-label">{{localize "MARKET.Buyer.Credits"}}</span>
+        <strong class="market-buyer-bar__credits-amount">{{buyer.formattedCredits}}</strong>
       </span>
     </div>
   {{else}}
@@ -416,6 +420,7 @@
                     aria-label="{{localize 'MARKET.Purchase.NegotiateButton'}}"
                   >
                     <i class="fa-solid fa-handshake" aria-hidden="true"></i>
+                    <span class="market-item__btn-label">{{localize "MARKET.Purchase.NegotiateButton"}}</span>
                   </button>
                 {{/if}}
                 <button
@@ -428,6 +433,7 @@
                   aria-label="{{localize 'MARKET.Purchase.BuyButton'}}"
                 >
                   <i class="fa-solid fa-coins" aria-hidden="true"></i>
+                  <span class="market-item__btn-label">{{localize "MARKET.Purchase.BuyButton"}}</span>
                 </button>
               </td>
             {{/if}}
