@@ -1578,6 +1578,128 @@ describe('MarketApplicationV2', () => {
 
       expect(context.catalog.totalCount).toBe(0)
     })
+
+    it('annotates restrictionLabel for items with restrictionLevel=none (non-null i18n key)', async () => {
+      const legal = makeItem({ type: 'weapon', name: 'Legal Blaster', restrictionLevel: 'none', availability: 'available' })
+      globalThis.game.items = makeItemsCollection([legal])
+
+      const app = new MarketApplicationV2()
+      const context = await app._preparePartContext('catalog', {})
+
+      // restrictionLabel must not be null for none — the template falls back to empty display via {{#if}}
+      // but the key must be provided so the template can localize correctly when restrictionLevel is 'none'
+      expect(context.catalog.items[0].restrictionLabel).toBe('ITEM.RESTRICTION_LEVEL.NONE')
+    })
+  })
+
+  /* -------------------------------------------- */
+  /*  Rarity display — rarityPips view-model       */
+  /* -------------------------------------------- */
+
+  describe('rarityPips annotation on catalog entries', () => {
+    it('produces an array of filled pip objects matching the rarity value', async () => {
+      const item = makeItem({ type: 'weapon', name: 'Blaster', rarity: 3, availability: 'available' })
+      globalThis.game.items = makeItemsCollection([item])
+
+      const app = new MarketApplicationV2()
+      const context = await app._preparePartContext('catalog', {})
+
+      const entry = context.catalog.items[0]
+      expect(Array.isArray(entry.rarityPips)).toBe(true)
+      expect(entry.rarityPips).toHaveLength(3)
+      expect(entry.rarityPips.every((p) => p.filled === true)).toBe(true)
+    })
+
+    it('produces an empty array when rarity is 0', async () => {
+      const item = makeItem({ type: 'weapon', name: 'Common Blaster', rarity: 0, availability: 'available' })
+      globalThis.game.items = makeItemsCollection([item])
+
+      const app = new MarketApplicationV2()
+      const context = await app._preparePartContext('catalog', {})
+
+      const entry = context.catalog.items[0]
+      expect(entry.rarityPips).toHaveLength(0)
+    })
+
+    it('produces an empty array when rarity is missing/undefined (falls back to 0)', async () => {
+      const item = makeItem({ type: 'weapon', name: 'Unknown Rarity', availability: 'available' })
+      // Override rarity to undefined after factory
+      item.system.rarity = undefined
+      globalThis.game.items = makeItemsCollection([item])
+
+      const app = new MarketApplicationV2()
+      const context = await app._preparePartContext('catalog', {})
+
+      const entry = context.catalog.items[0]
+      expect(Array.isArray(entry.rarityPips)).toBe(true)
+      expect(entry.rarityPips).toHaveLength(0)
+    })
+
+    it('caps rarityPips at 10 even when rarity exceeds 10', async () => {
+      const item = makeItem({ type: 'weapon', name: 'Ultra Rare', rarity: 15, availability: 'available' })
+      globalThis.game.items = makeItemsCollection([item])
+
+      const app = new MarketApplicationV2()
+      const context = await app._preparePartContext('catalog', {})
+
+      const entry = context.catalog.items[0]
+      expect(entry.rarityPips).toHaveLength(10)
+    })
+
+    it('produces exactly 1 pip for rarity 1', async () => {
+      const item = makeItem({ type: 'weapon', name: 'Blaster', rarity: 1, availability: 'available' })
+      globalThis.game.items = makeItemsCollection([item])
+
+      const app = new MarketApplicationV2()
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.catalog.items[0].rarityPips).toHaveLength(1)
+    })
+
+    it('produces exactly 10 pips for rarity 10', async () => {
+      const item = makeItem({ type: 'weapon', name: 'Legendary', rarity: 10, availability: 'available' })
+      globalThis.game.items = makeItemsCollection([item])
+
+      const app = new MarketApplicationV2()
+      // Use black-market to ensure visibility (rarity 10 items may be excluded in standard)
+      app._viewState = { ...app._viewState, activeMarketType: 'black-market' }
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.catalog.items[0].rarityPips).toHaveLength(10)
+    })
+
+    it('exposes rarityPips on every catalog entry', async () => {
+      const items = [
+        makeItem({ type: 'weapon', name: 'Item A', rarity: 2, availability: 'available' }),
+        makeItem({ type: 'armor', name: 'Item B', rarity: 5, availability: 'available' }),
+        makeItem({ type: 'gear', name: 'Item C', rarity: 0, availability: 'available' }),
+      ]
+      globalThis.game.items = makeItemsCollection(items)
+
+      const app = new MarketApplicationV2()
+      const context = await app._preparePartContext('catalog', {})
+
+      for (const entry of context.catalog.items) {
+        expect(entry).toHaveProperty('rarityPips')
+        expect(Array.isArray(entry.rarityPips)).toBe(true)
+      }
+    })
+
+    it('does not alter sort-by-rarity behavior (rarityPips is presentation-only, entry.rarity unchanged)', async () => {
+      const common = makeItem({ type: 'weapon', name: 'Common', rarity: 1 })
+      const rare = makeItem({ type: 'weapon', name: 'Rare', rarity: 5 })
+      globalThis.game.items = makeItemsCollection([rare, common])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, sortBy: 'rarity', sortDirection: 'asc' }
+      const context = await app._preparePartContext('catalog', {})
+
+      const rarities = context.catalog.items.map((e) => e.rarity)
+      expect(rarities[0]).toBeLessThanOrEqual(rarities[1])
+      // entry.rarity is preserved
+      expect(context.catalog.items[0].rarity).toBe(1)
+      expect(context.catalog.items[1].rarity).toBe(5)
+    })
   })
 
   /* -------------------------------------------- */
