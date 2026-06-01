@@ -261,7 +261,7 @@
             </td>
             <td class="market-col--name">
               {{entry.name}}
-              {{!-- Restriction badge (visible in specialized/black-market for restricted items) --}}
+              {{!-- Restriction badge (priority badge — shown when item carries a restriction level) --}}
               {{#if entry.isRestricted}}
                 <span class="market-entry__restriction-badge"
                       data-restriction="{{entry.restrictionLevel}}"
@@ -278,9 +278,9 @@
                   <span class="market-entry__restriction-text">{{localize entry.restrictionLabel}}</span>
                 </span>
               {{/if}}
-              {{!-- Narrative badges --}}
+              {{!-- Secondary narrative badges (deduplication applied in JS view-model) --}}
               <span class="market-badges" aria-label="{{localize 'MARKET.Badge.AriaLabel'}}">
-                {{#if entry.isImperialSuspicion}}
+                {{#if entry.badges.showImperialSuspicion}}
                   <span class="market-badge market-badge--imperial"
                     data-tooltip="{{localize 'MARKET.Badge.ImperialSuspicion.Tooltip'}}"
                     aria-label="{{localize 'MARKET.Badge.ImperialSuspicion.Tooltip'}}"
@@ -288,7 +288,7 @@
                     <i class="fa-solid fa-eye" aria-hidden="true"></i>
                   </span>
                 {{/if}}
-                {{#if entry.isBlackMarket}}
+                {{#if entry.badges.showBlackMarket}}
                   <span class="market-badge market-badge--black-market"
                     data-tooltip="{{localize 'MARKET.Badge.BlackMarket.Tooltip'}}"
                     aria-label="{{localize 'MARKET.Badge.BlackMarket.Tooltip'}}"
@@ -296,14 +296,15 @@
                     <i class="fa-solid fa-skull-crossbones" aria-hidden="true"></i>
                   </span>
                 {{/if}}
-                {{#if entry.obtainability.immediate}}
+                {{#if entry.badges.showImmediateAccess}}
                   <span class="market-badge market-badge--immediate"
                     data-tooltip="{{localize 'MARKET.Badge.ImmediateAccess.Tooltip'}}"
                     aria-label="{{localize 'MARKET.Badge.ImmediateAccess.Tooltip'}}"
                   >
                     <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
                   </span>
-                {{else}}
+                {{/if}}
+                {{#if entry.badges.showSupplyDelay}}
                   <span class="market-badge market-badge--delayed"
                     data-tooltip="{{localize 'MARKET.Badge.SupplyDelay.Tooltip'}}: {{entry.obtainability.delayInDays}} {{localize 'MARKET.Badge.SupplyDelay.Days'}}"
                     aria-label="{{localize 'MARKET.Badge.SupplyDelay.Tooltip'}}: {{entry.obtainability.delayInDays}} {{localize 'MARKET.Badge.SupplyDelay.Days'}}"
@@ -311,7 +312,7 @@
                     <i class="fa-solid fa-hourglass-half" aria-hidden="true"></i>
                   </span>
                 {{/if}}
-                {{#if entry.isNegotiable}}
+                {{#if entry.badges.showNegotiable}}
                   <span class="market-badge market-badge--negotiable"
                     data-tooltip="{{localize 'MARKET.Badge.Negotiable.Tooltip'}}"
                     aria-label="{{localize 'MARKET.Badge.Negotiable.Tooltip'}}"

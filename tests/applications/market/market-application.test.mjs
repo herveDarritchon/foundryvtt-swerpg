@@ -2123,6 +2123,126 @@ describe('MarketApplicationV2', () => {
   })
 
   /* -------------------------------------------- */
+  /*  Badge view-model deduplication (#526)       */
+  /* -------------------------------------------- */
+
+  describe('badges view-model on catalog entries', () => {
+    it('exposes a badges object on every catalog entry', async () => {
+      const item = makeItem({ type: 'weapon', name: 'Blaster', availability: 'available' })
+      globalThis.game.items = makeItemsCollection([item])
+
+      const app = new MarketApplicationV2()
+      const context = await app._preparePartContext('catalog', {})
+
+      const entry = context.catalog.items[0]
+      expect(entry.badges).toBeDefined()
+      expect(typeof entry.badges).toBe('object')
+    })
+
+    it('badges.showBlackMarket is false when restrictionLevel is "illegal" (skull already shown by restriction badge)', async () => {
+      // Black-market market — item is illegal (skull already rendered by restriction badge)
+      const item = makeItem({ type: 'weapon', name: 'Illegal Blaster', restrictionLevel: 'illegal', availability: 'blackMarket' })
+      globalThis.game.items = makeItemsCollection([item])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, activeMarketType: 'black-market' }
+      const context = await app._preparePartContext('catalog', {})
+
+      const entry = context.catalog.items[0]
+      // isBlackMarket is true, but showBlackMarket is suppressed because illegal already carries the skull
+      expect(entry.isBlackMarket).toBe(true)
+      expect(entry.badges.showBlackMarket).toBe(false)
+    })
+
+    it('badges.showBlackMarket is true when item is black-market but restrictionLevel is not "illegal"', async () => {
+      // Item with blackMarket availability but restriction "restricted" — skull not already shown
+      const item = makeItem({ type: 'weapon', name: 'Restricted BM Item', restrictionLevel: 'restricted', availability: 'blackMarket' })
+      globalThis.game.items = makeItemsCollection([item])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, activeMarketType: 'black-market' }
+      const context = await app._preparePartContext('catalog', {})
+
+      const entry = context.catalog.items[0]
+      expect(entry.isBlackMarket).toBe(true)
+      expect(entry.badges.showBlackMarket).toBe(true)
+    })
+
+    it('badges.showNegotiable is false when buyer is present (CTA negotiate button already signals negotiability)', async () => {
+      const item = makeItem({ type: 'weapon', name: 'Blaster', availability: 'available' })
+      globalThis.game.items = makeItemsCollection([item])
+
+      const actor = { id: 'actor-1', name: 'Test', system: { credits: 500 } }
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+      app._viewState = { ...app._viewState, activeMarketType: 'standard' } // negotiationAllowed=true
+      const context = await app._preparePartContext('catalog', {})
+
+      const entry = context.catalog.items[0]
+      // isNegotiable is true, but showNegotiable is suppressed because the CTA button is visible
+      expect(entry.isNegotiable).toBe(true)
+      expect(entry.badges.showNegotiable).toBe(false)
+    })
+
+    it('badges.showNegotiable is true when market is negotiable and buyer is absent', async () => {
+      const item = makeItem({ type: 'weapon', name: 'Blaster', availability: 'available' })
+      globalThis.game.items = makeItemsCollection([item])
+
+      const app = new MarketApplicationV2()
+      // No buyer set
+      app._viewState = { ...app._viewState, activeMarketType: 'standard' } // negotiationAllowed=true
+      const context = await app._preparePartContext('catalog', {})
+
+      const entry = context.catalog.items[0]
+      expect(entry.isNegotiable).toBe(true)
+      expect(entry.badges.showNegotiable).toBe(true)
+    })
+
+    it('badges.showImperialSuspicion reflects isImperialSuspicion (no deduplication applied)', async () => {
+      // Imperial suspicion badge is never duplicated by any other badge
+      const item = makeItem({ type: 'weapon', name: 'Restricted Blaster', restrictionLevel: 'restricted', availability: 'available' })
+      globalThis.game.items = makeItemsCollection([item])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, activeMarketType: 'specialized' }
+      const context = await app._preparePartContext('catalog', {})
+
+      const entry = context.catalog.items[0]
+      expect(entry.isImperialSuspicion).toBe(true)
+      expect(entry.badges.showImperialSuspicion).toBe(true)
+    })
+
+    it('badges.showImmediateAccess is true when obtainability.immediate is true', async () => {
+      // rarity=0 in standard market → immediate access
+      const item = makeItem({ type: 'weapon', name: 'Common Blaster', availability: 'available', rarity: 0 })
+      globalThis.game.items = makeItemsCollection([item])
+
+      const app = new MarketApplicationV2()
+      const context = await app._preparePartContext('catalog', {})
+
+      const entry = context.catalog.items[0]
+      expect(entry.badges.showImmediateAccess).toBe(entry.obtainability.immediate)
+      expect(entry.badges.showSupplyDelay).toBe(!entry.obtainability.immediate)
+    })
+
+    it('badges.showImmediateAccess and badges.showSupplyDelay are mutually exclusive', async () => {
+      const items = [
+        makeItem({ type: 'weapon', name: 'Common', availability: 'available', rarity: 0 }),
+        makeItem({ type: 'weapon', name: 'Rare', availability: 'rare', rarity: 7 }),
+      ]
+      globalThis.game.items = makeItemsCollection(items)
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, activeMarketType: 'specialized' }
+      const context = await app._preparePartContext('catalog', {})
+
+      for (const entry of context.catalog.items) {
+        expect(entry.badges.showImmediateAccess).not.toBe(entry.badges.showSupplyDelay)
+      }
+    })
+  })
+
+  /* -------------------------------------------- */
   /*  Consequence integration (Phase 7)           */
   /* -------------------------------------------- */
 
