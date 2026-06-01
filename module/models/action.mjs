@@ -915,7 +915,7 @@ export default class SwerpgAction extends foundry.abstract.DataModel {
 
   /**
    * A generator which provides the test conditions for action lifecycle.
-   * @returns {Generator<Object|*, void, *>}
+   * @yields {Object|*} The tag configuration for each lifecycle test condition.
    * @protected
    */
   *_tests() {

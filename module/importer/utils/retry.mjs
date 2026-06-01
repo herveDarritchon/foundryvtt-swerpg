@@ -20,7 +20,9 @@ export async function withRetry(fn, options = {}) {
       attempt += 1
       logger.warn('[Retry] Tentative échouée', { attempt, maxAttempts, error: e?.message })
       if (attempt >= maxAttempts || !shouldRetry(e)) throw e
-      await new Promise((res) => setTimeout(res, delay))
+      await new Promise((res) => {
+        setTimeout(res, delay)
+      })
       delay *= 2
     }
   }
