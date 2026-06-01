@@ -230,6 +230,51 @@ describe('MarketApplicationV2', () => {
       expect(context.buyer.name).toBe('Vara Kesh')
       expect(context.buyer.credits).toBe(750)
     })
+
+    it('exposes buyer formattedCredits as a non-empty string when credits are set', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const actor = { id: 'actor-1', name: 'Vara Kesh', system: { credits: 1250 } }
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.buyer).not.toBeNull()
+      expect(typeof context.buyer.formattedCredits).toBe('string')
+      expect(context.buyer.formattedCredits).not.toBe('')
+    })
+
+    it('exposes buyer formattedCredits as "—" when credits are null', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      // Actor with no credits field — resolves to null
+      const actor = { id: 'actor-1', name: 'No Credits', system: {} }
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.buyer).not.toBeNull()
+      expect(context.buyer.formattedCredits).toBe('—')
+    })
+
+    it('exposes formattedCredits derived from creditBudget.availableCredits when present', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const actor = {
+        id: 'actor-2',
+        name: 'Rich Character',
+        system: { creditBudget: { availableCredits: 3000 }, credits: 0 },
+      }
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.buyer).not.toBeNull()
+      // formattedCredits must reflect creditBudget.availableCredits (3000), not system.credits (0)
+      expect(context.buyer.credits).toBe(3000)
+      expect(typeof context.buyer.formattedCredits).toBe('string')
+      expect(context.buyer.formattedCredits).not.toBe('—')
+    })
   })
 
   describe('canBuy annotation on catalog entries', () => {
