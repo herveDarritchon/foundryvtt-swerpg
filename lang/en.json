@@ -1804,7 +1804,18 @@
       "ResaleEstimate": "Resale (25%)",
       "SellAriaLabel": "Sell",
       "SellButton": "Sell",
-      "Empty": "Your inventory contains no sellable items."
+      "Empty": "Your inventory contains no sellable items.",
+      "Toolbar": {
+        "Search": {
+          "Label": "Search inventory",
+          "Placeholder": "Search…"
+        },
+        "Sort": {
+          "BasePrice": "Base Price",
+          "ResaleEstimate": "Resale Price"
+        },
+        "EmptySearch": "No items in your inventory match the search."
+      }
     },
     "Settings": {
       "Title": "Market Configuration",

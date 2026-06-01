@@ -32,8 +32,11 @@ const { api } = foundry.applications
  * @property {boolean} affordableOnly    When true, only items the buyer can afford are shown
  * @property {string} sortBy             Sort field key: 'name' | 'price' | 'rarity'
  * @property {'asc'|'desc'} sortDirection  Sort direction
- * @property {string} activeMarketType   Active market type key (key of MARKET_TYPES)
- * @property {'buy'|'sell'} mode         Current market mode: buy catalogue or sell inventory
+ * @property {string} activeMarketType        Active market type key (key of MARKET_TYPES)
+ * @property {'buy'|'sell'} mode              Current market mode: buy catalogue or sell inventory
+ * @property {string} inventorySearch         Text search query for sell-mode inventory
+ * @property {string} inventorySortBy         Sort field key for inventory: 'name' | 'basePrice' | 'resaleEstimate'
+ * @property {'asc'|'desc'} inventorySortDirection  Sort direction for inventory
  */
 
 /**
@@ -44,6 +47,17 @@ const MARKET_SORT_FIELDS = Object.freeze({
   name: 'name',
   price: 'price',
   rarity: 'rarity',
+})
+
+/**
+ * Canonical sort field keys for the sell-mode inventory.
+ * Limited to fields meaningful for a seller's own inventory.
+ * @enum {string}
+ */
+const INVENTORY_SORT_FIELDS = Object.freeze({
+  name: 'name',
+  basePrice: 'basePrice',
+  resaleEstimate: 'resaleEstimate',
 })
 
 /**
@@ -60,6 +74,9 @@ const DEFAULT_VIEW_STATE = Object.freeze({
   sortDirection: 'asc',
   activeMarketType: DEFAULT_MARKET_TYPE,
   mode: 'buy',
+  inventorySearch: '',
+  inventorySortBy: INVENTORY_SORT_FIELDS.name,
+  inventorySortDirection: 'asc',
 })
 
 /* -------------------------------------------- */
@@ -172,6 +189,7 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
     actions: {
       openItem: MarketApplicationV2.#onOpenItem,
       resetCatalog: MarketApplicationV2.#onResetCatalog,
+      resetInventory: MarketApplicationV2.#onResetInventory,
       buyItem: MarketApplicationV2.#onBuyItem,
       negotiateItem: MarketApplicationV2.#onNegotiateItem,
       changeMarket: MarketApplicationV2.#onChangeMarket,
@@ -249,7 +267,8 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
       context.sourceFilterOptions = this.#buildSourceFilterOptions()
       context.restrictionFilterOptions = this.#buildRestrictionFilterOptions()
       context.marketTypeOptions = this.#buildMarketTypeOptions()
-      context.inventory = buyer ? this.#prepareInventory(buyer) : { items: [] }
+      context.inventorySortOptions = this.#buildInventorySortOptions()
+      context.inventory = buyer ? this.#prepareInventory(buyer) : { items: [], isEmpty: true, isFilteredEmpty: false }
     }
 
     return context
@@ -348,6 +367,19 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
       description: def.description,
       uiVariant: def.uiVariant,
     }))
+  }
+
+  /**
+   * Build the list of available sort options for the sell-mode inventory toolbar.
+   * Limited to fields relevant to the seller's inventory: name, base price, resale estimate.
+   * @returns {Array<{value: string, label: string}>}
+   */
+  #buildInventorySortOptions() {
+    return [
+      { value: INVENTORY_SORT_FIELDS.name, label: 'MARKET.Toolbar.Sort.Name' },
+      { value: INVENTORY_SORT_FIELDS.basePrice, label: 'MARKET.Inventory.Toolbar.Sort.BasePrice' },
+      { value: INVENTORY_SORT_FIELDS.resaleEstimate, label: 'MARKET.Inventory.Toolbar.Sort.ResaleEstimate' },
+    ]
   }
 
   /* -------------------------------------------- */
@@ -518,6 +550,25 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
    */
   static async #onResetCatalog(_event, _target) {
     this._viewState = { ...DEFAULT_VIEW_STATE }
+    await this.render()
+  }
+
+  /**
+   * Reset the sell-mode inventory search and sort to their defaults, then re-render.
+   * Does not change the mode or the buy-mode filters.
+   * @this {MarketApplicationV2}
+   * @param {PointerEvent} _event   The initiating click event
+   * @param {HTMLElement}  _target  The element bearing data-action="resetInventory"
+   * @returns {Promise<void>}
+   */
+  static async #onResetInventory(_event, _target) {
+    this._viewState = {
+      ...this._viewState,
+      inventorySearch: DEFAULT_VIEW_STATE.inventorySearch,
+      inventorySortBy: DEFAULT_VIEW_STATE.inventorySortBy,
+      inventorySortDirection: DEFAULT_VIEW_STATE.inventorySortDirection,
+    }
+    logger.debug('[Market] Inventory search/sort reset')
     await this.render()
   }
 
@@ -877,13 +928,15 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
 
   /**
    * Build the inventory context for the sell mode.
-   * Filters actor items to only include sellable types and annotates them with resale estimates.
+   * Pipeline: collect sellable items → normalise fields → filter by text search → sort.
+   * Search and sort are driven by the inventory-specific fields in `_viewState`.
    *
    * @param {Actor} actor  The seller actor.
-   * @returns {{ items: Array<object> }}
+   * @returns {{ items: Array<object>, isEmpty: boolean, isFilteredEmpty: boolean }}
    */
   #prepareInventory(actor) {
-    const sellableItems = []
+    // 1. Collect all sellable items and normalise fields
+    const allItems = []
 
     for (const item of actor.items ?? []) {
       if (!(item.type in PURCHASABLE_ITEM_TYPES)) continue
@@ -891,7 +944,7 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
       const valuation = computeResalePrice({ basePrice, negotiationOutcome: 'failure' })
       const typeConfig = PURCHASABLE_ITEM_TYPES[item.type]
 
-      sellableItems.push({
+      allItems.push({
         id: item.id,
         name: item.name,
         img: item.img ?? '',
@@ -903,9 +956,42 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
       })
     }
 
-    sellableItems.sort((a, b) => a.name.localeCompare(b.name))
+    const totalCount = allItems.length
 
-    return { items: sellableItems }
+    // 2. Apply text search on item name (case-insensitive)
+    const { inventorySearch, inventorySortBy, inventorySortDirection } = this._viewState
+    let filtered = allItems
+    if (inventorySearch) {
+      const needle = inventorySearch.trim().toLowerCase()
+      if (needle) {
+        filtered = allItems.filter((entry) => entry.name.toLowerCase().includes(needle))
+      }
+    }
+
+    // 3. Sort by selected field and direction
+    const multiplier = inventorySortDirection === 'desc' ? -1 : 1
+    const sorted = [...filtered].sort((a, b) => {
+      let cmp = 0
+      if (inventorySortBy === INVENTORY_SORT_FIELDS.name) {
+        cmp = a.name.localeCompare(b.name)
+      } else if (inventorySortBy === INVENTORY_SORT_FIELDS.basePrice) {
+        cmp = a.basePrice - b.basePrice
+      } else if (inventorySortBy === INVENTORY_SORT_FIELDS.resaleEstimate) {
+        cmp = a.resaleEstimate - b.resaleEstimate
+      } else {
+        cmp = a.name.localeCompare(b.name)
+      }
+      return cmp * multiplier
+    })
+
+    const filteredCount = sorted.length
+    const hasActiveFilter = !!inventorySearch?.trim()
+
+    return {
+      items: sorted,
+      isEmpty: totalCount === 0,
+      isFilteredEmpty: totalCount > 0 && filteredCount === 0 && hasActiveFilter,
+    }
   }
 
   /* -------------------------------------------- */
@@ -1151,6 +1237,33 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
     if (sortDirSelect) {
       sortDirSelect.addEventListener('change', (event) => {
         this._viewState = { ...this._viewState, sortDirection: event.currentTarget.value === 'desc' ? 'desc' : 'asc' }
+        this.render()
+      })
+    }
+
+    // Sell-mode toolbar: inventory search input
+    const inventorySearchInput = html.querySelector('.market-inventory-toolbar__search')
+    if (inventorySearchInput) {
+      inventorySearchInput.addEventListener('input', (event) => {
+        this._viewState = { ...this._viewState, inventorySearch: event.currentTarget.value ?? '' }
+        this.render()
+      })
+    }
+
+    // Sell-mode toolbar: inventory sort field
+    const inventorySortBySelect = html.querySelector('.market-inventory-toolbar__sort--field')
+    if (inventorySortBySelect) {
+      inventorySortBySelect.addEventListener('change', (event) => {
+        this._viewState = { ...this._viewState, inventorySortBy: event.currentTarget.value ?? INVENTORY_SORT_FIELDS.name }
+        this.render()
+      })
+    }
+
+    // Sell-mode toolbar: inventory sort direction
+    const inventorySortDirSelect = html.querySelector('.market-inventory-toolbar__sort--direction')
+    if (inventorySortDirSelect) {
+      inventorySortDirSelect.addEventListener('change', (event) => {
+        this._viewState = { ...this._viewState, inventorySortDirection: event.currentTarget.value === 'desc' ? 'desc' : 'asc' }
         this.render()
       })
     }
