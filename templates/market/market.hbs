@@ -385,8 +385,24 @@
                 <span class="market-price">{{entry.priceResult.finalPrice}}</span>
               {{/if}}
             </td>
-            <td class="market-col--rarity">{{entry.rarity}}</td>
-            <td class="market-col--restriction">{{entry.restrictionLevel}}</td>
+            <td class="market-col--rarity"
+                data-tooltip="{{localize 'MARKET.Catalog.Column.Rarity'}}: {{entry.rarity}}"
+                aria-label="{{localize 'MARKET.Catalog.Column.Rarity'}}: {{entry.rarity}}">
+              {{#if entry.rarityPips.length}}
+                <span class="market-rarity-pips" aria-hidden="true">
+                  {{#each entry.rarityPips}}
+                    <span class="market-rarity-pip market-rarity-pip--filled"></span>
+                  {{/each}}
+                </span>
+              {{else}}
+                <span class="market-rarity-pips market-rarity-pips--empty" aria-hidden="true"></span>
+              {{/if}}
+            </td>
+            <td class="market-col--restriction">
+              {{#if entry.restrictionLabel}}
+                {{localize entry.restrictionLabel}}
+              {{/if}}
+            </td>
             {{#if ../buyer}}
               <td class="market-col--buy">
                 {{#if entry.isNegotiable}}

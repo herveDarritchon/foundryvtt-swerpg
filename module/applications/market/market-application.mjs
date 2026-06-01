@@ -462,6 +462,13 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
       const isRestricted = restrictionLevel !== 'none'
       const restrictionLabel = RESTRICTION_LEVELS[restrictionLevel]?.label ?? null
 
+      // Rarity display: build an array of pip flags for visual rendering.
+      // Each element is { filled: boolean } — filled pips represent the item's rarity value.
+      // A rarity of 0 produces an empty array (no pips displayed).
+      const rarityValue = entry.rarity ?? 0
+      const MAX_RARITY_PIPS = 10
+      const rarityPips = Array.from({ length: Math.min(rarityValue, MAX_RARITY_PIPS) }, () => ({ filled: true }))
+
       // Badge view-model: encode deduplication rules so the template stays purely presentational.
       // Rule 1 — black-market badge: suppress when restrictionLevel === 'illegal', because the
       //           restriction badge already displays the skull icon for that level.
@@ -485,6 +492,7 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
         isBlackMarket,
         isRestricted,
         restrictionLabel,
+        rarityPips,
         badges,
       }
     })

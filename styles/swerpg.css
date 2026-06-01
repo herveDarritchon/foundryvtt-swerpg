@@ -5332,6 +5332,26 @@ input[type='range'] {
   color: var(--color-secondary);
 }
 /* ----------------------------------------- */
+/*  Rarity Pips                              */
+/* ----------------------------------------- */
+.market-rarity-pips {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  cursor: default;
+}
+.market-rarity-pip {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+.market-rarity-pip--filled {
+  background: var(--color-primary);
+  border: 1px solid var(--color-glow-25);
+  opacity: 0.85;
+}
+/* ----------------------------------------- */
 /*  Market Item Icon                         */
 /* ----------------------------------------- */
 .market-item__icon {
