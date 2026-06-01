@@ -240,8 +240,8 @@ class OggDudeDataElement {
 
   /**
    *  Returns the type of the file (directory or image or xml file)
-   * @param {boolean} dir if the type of the file is a directory
-   * @param {string} filename
+   * @param {string} filename The filename to type-check.
+   * @param {boolean} dir Whether the entry is a directory.
    * @returns {string} the type of the file (directory or image or xml file)
    * @private
    */
@@ -288,8 +288,8 @@ class OggDudeDataElement {
 
   /**
    * upload the images on the server
-   * @param imageContext {OggDudeContextImage} The context of the images to be uploaded
-   * @param zip {JSZip.JSZipObject} The zip object
+   * @param {object} imageContext The context of the images to be uploaded
+   * @param {object} zip The zip object
    * @returns {Promise<void>} A Promise that resolves when the images have been uploaded.
    * @private
    * @function
@@ -310,10 +310,10 @@ class OggDudeDataElement {
   }
   /**
    * Build the armor image world path
-   * @param key {string} The key of the item
-   * @param imageWorldPath {string} The path of the world
-   * @param prefix {string} The type of the element
-   * @param imgSystemPath {string} The system path and the item image filename
+   * @param {string} key The key of the item
+   * @param {string} imageWorldPath The path of the world
+   * @param {string} prefix The type of the element
+   * @param {string} imgSystemPath The system path and the item image filename
    * @returns {Promise<string>}   The path of the image
    * @private
    * @function
@@ -338,13 +338,13 @@ class OggDudeDataElement {
 
   /**
    * Store the Items in the database. The data is mapped to the Swerpg Item object array
-   * @param items {Array} The items to be stored in the database.
-   * @param folderType {string} The folder where the items will be stored.
-   * @param elementType {string} The element type to be stored, must be a system item type.
-   * @param imageWorldPath {string} The path to store the image for the item in the world .
-   * @param imgSystemPath {string} The path to store the image for the item in the system.
-   * @param prefix
-   * @param importToCompendium
+   * @param {Array} items The items to be stored in the database.
+   * @param {string} folderType The folder where the items will be stored.
+   * @param {string} elementType The element type to be stored, must be a system item type.
+   * @param {string} imageWorldPath The path to store the image for the item in the world .
+   * @param {string} imgSystemPath The path to store the image for the item in the system.
+   * @param {string} prefix The prefix for item image filenames.
+   * @param {boolean} importToCompendium Whether to import the items into a compendium.
    * @returns {Promise<void>} A Promise that resolves when the items have been stored.
    * @private
    * @function
@@ -427,8 +427,8 @@ class OggDudeDataElement {
   }
   /**
    * Store the Items in the database. The data is mapped to the Swerpg Item object array.
-   * @param jsonData {[OggDudeDataElement]} The Items in the format of Json.
-   * @param mapperFn {function} The function to map the Item data to the Swerpg Item object array.
+   * @param {Array} jsonData The Items in the format of Json.
+   * @param {Function} mapperFn The function to map the Item data to the Swerpg Item object array.
    * @returns {Array} The items to be created in FVTT.
    * @async
    * @private
@@ -443,9 +443,9 @@ class OggDudeDataElement {
 
   /**
    * Store Items base on the context provided
-   * @param context {OggDudeElementContext} The context of the element to be stored
-   * @param importToCompendium.importToCompendium
-   * @param importToCompendium
+   * @param {object} context The context of the element to be stored
+   * @param {object} importToCompendium Options object.
+   * @param {boolean} importToCompendium.importToCompendium Whether to import items into a compendium.
    * @returns {Promise<void>} A Promise that resolves when the element has been stored.
    * @async
    * @public
@@ -503,10 +503,10 @@ class OggDudeDataElement {
 
   /**
    * Process the data from the imported file. The process is as follows:
-   * @param zip {JSZip} The imported file.
-   * @param groupByDirectory {string} The directory to group the data by.
-   * @param elementFileName {string}  The name of the element file.
-   * @param elementCriteria
+   * @param {object} zip The imported file.
+   * @param {object} groupByDirectory The directory to group the data by.
+   * @param {string} elementFileName The name of the element file.
+   * @param {string} elementCriteria The criteria path used to extract data from the parsed JSON.
    * @returns {Promise<string>} A Promise that resolves when the data has been processed in the format of a json structure.
    */
   static async buildJsonDataFromFile(zip, groupByDirectory, elementFileName, elementCriteria) {
@@ -528,10 +528,10 @@ class OggDudeDataElement {
 
   /**
    * Process the data from the imported file. The process is as follows:
-   * @param zip {JSZip} The imported file.
-   * @param xmlOggDudeElement
-   * @param elementDirectoryName {string} The name of the element directory.
-   * @param elementCriteria
+   * @param {object} zip The imported file.
+   * @param {Array} xmlOggDudeElement The list of XML element descriptors to process.
+   * @param {string} elementDirectoryName The name of the element directory.
+   * @param {string} elementCriteria The criteria path used to extract data from the parsed JSON.
    * @returns {Promise<string>} A Promise that resolves when the data has been processed in the format of a json structure.
    */
   static async buildJsonDataFromDirectory(zip, xmlOggDudeElement, elementDirectoryName, elementCriteria) {

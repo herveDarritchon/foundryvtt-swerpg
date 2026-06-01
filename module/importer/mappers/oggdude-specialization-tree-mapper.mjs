@@ -20,7 +20,7 @@ import {
 
 /**
  * Wrap a value in an array if it is not already an array, normalizing objects and strings to single-element arrays.
- * @param value
+ * @param {*} value
  */
 function asArray(value) {
   if (Array.isArray(value)) return value.filter(Boolean)
@@ -31,8 +31,8 @@ function asArray(value) {
 
 /**
  * Return the trimmed string value, logging a warning when the value is absent or not a string.
- * @param label
- * @param value
+ * @param {string} label
+ * @param {*} value
  */
 function readMandatoryString(label, value) {
   if (value == null || typeof value !== 'string') {
@@ -45,7 +45,7 @@ function readMandatoryString(label, value) {
 
 /**
  * Return the value if it is a string, or an empty string otherwise.
- * @param value
+ * @param {*} value
  */
 function readOptionalString(value) {
   return typeof value === 'string' ? value : ''
@@ -68,7 +68,7 @@ function readFirstString(...values) {
 
 /**
  * Build lookup maps from raw node keys and row/column coordinates to normalized node IDs.
- * @param nodes
+ * @param {Array} nodes
  */
 function buildNodeReferenceMaps(nodes) {
   const maps = {
@@ -86,8 +86,8 @@ function buildNodeReferenceMaps(nodes) {
 
 /**
  * Resolve a raw connection endpoint reference to a canonical node ID using the provided reference maps.
- * @param rawReference
- * @param maps
+ * @param {*} rawReference
+ * @param {object} maps
  */
 function resolveConnectionEndpoint(rawReference, maps) {
   if (!rawReference) return null
@@ -107,9 +107,9 @@ function resolveConnectionEndpoint(rawReference, maps) {
 
 /**
  * Extract connection entries declared on a single node, resolving endpoints and recording invalid connections.
- * @param rawNode
- * @param currentNodeId
- * @param maps
+ * @param {object} rawNode
+ * @param {string} currentNodeId
+ * @param {object} maps
  */
 function extractNodeConnectionEntries(rawNode, currentNodeId, maps) {
   const connections = []
@@ -137,8 +137,8 @@ function extractNodeConnectionEntries(rawNode, currentNodeId, maps) {
 
 /**
  * Extract connection entries declared at the specialization level, resolving from/to endpoints and recording invalid connections.
- * @param xmlSpecialization
- * @param maps
+ * @param {object} xmlSpecialization
+ * @param {object} maps
  */
 function extractGlobalConnectionEntries(xmlSpecialization, maps) {
   const candidates = asArray(xmlSpecialization?.Connections?.Connection)
@@ -169,7 +169,7 @@ function extractGlobalConnectionEntries(xmlSpecialization, maps) {
 
 /**
  * Extract raw node entries from a talent-rows-style specialization XML block.
- * @param xmlSpecialization
+ * @param {object} xmlSpecialization
  */
 function extractNodesFromRows(xmlSpecialization) {
   const rows = asArray(xmlSpecialization?.TalentRows?.TalentRow)
@@ -215,7 +215,7 @@ function extractNodesFromRows(xmlSpecialization) {
 
 /**
  * Derive the tree row index from a node XP cost value, returning null when the cost does not map to a valid row.
- * @param cost
+ * @param {number} cost
  */
 function computeRowFromCost(cost) {
   const numericCost = Number(cost)
@@ -227,7 +227,7 @@ function computeRowFromCost(cost) {
 
 /**
  * Extract raw node entries from a flat Nodes/TalentNodes list in the specialization XML block.
- * @param xmlSpecialization
+ * @param {object} xmlSpecialization
  */
 function extractNodesFromFlatList(xmlSpecialization) {
   const candidates = [
@@ -248,7 +248,7 @@ function extractNodesFromFlatList(xmlSpecialization) {
 
 /**
  * Select and return raw node entries from a specialization XML block, preferring row-based extraction over the flat-list format.
- * @param xmlSpecialization
+ * @param {object} xmlSpecialization
  */
 function extractRawNodeEntries(xmlSpecialization) {
   const rowNodes = extractNodesFromRows(xmlSpecialization)
@@ -258,7 +258,7 @@ function extractRawNodeEntries(xmlSpecialization) {
 
 /**
  * Detect the structural format of the specialization XML input block (talent-rows-keys, talent-rows-columns, flat-list, or unknown).
- * @param xmlSpecialization
+ * @param {object} xmlSpecialization
  */
 function detectInputFormat(xmlSpecialization) {
   const rows = asArray(xmlSpecialization?.TalentRows?.TalentRow)
@@ -291,8 +291,8 @@ function detectInputFormat(xmlSpecialization) {
 
 /**
  * Parse and normalize all node entries from the specialization XML, validating positions and costs.
- * @param xmlSpecialization
- * @param specializationId
+ * @param {object} xmlSpecialization
+ * @param {string} specializationId
  */
 function normalizeNodes(xmlSpecialization, specializationId) {
   const warnings = []
@@ -333,7 +333,7 @@ function normalizeNodes(xmlSpecialization, specializationId) {
 
 /**
  * Remove duplicate connection entries, keeping only the first occurrence of each from→to:type combination.
- * @param connections
+ * @param {Array} connections
  */
 function dedupeConnections(connections) {
   const seen = new Set()
@@ -351,7 +351,7 @@ function dedupeConnections(connections) {
 
 /**
  * Derive Right and Down directional connections from node direction flags in talent-rows-keys format.
- * @param nodes
+ * @param {Array} nodes
  */
 function extractDirectionalConnections(nodes) {
   const connections = []
@@ -391,9 +391,9 @@ function extractDirectionalConnections(nodes) {
 
 /**
  * Map an array of raw OggDude specialization XML objects to Foundry specialization tree item data.
- * @param specializations
- * @param root0
- * @param root0.talentById
+ * @param {Array} specializations
+ * @param {object} root0
+ * @param {Map} root0.talentById
  */
 export function specializationTreeMapper(specializations, { talentById } = {}) {
   resetSpecializationTreeImportStats()

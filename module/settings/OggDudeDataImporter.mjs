@@ -44,7 +44,7 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
 
   /**
    * Initialize the domains for the OggDude data importer.
-   * @param domainNames {string[]} The names of the domains to initialize.
+   * @param {string[]} domainNames The names of the domains to initialize.
    * @returns {object[]} The initialized domains.
    * @private
    */
@@ -261,8 +261,8 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
   /**
    * LoadAction handler for the form submission.
    * @this {OggDudeDataImporter} this is capture by the action handler
-   * @param _event
-   * @param target
+   * @param {Event} _event
+   * @param {HTMLElement} target
    * @returns {Promise<void>}
    */
   static async loadAction(_event, target) {
@@ -312,8 +312,8 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
   /**
    * Précharge les données pour prévisualisation sans création d'items
    * @this {OggDudeDataImporter} this is capture by the action handler
-   * @param _event {Event} Event object triggering the action
-   * @param _target {HTMLElement} Target element of the action
+   * @param {Event} _event Event object triggering the action
+   * @param {HTMLElement} _target Target element of the action
    */
   static async preloadAction(_event, _target) {
     logger.info('[OggDudeDataImporter] Preload OggDude Data (preview mode)', { instance: this })
@@ -332,8 +332,8 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
   /* -------------------------------------------- */
   /**
    * Convert a string to a boolean value.
-   * @param value {string} The value to convert.
-   * @returns {boolean|boolean} The converted value.
+   * @param {string} value The value to convert.
+   * @returns {boolean} The converted value.
    */
   toBoolean(value) {
     return this ? value.toLowerCase() === 'true' : false
@@ -344,8 +344,8 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
   /**
    * Toggle the checked state of a domain.
    * @this {OggDudeDataImporter} this is capture by the action handler
-   * @param _event {Event} The triggering event.
-   * @param target {HTMLElement} The target element of the action.
+   * @param {Event} _event The triggering event.
+   * @param {HTMLElement} target The target element of the action.
    */
   static async toggleDomainAction(_event, target) {
     if (this.noZipFileSelected()) {
@@ -367,8 +367,8 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
   /**
    * Bascule visibilité section Statistiques.
    * @this {OggDudeDataImporter} this is capture by the action handler
-   * @param _event {Event}
-   * @param _target {HTMLElement}
+   * @param {Event} _event
+   * @param {HTMLElement} _target
    */
   static async toggleStatsAction(_event, _target) {
     this.showStats = !this.showStats
@@ -378,8 +378,8 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
   /**
    * Bascule visibilité section Métriques globales.
    * @this {OggDudeDataImporter} this is capture by the action handler
-   * @param _event {Event}
-   * @param _target {HTMLElement}
+   * @param {Event} _event
+   * @param {HTMLElement} _target
    */
   static async toggleMetricsAction(_event, _target) {
     this.showMetrics = !this.showMetrics
@@ -389,8 +389,8 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
   /**
    * Bascule visibilité section Prévisualisation.
    * @this {OggDudeDataImporter} this is capture by the action handler
-   * @param _event {Event}
-   * @param _target {HTMLElement}
+   * @param {Event} _event
+   * @param {HTMLElement} _target
    */
   static async togglePreviewAction(_event, _target) {
     this.showPreview = !this.showPreview
@@ -400,8 +400,8 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
   /**
    * Bascule l'état de l'import vers Compendium.
    * @this {OggDudeDataImporter}
-   * @param _event {Event}
-   * @param target {HTMLElement}
+   * @param {Event} _event
+   * @param {HTMLElement} target
    */
   static async toggleImportToCompendiumAction(_event, target) {
     this.importToCompendium = target.checked
@@ -411,8 +411,8 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
   /**
    * Bascule l'état de tous les domaines.
    * @this {OggDudeDataImporter}
-   * @param _event {Event}
-   * @param target {HTMLElement}
+   * @param {Event} _event
+   * @param {HTMLElement} target
    */
   static async toggleAllDomainsAction(_event, target) {
     if (this.noZipFileSelected()) return
@@ -428,9 +428,9 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
   /**
    * Handle form submission.
    * @this {OggDudeDataImporter} this is capture by the action handler
-   * @param event Event object for the form submission.
-   * @param form The form element that was submitted.
-   * @param formData The form data object containing the form fields and their values.
+   * @param {Event} event Event object for the form submission.
+   * @param {HTMLFormElement} form The form element that was submitted.
+   * @param {FormDataExtended} formData The form data object containing the form fields and their values.
    * @returns {Promise<void>} A promise that resolves when the form submission is handled.
    * @private
    */
@@ -447,8 +447,8 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
   /**
    * Reset all settings to their default values.
    * @this {OggDudeDataImporter} this is capture by the action handler
-   * @param _event {Event} The triggering event.
-   * @param target {HTMLElement} The target element of the action.
+   * @param {Event} _event The triggering event.
+   * @param {HTMLElement} target The target element of the action.
    */
   static async resetAction(_event, target) {
     logger.info('[OggDudeDataImporter] Resetting settings', { instance: this })

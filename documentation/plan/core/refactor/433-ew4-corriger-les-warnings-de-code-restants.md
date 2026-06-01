@@ -2,100 +2,126 @@
 
 **Issue** : [#433 — EW4 — Corriger les warnings de code restants](https://github.com/herveDarritchon/foundryvtt-swerpg/issues/433)
 **Baseline de référence** : [commentaire snapshot ESLint du 433](https://github.com/herveDarritchon/foundryvtt-swerpg/issues/433#issuecomment-4590302708) — `✖ 133 problems (0 errors, 133 warnings)`
+**ADR** : [`adr-0018-no-magic-numbers-named-constants.md`](../../../architecture/adr/adr-0018-no-magic-numbers-named-constants.md) (pour le Lot C)
+
+> **Mise à jour de périmètre (décision utilisateur)** : EW4 est élargi pour absorber, en plus des warnings de code isolés, le lot `jsdoc/require-param-type` (initialement EW2 #438) **et** le lot `no-magic-numbers` (initialement EW6 / ADR-0018). Ce regroupement est volontaire : EW4 devient le lot de clôture global des 133 warnings restants. Voir « Écart de périmètre assumé » plus bas.
 
 ## Objectif
 
-Fermer le lot des warnings de code « isolés » du chantier `ESLint Warnings Reduction` qui ne relèvent ni des types JSDoc (EW2), ni des descriptions JSDoc (EW3), ni de `no-magic-numbers` (EW6 / ADR-0018), en s'appuyant sur l'état réel du lint remonté dans le commentaire de l'issue plutôt que sur l'estimation initiale du corps de l'issue.
+Ramener à 0 les 133 warnings ESLint restants remontés par le snapshot du commentaire, en trois lots distincts mais portés par cette même story : warnings de code isolés (Lot A), types JSDoc manquants (Lot B), et magic numbers (Lot C). Corrections prudentes, sans changement comportemental, alignées sur l'état réel du lint plutôt que sur l'estimation initiale du corps de l'issue.
+
+## Périmètre
+
+### Inclus
+
+- **Lot A — warnings de code isolés** : `jsdoc/require-yields`, `jsdoc/check-param-names`, plus toute réapparition de `no-proto` / `no-promise-executor-return`.
+- **Lot B — types JSDoc** : `jsdoc/require-param-type` sur l'ensemble du scope (`module/**/*.mjs`, `tests/**/*.mjs`, `swerpg.mjs`).
+- **Lot C — magic numbers** : `no-magic-numbers` dans `module/config/*.mjs`, traités selon ADR-0018 (constantes nommées + tests contractuels).
+
+### Hors scope
+
+- `jsdoc/require-description` (reste EW3 #432).
+- Tout refactor fonctionnel, renommage, ou changement de règle métier non strictement requis par une correction de warning.
 
 ## Constat sur l'existant
 
-Le corps de l'issue cible historiquement `no-proto` (12), `no-promise-executor-return` (5), `jsdoc/check-param-names` (6) et des cas isolés. Le snapshot ESLint le plus récent (commentaire à utiliser en priorité) montre un état différent :
+Le corps de l'issue cible historiquement `no-proto` (12), `no-promise-executor-return` (5), `jsdoc/check-param-names` (6) et des cas isolés. Le snapshot ESLint le plus récent (commentaire prioritaire) montre un état différent, réparti ainsi :
 
-- `no-proto` : **0 occurrence** restante (`grep __proto__` sur `module/` et `swerpg.mjs` ne remonte rien) — déjà absorbé en amont.
-- `no-promise-executor-return` : **0 occurrence** restante — déjà absorbé en amont.
-- `jsdoc/require-param-type` : majorité des 133 warnings — **hors scope EW4**, relève de EW2 (#438).
-- `no-magic-numbers` : ~16 warnings (`config/action.mjs`, `config/effects.mjs`, `config/talent-tree.mjs`) — **hors scope EW4**, relève de EW6 / ADR-0018.
-- `jsdoc/require-yields` : **1 occurrence** — `module/models/action.mjs:916` (`*_tests()` documenté `@returns` au lieu de `@yields`).
-- `jsdoc/check-param-names` : **3 occurrences** — `tests/models/gear.test.mjs:10` (`@param {object} [overrides]` alors que la fonction déstructure `price`, `rarity`, `broken`).
+| Règle                        | Occurrences | Localisation                                                        | Lot             |
+| ---------------------------- | ----------- | ------------------------------------------------------------------- | --------------- |
+| `no-proto`                   | 0           | — (`grep __proto__` vide)                                           | A (déjà résolu) |
+| `no-promise-executor-return` | 0           | —                                                                   | A (déjà résolu) |
+| `jsdoc/require-yields`       | 1           | `module/models/action.mjs:916`                                      | A               |
+| `jsdoc/check-param-names`    | 3           | `tests/models/gear.test.mjs:10`                                     | A               |
+| `jsdoc/require-param-type`   | ~109        | ~23 fichiers (voir Lot B)                                           | B               |
+| `no-magic-numbers`           | ~16         | `config/action.mjs`, `config/effects.mjs`, `config/talent-tree.mjs` | C               |
 
-Le résiduel réellement imputable à EW4 dans l'état courant se réduit donc à **4 warnings** : 1 `jsdoc/require-yields` + 3 `jsdoc/check-param-names`.
+> **Statut Lot A** : déjà implémenté. `module/models/action.mjs` (`*_tests()` → `@yields`) et `tests/models/gear.test.mjs` (`buildGearData` → `@param overrides.*`) corrigés ; `eslint` ne remonte plus `require-yields` ni `check-param-names` sur ces fichiers ; `no-proto` / `no-promise-executor-return` confirmés à 0. Reste à traiter : Lot B et Lot C.
 
 ## Décisions de cadrage
 
-- Prendre comme baseline le snapshot ESLint du commentaire de l'issue, pas la liste prévisionnelle du corps de l'issue.
-- Limiter le lot aux warnings de code « isolés » réellement présents et non rattachés à un autre lot : `jsdoc/require-yields` et `jsdoc/check-param-names`.
-- Confirmer (et non re-corriger) que `no-proto` et `no-promise-executor-return` sont déjà absents : si une occurrence réapparaît au lancement du lint, la traiter mécaniquement (`Object.setPrototypeOf`, refactor de l'exécuteur de Promise) ; sinon ne rien faire.
-- Exclure strictement `jsdoc/require-param-type` (EW2), `jsdoc/require-description` (EW3) et `no-magic-numbers` (EW6) : aucune absorption opportuniste.
-- Corrections documentaires/mécaniques uniquement, sans changement comportemental ni refactor fonctionnel.
+- Baseline = snapshot ESLint du commentaire, à re-figer par une passe lint fraîche avant le Lot B (le Lot A a déjà bougé l'état).
+- **Lot B** : ajouter des types **larges, observables et défendables** (`string`, `number`, `boolean`, `object`, `Array<...>`, unions simples, nullable) plutôt que des types métier spéculatifs. Réutiliser les typedefs/shapes locaux quand ils existent. Pas de réécriture documentaire ni de description (ça reste EW3).
+- **Lot C** : appliquer strictement ADR-0018 — extraire chaque littéral porteur de sens métier en constante nommée dans `module/config/<entity>.mjs`, exposée via `SYSTEM.<ENTITY>.<CONST>`, avec `Object.defineProperty({ enumerable: false })` si le parent est itéré, et ajouter/compléter un test contractuel sous `tests/config/<entity>.test.mjs`. Ne pas masquer un warning avec un commentaire `eslint-disable` sauf littéral réellement non métier dûment justifié.
+- Prioriser les fichiers les plus denses pour une baisse visible et des revues lisibles.
+- Corrections sans changement comportemental : un magic number extrait doit conserver exactement la même valeur.
 
 ## Plan de travail
 
-### 1. Re-figer la baseline EW4 depuis le lint courant
+### Lot A — warnings de code isolés ✅ (fait)
 
-**Fichiers cibles** : rapport ESLint courant sur `module/**/*.mjs`, `tests/**/*.mjs`, `swerpg.mjs`
+1. **Re-figer la baseline** — passe ESLint, filtrer `require-yields`, `check-param-names`, `no-proto`, `no-promise-executor-return`.
+2. **`@yields`** — `module/models/action.mjs` (`*_tests()`) : `@returns {Generator<...>}` → `@yields`.
+3. **`check-param-names`** — `tests/models/gear.test.mjs` (`buildGearData`) : documenter `overrides.price/rarity/broken`.
 
-**What**
+> Étapes 2-3 livrées. Étape 1 reconduite en tête du Lot B pour re-figer la baseline avant d'attaquer les types.
 
-- relancer la passe ESLint pour obtenir l'état à jour et le comparer au snapshot du commentaire ;
-- isoler uniquement les warnings `jsdoc/require-yields` et `jsdoc/check-param-names`, plus toute éventuelle réapparition de `no-proto` / `no-promise-executor-return` ;
-- écarter explicitement `jsdoc/require-param-type`, `jsdoc/require-description` et `no-magic-numbers` du lot.
+### Lot B — `jsdoc/require-param-type`
 
-**Validation visée** : le périmètre EW4 est borné au résiduel réel et ne recouvre pas EW2/EW3/EW6.
-
-### 2. Aligner le contrat `@yields` du générateur
-
-**Fichiers cibles** : `module/models/action.mjs` (`*_tests()`, ~ligne 916)
+**Fichiers cibles** (du snapshot, à reconfirmer par lint frais) :
+`module/applications/character-audit-log.mjs`, `module/applications/specialization-tree-app.mjs`, `module/canvas/grid.mjs`, `module/canvas/talent-icon.mjs`, `module/canvas/talent-tree-talent.mjs`, `module/canvas/talent-tree.mjs`, `module/canvas/token.mjs`, `module/config/qualities.mjs`, `module/config/talent-tree.mjs`, `module/dice/action-use-dialog.mjs`, `module/dice/standard-check-dialog.mjs`, `module/documents/actor.mjs`, `module/documents/item.mjs`, `module/importer/oggDude.mjs`, `module/models/action.mjs` (lignes 1203-1206), `module/models/actor-type.mjs`, `module/models/career.mjs`, `module/models/specialization.mjs`, `module/models/species.mjs`, `module/settings/OggDudeDataImporter.mjs`, `module/settings/directories.mjs`, `module/utils/oggdude-mapping-config.mjs`, `module/utils/skill-costs.mjs`.
 
 **What**
 
-- remplacer/compléter le bloc JSDoc du générateur pour exposer un `@yields` cohérent avec les valeurs réellement `yield`ées, conformément à `jsdoc/require-yields` ;
-- conserver le comportement et la signature du générateur inchangés.
+- regrouper les corrections par fichier/module cohérent (batches relisibles), en commençant par les plus denses (`oggDude.mjs`, `OggDudeDataImporter.mjs`, `character-audit-log.mjs`, `action-use-dialog.mjs`) ;
+- ajouter sur chaque `@param` signalé le type le plus simple compatible avec l'usage réel visible localement ;
+- pour les params déstructurés (`options.*`, `root0.*`), typer chaque sous-propriété signalée ;
+- ne pas reformuler les descriptions, ne pas renommer, ne pas restructurer les signatures.
 
-**Validation visée** : le warning `jsdoc/require-yields` disparaît sans modifier la mécanique du générateur.
+**Validation visée** : `jsdoc/require-param-type` à 0 sur tout le scope, sans documentation trompeuse.
 
-### 3. Aligner les noms de paramètres JSDoc déstructurés
+### Lot C — `no-magic-numbers` (ADR-0018)
 
-**Fichiers cibles** : `tests/models/gear.test.mjs` (`buildGearData`, ~ligne 10)
+**Fichiers cibles** :
 
-**What**
-
-- documenter les propriétés déstructurées (`overrides.price`, `overrides.rarity`, `overrides.broken`) attendues par `jsdoc/check-param-names`, en restant fidèle aux valeurs par défaut existantes ;
-- ne pas altérer la logique du helper ni les tests qui l'utilisent.
-
-**Validation visée** : les 3 warnings `jsdoc/check-param-names` disparaissent sans changer le comportement du helper de test.
-
-### 4. Qualifier le résiduel et préparer la revalidation globale
-
-**Fichiers cibles** : fichiers modifiés EW4, rapport ESLint du lot
+- `module/config/action.mjs` — `2` (lignes 400, 401, 402, 567).
+- `module/config/effects.mjs` — `16` (ligne 7 ×2), `2` (lignes 76, 100, 170, 285).
+- `module/config/talent-tree.mjs` — `3` (154), `0.5` (221 ×2, 222), `2` (286).
 
 **What**
 
-- vérifier qu'aucun warning hors périmètre EW4 n'a été touché ;
-- confirmer le statut « déjà résolu » de `no-proto` / `no-promise-executor-return` ou consigner la correction si réapparition ;
-- laisser le résiduel restant (`jsdoc/require-param-type`, `no-magic-numbers`) clairement attribué à EW2 et EW6 pour la revalidation globale du chantier.
+- pour chaque littéral, déterminer le sens métier et choisir un nom de constante explicite (ex. multiplicateur de dégâts, taille d'icône, demi-pas de grille) ;
+- déclarer la constante dans le `module/config/<entity>.mjs` correspondant, exposée via `SYSTEM.<ENTITY>.<CONST>`, `enumerable: false` si le parent est itéré par des consommateurs ;
+- remplacer le littéral par la constante au point d'usage ;
+- ajouter/compléter le test contractuel sous `tests/config/<entity>.test.mjs` vérifiant la valeur et la non-énumérabilité quand applicable ;
+- réutiliser une constante existante si elle porte déjà ce sens, plutôt qu'en créer une seconde.
 
-**Validation visée** : EW4 ferme uniquement les warnings de code isolés et laisse un résiduel proprement routé.
+**Validation visée** : `no-magic-numbers` à 0 sur `module/config/*`, valeurs inchangées, tests contractuels verts.
+
+### Clôture
+
+- relancer la passe ESLint complète : 0 warning sur le scope ;
+- vérifier le diff (pas de débordement hors warnings ciblés) ;
+- confirmer non-régression des suites de tests impactées.
 
 ## Fichiers probablement modifiés
 
-- `module/models/action.mjs` — JSDoc `@yields` du générateur `*_tests()`.
-- `tests/models/gear.test.mjs` — JSDoc `@param` déstructuré de `buildGearData`.
+- **Lot A (fait)** : `module/models/action.mjs`, `tests/models/gear.test.mjs`.
+- **Lot B** : les ~23 fichiers listés ci-dessus (JSDoc `@param` uniquement).
+- **Lot C** : `module/config/action.mjs`, `module/config/effects.mjs`, `module/config/talent-tree.mjs` + `tests/config/action.test.mjs`, `tests/config/effects.test.mjs`, `tests/config/talent-tree.test.mjs` (création/màj selon existant).
 
 ## Tests attendus
 
-- Aucun nouveau test requis (corrections documentaires).
-- Non-régression : `pnpm vitest run tests/models/gear.test.mjs` doit rester vert.
-- `pnpm exec eslint module/models/action.mjs tests/models/gear.test.mjs` ne remonte plus `jsdoc/require-yields` ni `jsdoc/check-param-names`.
+- **Lot A/B** : corrections documentaires → pas de nouveau test ; non-régression `pnpm vitest run` sur fichiers ayant un test associé (ex. `tests/models/gear.test.mjs`).
+- **Lot C** : un test contractuel par constante nommée sous `tests/config/<entity>.test.mjs` (valeur exacte + non-énumérabilité si `enumerable: false`).
+- Global : `pnpm exec eslint module tests swerpg.mjs` → 0 warning sur les règles ciblées.
 
 ## Risques et mitigations
 
-- **Risque** : déborder sur EW2 (`require-param-type`) ou EW6 (`no-magic-numbers`) par effet de bord lors de l'édition des blocs JSDoc. **Mitigation** : limiter chaque diff aux lignes signalées, ne pas reformuler les blocs voisins.
-- **Risque** : `@yields` mal typé créant une doc trompeuse. **Mitigation** : refléter exactement les valeurs `yield`ées observables dans `*_tests()`.
-- **Risque** : réapparition de `no-proto` / `no-promise-executor-return` non anticipée. **Mitigation** : étape 1 compare au lint courant et inclut ces règles dans le filtre.
+- **Risque** : types JSDoc spéculatifs créant une doc fausse (Lot B). **Mitigation** : types larges fondés sur l'usage local observable, pas d'invention de contrat métier.
+- **Risque** : extraction d'un magic number changeant la valeur ou la sémantique (Lot C). **Mitigation** : valeur strictement identique, test contractuel figeant la valeur.
+- **Risque** : un `no-magic-numbers` portant sur un littéral non métier (ex. `2` purement arithmétique). **Mitigation** : si aucune sémantique métier, justifier un `// eslint-disable-next-line` ciblé plutôt qu'une constante artificielle — décision au cas par cas, documentée dans le diff.
+- **Risque** : diff transverse illisible vu le nombre de fichiers (Lot B). **Mitigation** : batches par module, commits courts.
+- **Risque** : débordement sur `jsdoc/require-description` (EW3). **Mitigation** : ne toucher que les `@param` de type, pas les descriptions.
+
+## Écart de périmètre assumé
+
+Le découpage chantier d'origine isolait `require-param-type` en EW2 (#438) et `no-magic-numbers` en EW6 / ADR-0018. Sur décision utilisateur, ces deux lots sont rapatriés dans EW4 #433 qui devient le lot de clôture global des warnings. Conséquence : EW2 et EW6 deviennent sans objet si EW4 ramène le compteur à 0 ; à acter au moment de la revalidation du chantier pour éviter un double traitement.
 
 ## Critères d'arrêt
 
-- `jsdoc/require-yields` et `jsdoc/check-param-names` à 0 sur le scope EW4.
-- `no-proto` et `no-promise-executor-return` confirmés à 0 (ou corrigés si présents).
-- Aucun warning EW2/EW3/EW6 absorbé ou modifié.
-- Suite Vitest impactée verte, aucun changement comportemental introduit.
+- Lot A : `require-yields`, `check-param-names` à 0 ; `no-proto` / `no-promise-executor-return` confirmés à 0. ✅
+- Lot B : `jsdoc/require-param-type` à 0 sur tout le scope.
+- Lot C : `no-magic-numbers` à 0 sur `module/config/*`, constantes nommées + tests contractuels verts, valeurs inchangées.
+- `jsdoc/require-description` (EW3) non touché.
+- Suites Vitest impactées vertes, aucun changement comportemental introduit.

@@ -6,7 +6,7 @@ const BRAWN_BASED_SKILLS = new Set(['melee', 'meleeheavy', 'meleelight', 'brawl'
 
 /**
  * Return the value wrapped in an array if it is not already an array, or an empty array for falsy values.
- * @param value
+ * @param {*} value
  */
 function ensureArray(value) {
   if (!value) {
@@ -17,8 +17,8 @@ function ensureArray(value) {
 
 /**
  * Parse a value as an integer, returning the fallback when the result is NaN.
- * @param value
- * @param fallback
+ * @param {*} value
+ * @param {number} fallback
  */
 function parseInteger(value, fallback = 0) {
   const parsed = Number.parseInt(value, 10)
@@ -30,7 +30,7 @@ function parseInteger(value, fallback = 0) {
 
 /**
  * Convert a PascalCase key to camelCase by lowercasing the first character.
- * @param key
+ * @param {string} key
  */
 function toCamelCase(key) {
   if (!key) {

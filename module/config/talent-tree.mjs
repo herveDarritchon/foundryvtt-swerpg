@@ -4,6 +4,26 @@ import { logger } from '../utils/logger.mjs'
 import { CHARACTERISTICS } from './attributes.mjs'
 import Enum from './enum.mjs'
 
+/**
+ * Ability value offset added in prerequisite computation: `tier + ABILITY_REQUIREMENT_OFFSET - ad`.
+ * Reflects that the base ability requirement starts 3 above tier 0.
+ * @type {number}
+ */
+export const ABILITY_REQUIREMENT_OFFSET = 3
+
+/**
+ * Color mix factor used when blending two characteristic colors for multi-ability nodes.
+ * A value of 0.5 means an equal blend of both colors.
+ * @type {number}
+ */
+export const NODE_COLOR_MIX_FACTOR = 0.5
+
+/**
+ * Maximum number of signature talents that can be purchased at a given tier.
+ * @type {number}
+ */
+export const MAX_SIGNATURES_PER_TIER = 2
+
 const DEPR_GLOBAL_TREE = () => SYSTEM.DEPRECATION.crucible.globalTree
 
 /**
@@ -151,7 +171,7 @@ export default class SwerpgTalentNode {
     }
 
     for (const ability of this.abilities) {
-      reqs[`abilities.${ability}.value`] = this.tier + 3 - ad
+      reqs[`abilities.${ability}.value`] = this.tier + ABILITY_REQUIREMENT_OFFSET - ad
     }
     return reqs
   }
@@ -218,8 +238,8 @@ export default class SwerpgTalentNode {
     for (const ability of this.abilities) {
       if (!this.color) this.color = CHARACTERISTICS[ability]?.color ?? Color.from('#113c1b')
       else {
-        const c2 = CHARACTERISTICS[ability]?.color?.maximize(0.5) ?? Color.from('#113c1b').maximize(0.5)
-        this.color = this.color.mix(c2, 0.5)
+        const c2 = CHARACTERISTICS[ability]?.color?.maximize(NODE_COLOR_MIX_FACTOR) ?? Color.from('#113c1b').maximize(NODE_COLOR_MIX_FACTOR)
+        this.color = this.color.mix(c2, NODE_COLOR_MIX_FACTOR)
       }
     }
 
@@ -283,7 +303,7 @@ export default class SwerpgTalentNode {
   #isBanned(actor, signatures) {
     if (this.type !== 'signature') return false // Only signature talents get banned
     const purchased = signatures[this.tier]
-    if (purchased.size >= 2) return true // Already purchased 2 signatures at this tier
+    if (purchased.size >= MAX_SIGNATURES_PER_TIER) return true // Already purchased max signatures at this tier
     return false
   }
 
