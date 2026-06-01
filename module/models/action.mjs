@@ -1200,10 +1200,10 @@ export default class SwerpgAction extends foundry.abstract.DataModel {
 
   /**
    * Confirm the result of an Action that was recorded as a ChatMessage.
-   * @param message
-   * @param root0
-   * @param root0.action
-   * @param root0.reverse
+   * @param {ChatMessage} message
+   * @param {object} root0
+   * @param {SwerpgAction} root0.action
+   * @param {boolean} root0.reverse
    */
   static async confirm(message, { action, reverse = false } = {}) {
     action ||= this.fromChatMessage(message)

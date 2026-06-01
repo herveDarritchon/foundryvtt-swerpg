@@ -46,7 +46,7 @@ export default class SwerpgCareer extends foundry.abstract.TypeDataModel {
 
   /**
    * Validate career skill list
-   * @param careerSkills {Array} The career skills to validate
+   * @param {Array} careerSkills The career skills to validate
    */
   static #validateCareerSkills(careerSkills) {
     if (careerSkills.length < 0 || careerSkills.length > 8) throw new Error(`Skill list must contain between 0 and 8 skills`)

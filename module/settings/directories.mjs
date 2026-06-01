@@ -1,6 +1,6 @@
 /**
  * Build the path to the armor images.
- * @param imageFileName {string} The name of the image file.
+ * @param {string} imageFileName The name of the image file.
  * @returns {string} The path to the armor images.
  * @public
  * @function
@@ -13,7 +13,7 @@ export function buildItemImgSystemPath(imageFileName) {
 
 /**
  * Build the path to the images.
- * @param type {string} The type of the images.
+ * @param {string} type The type of the images.
  * @returns {string} The path to the images.
  * @public
  * @function

@@ -334,8 +334,8 @@ export default class SwerpgActor extends TalentsMixin(EquipmentMixin(ResourcesMi
    * @param {object} [options]                Options which affect how details are applied
    * @param {boolean} [options.canApply]        Allow new detail data to be applied?
    * @param {boolean} [options.canClear]        Allow the prior data to be cleared if null is passed?
-   * @param options.isCollection
-   * @param options.collectionKey
+   * @param {boolean} options.isCollection
+   * @param {string} options.collectionKey
    * @returns {Promise<void>}
    * @internal
    */
@@ -652,9 +652,9 @@ export default class SwerpgActor extends TalentsMixin(EquipmentMixin(ResourcesMi
 
   /**
    * Display changes to the Actor as scrolling combat text.
-   * @param changed
-   * @param root0
-   * @param root0.statusText
+   * @param {object} changed
+   * @param {object} root0
+   * @param {string} root0.statusText
    */
   #displayScrollingStatus(changed, { statusText } = {}) {
     const resources = changed.system?.resources || {}

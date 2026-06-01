@@ -145,7 +145,7 @@ export default class SwerpgSpecies extends foundry.abstract.TypeDataModel {
 
   /**
    * Validate career skill list
-   * @param freeSkills {Array} The career skills to validate
+   * @param {Array} freeSkills The career skills to validate
    */
   static #validatefreeSkills(freeSkills) {
     if (freeSkills.length < 0 || freeSkills.length > 4) throw new Error(`Species Free Skill list must contain between 0 and 8 skills`)

@@ -46,7 +46,7 @@ export default class SwerpgSpecialization extends foundry.abstract.TypeDataModel
 
   /**
    * Validate specialization skill list
-   * @param specializationSkills {Array} The specialization skills to validate
+   * @param {Array} specializationSkills The specialization skills to validate
    */
   static #validateSpecializationSkills(specializationSkills) {
     if (specializationSkills.length < 0 || specializationSkills.length > 8) throw new Error(`Skill list must contain between 0 and 8 skills`)

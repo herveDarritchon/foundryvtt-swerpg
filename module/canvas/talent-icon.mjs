@@ -77,7 +77,7 @@ export default class SwerpgTalentIcon extends PIXI.Container {
 
   /**
    * Draw the talent tree icon
-   * @param config
+   * @param {object} config
    * @returns {Promise<void>}
    */
   async draw(config = {}) {

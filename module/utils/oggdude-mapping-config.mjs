@@ -63,7 +63,7 @@ const OGGDUDE_PACKS_BY_TYPE = {
 
 /**
  * Return the compendium pack configuration for the given OggDude element type, throwing when the type is unsupported.
- * @param elementType
+ * @param {string} elementType
  */
 export function getOggDudePackConfig(elementType) {
   const normalizedType = String(elementType).toLowerCase()

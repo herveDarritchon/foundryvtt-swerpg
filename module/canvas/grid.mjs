@@ -47,8 +47,8 @@ export function getTargetAreaOffsets(origin, shape) {
  * TODO
  * Express the target area as a consolidated polygon.
  * Idea: classify all offsets into quadrants in getTargetAreaOffsets. Go quadrant-by-quadrant adding the perimeter edges
- * @param origin
- * @param offsets
+ * @param {Point} origin
+ * @param {GridOffset[]} offsets
  */
 export function getTargetAreaPolygon(origin, offsets) {}
 

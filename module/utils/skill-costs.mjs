@@ -31,8 +31,8 @@ export function getSkillNextRankCost({ rank, isCareer, maxRank = MAX_RANK }) {
  * @param {number} params.freeCareerSkillsLeft Number of free career skills left
  * @param {number} params.freeSpecializationSkillsLeft Number of free specialization skills left
  * @param {number} [params.maxRank=5] Maximum rank allowed
- * @param params.careerFreeRank
- * @param params.specializationFreeRank
+ * @param {number} params.careerFreeRank
+ * @param {number} params.specializationFreeRank
  * @returns {Object} Purchase state
  */
 export function getSkillPurchaseState({

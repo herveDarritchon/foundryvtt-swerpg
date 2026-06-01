@@ -335,8 +335,8 @@ export default class SwerpgTalentNode {
 
   /**
    * Test whether two ability score quadrants are adjacent on the tree.
-   * @param ability1
-   * @param ability2
+   * @param {string} ability1
+   * @param {string} ability2
    * @returns {-1|0|1} Is ability1 counter-clockwise of ability2 (-1), clockwise of ability2 (1), or not adjacent (0)
    */
   static areAbilitiesAdjacent(ability1, ability2) {

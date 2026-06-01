@@ -128,9 +128,9 @@ export default class ActionUseDialog extends StandardCheckDialog {
 
   /**
    * Resolve dialog submission to enact a Roll.
-   * @param _event
-   * @param _button
-   * @param _dialog
+   * @param {PointerEvent} _event
+   * @param {HTMLElement} _button
+   * @param {object} _dialog
    * @returns {StandardCheck}
    * @protected
    */
@@ -219,10 +219,10 @@ export default class ActionUseDialog extends StandardCheckDialog {
 
   /**
    * Prepare Measured Template data for a certain candidate action
-   * @param token
-   * @param range
-   * @param target
-   * @param targetTemplateConfig
+   * @param {Token} token
+   * @param {object} range
+   * @param {object} target
+   * @param {object} targetTemplateConfig
    */
   #getTemplateData(token, range, target, targetTemplateConfig) {
     const { x, y } = token?.center ?? canvas.dimensions.rect.center
