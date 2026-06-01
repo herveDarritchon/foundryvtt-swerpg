@@ -998,7 +998,7 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
 
     let finalValuation = baseValuation
     if (offerNegotiation) {
-      const negotiationResult = await NegotiationDialog.prompt({ entry: { name: item.name, rarity: item.system?.rarity ?? 0 }, buyer: seller })
+      const negotiationResult = await NegotiationDialog.prompt({ entry: { name: item.name, rarity: item.system?.rarity ?? 0 }, buyer: seller, forSale: true })
 
       if (negotiationResult?.confirmed) {
         finalValuation = computeResalePrice({

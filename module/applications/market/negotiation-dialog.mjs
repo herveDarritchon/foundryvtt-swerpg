@@ -1,4 +1,5 @@
 import { computeNegotiatedPrice, rarityToDifficulty, NEGOTIATION_SKILLS } from '../../lib/market/negotiation.mjs'
+import { computeResalePrice } from '../../lib/market/sell-valuation.mjs'
 import { logger } from '../../utils/logger.mjs'
 
 const { api } = foundry.applications
@@ -9,26 +10,61 @@ const { api } = foundry.applications
  * @typedef {Object} NegotiationDialogResult
  * @property {boolean}  confirmed     Whether the user confirmed the negotiated purchase.
  * @property {number}   finalPrice    The negotiated price (may be higher on disaster, lower on success).
- * @property {string}   outcome       One of 'success', 'failure', 'disaster'.
+ * @property {string}   outcome       One of 'success', 'failure', 'disaster' (buy mode) or 'success', 'failure', 'triumph', 'disaster' (sale mode).
  * @property {number}   successRanks  Net success ranks used.
  */
 
 /* -------------------------------------------- */
 
 /**
- * Dialog allowing the buyer to attempt a price negotiation before confirming purchase.
+ * Minimum net success ranks required to achieve a 'triumph' outcome in sale mode.
+ * When the seller achieves this many success ranks (or more), the maximum resale fraction applies.
+ * @type {number}
+ */
+export const TRIUMPH_THRESHOLD = 4
+
+/* -------------------------------------------- */
+
+/**
+ * Map the dialog form state to a sale negotiation outcome string.
  *
- * The GM or player inputs:
- *   1. Which skill to use (Negotiation, Persuasion, or Deception).
- *   2. The number of net success ranks obtained from the skill roll.
- *   3. Whether the roll produced a Disaster.
+ * In sale mode, the form state (successRanks + isDisaster) must be converted
+ * to one of the four outcomes understood by `computeResalePrice`:
+ *   - 'failure'  → base fraction (25%)
+ *   - 'success'  → negotiated fraction (50%)
+ *   - 'triumph'  → max fraction (75%)
+ *   - 'disaster' → penalty fraction (10%)
  *
- * The dialog shows the resulting price in real time and lets the buyer confirm or cancel.
+ * @param {object} formState
+ * @param {number} formState.successRanks  Net success ranks (≥ 0).
+ * @param {boolean} formState.isDisaster   Whether the roll produced a Disaster.
+ * @returns {'failure'|'success'|'triumph'|'disaster'}
+ */
+export function mapOutcomeToSale({ successRanks, isDisaster }) {
+  if (isDisaster) return 'disaster'
+  if (successRanks >= TRIUMPH_THRESHOLD) return 'triumph'
+  if (successRanks > 0) return 'success'
+  return 'failure'
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Dialog allowing the buyer to attempt a price negotiation before confirming purchase,
+ * or the seller to negotiate a better resale price.
  *
- * Usage:
+ * When `forSale` is true, the dialog uses `computeResalePrice` with a mapped outcome
+ * instead of `computeNegotiatedPrice`, and adjusts labels/title accordingly.
+ *
+ * Usage — buy mode (unchanged):
  * ```js
  * const result = await NegotiationDialog.prompt({ entry, buyer })
  * if (result?.confirmed) { // use result.finalPrice }
+ * ```
+ *
+ * Usage — sale mode (new):
+ * ```js
+ * const result = await NegotiationDialog.prompt({ entry, buyer: seller, forSale: true })
  * ```
  */
 export default class NegotiationDialog extends api.HandlebarsApplicationMixin(api.ApplicationV2) {
@@ -38,7 +74,7 @@ export default class NegotiationDialog extends api.HandlebarsApplicationMixin(ap
     classes: ['swerpg', 'application', 'market-negotiation-dialog'],
     tag: 'div',
     window: {
-      title: 'MARKET.Negotiation.Dialog.Title',
+      title: 'MARKET.Negotiation.Dialog.Title', // default; overridden by #forSale title getter
       minimizable: false,
       resizable: false,
     },
@@ -73,6 +109,12 @@ export default class NegotiationDialog extends api.HandlebarsApplicationMixin(ap
   #buyer = null
 
   /**
+   * Whether this dialog is in sale mode (seller negotiates a better resale price).
+   * @type {boolean}
+   */
+  #forSale = false
+
+  /**
    * Current form state: selected skill, success ranks, disaster flag.
    * @type {{ skillKey: string, successRanks: number, isDisaster: boolean }}
    */
@@ -86,20 +128,32 @@ export default class NegotiationDialog extends api.HandlebarsApplicationMixin(ap
 
   /* -------------------------------------------- */
 
+  /** @override */
+  get title() {
+    if (this.#forSale) {
+      return game.i18n.localize('MARKET.Negotiation.Dialog.TitleSell')
+    }
+    return super.title
+  }
+
+  /* -------------------------------------------- */
+
   /**
-   * Open a negotiation dialog for the given entry and buyer, returning a promise
+   * Open a negotiation dialog for the given entry and buyer/seller, returning a promise
    * that resolves to the NegotiationDialogResult when the dialog closes.
    *
    * @param {object} params
-   * @param {import('../../lib/market/market-entry.mjs').MarketEntry} params.entry  The market entry.
-   * @param {object|null} params.buyer   The buyer actor.
+   * @param {import('../../lib/market/market-entry.mjs').MarketEntry} params.entry    The market entry.
+   * @param {object|null} params.buyer     The buyer (or seller) actor.
+   * @param {boolean}  [params.forSale=false]  Whether this is a sale negotiation.
    * @returns {Promise<NegotiationDialogResult|null>}
    */
-  static async prompt({ entry, buyer }) {
+  static async prompt({ entry, buyer, forSale = false }) {
     return new Promise((resolve) => {
       const dialog = new NegotiationDialog()
       dialog.#entry = entry
       dialog.#buyer = buyer
+      dialog.#forSale = forSale
       dialog.#resolve = resolve
       dialog.render(true)
     })
@@ -115,11 +169,27 @@ export default class NegotiationDialog extends api.HandlebarsApplicationMixin(ap
     const rarity = entry?.rarity ?? 0
     const difficulty = rarityToDifficulty(rarity)
 
-    const negotiationResult = computeNegotiatedPrice({
-      originalPrice,
-      successRanks: this.#formState.successRanks,
-      isDisaster: this.#formState.isDisaster,
-    })
+    let negotiationResult
+    if (this.#forSale) {
+      const outcome = mapOutcomeToSale(this.#formState)
+      const saleResult = computeResalePrice({
+        basePrice: originalPrice,
+        negotiationOutcome: outcome,
+      })
+      // Normalize to shape expected by the template (finalPrice)
+      negotiationResult = {
+        outcome: saleResult.outcome,
+        finalPrice: saleResult.resalePrice,
+        originalPrice: saleResult.basePrice,
+        successRanks: this.#formState.successRanks,
+      }
+    } else {
+      negotiationResult = computeNegotiatedPrice({
+        originalPrice,
+        successRanks: this.#formState.successRanks,
+        isDisaster: this.#formState.isDisaster,
+      })
+    }
 
     context.entry = { name: entry?.name ?? '', rarity, originalPrice }
     context.difficulty = difficulty
@@ -130,6 +200,7 @@ export default class NegotiationDialog extends api.HandlebarsApplicationMixin(ap
     }))
     context.formState = { ...this.#formState }
     context.negotiationResult = negotiationResult
+    context.forSale = this.#forSale
 
     return context
   }
@@ -181,11 +252,27 @@ export default class NegotiationDialog extends api.HandlebarsApplicationMixin(ap
    */
   static async #onConfirmNegotiation(_event, _target) {
     const originalPrice = this.#entry?.priceResult?.finalPrice ?? 0
-    const negotiationResult = computeNegotiatedPrice({
-      originalPrice,
-      successRanks: this.#formState.successRanks,
-      isDisaster: this.#formState.isDisaster,
-    })
+
+    let negotiationResult
+    if (this.#forSale) {
+      const outcome = mapOutcomeToSale(this.#formState)
+      const saleResult = computeResalePrice({
+        basePrice: originalPrice,
+        negotiationOutcome: outcome,
+      })
+      negotiationResult = {
+        outcome: saleResult.outcome,
+        finalPrice: saleResult.resalePrice,
+        originalPrice: saleResult.basePrice,
+        successRanks: this.#formState.successRanks,
+      }
+    } else {
+      negotiationResult = computeNegotiatedPrice({
+        originalPrice,
+        successRanks: this.#formState.successRanks,
+        isDisaster: this.#formState.isDisaster,
+      })
+    }
 
     logger.debug('[Market] Negotiation confirmed', {
       skill: this.#formState.skillKey,
@@ -194,6 +281,7 @@ export default class NegotiationDialog extends api.HandlebarsApplicationMixin(ap
       outcome: negotiationResult.outcome,
       originalPrice,
       finalPrice: negotiationResult.finalPrice,
+      forSale: this.#forSale,
     })
 
     this.#resolve?.({

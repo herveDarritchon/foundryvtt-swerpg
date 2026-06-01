@@ -1529,7 +1529,10 @@
         "DisasterTooltip": "Cochez si le jet a produit un Désastre — le vendeur est offensé et augmente le prix.",
         "NegotiatedPrice": "Prix négocié",
         "Confirm": "Acheter à ce prix",
-        "Cancel": "Annuler"
+        "Cancel": "Annuler",
+        "TitleSell": "Négocier le prix de vente",
+        "ConfirmSell": "Vendre à ce prix",
+        "NegotiatedPriceSell": "Prix de vente"
       },
       "Skill": {
         "Negotiation": "Négociation",
