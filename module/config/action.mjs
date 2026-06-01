@@ -21,6 +21,33 @@ export const DEFAULT_RESOURCE = 'health'
  */
 export const DEFAULT_RESOURCE_MORALE = 'morale'
 
+/**
+ * Movement distance multiplier applied when the actor has the Slowed status.
+ * Slowed actors must travel twice the distance to cover the same ground.
+ * @type {number}
+ */
+export const MOVEMENT_SLOWED_MULTIPLIER = 2
+
+/**
+ * Movement distance divisor applied when the actor has the Hastened status.
+ * Hastened actors cover twice the distance per stride.
+ * @type {number}
+ */
+export const MOVEMENT_HASTENED_DIVISOR = 2
+
+/**
+ * Additional distance penalty added when the actor has the Prone status.
+ * @type {number}
+ */
+export const MOVEMENT_PRONE_PENALTY = 2
+
+/**
+ * Divisor applied to an actor's threat level when computing the level of a summoned creature.
+ * A summoned creature's level equals ceil(actor.threatLevel / SUMMON_LEVEL_DIVISOR).
+ * @type {number}
+ */
+export const SUMMON_LEVEL_DIVISOR = 2
+
 /* -------------------------------------------- */
 
 /**
@@ -397,9 +424,9 @@ export const TAGS = {
 
       // Determine the distance traveled and apply distance modifiers
       let distance = (this.usage.distance ??= stride)
-      if (statuses.has('slowed')) distance *= 2
-      if (statuses.has('hastened')) distance /= 2
-      if (statuses.has('prone')) distance += 2
+      if (statuses.has('slowed')) distance *= MOVEMENT_SLOWED_MULTIPLIER
+      if (statuses.has('hastened')) distance /= MOVEMENT_HASTENED_DIVISOR
+      if (statuses.has('prone')) distance += MOVEMENT_PRONE_PENALTY
       if (statuses.has('restrained')) {
         this.cost.action = Infinity
         return
@@ -564,7 +591,7 @@ export const TAGS = {
               'focus.value': 9e99,
             },
             details: {
-              level: Math.ceil(this.actor.system.details.threatLevel / 2),
+              level: Math.ceil(this.actor.system.details.threatLevel / SUMMON_LEVEL_DIVISOR),
             },
           },
         },

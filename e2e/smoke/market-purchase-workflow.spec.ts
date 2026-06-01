@@ -33,11 +33,15 @@ test.describe('[smoke] Market purchase workflow', () => {
       return
     }
 
+    // Wait for Foundry's setup hook to complete — marketApp is created there
+    // @ts-ignore — game is a Foundry browser global
+    await page.waitForFunction(() => typeof game?.system?.marketApp?.render === 'function', { timeout: 15000 }).catch(() => {})
+
     // Evaluate the market open call in the browser context.
     // This does NOT require a buyer actor — just verifies the Application V2 renders.
     const hasMarketApi = await page.evaluate(() => {
-      // @ts-ignore — game.system.api exists in SWERPG
-      return typeof game?.system?.api?.openMarket === 'function'
+      // @ts-ignore — game is a Foundry browser global
+      return typeof game?.system?.api?.methods?.openMarket === 'function' && typeof game?.system?.marketApp?.render === 'function'
     })
 
     if (!hasMarketApi) {
@@ -49,7 +53,7 @@ test.describe('[smoke] Market purchase workflow', () => {
     // Open market without buyer (catalogue-only mode)
     await page.evaluate(async () => {
       // @ts-ignore
-      await game.system.api.openMarket(null)
+      await game.system.api.methods.openMarket(null)
     })
 
     // The market application should render in the DOM
@@ -68,11 +72,25 @@ test.describe('[smoke] Market purchase workflow', () => {
       return
     }
 
-    const marketApp = page.locator('#market')
-    if (!(await marketApp.isVisible().catch(() => false))) {
+    // @ts-ignore — game is a Foundry browser global
+    await page.waitForFunction(() => typeof game?.system?.marketApp?.render === 'function', { timeout: 15000 }).catch(() => {})
+
+    const hasMarketApi = await page.evaluate(() => {
+      // @ts-ignore — game is a Foundry browser global
+      return typeof game?.system?.api?.methods?.openMarket === 'function' && typeof game?.system?.marketApp?.render === 'function'
+    })
+    if (!hasMarketApi) {
       test.skip()
       return
     }
+
+    await page.evaluate(async () => {
+      // @ts-ignore
+      await game.system.api.methods.openMarket(null)
+    })
+
+    const marketApp = page.locator('#market')
+    await expect(marketApp).toBeVisible({ timeout: 5000 })
 
     // Verify toolbar elements are rendered
     await expect(marketApp.locator('.market-toolbar__search')).toBeVisible()
@@ -87,11 +105,25 @@ test.describe('[smoke] Market purchase workflow', () => {
       return
     }
 
-    const marketApp = page.locator('#market')
-    if (!(await marketApp.isVisible().catch(() => false))) {
+    // @ts-ignore — game is a Foundry browser global
+    await page.waitForFunction(() => typeof game?.system?.marketApp?.render === 'function', { timeout: 15000 }).catch(() => {})
+
+    const hasMarketApi = await page.evaluate(() => {
+      // @ts-ignore — game is a Foundry browser global
+      return typeof game?.system?.api?.methods?.openMarket === 'function' && typeof game?.system?.marketApp?.render === 'function'
+    })
+    if (!hasMarketApi) {
       test.skip()
       return
     }
+
+    await page.evaluate(async () => {
+      // @ts-ignore
+      await game.system.api.methods.openMarket(null)
+    })
+
+    const marketApp = page.locator('#market')
+    await expect(marketApp).toBeVisible({ timeout: 5000 })
 
     // Market type selector (dropdown or button group)
     const marketSelector = marketApp.locator('.market-selector__select')

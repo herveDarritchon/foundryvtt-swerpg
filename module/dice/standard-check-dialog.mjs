@@ -147,9 +147,9 @@ export default class StandardCheckDialog extends DialogV2 {
 
   /**
    * Resolve dialog submission to enact a Roll.
-   * @param _event
-   * @param _button
-   * @param _dialog
+   * @param {PointerEvent} _event
+   * @param {HTMLElement} _button
+   * @param {object} _dialog
    * @returns {StandardCheck}
    * @protected
    */
@@ -162,9 +162,9 @@ export default class StandardCheckDialog extends DialogV2 {
 
   /**
    * Resolve dialog submission to request a Roll.
-   * @param _event
-   * @param _button
-   * @param _dialog
+   * @param {PointerEvent} _event
+   * @param {HTMLElement} _button
+   * @param {object} _dialog
    * @returns {StandardCheck}
    * @protected
    */

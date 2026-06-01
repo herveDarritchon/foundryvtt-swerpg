@@ -8,6 +8,9 @@ import SwerpgGear from '../../module/models/gear.mjs'
  * are directly accessible on the instance as this.price, this.rarity, etc.
  *
  * @param {object} [overrides]
+ * @param {number} [overrides.price]
+ * @param {number} [overrides.rarity]
+ * @param {boolean} [overrides.broken]
  * @returns {object}
  */
 function buildGearData({ price = 200, rarity = 1, broken = false } = {}) {

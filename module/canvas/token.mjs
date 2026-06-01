@@ -347,7 +347,7 @@ export default class SwerpgTokenObject extends foundry.canvas.placeables.Token {
 
   /**
    * Set the render flag to schedule a flanking refresh.
-   * @param commit
+   * @param {boolean} commit
    */
   refreshFlanking(commit) {
     const activeGM = game.users.activeGM
@@ -451,7 +451,7 @@ export default class SwerpgTokenObject extends foundry.canvas.placeables.Token {
 
   /**
    * Draw the visualization of Token engagement.
-   * @param engagement
+   * @param {SwerpgTokenEngagement} engagement
    * @internal
    */
   _visualizeEngagement(engagement) {
@@ -525,7 +525,7 @@ export default class SwerpgTokenObject extends foundry.canvas.placeables.Token {
 
   /**
    * TODO: figure out how to use this
-   * @param g
+   * @param {PIXI.Graphics} g
    * @private
    */
   _visualizeOffensiveRange(g) {

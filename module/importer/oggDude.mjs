@@ -204,7 +204,7 @@ function buildContextRegistry() {
 
 /**
  * Return the import statistics payload for the given domain identifier.
- * @param domain
+ * @param {string} domain
  */
 function getDomainStatsPayload(domain) {
   if (domain === 'specialization') {
@@ -219,8 +219,8 @@ function getDomainStatsPayload(domain) {
 export default class OggDudeImporter {
   /**
    * Map a String value, if it is not present, return an empty string.
-   * @param label {string} The label of the element.
-   * @param value {string} The value of the element.
+   * @param {string} label The label of the element.
+   * @param {string} value The value of the element.
    * @returns {string} The mapped value of the element.
    * @public
    * @function
@@ -236,7 +236,7 @@ export default class OggDudeImporter {
 
   /**
    * Map an optional String value, if it is not present, return an empty string.
-   * @param value {string} The value of the element.
+   * @param {string} value The value of the element.
    * @returns {string} The mapped value of the element.
    * @public
    * @function
@@ -248,8 +248,8 @@ export default class OggDudeImporter {
 
   /**
    * Map a String value to a Number, if it is not present, return 0.
-   * @param label {string} The label of the element.
-   * @param value {string} The value of the element.
+   * @param {string} label The label of the element.
+   * @param {string} value The value of the element.
    * @returns {number} The mapped value of the element.
    * @public
    * @function
@@ -265,7 +265,7 @@ export default class OggDudeImporter {
 
   /**
    * Map an optional Number value, if it is not present, return 0.
-   * @param value {string} The value of the element.
+   * @param {string} value The value of the element.
    * @returns {number|number} The mapped value of the element.
    * @public
    * @function
@@ -277,8 +277,8 @@ export default class OggDudeImporter {
 
   /**
    * Map a Boolean value, if it is not present, return false.
-   * @param label {string} The label of the element.
-   * @param value {string} The value of the element.
+   * @param {string} label The label of the element.
+   * @param {string} value The value of the element.
    * @returns {boolean} The mapped value of the element.
    * @public
    * @function
@@ -294,7 +294,7 @@ export default class OggDudeImporter {
 
   /**
    *  Map a Boolean value, if it is not present, return false.
-   * @param value {string} The value of the element.
+   * @param {string} value The value of the element.
    * @returns {boolean} The mapped value of the element.
    * @public
    * @function
@@ -306,8 +306,8 @@ export default class OggDudeImporter {
 
   /**
    * Map an optional array value, if it is not present, return an empty array.
-   * @param value {Array} The value of the element.
-   * @param mapper {function} The function to map the value.
+   * @param {Array} value The value of the element.
+   * @param {Function} mapper The function to map the value.
    * @returns {*[]} The mapped value of the element as an array.
    * @public
    * @function
@@ -328,8 +328,8 @@ export default class OggDudeImporter {
 
   /**
    * Map an optional array value, if it is not present, return an empty array.
-   * @param value {Object} The value of the element.
-   * @param mapper {function} The function to map the value.
+   * @param {Object} value The value of the element.
+   * @param {Function} mapper The function to map the value.
    * @returns {Object} The mapped value of the element as an object.
    * @public
    * @function
@@ -351,11 +351,11 @@ export default class OggDudeImporter {
    * 4.1 Get the Armor file from the Data directory
    * 4.2 Get the Weapon file from the Data directory
    * 4.3 Get the Gear file from the Data directory
-   * @param importedFile {File} The imported file.
-   * @param domains {Object[]}The list of domains to import from the OggDude File.
+   * @param {File} importedFile The imported file.
+   * @param {Object[]} domains The list of domains to import from the OggDude File.
    * @param {Object} [options] Options supplémentaires
    * @param {function(Object):void} [options.progressCallback] Callback appelé à chaque étape (payload: {total, processed, domain?, phase, reason?, error?, domainStats?})
-   * @param options.importToCompendium
+   * @param {boolean} options.importToCompendium
    * @returns {Promise<void>} A Promise that resolves when the Armor data has been processed.
    * @async
    * @public
@@ -602,7 +602,7 @@ export default class OggDudeImporter {
 
   /**
    * Load an OggDude zip archive and return its entries keyed by path.
-   * @param file : File (Zip file path) from OGGDude https://www.swrpgcommunity.com/gm-resources/apps-dice-utilities/oggdudes-generator
+   * @param {File} file File (Zip file path) from OGGDude https://www.swrpgcommunity.com/gm-resources/apps-dice-utilities/oggdudes-generator
    * @returns {Promise<{[p: string]: JSZip.JSZipObject}>}
    */
   async load(file) {

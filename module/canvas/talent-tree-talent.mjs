@@ -46,7 +46,7 @@ export default class SwerpgTalentTreeTalent extends SwerpgTalentIcon {
 
   /**
    * Handle a left-click on a talent node to trigger a purchase action (deprecated V1 path).
-   * @param event
+   * @param {PIXI.FederatedEvent} event
    * @deprecated Crucible legacy — choice wheel left-click purchase.
    *   V1 Edge uses specialization-tree-app.mjs with purchaseTalentNode().
    */

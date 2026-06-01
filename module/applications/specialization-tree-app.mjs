@@ -308,8 +308,8 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
 
   /**
    * Reset the tree renderer viewport to its default position and zoom.
-   * @param event
-   * @param _target
+   * @param {PointerEvent} event
+   * @param {HTMLElement} _target
    * @returns {Promise<void>}
    */
   static async #onResetView(event, _target) {
@@ -319,8 +319,8 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
 
   /**
    * Set the selected specialization tree key from the clicked tab and trigger a re-render.
-   * @param event
-   * @param target
+   * @param {PointerEvent} event
+   * @param {HTMLElement} target
    * @returns {Promise<void>}
    */
   static async #onSelectTree(event, target) {
@@ -333,8 +333,8 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
 
   /**
    * Zoom the tree renderer in by one step.
-   * @param event
-   * @param _target
+   * @param {PointerEvent} event
+   * @param {HTMLElement} _target
    * @returns {Promise<void>}
    */
   static async #onZoomIn(event, _target) {
@@ -344,8 +344,8 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
 
   /**
    * Zoom the tree renderer out by one step.
-   * @param event
-   * @param _target
+   * @param {PointerEvent} event
+   * @param {HTMLElement} _target
    * @returns {Promise<void>}
    */
   static async #onZoomOut(event, _target) {
@@ -449,8 +449,8 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
 
   /**
    * Trigger the primary action (purchase or forget) for the currently selected detail node.
-   * @param event
-   * @param _target
+   * @param {PointerEvent} event
+   * @param {HTMLElement} _target
    * @returns {Promise<void>}
    */
   static async #onContextualAction(event, _target) {
@@ -462,8 +462,8 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
 
   /**
    * Hide the node detail panel.
-   * @param event
-   * @param _target
+   * @param {PointerEvent} event
+   * @param {HTMLElement} _target
    * @returns {Promise<void>}
    */
   static async #onCloseDetail(event, _target) {
@@ -473,8 +473,8 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
 
   /**
    * Remove a specialization from the actor after evaluating whether removal is permitted.
-   * @param event
-   * @param target
+   * @param {PointerEvent} event
+   * @param {HTMLElement} target
    * @returns {Promise<void>}
    */
   static async #onRemoveSpecialization(event, target) {

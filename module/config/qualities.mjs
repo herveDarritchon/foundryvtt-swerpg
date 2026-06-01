@@ -66,7 +66,7 @@ export const OGGDUDE_QUALITY_MAP = {
 
 /**
  * Return the quality configuration entry matching the given key, or undefined when not found.
- * @param key
+ * @param {string} key
  */
 export function getQualityConfig(key) {
   return Object.values(QUALITIES).find((q) => q.key === key)

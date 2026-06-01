@@ -395,7 +395,7 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
    *
    * This is a private method and meant to be accessed only within the class.
    *
-   * @param actor
+   * @param {SwerpgActor} actor
    * @private
    * @function
    * @returns {number} The calculated wound threshold value.
@@ -415,7 +415,7 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
    *
    * This is a private method and meant to be accessed only within the class.
    *
-   * @param actor
+   * @param {SwerpgActor} actor
    * @private
    * @function
    * @returns {number} The calculated strain threshold value.
@@ -435,7 +435,7 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
    *
    * This is a private method and meant to be accessed only within the class.
    *
-   * @param actor
+   * @param {SwerpgActor} actor
    * @private
    * @function
    * @returns {number} The calculated encumbrance threshold value.
@@ -453,7 +453,7 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
    *
    * This is a private method and meant to be accessed only within the class.
    *
-   * @param actor
+   * @param {SwerpgActor} actor
    * @private
    * @function
    * @returns {DefenseAttributes} The calculated defense value.
@@ -472,7 +472,7 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
    *
    * This is a private method and meant to be accessed only within the class.
    *
-   * @param actor
+   * @param {SwerpgActor} actor
    * @private
    * @function
    * @returns {number} The calculated soak value.

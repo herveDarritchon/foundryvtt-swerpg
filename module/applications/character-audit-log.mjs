@@ -130,7 +130,7 @@ function getAuditLogDateLocale() {
 
 /**
  * Format a Unix timestamp as a localized date-time string.
- * @param timestamp
+ * @param {number} timestamp
  */
 function formatAuditLogTimestamp(timestamp) {
   const date = new Date(timestamp)
@@ -148,7 +148,7 @@ function formatAuditLogTimestamp(timestamp) {
 
 /**
  * Format an XP delta value as a signed string with the "XP" suffix.
- * @param xpDelta
+ * @param {number} xpDelta
  */
 function formatAuditLogDelta(xpDelta) {
   const value = Number(xpDelta) || 0
@@ -158,7 +158,7 @@ function formatAuditLogDelta(xpDelta) {
 
 /**
  * Format a credit delta value as a signed string with the "cr" suffix.
- * @param creditDelta
+ * @param {number} creditDelta
  */
 function formatAuditLogCreditDelta(creditDelta) {
   const value = Number(creditDelta) || 0
@@ -168,7 +168,7 @@ function formatAuditLogCreditDelta(creditDelta) {
 
 /**
  * Return the localized label for the given audit entry type, falling back to the UNKNOWN key.
- * @param type
+ * @param {string} type
  */
 function getAuditLogTypeLabel(type) {
   const key = AUDIT_LOG_TYPE_LABELS[type] ?? 'SWERPG.AUDIT_LOG.TYPE.UNKNOWN'
@@ -177,8 +177,8 @@ function getAuditLogTypeLabel(type) {
 
 /**
  * Return the display name for a value, localizing the fallback key when the value is absent or empty.
- * @param value
- * @param fallbackKey
+ * @param {*} value
+ * @param {string} fallbackKey
  */
 function getAuditLogName(value, fallbackKey = 'SWERPG.AUDIT_LOG.UNKNOWN_VALUE') {
   if (value === null || value === undefined || value === '') return game.i18n.localize(fallbackKey)
@@ -456,7 +456,7 @@ export default class CharacterAuditLogApp extends api.HandlebarsApplicationMixin
 
 /**
  * Escape a value for inclusion in a CSV cell, wrapping in double-quotes when the string contains commas, quotes, or line breaks.
- * @param value
+ * @param {*} value
  */
 export function escapeCsvCell(value) {
   if (value === null || value === undefined) return ''
@@ -469,7 +469,7 @@ export function escapeCsvCell(value) {
 
 /**
  * Return the display name of the first user with owner-level permission on the actor, or "unknown-player".
- * @param actor
+ * @param {Actor|object} actor
  */
 export function getPrimaryOwnerName(actor) {
   if (!actor?.ownership) return 'unknown-player'
@@ -487,7 +487,7 @@ export function getPrimaryOwnerName(actor) {
 
 /**
  * Convert a string to a lowercase slug safe for use in filenames.
- * @param str
+ * @param {string} str
  */
 function slugify(str) {
   return (
@@ -503,7 +503,7 @@ function slugify(str) {
 
 /**
  * Build a dated CSV export filename from the actor's name and primary owner name.
- * @param actor
+ * @param {Actor|object} actor
  */
 export function buildExportFilename(actor) {
   const charName = slugify(actor?.name ?? 'character')
@@ -514,7 +514,7 @@ export function buildExportFilename(actor) {
 
 /**
  * Build the full CSV content for the actor's audit log, including the header row.
- * @param actor
+ * @param {Actor|object} actor
  */
 export function buildCsvContent(actor) {
   const rawLogs = foundry.utils.getProperty(actor, AUDIT_LOG_PATH) ?? []

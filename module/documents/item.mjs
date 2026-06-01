@@ -245,7 +245,7 @@ export default class SwerpgItem extends Item {
 
   /**
    * Display changes to the Item as scrolling combat text.
-   * @param changed
+   * @param {object} changed
    * @private
    */
   _displayScrollingStatus(changed) {
