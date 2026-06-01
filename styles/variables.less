@@ -57,7 +57,12 @@
   --color-frame-bg: #101722; /* Noir bleu profond pour les fonds */
   --color-frame-bg-25: rgb(16 23 34 / 25%);
   --color-frame-bg-50: rgb(16 23 34 / 50%);
+  --color-frame-bg-60: rgb(16 23 34 / 60%);
+  --color-frame-bg-70: rgb(16 23 34 / 70%);
   --color-frame-bg-75: rgb(16 23 34 / 75%);
+
+  /* Input background (fond des champs search/filter/select) */
+  --color-input-bg: rgb(10 17 26 / 70%);
   //--color-accent: #0096FF; /* Bleu néon pour les éléments interactifs */
   --color-tern: #142a3c; /* Bleu sombre désaturé */
   --color-link-text: #8db9cc; /* Cyan atténué pour les liens */
@@ -132,6 +137,76 @@
   --color-success: #00ff99;
   --color-warning: #ffaa00;
   --color-danger: #ff3333;
+
+  /* Glow alpha (color-mix pour héritage de thème automatique) */
+  --color-glow-07: color-mix(in srgb, var(--color-glow) 7%, transparent);
+  --color-glow-08: color-mix(in srgb, var(--color-glow) 8%, transparent);
+  --color-glow-10: color-mix(in srgb, var(--color-glow) 10%, transparent);
+  --color-glow-15: color-mix(in srgb, var(--color-glow) 15%, transparent);
+  --color-glow-20: color-mix(in srgb, var(--color-glow) 20%, transparent);
+  --color-glow-22: color-mix(in srgb, var(--color-glow) 22%, transparent);
+  --color-glow-25: color-mix(in srgb, var(--color-glow) 25%, transparent);
+  --color-glow-50: color-mix(in srgb, var(--color-glow) 50%, transparent);
+  --color-glow-60: color-mix(in srgb, var(--color-glow) 60%, transparent);
+
+  /* Success alpha */
+  --color-success-10: color-mix(in srgb, var(--color-success) 10%, transparent);
+  --color-success-12: color-mix(in srgb, var(--color-success) 12%, transparent);
+  --color-success-15: color-mix(in srgb, var(--color-success) 15%, transparent);
+  --color-success-20: color-mix(in srgb, var(--color-success) 20%, transparent);
+  --color-success-30: color-mix(in srgb, var(--color-success) 30%, transparent);
+  --color-success-35: color-mix(in srgb, var(--color-success) 35%, transparent);
+  --color-success-40: color-mix(in srgb, var(--color-success) 40%, transparent);
+  --color-success-text: color-mix(in srgb, var(--color-success) 80%, var(--color-text));
+  --color-success-text-light: color-mix(in srgb, var(--color-success) 60%, var(--color-text));
+
+  /* Danger alpha */
+  --color-danger-08: color-mix(in srgb, var(--color-danger) 8%, transparent);
+  --color-danger-10: color-mix(in srgb, var(--color-danger) 10%, transparent);
+  --color-danger-15: color-mix(in srgb, var(--color-danger) 15%, transparent);
+  --color-danger-20: color-mix(in srgb, var(--color-danger) 20%, transparent);
+  --color-danger-30: color-mix(in srgb, var(--color-danger) 30%, transparent);
+  --color-danger-35: color-mix(in srgb, var(--color-danger) 35%, transparent);
+  --color-danger-text: color-mix(in srgb, var(--color-danger) 70%, var(--color-text));
+  --color-danger-text-strong: color-mix(in srgb, var(--color-danger) 60%, var(--color-text));
+
+  /* Warning alpha */
+  --color-warning-08: color-mix(in srgb, var(--color-warning) 8%, transparent);
+  --color-warning-12: color-mix(in srgb, var(--color-warning) 12%, transparent);
+  --color-warning-25: color-mix(in srgb, var(--color-warning) 25%, transparent);
+  --color-warning-30: color-mix(in srgb, var(--color-warning) 30%, transparent);
+  --color-warning-text: color-mix(in srgb, var(--color-warning) 90%, var(--color-text));
+
+  /* Accent-blue alpha */
+  --color-accent-blue-12: color-mix(in srgb, var(--color-accent-blue) 12%, transparent);
+  --color-accent-blue-15: color-mix(in srgb, var(--color-accent-blue) 15%, transparent);
+  --color-accent-blue-30: color-mix(in srgb, var(--color-accent-blue) 30%, transparent);
+  --color-accent-blue-text: color-mix(in srgb, var(--color-accent-blue) 80%, var(--color-text));
+  --color-accent-blue-text-light: color-mix(in srgb, var(--color-accent-blue) 90%, var(--color-text));
+
+  /* Market forbidden (marché noir / purple) */
+  --color-market-forbidden: #b400e6;
+  --color-market-forbidden-08: color-mix(in srgb, var(--color-market-forbidden) 8%, transparent);
+  --color-market-forbidden-12: color-mix(in srgb, var(--color-market-forbidden) 12%, transparent);
+  --color-market-forbidden-25: color-mix(in srgb, var(--color-market-forbidden) 25%, transparent);
+  --color-market-forbidden-30: color-mix(in srgb, var(--color-market-forbidden) 30%, transparent);
+  --color-market-forbidden-text: color-mix(in srgb, var(--color-market-forbidden) 70%, var(--color-text));
+
+  /* Market restriction générale (orange) */
+  --color-market-restricted: #ff9500;
+  --color-market-restricted-bg: color-mix(in srgb, var(--color-market-restricted) 10%, transparent);
+  --color-market-restricted-border: color-mix(in srgb, var(--color-market-restricted) 30%, transparent);
+  --color-market-restricted-text: var(--color-market-restricted);
+
+  /* Market restriction militaire (goldenrod → accent-yellow) */
+  --color-market-military-bg: color-mix(in srgb, var(--color-accent-yellow) 10%, transparent);
+  --color-market-military-border: color-mix(in srgb, var(--color-accent-yellow) 30%, transparent);
+  --color-market-military-text: var(--color-accent-yellow);
+
+  /* Market restriction illégale (rouge → danger) */
+  --color-market-illegal-bg: color-mix(in srgb, var(--color-danger) 10%, transparent);
+  --color-market-illegal-border: color-mix(in srgb, var(--color-danger) 30%, transparent);
+  --color-market-illegal-text: var(--color-danger);
 
   --font-h1: 'Orbitron', sans-serif;
   --font-h2: 'Orbitron', sans-serif;
