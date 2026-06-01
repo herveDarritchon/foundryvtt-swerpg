@@ -418,6 +418,7 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
     const sorted = sortEntries(filtered, sortBy, sortDirection)
 
     // 5. Annotate each entry with canBuy, obtainability, and narrative badges
+    const hasBuyer = buyer !== null
     const annotated = sorted.map((entry) => {
       const validation = validatePurchase({ actor: buyer, entry })
       const obtainability = evaluateObtainability({ rarity: entry.rarity, marketType: activeMarketType })
@@ -428,16 +429,31 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
       const restrictionLevel = entry.restrictionLevel ?? 'none'
       const isRestricted = restrictionLevel !== 'none'
       const restrictionLabel = RESTRICTION_LEVELS[restrictionLevel]?.label ?? null
+
+      // Badge view-model: encode deduplication rules so the template stays purely presentational.
+      // Rule 1 — black-market badge: suppress when restrictionLevel === 'illegal', because the
+      //           restriction badge already displays the skull icon for that level.
+      // Rule 2 — negotiable badge: suppress when the buyer is present, because the negotiate CTA
+      //           button in the buy column already signals negotiability on the same row.
+      const badges = {
+        showImperialSuspicion: isImperialSuspicion,
+        showBlackMarket: isBlackMarket && restrictionLevel !== 'illegal',
+        showNegotiable: isNegotiable && !hasBuyer,
+        showImmediateAccess: obtainability.immediate,
+        showSupplyDelay: !obtainability.immediate,
+      }
+
       return {
         ...entry,
-        canBuy: buyer !== null && validation.canPurchase,
-        buyBlockedReason: buyer !== null && !validation.canPurchase ? validation.reason : null,
+        canBuy: hasBuyer && validation.canPurchase,
+        buyBlockedReason: hasBuyer && !validation.canPurchase ? validation.reason : null,
         obtainability,
         isNegotiable,
         isImperialSuspicion,
         isBlackMarket,
         isRestricted,
         restrictionLabel,
+        badges,
       }
     })
 
