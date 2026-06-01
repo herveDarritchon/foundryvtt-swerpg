@@ -5382,6 +5382,133 @@ input[type='range'] {
   color: var(--color-secondary);
 }
 /* ----------------------------------------- */
+/*  Market Mode Toggle (segmented control)   */
+/* ----------------------------------------- */
+.market-mode-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: var(--color-frame-bg-70);
+  border: 1px solid var(--color-glow-22);
+  border-radius: 6px;
+  padding: 3px;
+  width: fit-content;
+  margin-bottom: 0.5rem;
+}
+.market-mode-toggle__btn {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.75rem;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  color: var(--color-secondary);
+  font-size: var(--font-size-13);
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease, border-color 0.12s ease;
+}
+.market-mode-toggle__btn:hover:not(.is-active) {
+  background: var(--color-glow-08);
+  color: var(--color-primary);
+}
+.market-mode-toggle__btn:focus-visible {
+  outline: 2px solid var(--color-glow-50);
+  outline-offset: 2px;
+}
+.market-mode-toggle__btn.is-active,
+.market-mode-toggle__btn[aria-pressed='true'] {
+  background: var(--color-glow-15);
+  border-color: var(--color-glow-25);
+  color: var(--color-primary);
+  font-weight: 600;
+}
+/* ----------------------------------------- */
+/*  Market Inventory Table                   */
+/* ----------------------------------------- */
+.market-inventory__table {
+  border: 1px solid var(--color-glow-22);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--color-frame-bg-60);
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: var(--font-size-13);
+}
+.market-inventory__table thead tr {
+  background: var(--color-frame-bg-50);
+}
+.market-inventory__table th {
+  padding: 0.35rem 0.75rem;
+  text-align: left;
+  color: var(--color-secondary);
+  font-size: var(--font-size-11);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--color-glow-15);
+  white-space: nowrap;
+}
+.market-inventory__table tbody tr.market-item {
+  cursor: pointer;
+  transition: background 0.12s ease;
+}
+.market-inventory__table tbody tr.market-item:hover {
+  background: var(--color-glow-08);
+}
+.market-inventory__table tbody tr.market-item:not(:last-child) {
+  border-bottom: 1px solid var(--color-glow-07);
+}
+.market-inventory__table td {
+  padding: 0.4rem 0.75rem;
+  color: var(--color-text);
+  vertical-align: middle;
+}
+/* ----------------------------------------- */
+/*  Market Sell Column & Button              */
+/* ----------------------------------------- */
+.market-col--sell {
+  width: 50px;
+  text-align: center;
+}
+.market-item__sell {
+  padding: 0.3rem 0.5rem;
+  background: var(--color-warning-12);
+  border: 1px solid var(--color-warning-30);
+  border-radius: 4px;
+  color: var(--color-warning-text);
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease;
+  font-size: var(--font-size-13);
+}
+.market-item__sell:hover {
+  background: var(--color-warning-25);
+}
+.market-item__sell:focus-visible {
+  outline: 2px solid var(--color-glow-50);
+  outline-offset: 2px;
+}
+.market-item__sell--disabled {
+  background: var(--color-glow-08);
+  border-color: var(--color-glow-15);
+  color: var(--color-secondary);
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+.market-item__sell--disabled:hover {
+  background: var(--color-glow-08);
+  color: var(--color-secondary);
+}
+/* ----------------------------------------- */
+/*  Market Resale Estimate                   */
+/* ----------------------------------------- */
+.market-resale-estimate {
+  color: var(--color-warning-text);
+  font-weight: 500;
+  font-size: var(--font-size-12);
+}
+/* ----------------------------------------- */
 /*  Market Negotiate Button                  */
 /* ----------------------------------------- */
 .market-col--buy {
