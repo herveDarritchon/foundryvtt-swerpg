@@ -43,7 +43,63 @@
         <p class="market-selector__description">{{localize "MARKET.Inventory.Description"}}</p>
       </div>
 
-      {{#if inventory.items.length}}
+      {{!-- Sell-mode toolbar: search, sort, reset --}}
+      <div class="market-toolbar market-inventory-toolbar">
+        <div class="market-toolbar__search-group">
+          <label for="market-inventory-search" class="sr-only">{{localize "MARKET.Inventory.Toolbar.Search.Label"}}</label>
+          <input
+            id="market-inventory-search"
+            class="market-toolbar__search market-inventory-toolbar__search"
+            type="search"
+            placeholder="{{localize 'MARKET.Inventory.Toolbar.Search.Placeholder'}}"
+            value="{{viewState.inventorySearch}}"
+            aria-label="{{localize 'MARKET.Inventory.Toolbar.Search.Label'}}"
+          />
+        </div>
+
+        <div class="market-toolbar__sort">
+          <label for="market-inventory-sort-field" class="sr-only">{{localize "MARKET.Toolbar.Sort.Label"}}</label>
+          <select id="market-inventory-sort-field" class="market-toolbar__sort--field market-inventory-toolbar__sort--field" aria-label="{{localize 'MARKET.Toolbar.Sort.Label'}}">
+            {{#each inventorySortOptions as |opt|}}
+              <option value="{{opt.value}}" {{#if (eq opt.value ../viewState.inventorySortBy)}}selected{{/if}}>
+                {{localize opt.label}}
+              </option>
+            {{/each}}
+          </select>
+
+          <label for="market-inventory-sort-dir" class="sr-only">{{localize "MARKET.Toolbar.Sort.DirectionLabel"}}</label>
+          <select id="market-inventory-sort-dir" class="market-toolbar__sort--direction market-inventory-toolbar__sort--direction" aria-label="{{localize 'MARKET.Toolbar.Sort.DirectionLabel'}}">
+            <option value="asc" {{#if (eq viewState.inventorySortDirection "asc")}}selected{{/if}}>
+              {{localize "MARKET.Toolbar.Sort.Asc"}}
+            </option>
+            <option value="desc" {{#if (eq viewState.inventorySortDirection "desc")}}selected{{/if}}>
+              {{localize "MARKET.Toolbar.Sort.Desc"}}
+            </option>
+          </select>
+        </div>
+
+        <button
+          type="button"
+          class="market-toolbar__reset"
+          data-action="resetInventory"
+          data-tooltip="{{localize 'MARKET.Toolbar.Reset.Tooltip'}}"
+          aria-label="{{localize 'MARKET.Toolbar.Reset.Tooltip'}}"
+        >
+          <i class="fa-solid fa-rotate-left" aria-hidden="true"></i>
+          <span class="market-toolbar__reset-label">{{localize "MARKET.Toolbar.Reset.Label"}}</span>
+        </button>
+      </div>
+
+      {{#if inventory.isEmpty}}
+        <div class="market-empty">
+          <p>{{localize "MARKET.Inventory.Empty"}}</p>
+        </div>
+      {{else if inventory.isFilteredEmpty}}
+        <p class="market-empty market-empty--filtered">
+          <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+          {{localize "MARKET.Inventory.Toolbar.EmptySearch"}}
+        </p>
+      {{else if inventory.items.length}}
         <table class="market-inventory__table">
           <thead>
             <tr>
@@ -85,10 +141,6 @@
             {{/each}}
           </tbody>
         </table>
-      {{else}}
-        <div class="market-empty">
-          <p>{{localize "MARKET.Inventory.Empty"}}</p>
-        </div>
       {{/if}}
 
     {{else}}

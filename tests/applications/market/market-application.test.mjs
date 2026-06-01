@@ -1975,6 +1975,377 @@ describe('MarketApplicationV2', () => {
   })
 
   /* -------------------------------------------- */
+  /*  Sell-mode toolbar: search, sort, reset      */
+  /* -------------------------------------------- */
+
+  describe('sell-mode inventory toolbar — search', () => {
+    it('_viewState starts with empty inventorySearch', () => {
+      const app = new MarketApplicationV2()
+      expect(app._viewState.inventorySearch).toBe('')
+    })
+
+    it('filters inventory items by name when inventorySearch is set (case-insensitive)', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const items = [
+        { id: 'w1', name: 'Blaster Pistol', img: '', type: 'weapon', system: { price: 100 } },
+        { id: 'w2', name: 'Vibro Knife', img: '', type: 'weapon', system: { price: 80 } },
+      ]
+      const actor = {
+        id: 'actor-1',
+        name: 'Test',
+        system: { credits: 500 },
+        items: makeItemsCollection(items),
+      }
+
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+      app._viewState = { ...app._viewState, inventorySearch: 'blaster' }
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.inventory.items).toHaveLength(1)
+      expect(context.inventory.items[0].name).toBe('Blaster Pistol')
+    })
+
+    it('inventory search is case-insensitive', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const item = { id: 'w1', name: 'Blaster Pistol', img: '', type: 'weapon', system: { price: 100 } }
+      const actor = {
+        id: 'actor-1',
+        name: 'Test',
+        system: { credits: 500 },
+        items: makeItemsCollection([item]),
+      }
+
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+      app._viewState = { ...app._viewState, inventorySearch: 'BLASTER' }
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.inventory.items).toHaveLength(1)
+    })
+
+    it('empty inventorySearch returns all sellable items', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const items = [
+        { id: 'w1', name: 'Blaster', img: '', type: 'weapon', system: { price: 100 } },
+        { id: 'a1', name: 'Armor', img: '', type: 'armor', system: { price: 200 } },
+      ]
+      const actor = {
+        id: 'actor-1',
+        name: 'Test',
+        system: { credits: 500 },
+        items: makeItemsCollection(items),
+      }
+
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+      app._viewState = { ...app._viewState, inventorySearch: '' }
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.inventory.items).toHaveLength(2)
+    })
+
+    it('returns isFilteredEmpty=true when search matches nothing but inventory has items', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const item = { id: 'w1', name: 'Blaster', img: '', type: 'weapon', system: { price: 100 } }
+      const actor = {
+        id: 'actor-1',
+        name: 'Test',
+        system: { credits: 500 },
+        items: makeItemsCollection([item]),
+      }
+
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+      app._viewState = { ...app._viewState, inventorySearch: 'lightsaber' }
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.inventory.isEmpty).toBe(false)
+      expect(context.inventory.isFilteredEmpty).toBe(true)
+      expect(context.inventory.items).toHaveLength(0)
+    })
+  })
+
+  describe('sell-mode inventory toolbar — sort', () => {
+    it('_viewState starts with inventorySortBy=name and inventorySortDirection=asc', () => {
+      const app = new MarketApplicationV2()
+      expect(app._viewState.inventorySortBy).toBe('name')
+      expect(app._viewState.inventorySortDirection).toBe('asc')
+    })
+
+    it('sorts inventory by name ascending (A→Z)', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const items = [
+        { id: 'z1', name: 'Z-6 Blaster', img: '', type: 'weapon', system: { price: 100 } },
+        { id: 'a1', name: 'A-300 Rifle', img: '', type: 'weapon', system: { price: 150 } },
+      ]
+      const actor = {
+        id: 'actor-1',
+        name: 'Test',
+        system: { credits: 500 },
+        items: makeItemsCollection(items),
+      }
+
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+      app._viewState = { ...app._viewState, inventorySortBy: 'name', inventorySortDirection: 'asc' }
+      const context = await app._preparePartContext('catalog', {})
+
+      const names = context.inventory.items.map((i) => i.name)
+      expect(names).toEqual([...names].sort((a, b) => a.localeCompare(b)))
+    })
+
+    it('sorts inventory by name descending (Z→A)', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const items = [
+        { id: 'a1', name: 'A-300 Rifle', img: '', type: 'weapon', system: { price: 100 } },
+        { id: 'z1', name: 'Z-6 Blaster', img: '', type: 'weapon', system: { price: 150 } },
+      ]
+      const actor = {
+        id: 'actor-1',
+        name: 'Test',
+        system: { credits: 500 },
+        items: makeItemsCollection(items),
+      }
+
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+      app._viewState = { ...app._viewState, inventorySortBy: 'name', inventorySortDirection: 'desc' }
+      const context = await app._preparePartContext('catalog', {})
+
+      const names = context.inventory.items.map((i) => i.name)
+      expect(names[0]).toBe('Z-6 Blaster')
+      expect(names[1]).toBe('A-300 Rifle')
+    })
+
+    it('sorts inventory by basePrice ascending (cheapest first)', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const items = [
+        { id: 'e1', name: 'Expensive', img: '', type: 'weapon', system: { price: 500 } },
+        { id: 'c1', name: 'Cheap', img: '', type: 'weapon', system: { price: 50 } },
+      ]
+      const actor = {
+        id: 'actor-1',
+        name: 'Test',
+        system: { credits: 500 },
+        items: makeItemsCollection(items),
+      }
+
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+      app._viewState = { ...app._viewState, inventorySortBy: 'basePrice', inventorySortDirection: 'asc' }
+      const context = await app._preparePartContext('catalog', {})
+
+      const prices = context.inventory.items.map((i) => i.basePrice)
+      expect(prices[0]).toBeLessThanOrEqual(prices[1])
+    })
+
+    it('sorts inventory by basePrice descending (most expensive first)', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const items = [
+        { id: 'c1', name: 'Cheap', img: '', type: 'weapon', system: { price: 50 } },
+        { id: 'e1', name: 'Expensive', img: '', type: 'weapon', system: { price: 500 } },
+      ]
+      const actor = {
+        id: 'actor-1',
+        name: 'Test',
+        system: { credits: 500 },
+        items: makeItemsCollection(items),
+      }
+
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+      app._viewState = { ...app._viewState, inventorySortBy: 'basePrice', inventorySortDirection: 'desc' }
+      const context = await app._preparePartContext('catalog', {})
+
+      const prices = context.inventory.items.map((i) => i.basePrice)
+      expect(prices[0]).toBeGreaterThanOrEqual(prices[1])
+    })
+
+    it('sorts inventory by resaleEstimate ascending', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const items = [
+        { id: 'h1', name: 'High', img: '', type: 'weapon', system: { price: 400 } },
+        { id: 'l1', name: 'Low', img: '', type: 'weapon', system: { price: 100 } },
+      ]
+      const actor = {
+        id: 'actor-1',
+        name: 'Test',
+        system: { credits: 500 },
+        items: makeItemsCollection(items),
+      }
+
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+      app._viewState = { ...app._viewState, inventorySortBy: 'resaleEstimate', inventorySortDirection: 'asc' }
+      const context = await app._preparePartContext('catalog', {})
+
+      const estimates = context.inventory.items.map((i) => i.resaleEstimate)
+      expect(estimates[0]).toBeLessThanOrEqual(estimates[1])
+    })
+
+    it('exposes inventorySortOptions in catalog context', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.inventorySortOptions).toBeDefined()
+      expect(Array.isArray(context.inventorySortOptions)).toBe(true)
+      expect(context.inventorySortOptions).toHaveLength(3)
+
+      const values = context.inventorySortOptions.map((o) => o.value)
+      expect(values).toContain('name')
+      expect(values).toContain('basePrice')
+      expect(values).toContain('resaleEstimate')
+    })
+  })
+
+  describe('sell-mode inventory toolbar — reset', () => {
+    it('declares the resetInventory action', () => {
+      expect(MarketApplicationV2.DEFAULT_OPTIONS.actions).toHaveProperty('resetInventory')
+    })
+
+    it('resetInventory resets inventorySearch, inventorySortBy, inventorySortDirection to defaults', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      app._viewState = {
+        ...app._viewState,
+        inventorySearch: 'blaster',
+        inventorySortBy: 'basePrice',
+        inventorySortDirection: 'desc',
+      }
+      app.render = vi.fn().mockResolvedValue(undefined)
+
+      const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.resetInventory
+      await action.call(app, {}, {})
+
+      expect(app._viewState.inventorySearch).toBe('')
+      expect(app._viewState.inventorySortBy).toBe('name')
+      expect(app._viewState.inventorySortDirection).toBe('asc')
+      expect(app.render).toHaveBeenCalled()
+    })
+
+    it('resetInventory preserves the current mode (sell) and buy-mode state', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      app._viewState = {
+        ...app._viewState,
+        mode: 'sell',
+        search: 'blaster',
+        filterType: 'weapon',
+        activeMarketType: 'black-market',
+        inventorySearch: 'rifle',
+        inventorySortBy: 'basePrice',
+        inventorySortDirection: 'desc',
+      }
+      app.render = vi.fn().mockResolvedValue(undefined)
+
+      const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.resetInventory
+      await action.call(app, {}, {})
+
+      // Inventory state reset
+      expect(app._viewState.inventorySearch).toBe('')
+      expect(app._viewState.inventorySortBy).toBe('name')
+      expect(app._viewState.inventorySortDirection).toBe('asc')
+
+      // Buy-mode state and current mode preserved
+      expect(app._viewState.mode).toBe('sell')
+      expect(app._viewState.search).toBe('blaster')
+      expect(app._viewState.filterType).toBe('weapon')
+      expect(app._viewState.activeMarketType).toBe('black-market')
+    })
+
+    it('resetInventory does not reset buy-mode search when in sell mode', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      app._viewState = {
+        ...app._viewState,
+        mode: 'sell',
+        search: 'vibro',
+        inventorySearch: 'blaster',
+      }
+      app.render = vi.fn().mockResolvedValue(undefined)
+
+      const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.resetInventory
+      await action.call(app, {}, {})
+
+      expect(app._viewState.inventorySearch).toBe('')
+      expect(app._viewState.search).toBe('vibro')
+    })
+  })
+
+  describe('sell-mode inventory toolbar — combined search+sort', () => {
+    it('applies search and sort together (search first, then sort result)', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const items = [
+        { id: 'b2', name: 'Blaster Rifle', img: '', type: 'weapon', system: { price: 300 } },
+        { id: 'b1', name: 'Blaster Pistol', img: '', type: 'weapon', system: { price: 100 } },
+        { id: 'v1', name: 'Vibro Knife', img: '', type: 'weapon', system: { price: 80 } },
+      ]
+      const actor = {
+        id: 'actor-1',
+        name: 'Test',
+        system: { credits: 500 },
+        items: makeItemsCollection(items),
+      }
+
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+      // Search for "blaster" then sort by basePrice ascending
+      app._viewState = { ...app._viewState, inventorySearch: 'blaster', inventorySortBy: 'basePrice', inventorySortDirection: 'asc' }
+      const context = await app._preparePartContext('catalog', {})
+
+      // Only blaster items, sorted by base price ascending
+      expect(context.inventory.items).toHaveLength(2)
+      expect(context.inventory.items[0].name).toBe('Blaster Pistol') // 100 < 300
+      expect(context.inventory.items[1].name).toBe('Blaster Rifle')
+    })
+  })
+
+  describe('sell-mode inventory — non-regression on buy mode', () => {
+    it('buy-mode catalog is not affected by inventory search state', async () => {
+      const weapon = makeItem({ type: 'weapon', name: 'Blaster Pistol' })
+      globalThis.game.items = makeItemsCollection([weapon])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, mode: 'buy', inventorySearch: 'lightsaber' }
+      const context = await app._preparePartContext('catalog', {})
+
+      // Buy-mode catalog should still show the weapon — inventorySearch does not affect it
+      expect(context.catalog.items).toHaveLength(1)
+      expect(context.catalog.items[0].name).toBe('Blaster Pistol')
+    })
+
+    it('toggling from sell to buy does not clear the buy-mode search', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, mode: 'sell', search: 'blaster' }
+      app.render = vi.fn().mockResolvedValue(undefined)
+
+      const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.toggleMode
+      await action.call(app, {}, { dataset: { mode: 'buy' } })
+
+      expect(app._viewState.mode).toBe('buy')
+      expect(app._viewState.search).toBe('blaster')
+    })
+  })
+
+  /* -------------------------------------------- */
   /*  sellItem action                             */
   /* -------------------------------------------- */
 

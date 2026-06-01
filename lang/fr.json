@@ -1700,7 +1700,18 @@
       "ResaleEstimate": "Revente (25%)",
       "SellAriaLabel": "Vendre",
       "SellButton": "Vendre",
-      "Empty": "Votre inventaire ne contient aucun article vendable."
+      "Empty": "Votre inventaire ne contient aucun article vendable.",
+      "Toolbar": {
+        "Search": {
+          "Label": "Rechercher dans l'inventaire",
+          "Placeholder": "Rechercher…"
+        },
+        "Sort": {
+          "BasePrice": "Prix de base",
+          "ResaleEstimate": "Prix de revente"
+        },
+        "EmptySearch": "Aucun article de votre inventaire ne correspond à la recherche."
+      }
     },
     "Settings": {
       "Title": "Configuration du marché",
