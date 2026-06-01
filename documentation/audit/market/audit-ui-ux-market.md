@@ -41,7 +41,9 @@ Le projet dispose pourtant d'un design system riche et cohérent (`variables.les
 - Effet « arc-en-ciel » : vert/bleu/violet/ambre/rouge se disputent l'attention sans hiérarchie de marque.
 - Rupture d'identité : un joueur sent immédiatement que cet écran « vient d'ailleurs ».
 
-**Reco** : remapper toutes les couleurs sur les tokens du système (achat → `--color-success`, danger/impérial → `--color-danger`, négociable → `--color-accent-blue`, premium → `--color-accent-yellow`…). Aucune couleur en dur dans `market.less`.
+**Reco** : remapper toutes les couleurs sur les tokens du système (achat → `--color-success`, danger/impérial → `--color-danger`, négociable → `--color-accent-blue`, premium → `--color-accent-yellow`…). Aucune couleur en dur dans `market.less`. Contrôle outillé livré : `scripts/check-style-tokens.mjs` ([ADR-0022](../../architecture/adr/adr-0022-design-tokens-mandatory-styling.md)) — `market.less` y ressort à **110 couleurs en dur**, confirmant ce constat.
+
+> **⚠ Correctif factuel (post-vérification ADR-0022)** — Le constat central (palette Material en dur, 0 token, ≈110 couleurs) est **confirmé** par le scan. En revanche, `--color-cool-4`/`--color-cool-3` (utilisés en fallback dans `market.less`) **sont des tokens Foundry Core**, et non des « variables fantômes » : ils résolvent correctement. La mention initiale d'un `--color-cool-*` « inexistant » était inexacte ; seul le problème des couleurs **en dur** est avéré ici.
 
 ### 🔴 DA2. Aucune identité typographique
 
@@ -179,24 +181,24 @@ Le bouton d'achat passe en `opacity .45` mais la **ligne reste « active »** (c
 
 > **P0** = rupture de marque/incohérence visible ; **P1** = finition/immersion ; **P2** = polish.
 
-| ID        | Titre                                                                                  | Prio   | Type         | Effort | Réf.    |
-| --------- | -------------------------------------------------------------------------------------- | ------ | ------------ | ------ | ------- |
-| MKT-UI-01 | Variabiliser toute la palette `market.less` sur le design system (0 couleur en dur)    | **P0** | DA/dette     | M      | DA1     |
-| MKT-UI-02 | Styler la table de vente + le toggle buy/sell (parité avec l'achat)                    | **P0** | UX           | M      | UX1     |
-| MKT-UI-03 | Décliner une ambiance visuelle par `uiVariant` (standard/local/spécialisé/marché noir) | **P0** | DA/immersion | M      | DA3     |
-| MKT-UI-04 | Rendre visible le prix modifié (couleur remise/premium + indicateur)                   | **P1** | UX           | S      | UX5     |
-| MKT-UI-05 | Identité typographique (titres/headers en Orbitron/Rajdhani)                           | **P1** | DA           | S      | DA2     |
-| MKT-UI-06 | Rationaliser les badges (hiérarchie, dédup tête-de-mort/poignée, regroupement)         | **P1** | UX           | M      | UX3     |
-| MKT-UI-07 | Recherche + tri en mode vente (symétrie des parcours)                                  | **P1** | UX           | M      | UX2     |
-| MKT-UI-08 | Rareté en pips/étoiles + restriction localisée (supprimer données brutes)              | **P1** | UX           | S      | UX4     |
-| MKT-UI-09 | Chrome diégétique léger (cadre/liseré holographique, en-tête de marché)                | **P1** | DA/immersion | M      | DA5     |
-| MKT-UI-10 | Valoriser le portefeuille (icône crédits, format milliers, emphase)                    | **P2** | UX           | XS     | UX6     |
-| MKT-UI-11 | Agrandir/clarifier les actions d'achat/négocier (cibles ≥ 44px)                        | **P2** | UX/a11y      | S      | UX7     |
-| MKT-UI-12 | Rendre l'état « filtre actif » + compteur de résultats                                 | **P2** | UX           | S      | UX8     |
-| MKT-UI-13 | Réorganiser la toolbar (groupes Filtrer/Trier, repères visuels)                        | **P2** | UX           | S      | UX9     |
-| MKT-UI-14 | États vides illustrés + loader pendant (re)construction du catalogue                   | **P2** | UX           | S      | UX10    |
-| MKT-UI-15 | Signaler visuellement les items hors budget (ligne/prix)                               | **P2** | UX           | XS     | UX11    |
-| MKT-UI-16 | Supprimer le CSS mort / variables fantômes (`--color-cool-*`, `.is-active` filtres)    | **P2** | dette        | XS     | DA1/UX8 |
+| ID        | Titre                                                                                        | Prio   | Type         | Effort | Réf. |
+| --------- | -------------------------------------------------------------------------------------------- | ------ | ------------ | ------ | ---- |
+| MKT-UI-01 | Variabiliser toute la palette `market.less` sur le design system (0 couleur en dur)          | **P0** | DA/dette     | M      | DA1  |
+| MKT-UI-02 | Styler la table de vente + le toggle buy/sell (parité avec l'achat)                          | **P0** | UX           | M      | UX1  |
+| MKT-UI-03 | Décliner une ambiance visuelle par `uiVariant` (standard/local/spécialisé/marché noir)       | **P0** | DA/immersion | M      | DA3  |
+| MKT-UI-04 | Rendre visible le prix modifié (couleur remise/premium + indicateur)                         | **P1** | UX           | S      | UX5  |
+| MKT-UI-05 | Identité typographique (titres/headers en Orbitron/Rajdhani)                                 | **P1** | DA           | S      | DA2  |
+| MKT-UI-06 | Rationaliser les badges (hiérarchie, dédup tête-de-mort/poignée, regroupement)               | **P1** | UX           | M      | UX3  |
+| MKT-UI-07 | Recherche + tri en mode vente (symétrie des parcours)                                        | **P1** | UX           | M      | UX2  |
+| MKT-UI-08 | Rareté en pips/étoiles + restriction localisée (supprimer données brutes)                    | **P1** | UX           | S      | UX4  |
+| MKT-UI-09 | Chrome diégétique léger (cadre/liseré holographique, en-tête de marché)                      | **P1** | DA/immersion | M      | DA5  |
+| MKT-UI-10 | Valoriser le portefeuille (icône crédits, format milliers, emphase)                          | **P2** | UX           | XS     | UX6  |
+| MKT-UI-11 | Agrandir/clarifier les actions d'achat/négocier (cibles ≥ 44px)                              | **P2** | UX/a11y      | S      | UX7  |
+| MKT-UI-12 | Rendre l'état « filtre actif » + compteur de résultats                                       | **P2** | UX           | S      | UX8  |
+| MKT-UI-13 | Réorganiser la toolbar (groupes Filtrer/Trier, repères visuels)                              | **P2** | UX           | S      | UX9  |
+| MKT-UI-14 | États vides illustrés + loader pendant (re)construction du catalogue                         | **P2** | UX           | S      | UX10 |
+| MKT-UI-15 | Signaler visuellement les items hors budget (ligne/prix)                                     | **P2** | UX           | XS     | UX11 |
+| MKT-UI-16 | Supprimer le CSS mort (`.is-active` filtres non appliqué) + corriger les vrais tokens cassés | **P2** | dette        | XS     | UX8  |
 
 ---
 

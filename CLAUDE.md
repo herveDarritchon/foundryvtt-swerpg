@@ -146,6 +146,7 @@ Pure domain tests in `module/lib/` need no mocking — import directly and test 
 - No `document.update()` calls inside `prepareDerivedData()` — derived data must be side-effect free
 - i18n keys follow `SWERPG.Domain.Subdomain.Key`; no hard-coded user-facing strings
 - **No magic numbers or magic strings** — any numeric/string literal with business meaning must be a named constant in `module/config/<entity>.mjs`, exposed via `SYSTEM.<ENTITY>.CONST_NAME`. If the parent object is iterated by consumers, use `Object.defineProperty` with `enumerable: false`. Add a contractual test in `tests/config/<entity>.test.mjs`. See [ADR-0018](documentation/architecture/adr/adr-0018-no-magic-numbers-named-constants.md).
+- **No hard-coded colors or fonts in styles** — every color/font in `styles/**/*.less` MUST use a design token (`var(--color-*)`, `var(--font-*)`) from `styles/variables.less` / `styles/theme.less`. No raw `#hex`/`rgb()`/`rgba()`/`hsl()` and no literal `font-family`. Any `var(--x)` must point to a real token (project or Foundry-core). A new recurring color must first be added as a token in `variables.less` (and declined in the Jedi/Sith themes), then consumed. Justified one-off literals: suffix the line with `// tokens-allow-raw`. Check with `pnpm run style:tokens` (advisory) / `pnpm run style:tokens:strict` (blocking). Hard-coded styles break brand immersion and the Jedi/Sith theming. See [ADR-0022](documentation/architecture/adr/adr-0022-design-tokens-mandatory-styling.md).
 
 ## Compendiums
 

@@ -7,7 +7,7 @@ metadata:
   project: swerpg
   platform: Foundry VTT v13+
   domain: ApplicationV2, Handlebars, actor sheets, item sheets, tabs, CSS/HTML UI contracts
-  source_docs: documentation/architecture/adr/adr-0001-foundry-applicationv2-adoption.md; documentation/architecture/ui/APPLICATIONS.md; documentation/architecture/ui/APPLICATIONS-RULES.md; documentation/architecture/ui/APPLICATIONS-AGENT.md; documentation/architecture/ui/SHEETS-TABS.md; documentation/architecture/ui/SHEETS-REFACTORING-PLAN.md; documentation/architecture/ui/HANDLEBARS.md; documentation/architecture/ui/CANVAS.md; documentation/architecture/ui/PHASE4-CSS-HTML-CONFORMITY.md; docs/swerpg/SHEETS-TABS.md
+  source_docs: documentation/architecture/adr/adr-0001-foundry-applicationv2-adoption.md; documentation/architecture/adr/adr-0022-design-tokens-mandatory-styling.md; documentation/architecture/ui/APPLICATIONS.md; documentation/architecture/ui/APPLICATIONS-RULES.md; documentation/architecture/ui/APPLICATIONS-AGENT.md; documentation/architecture/ui/SHEETS-TABS.md; documentation/architecture/ui/SHEETS-REFACTORING-PLAN.md; documentation/architecture/ui/HANDLEBARS.md; documentation/architecture/ui/CANVAS.md; documentation/architecture/ui/PHASE4-CSS-HTML-CONFORMITY.md; docs/swerpg/SHEETS-TABS.md
 ---
 
 # ApplicationV2 & UI Sheets — `swerpg`
@@ -555,11 +555,50 @@ If you must break this contract:
 
 - Scope sheet styles under `.swerpg.sheet` or a specific sheet class.
 - Do not introduce global selectors that affect Foundry core or other systems.
-- Use existing CSS variables when possible.
 - Use `.tab.<id>.active` only when a tab needs non-default display such as grid/flex.
 - Preserve visible focus states.
 - Respect `prefers-reduced-motion` when adding transitions.
 - Do not use opacity/color alone to convey active state.
+
+### Design tokens are MANDATORY (ADR-0022)
+
+Every color and font MUST come from a design token. The system theme (Star Wars
+holographic palette + Jedi/Sith theming) lives in `styles/variables.less` and
+`styles/theme.less`. Hard-coded styling breaks brand immersion and the theme switch.
+
+**Required:**
+
+- Colors → `var(--color-*)` tokens. Canonical families in `styles/variables.less`:
+  - Brand/text: `--color-primary`, `--color-secondary`, `--color-tertiary`, `--color-text`, `--color-h1`, `--color-glow`, `--color-accent`, `--color-accent-blue`, `--color-accent-yellow`, `--color-link-text`.
+  - Semantic: `--color-success`, `--color-warning`, `--color-danger`.
+  - Surfaces/frames: `--color-frame`, `--color-frame-bg`, `--color-frame-bg-25/50/75`, `--color-border`.
+  - Domain: wounds/strain/soak/defense/encumbrance families.
+- Fonts → `var(--font-h1|h2|h3|body|quote|sans)`. Never a literal `font-family: 'Orbitron'`.
+- Opacity over a token → `color-mix(in srgb, var(--token) N%, transparent)`, not a raw `rgba()`.
+- Every `var(--x)` must resolve to a **real** token: either a project token, or a
+  Foundry-core token (`--color-cool-*`, `--color-warm-*`, `--font-size-*`,
+  `--z-index-*`, `--color-text-light/dark-*`). A typo like `var(--color-error)`
+  (the real token is `--color-danger`) silently breaks the color.
+
+**Forbidden:**
+
+- Raw color literals (`#hex`, `rgb()`, `rgba()`, `hsl()`, `hsla()`) in a component `.less`.
+- Literal `font-family` instead of `var(--font-*)`.
+- Re-declaring or shadowing a Foundry-core token.
+
+**New recurring color?** Add it as a token in `styles/variables.less` first (and
+decline it in `.theme-light()` / `.theme-dark()` if it should follow the theme),
+then consume it via `var(--…)`. Do not paint values inline.
+
+**Justified one-off literal** (illustration gradient, image): suffix the line with
+`// tokens-allow-raw` and explain why.
+
+**Verify:** `pnpm run style:tokens` (advisory) or `pnpm run style:tokens:strict`
+(blocking) — see `scripts/check-style-tokens.mjs`.
+
+Reference contrast: `audit-log` consumes tokens correctly; the `Market` (≈110
+hard-coded colors) is the anti-example to never reproduce. See the two UI audits
+under `documentation/audit/`.
 
 For vertical icon tabs:
 
@@ -651,6 +690,7 @@ A new sheet is acceptable only if:
 - [ ] It has no direct mutation of `this.document.system`.
 - [ ] It uses `data-action`, stable `data-*` markers, or ApplicationV2 actions for interactions.
 - [ ] It preserves `.swerpg.sheet`, `.sheet-header`, `.sheet-tabs`, `.sheet-body`, and `.sheet-footer`.
+- [ ] Its styles use design tokens only — no hard-coded colors/fonts, every `var(--x)` resolves to a real token; `pnpm run style:tokens` shows no new violation (ADR-0022).
 - [ ] It is localized.
 - [ ] It preserves labels, focus visibility, and icon-button accessibility.
 - [ ] It introduces no permanent debug logs.
@@ -678,6 +718,7 @@ Before refactoring existing sheets:
 - [ ] Remove permanent debug logs.
 - [ ] Consolidate duplicated context preparation into base helpers only when shared by multiple sheets.
 - [ ] Avoid mixing visual refactor, behavior change, and data-schema change in one patch.
+- [ ] When touching styles, replace any hard-coded color/font with a design token (ADR-0022); do not add new raw literals.
 - [ ] Run or update relevant unit/e2e/manual tests.
 - [ ] Validate all affected sheets open, render, save, rerender, and close.
 

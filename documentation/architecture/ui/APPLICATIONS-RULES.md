@@ -160,6 +160,16 @@
   - documentée dans le **changelog** ;
   - documentée dans la **doc d’intégration** (section modules / hooks).
 
+### Design tokens obligatoires (ADR-0022)
+
+- Toute **couleur** dans `styles/**/*.less` **doit** utiliser un token `var(--color-*)` défini dans `styles/variables.less` / `styles/theme.less`. **Interdit** : littéraux `#hex`, `rgb()`, `rgba()`, `hsl()`, `hsla()` à valeur de marque dans un `.less` de composant.
+- Toute **police** **doit** utiliser `var(--font-h1|h2|h3|body|quote|sans)`. **Interdit** : `font-family` littérale (ex. `'Orbitron'`).
+- Toute référence `var(--x)` **doit** pointer vers un token **réel** : token projet (`variables.less`/`theme.less`) **ou** token Foundry Core (`--color-cool-*`, `--color-warm-*`, `--font-size-*`, `--z-index-*`, `--color-text-light/dark-*`). Un `var(--color-error)` (le token réel est `--color-danger`) casse silencieusement la couleur.
+- Une **opacité** sur un token : `color-mix(in srgb, var(--token) N%, transparent)`, pas un `rgba()` en dur.
+- Un **nouveau besoin de couleur récurrente** **doit** être ajouté comme token dans `variables.less` (et décliné dans `.theme-light()/.theme-dark()` si thémable), **puis** consommé.
+- **Exception ponctuelle justifiée** : suffixer la ligne de `// tokens-allow-raw` avec un commentaire.
+- **Contrôle** : `pnpm run style:tokens` (avertissement) / `pnpm run style:tokens:strict` (bloquant). Cas conforme de référence : journal d'audit. Anti-exemple : Market (≈110 couleurs en dur). Voir [ADR-0022](../adr/adr-0022-design-tokens-mandatory-styling.md) et les audits sous `documentation/audit/`.
+
 ---
 
 ## 12. Checklist obligatoire « nouvelle sheet »
@@ -176,3 +186,4 @@ Une nouvelle feuille est considérée conforme si et seulement si :
 - [ ] Les données sont modifiées via `this.document.update()` / `updateSource()`, jamais par mutation directe de `this.document.system`.
 - [ ] Les templates `.hbs` ne contiennent pas de logique métier et respectent la structure du `TypeDataModel`.
 - [ ] Les classes CSS de base et la structure `.sheet-header`, `.sheet-tabs`, `.sheet-body`, `.sheet-footer` sont respectées.
+- [ ] Les styles n'utilisent que des **design tokens** (aucune couleur/police en dur, chaque `var(--x)` pointe vers un token réel) — `pnpm run style:tokens` ne signale aucune nouvelle violation (ADR-0022).

@@ -12,6 +12,8 @@
     "less": "gulp css",
     "less:watch": "gulp watch:css",
     "dev:css": "pnpm run less:watch",
+    "style:tokens": "node scripts/check-style-tokens.mjs",
+    "style:tokens:strict": "node scripts/check-style-tokens.mjs --strict",
     "compile": "node build.mjs compile",
     "extract": "node build.mjs extract",
     "test": "vitest run --config vitest.config.mjs",
