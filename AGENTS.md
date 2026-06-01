@@ -19,7 +19,7 @@ pnpm test                          # Vitest (config: vitest.config.mjs)
 pnpm test:coverage                 # Vitest + coverage (config: vitest.config.js)
 pnpm vitest run tests/path/to.test.mjs  # Single file
 pnpm vitest run --grep "pattern"        # Filter by name
-pnpm exec eslint <targets>              # Lint (no npm script exists)
+pnpm run lint                           # ESLint (advisory — zero-warning enforcement pending debt cleanup)
 pnpm fmt:check                          # Prettier check (no --write)
 pnpm run build                         # fmt → rollup → less
 pnpm e2e                               # E2E regression (requires Docker Foundry, port 31001)
@@ -153,9 +153,26 @@ For failures:
 - send only the files directly involved;
 - ask for the smallest correction.
 
+## ESLint zero-warnings policy (phased)
+
+The project targets **0 warnings, 0 errors** on `pnpm run lint` before commit/PR.
+Enforcement is deployed in two phases:
+
+**Phase A (current) — Config & awareness**
+
+- Scripts/quoted globs in `package.json` ready for `--max-warnings=0`
+- Policy documented in `AGENTS.md`, `CLAUDE.md`, `.github/copilot-instructions.md`
+- `pnpm run lint` is **advisory** — it reports debt but does not block
+
+**Phase B (after debt cleanup) — Activation**
+
+- Add `--max-warnings=0` to `lint` and `lint:fix` scripts in `package.json`
+- Add `pnpm run lint` to `.husky/pre-commit` before `lint-staged`
+- CI inherits strict mode automatically (calls `pnpm lint`)
+- A task is not "done" if `pnpm run lint` reports any warning or error
+
 ## Stale doc (trust executable config over prose)
 
 - `.github/copilot-instructions.md` — references Foundry v13/Crucible/Tenebris (outdated), wrong npm commands (use
   `pnpm`)
 - `README.md` — E2E sections updated; two-tier strategy now documented inline
-- No `lint` npm script in `package.json` — use `pnpm exec eslint <targets>` directly

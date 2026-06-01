@@ -48,6 +48,7 @@ pnpm test:coverage      # Generate coverage reports
 
 - Game content lives in `_source/` as YAML files, compiled to `packs/` LevelDB. Never edit binary packs directly.
 - System must remain compatible with Foundry VTT v13.
+- **ESLint zero-warnings policy (phased)**: The project targets 0 warnings, 0 errors on `pnpm run lint` before commit/PR. Currently in Phase A (advisory — debt visible but non-blocking). Phase B will activate strict enforcement once debt is cleared.
 
 ### Action System
 
@@ -181,7 +182,7 @@ Always wrap action execution in try-catch and provide user feedback through UI.n
 - **Inline styles** dans le HTML.
 - **Variables globales** non encapsulées.
 - Utilisation de **jQuery** pour de la manipulation DOM simple (utiliser Vanilla JS).
-- Ignorer les **erreurs ESLint** ou warnings de **Prettier**.
+- Ignorer les **erreurs/warnings ESLint** — la cible est 0 warnings, 0 errors sur `pnpm run lint`. Actuellement en phase advisory ; le blocage sera activé après nettoyage de la dette.
 
 ---
 

@@ -34,7 +34,7 @@ pnpm vitest run --grep "pattern"                       # filter by name
 pnpm test:coverage                                     # run + generate coverage
 
 # Lint
-pnpm exec eslint <file-or-dir>                         # no npm "lint" script exists
+pnpm run lint                                           # ESLint (advisory — zero-warning enforcement pending debt cleanup)
 pnpm fmt:check                                         # Prettier check only
 
 # Compendiums
