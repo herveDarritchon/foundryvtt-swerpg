@@ -1190,10 +1190,20 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
     }
 
     // Execute sale: delete item then credit actor
+    // The manual adjustment stored in system.credits is the raw base for writing.
+    // When the item is deleted, totalSpent drops by basePrice automatically (via _prepareCredits),
+    // which would inflate availableCredits by basePrice. To compensate, we write:
+    //   system.credits = manualAdjustmentBefore + resalePrice - basePrice
+    // so that availableCredits after = (manualAdjustmentBefore + resalePrice - basePrice) - (totalSpent - basePrice)
+    //                                = manualAdjustmentBefore + resalePrice - totalSpent
+    //                                = availableCreditsBefore + resalePrice  ✓
+    const manualAdjustmentBefore = seller.system?._source?.credits ?? seller.system?.credits ?? 0
+    const availableCreditsAfter = currentCredits + finalValuation.resalePrice
+    const newManualAdjustment = manualAdjustmentBefore + finalValuation.resalePrice - validation.basePrice
+
     try {
       await seller.deleteEmbeddedDocuments('Item', [item.id])
-      const newCredits = currentCredits + finalValuation.resalePrice
-      await seller.update({ 'system.credits': newCredits })
+      await seller.update({ 'system.credits': newManualAdjustment })
 
       // Record in audit log (non-blocking)
       try {
@@ -1205,7 +1215,7 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
           resalePrice: finalValuation.resalePrice,
           fraction: finalValuation.fraction,
           negotiationOutcome: finalValuation.outcome,
-          creditsAfter: newCredits,
+          creditsAfter: availableCreditsAfter,
           itemId: item.id,
         })
       } catch (auditErr) {
@@ -1216,7 +1226,7 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
         i18n.format('MARKET.Sale.Success', {
           name: item.name,
           price: finalValuation.resalePrice,
-          remaining: newCredits,
+          remaining: availableCreditsAfter,
         }),
       )
 
@@ -1227,7 +1237,7 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
         itemName: item.name,
         basePrice: validation.basePrice,
         resalePrice: finalValuation.resalePrice,
-        creditsAfter: newCredits,
+        creditsAfter: availableCreditsAfter,
       })
 
       await this.render()
