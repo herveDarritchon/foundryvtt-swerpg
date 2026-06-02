@@ -170,6 +170,10 @@
   --color-accent-blue-30: color-mix(in srgb, var(--color-accent-blue) 30%, transparent);
   --color-accent-blue-text: color-mix(in srgb, var(--color-accent-blue) 80%, var(--color-text));
   --color-accent-blue-text-light: color-mix(in srgb, var(--color-accent-blue) 90%, var(--color-text));
+  /* Accent-yellow alpha (imperial / specialized market) */
+  --color-accent-yellow-15: color-mix(in srgb, var(--color-accent-yellow) 15%, transparent);
+  --color-accent-yellow-30: color-mix(in srgb, var(--color-accent-yellow) 30%, transparent);
+  --color-accent-yellow-text: color-mix(in srgb, var(--color-accent-yellow) 90%, var(--color-text));
   /* Market forbidden (marché noir / purple) */
   --color-market-forbidden: #b400e6;
   --color-market-forbidden-08: color-mix(in srgb, var(--color-market-forbidden) 8%, transparent);
@@ -6071,4 +6075,59 @@ input[type='range'] {
 }
 .consequences-btn--cancel:hover {
   background: var(--color-danger-20);
+}
+/* ----------------------------------------- */
+/*  Market UI Variants                       */
+/* ----------------------------------------- */
+/*
+ * Each class overrides the shared accent/glow tokens consumed by all Market
+ * components (toolbar, table, buyer bar, mode toggle, badges, buttons).
+ * Components already reference var(--color-accent) and var(--color-glow) so
+ * scoping these overrides here is sufficient — no duplication needed.
+ *
+ * Scope: buy mode only. The sell template does not apply these classes.
+ */
+/* Standard — cyan (default palette, no override needed but explicit for clarity) */
+.market--standard {
+  --color-accent: var(--color-accent-blue);
+  --color-glow: var(--color-accent-blue);
+}
+/* Local — green / agricultural */
+.market--local {
+  --color-accent: var(--color-success);
+  --color-glow: var(--color-success);
+  --color-glow-07: color-mix(in srgb, var(--color-success) 7%, transparent);
+  --color-glow-08: color-mix(in srgb, var(--color-success) 8%, transparent);
+  --color-glow-10: color-mix(in srgb, var(--color-success) 10%, transparent);
+  --color-glow-15: color-mix(in srgb, var(--color-success) 15%, transparent);
+  --color-glow-20: color-mix(in srgb, var(--color-success) 20%, transparent);
+  --color-glow-22: color-mix(in srgb, var(--color-success) 22%, transparent);
+  --color-glow-25: color-mix(in srgb, var(--color-success) 25%, transparent);
+  --color-glow-50: color-mix(in srgb, var(--color-success) 50%, transparent);
+}
+/* Specialized — gold / imperial */
+.market--specialized {
+  --color-accent: var(--color-accent-yellow);
+  --color-glow: var(--color-accent-yellow);
+  --color-glow-07: color-mix(in srgb, var(--color-accent-yellow) 7%, transparent);
+  --color-glow-08: color-mix(in srgb, var(--color-accent-yellow) 8%, transparent);
+  --color-glow-10: color-mix(in srgb, var(--color-accent-yellow) 10%, transparent);
+  --color-glow-15: color-mix(in srgb, var(--color-accent-yellow) 15%, transparent);
+  --color-glow-20: color-mix(in srgb, var(--color-accent-yellow) 20%, transparent);
+  --color-glow-22: color-mix(in srgb, var(--color-accent-yellow) 22%, transparent);
+  --color-glow-25: color-mix(in srgb, var(--color-accent-yellow) 25%, transparent);
+  --color-glow-50: color-mix(in srgb, var(--color-accent-yellow) 50%, transparent);
+}
+/* Black Market — purple / underworld */
+.market--black-market {
+  --color-accent: var(--color-market-forbidden);
+  --color-glow: var(--color-market-forbidden);
+  --color-glow-07: color-mix(in srgb, var(--color-market-forbidden) 7%, transparent);
+  --color-glow-08: color-mix(in srgb, var(--color-market-forbidden) 8%, transparent);
+  --color-glow-10: color-mix(in srgb, var(--color-market-forbidden) 10%, transparent);
+  --color-glow-15: color-mix(in srgb, var(--color-market-forbidden) 15%, transparent);
+  --color-glow-20: color-mix(in srgb, var(--color-market-forbidden) 20%, transparent);
+  --color-glow-22: color-mix(in srgb, var(--color-market-forbidden) 22%, transparent);
+  --color-glow-25: color-mix(in srgb, var(--color-market-forbidden) 25%, transparent);
+  --color-glow-50: color-mix(in srgb, var(--color-market-forbidden) 50%, transparent);
 }
