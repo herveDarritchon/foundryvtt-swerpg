@@ -1541,6 +1541,10 @@
         "availability": "Availability",
         "rarity": "Rarity",
         "gmModifier": "GM adjustment"
+      },
+      "Trend": {
+        "discount": "Price reduced",
+        "premium": "Price increased"
       }
     },
     "Buyer": {

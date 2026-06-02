@@ -3138,4 +3138,118 @@ describe('MarketApplicationV2', () => {
       expect(context.toolbarState).toBeUndefined()
     })
   })
+
+  /* -------------------------------------------- */
+  /*  Price variation view-model (#532)            */
+  /* -------------------------------------------- */
+
+  describe('price variation view-model on catalog entries', () => {
+    it('isModified=false and priceTrend="none" when price has no modifiers (e.g. rarity=0, standard market)', async () => {
+      const item = makeItem({ type: 'weapon', name: 'Blaster', price: 100, rarity: 0, availability: 'available' })
+      globalThis.game.items = makeItemsCollection([item])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, activeMarketType: 'standard' }
+      const context = await app._preparePartContext('catalog', {})
+
+      const entry = context.catalog.items[0]
+      expect(entry.isModified).toBe(false)
+      expect(entry.priceTrend).toBe('none')
+      expect(entry.priceStateClass).toBe('')
+      expect(entry.priceIndicator).toBeNull()
+      expect(entry.priceTrendAriaKey).toBeNull()
+    })
+
+    it('isModified=true and priceTrend="premium" when finalPrice > basePrice (e.g. black-market +50%)', async () => {
+      const item = makeItem({ type: 'weapon', name: 'Blaster', price: 100, rarity: 0, availability: 'available' })
+      globalThis.game.items = makeItemsCollection([item])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, activeMarketType: 'black-market' }
+      const context = await app._preparePartContext('catalog', {})
+
+      const entry = context.catalog.items[0]
+      // Black-market applies a +50% premium: finalPrice=150 > basePrice=100
+      expect(entry.isModified).toBe(true)
+      expect(entry.priceTrend).toBe('premium')
+      expect(entry.priceStateClass).toBe('market-price--premium')
+      expect(entry.priceIndicator).toBe('↑')
+      expect(entry.priceTrendAriaKey).toBe('MARKET.Price.Trend.premium')
+    })
+
+    it('isModified=true and priceTrend="discount" when finalPrice < basePrice (e.g. local market -10%)', async () => {
+      const item = makeItem({ type: 'weapon', name: 'Blaster', price: 100, rarity: 0, availability: 'available' })
+      globalThis.game.items = makeItemsCollection([item])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, activeMarketType: 'local' }
+      const context = await app._preparePartContext('catalog', {})
+
+      const entry = context.catalog.items[0]
+      // Local market applies a -10% discount: finalPrice=90 < basePrice=100
+      expect(entry.isModified).toBe(true)
+      expect(entry.priceTrend).toBe('discount')
+      expect(entry.priceStateClass).toBe('market-price--discount')
+      expect(entry.priceIndicator).toBe('↓')
+      expect(entry.priceTrendAriaKey).toBe('MARKET.Price.Trend.discount')
+    })
+
+    it('exposes isModified, priceTrend, priceStateClass, priceIndicator, priceTrendAriaKey on every catalog entry', async () => {
+      const items = [
+        makeItem({ type: 'weapon', name: 'Blaster A', price: 100, rarity: 0, availability: 'available' }),
+        makeItem({ type: 'armor', name: 'Armor B', price: 200, rarity: 1, availability: 'available' }),
+      ]
+      globalThis.game.items = makeItemsCollection(items)
+
+      const app = new MarketApplicationV2()
+      const context = await app._preparePartContext('catalog', {})
+
+      for (const entry of context.catalog.items) {
+        expect(entry).toHaveProperty('isModified')
+        expect(typeof entry.isModified).toBe('boolean')
+        expect(entry).toHaveProperty('priceTrend')
+        expect(['none', 'discount', 'premium']).toContain(entry.priceTrend)
+        expect(entry).toHaveProperty('priceStateClass')
+        expect(typeof entry.priceStateClass).toBe('string')
+        expect(entry).toHaveProperty('priceIndicator')
+        expect(entry).toHaveProperty('priceTrendAriaKey')
+      }
+    })
+
+    it('priceIndicator is null and priceTrendAriaKey is null when isModified=false', async () => {
+      const item = makeItem({ type: 'weapon', name: 'Blaster', price: 100, rarity: 0, availability: 'available' })
+      globalThis.game.items = makeItemsCollection([item])
+
+      const app = new MarketApplicationV2()
+      const context = await app._preparePartContext('catalog', {})
+
+      const entry = context.catalog.items[0]
+      expect(entry.priceIndicator).toBeNull()
+      expect(entry.priceTrendAriaKey).toBeNull()
+    })
+
+    it('priceStateClass is empty string when isModified=false', async () => {
+      const item = makeItem({ type: 'weapon', name: 'Blaster', price: 100, rarity: 0, availability: 'available' })
+      globalThis.game.items = makeItemsCollection([item])
+
+      const app = new MarketApplicationV2()
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.catalog.items[0].priceStateClass).toBe('')
+    })
+
+    it('does not alter priceResult.basePrice or priceResult.finalPrice when adding trend fields', async () => {
+      const item = makeItem({ type: 'weapon', name: 'Blaster', price: 100, rarity: 0, availability: 'available' })
+      globalThis.game.items = makeItemsCollection([item])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, activeMarketType: 'black-market' }
+      const context = await app._preparePartContext('catalog', {})
+
+      const entry = context.catalog.items[0]
+      // Price values must remain unchanged
+      expect(entry.priceResult.basePrice).toBe(100)
+      expect(entry.priceResult.finalPrice).toBe(150)
+    })
+  })
 })

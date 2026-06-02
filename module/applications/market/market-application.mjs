@@ -512,6 +512,22 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
       const MAX_RARITY_PIPS = 10
       const rarityPips = Array.from({ length: Math.min(rarityValue, MAX_RARITY_PIPS) }, () => ({ filled: true }))
 
+      // Price variation view-model: expose pre-computed state so the template stays purely presentational.
+      // isModified: true when at least one modifier has changed the base price.
+      // priceTrend: 'discount' | 'premium' | 'none' — direction of the modification.
+      // priceStateClass: CSS modifier class to apply on the price cell.
+      // priceIndicator: visual arrow character ('↓' / '↑' / null) for the trend indicator.
+      const isModified = (entry.priceResult.modifiers?.length ?? 0) > 0
+      const finalPriceVal = entry.priceResult.finalPrice ?? 0
+      const basePriceVal = entry.priceResult.basePrice ?? 0
+      let priceTrend = 'none'
+      if (isModified) {
+        priceTrend = finalPriceVal < basePriceVal ? 'discount' : 'premium'
+      }
+      const priceStateClass = isModified ? `market-price--${priceTrend}` : ''
+      const priceIndicator = priceTrend === 'discount' ? '↓' : priceTrend === 'premium' ? '↑' : null
+      const priceTrendAriaKey = priceTrend !== 'none' ? `MARKET.Price.Trend.${priceTrend}` : null
+
       // Badge view-model: encode deduplication rules so the template stays purely presentational.
       // Rule 1 — black-market badge: suppress when restrictionLevel === 'illegal', because the
       //           restriction badge already displays the skull icon for that level.
@@ -537,6 +553,11 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
         restrictionLabel,
         rarityPips,
         badges,
+        isModified,
+        priceTrend,
+        priceStateClass,
+        priceIndicator,
+        priceTrendAriaKey,
       }
     })
 
