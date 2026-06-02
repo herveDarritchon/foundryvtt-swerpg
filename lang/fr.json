@@ -1415,6 +1415,13 @@
     "Catalog": {
       "Empty": "Aucun article disponible dans le marché.",
       "EmptySearch": "Aucun article ne correspond à votre recherche ou à vos filtres.",
+      "EmptyTitle": "Les étagères du marché sont vides",
+      "EmptyHint": "Aucun article achetable n'a encore été ajouté à ce monde.",
+      "FilteredEmptyTitle": "Aucun article correspondant",
+      "FilteredEmptyHint": "Aucun article ne correspond à votre recherche ou à vos filtres actifs.",
+      "FilteredEmptyCta": "Réinitialiser les filtres",
+      "OutOfBudgetAriaLabel": "Crédits insuffisants",
+      "OutOfBudgetTooltip": "Vous n'avez pas assez de crédits pour acheter cet article.",
       "OpenSheet": "Ouvrir la fiche de l'objet",
       "Column": {
         "Name": "Nom",
@@ -1712,6 +1719,11 @@
       "SellAriaLabel": "Vendre",
       "SellButton": "Vendre",
       "Empty": "Votre inventaire ne contient aucun article vendable.",
+      "EmptyTitle": "Inventaire vide",
+      "EmptyHint": "Votre personnage ne porte aucun article pouvant être vendu sur ce marché.",
+      "FilteredEmptyTitle": "Aucun article correspondant",
+      "FilteredEmptyHint": "Aucun article de votre inventaire ne correspond à la recherche actuelle.",
+      "FilteredEmptyCta": "Effacer la recherche",
       "Toolbar": {
         "Search": {
           "Label": "Rechercher dans l'inventaire",

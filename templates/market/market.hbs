@@ -93,14 +93,26 @@
       </div>
 
       {{#if inventory.isEmpty}}
-        <div class="market-empty">
-          <p>{{localize "MARKET.Inventory.Empty"}}</p>
+        <div class="market-empty market-empty--catalog" role="status" aria-live="polite">
+          <i class="fa-solid fa-box-open market-empty__icon" aria-hidden="true"></i>
+          <p class="market-empty__title">{{localize "MARKET.Inventory.EmptyTitle"}}</p>
+          <p class="market-empty__hint">{{localize "MARKET.Inventory.EmptyHint"}}</p>
         </div>
       {{else if inventory.isFilteredEmpty}}
-        <p class="market-empty market-empty--filtered">
-          <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
-          {{localize "MARKET.Inventory.Toolbar.EmptySearch"}}
-        </p>
+        <div class="market-empty market-empty--filtered" role="status" aria-live="polite">
+          <i class="fa-solid fa-magnifying-glass market-empty__icon" aria-hidden="true"></i>
+          <p class="market-empty__title">{{localize "MARKET.Inventory.FilteredEmptyTitle"}}</p>
+          <p class="market-empty__hint">{{localize "MARKET.Inventory.FilteredEmptyHint"}}</p>
+          <button
+            type="button"
+            class="market-empty__cta"
+            data-action="resetInventory"
+            aria-label="{{localize 'MARKET.Inventory.FilteredEmptyCta'}}"
+          >
+            <i class="fa-solid fa-rotate-left" aria-hidden="true"></i>
+            {{localize "MARKET.Inventory.FilteredEmptyCta"}}
+          </button>
+        </div>
       {{else if inventory.items.length}}
         <table class="market-inventory__table">
           <thead>
@@ -310,12 +322,26 @@
 
   {{!-- Catalog content --}}
   {{#if catalog.isEmpty}}
-    <p class="market-empty">{{localize "MARKET.Catalog.Empty"}}</p>
+    <div class="market-empty market-empty--catalog" role="status" aria-live="polite">
+      <i class="fa-solid fa-store-slash market-empty__icon" aria-hidden="true"></i>
+      <p class="market-empty__title">{{localize "MARKET.Catalog.EmptyTitle"}}</p>
+      <p class="market-empty__hint">{{localize "MARKET.Catalog.EmptyHint"}}</p>
+    </div>
   {{else if catalog.isFilteredEmpty}}
-    <p class="market-empty market-empty--filtered">
-      <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
-      {{localize "MARKET.Catalog.EmptySearch"}}
-    </p>
+    <div class="market-empty market-empty--filtered" role="status" aria-live="polite">
+      <i class="fa-solid fa-magnifying-glass market-empty__icon" aria-hidden="true"></i>
+      <p class="market-empty__title">{{localize "MARKET.Catalog.FilteredEmptyTitle"}}</p>
+      <p class="market-empty__hint">{{localize "MARKET.Catalog.FilteredEmptyHint"}}</p>
+      <button
+        type="button"
+        class="market-empty__cta"
+        data-action="resetCatalog"
+        aria-label="{{localize 'MARKET.Catalog.FilteredEmptyCta'}}"
+      >
+        <i class="fa-solid fa-rotate-left" aria-hidden="true"></i>
+        {{localize "MARKET.Catalog.FilteredEmptyCta"}}
+      </button>
+    </div>
   {{else}}
     <table class="market-catalog__table">
       <thead>
@@ -331,8 +357,10 @@
       </thead>
       <tbody>
         {{#each catalog.items as |entry|}}
-          <tr class="market-item" data-uuid="{{entry.uuid}}" data-action="openItem"
-              data-tooltip="{{localize 'MARKET.Catalog.OpenSheet'}}">
+          <tr class="market-item {{#if entry.isOutOfBudget}}is-out-of-budget{{/if}}"
+              data-uuid="{{entry.uuid}}" data-action="openItem"
+              data-tooltip="{{localize 'MARKET.Catalog.OpenSheet'}}"
+              {{#if entry.isOutOfBudget}}aria-label="{{entry.name}} — {{localize 'MARKET.Catalog.OutOfBudgetAriaLabel'}}"{{/if}}>
             <td class="market-col--icon">
               {{#if entry.img}}
                 <img class="market-item__icon" src="{{entry.img}}" alt="{{entry.name}}" />
@@ -404,7 +432,7 @@
             <td class="market-col--type">{{localize entry.itemType}}</td>
             <td class="market-col--price">
               {{#if entry.isModified}}
-                <span class="market-price market-price--modified {{entry.priceStateClass}}"
+                <span class="market-price market-price--modified {{entry.priceStateClass}} {{#if entry.isOutOfBudget}}market-price--out-of-budget{{/if}}"
                   data-tooltip="{{localize 'MARKET.Price.BaseLabel'}}: {{entry.priceResult.basePrice}} → {{localize 'MARKET.Price.FinalLabel'}}: {{entry.priceResult.finalPrice}}"
                   aria-label="{{localize 'MARKET.Price.FinalLabel'}}: {{entry.priceResult.finalPrice}}"
                 >
@@ -414,7 +442,14 @@
                   {{/if}}
                 </span>
               {{else}}
-                <span class="market-price">{{entry.priceResult.finalPrice}}</span>
+                <span class="market-price {{#if entry.isOutOfBudget}}market-price--out-of-budget{{/if}}">
+                  {{entry.priceResult.finalPrice}}
+                  {{#if entry.isOutOfBudget}}
+                    <i class="fa-solid fa-circle-xmark market-price__budget-icon"
+                       aria-label="{{localize 'MARKET.Catalog.OutOfBudgetAriaLabel'}}"
+                       data-tooltip="{{localize 'MARKET.Catalog.OutOfBudgetTooltip'}}"></i>
+                  {{/if}}
+                </span>
               {{/if}}
             </td>
             <td class="market-col--rarity"

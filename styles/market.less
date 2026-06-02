@@ -132,21 +132,89 @@
   }
 }
 
-/* Empty state */
+/* ----------------------------------------- */
+/*  Empty States — illustrated               */
+/* ----------------------------------------- */
+
+/*
+ * Illustrated empty state block.
+ * Used for both "catalogue is genuinely empty" and "filters match nothing".
+ * Structure: icon · title · hint · optional CTA button.
+ * Uses .market-empty--filtered modifier for the filtered variant.
+ */
 .market-empty {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  padding: 2rem;
+  padding: 2.5rem 2rem;
   color: var(--color-secondary);
   text-align: center;
-  font-style: italic;
 
-  i {
-    font-size: var(--font-size-20);
-    opacity: 0.5;
+  &__icon {
+    font-size: 2rem;
+    opacity: 0.35;
+    margin-bottom: 0.25rem;
+  }
+
+  &__title {
+    font-family: var(--font-h2);
+    font-size: var(--font-size-14);
+    font-weight: 600;
+    color: var(--color-primary);
+    margin: 0;
+    letter-spacing: 0.03em;
+  }
+
+  &__hint {
+    font-family: var(--font-sans);
+    font-size: var(--font-size-13);
+    color: var(--color-secondary);
+    margin: 0;
+    opacity: 0.8;
+  }
+
+  /*
+   * CTA button: used in the filtered-empty state to reset filters / search.
+   * Minimal styling — matches toolbar reset button aesthetics.
+   */
+  &__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-top: 0.5rem;
+    padding: 0.35rem 0.75rem;
+    background: transparent;
+    border: 1px solid var(--color-glow-25);
+    border-radius: 4px;
+    color: var(--color-secondary);
+    font-family: var(--font-sans);
+    font-size: var(--font-size-13);
+    cursor: pointer;
+    transition:
+      background 0.12s ease,
+      color 0.12s ease,
+      border-color 0.12s ease;
+
+    &:hover {
+      background: var(--color-glow-10);
+      color: var(--color-primary);
+      border-color: var(--color-accent);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-glow-50);
+      outline-offset: 2px;
+    }
+  }
+
+  /* Filtered variant: icon uses accent tint instead of neutral opacity */
+  &--filtered {
+    .market-empty__icon {
+      color: var(--color-accent);
+      opacity: 0.55;
+    }
   }
 }
 
@@ -190,12 +258,6 @@
     outline: none;
     border-color: var(--color-glow-50);
   }
-}
-
-.market-toolbar__filters {
-  display: flex;
-  gap: 0.4rem;
-  flex-wrap: wrap;
 }
 
 .market-toolbar__filter,
@@ -487,6 +549,41 @@
   display: inline-block;
   line-height: 1;
   vertical-align: middle;
+}
+
+/* ----------------------------------------- */
+/*  Out-of-budget items                      */
+/* ----------------------------------------- */
+
+/*
+ * Visual attenuation for items the buyer cannot afford.
+ * The row is dimmed and the cursor changed to signal non-interactivity,
+ * while the buy button's existing disabled state handles the action block.
+ * Signal is not solely color-based: the icon in the price cell provides
+ * a redundant non-color cue.
+ */
+.market-item.is-out-of-budget {
+  opacity: 0.55;
+  cursor: default;
+
+  &:hover {
+    /* Suppress the normal row hover highlight so attenuation stays visible */
+    background: transparent !important;
+  }
+}
+
+/* Price tint for out-of-budget — uses the danger semantic token */
+.market-price--out-of-budget {
+  color: var(--color-danger-text);
+}
+
+/* Small icon beside the price value indicating the item is unaffordable */
+.market-price__budget-icon {
+  font-size: var(--font-size-11);
+  opacity: 0.75;
+  margin-left: 0.2rem;
+  vertical-align: middle;
+  cursor: help;
 }
 
 .market-col--restriction {
