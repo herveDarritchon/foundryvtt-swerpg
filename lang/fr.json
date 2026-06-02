@@ -1490,6 +1490,13 @@
       "Reset": {
         "Label": "Réinitialiser",
         "Tooltip": "Réinitialiser les filtres et la recherche"
+      },
+      "Group": {
+        "Filter": "Filtrer",
+        "Sort": "Trier"
+      },
+      "ResultCount": {
+        "AriaLabel": "Résultats"
       }
     },
     "Restriction": {

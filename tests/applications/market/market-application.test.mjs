@@ -2952,4 +2952,190 @@ describe('MarketApplicationV2', () => {
       delete globalThis.foundry.applications.api.DialogV2.confirm
     })
   })
+
+  /* -------------------------------------------- */
+  /*  Toolbar state (active filter indicators)    */
+  /* -------------------------------------------- */
+
+  describe('toolbarState in _preparePartContext', () => {
+    it('exposes toolbarState in catalog context', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.toolbarState).toBeDefined()
+    })
+
+    it('all active flags are false in the default view state', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      const context = await app._preparePartContext('catalog', {})
+      const { toolbarState } = context
+
+      expect(toolbarState.isSearchActive).toBe(false)
+      expect(toolbarState.isFilterTypeActive).toBe(false)
+      expect(toolbarState.isFilterSourceActive).toBe(false)
+      expect(toolbarState.isFilterRestrictionActive).toBe(false)
+      expect(toolbarState.isAffordableActive).toBe(false)
+      expect(toolbarState.isSortNonDefault).toBe(false)
+      expect(toolbarState.hasActiveFilters).toBe(false)
+    })
+
+    it('isSearchActive is true when search is non-empty', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, search: 'blaster' }
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.toolbarState.isSearchActive).toBe(true)
+      expect(context.toolbarState.hasActiveFilters).toBe(true)
+    })
+
+    it('isSearchActive is false when search contains only whitespace', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, search: '   ' }
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.toolbarState.isSearchActive).toBe(false)
+    })
+
+    it('isFilterTypeActive is true when filterType is set', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, filterType: 'weapon' }
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.toolbarState.isFilterTypeActive).toBe(true)
+      expect(context.toolbarState.hasActiveFilters).toBe(true)
+    })
+
+    it('isFilterSourceActive is true when filterSource is set', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, filterSource: 'world' }
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.toolbarState.isFilterSourceActive).toBe(true)
+      expect(context.toolbarState.hasActiveFilters).toBe(true)
+    })
+
+    it('isFilterRestrictionActive is true when filterRestriction is set', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, activeMarketType: 'black-market', filterRestriction: 'restricted' }
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.toolbarState.isFilterRestrictionActive).toBe(true)
+      expect(context.toolbarState.hasActiveFilters).toBe(true)
+    })
+
+    it('isAffordableActive is true only when affordableOnly=true and a buyer is set', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const actor = { id: 'actor-1', name: 'Test', system: { credits: 100 } }
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+      app._viewState = { ...app._viewState, affordableOnly: true }
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.toolbarState.isAffordableActive).toBe(true)
+      expect(context.toolbarState.hasActiveFilters).toBe(true)
+    })
+
+    it('isAffordableActive is false when affordableOnly=true but no buyer is set', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, affordableOnly: true }
+      const context = await app._preparePartContext('catalog', {})
+
+      // Without a buyer, the affordableOnly filter has no effect — active flag must be false
+      expect(context.toolbarState.isAffordableActive).toBe(false)
+    })
+
+    it('isSortNonDefault is true when sortBy differs from the default', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, sortBy: 'price' }
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.toolbarState.isSortNonDefault).toBe(true)
+    })
+
+    it('isSortNonDefault is true when sortDirection differs from the default', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, sortDirection: 'desc' }
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.toolbarState.isSortNonDefault).toBe(true)
+    })
+
+    it('isSortNonDefault is false at default sortBy=name and sortDirection=asc', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      // Explicitly set to defaults
+      app._viewState = { ...app._viewState, sortBy: 'name', sortDirection: 'asc' }
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.toolbarState.isSortNonDefault).toBe(false)
+    })
+
+    it('hasActiveFilters is false when only sort is non-default (sort is not a filter)', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, sortBy: 'price', sortDirection: 'desc' }
+      const context = await app._preparePartContext('catalog', {})
+
+      // Sort order is highlighted separately — it does not contribute to hasActiveFilters
+      expect(context.toolbarState.hasActiveFilters).toBe(false)
+    })
+
+    it('hasActiveFilters is true when multiple filters are active simultaneously', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, search: 'blaster', filterType: 'weapon' }
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.toolbarState.hasActiveFilters).toBe(true)
+      expect(context.toolbarState.isSearchActive).toBe(true)
+      expect(context.toolbarState.isFilterTypeActive).toBe(true)
+    })
+
+    it('resetCatalog action resets toolbarState active flags to default', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, search: 'blaster', filterType: 'weapon', sortBy: 'price' }
+      app.render = vi.fn().mockResolvedValue(undefined)
+
+      const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.resetCatalog
+      await action.call(app, {}, {})
+
+      // After reset, verify toolbarState would show no active filters
+      const context = await app._preparePartContext('catalog', {})
+      expect(context.toolbarState.hasActiveFilters).toBe(false)
+      expect(context.toolbarState.isSortNonDefault).toBe(false)
+    })
+
+    it('toolbarState is not present in non-catalog part context', async () => {
+      const app = new MarketApplicationV2()
+      const context = await app._preparePartContext('other', {})
+
+      expect(context.toolbarState).toBeUndefined()
+    })
+  })
 })

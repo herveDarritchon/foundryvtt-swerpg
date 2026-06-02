@@ -270,9 +270,51 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
       context.marketTypeOptions = this.#buildMarketTypeOptions()
       context.inventorySortOptions = this.#buildInventorySortOptions()
       context.inventory = buyer ? this.#prepareInventory(buyer) : { items: [], isEmpty: true, isFilteredEmpty: false }
+      context.toolbarState = this.#buildToolbarState(buyer)
     }
 
     return context
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Build the toolbar active-state view-model for the buy-mode toolbar.
+   * Each property reflects whether the corresponding control deviates from its default value,
+   * so the template can apply `.is-active` without inline logic.
+   *
+   * @param {Actor|null} buyer  The buyer actor (needed to determine affordableOnly activation).
+   * @returns {{
+   *   isSearchActive: boolean,
+   *   isFilterTypeActive: boolean,
+   *   isFilterSourceActive: boolean,
+   *   isFilterRestrictionActive: boolean,
+   *   isAffordableActive: boolean,
+   *   isSortNonDefault: boolean,
+   *   hasActiveFilters: boolean
+   * }}
+   */
+  #buildToolbarState(buyer = null) {
+    const { search, filterType, filterSource, filterRestriction, affordableOnly, sortBy, sortDirection } = this._viewState
+
+    const isSearchActive = !!(search && search.trim())
+    const isFilterTypeActive = !!filterType
+    const isFilterSourceActive = !!filterSource
+    const isFilterRestrictionActive = !!filterRestriction
+    const isAffordableActive = affordableOnly === true && buyer !== null
+    const isSortNonDefault = sortBy !== DEFAULT_VIEW_STATE.sortBy || sortDirection !== DEFAULT_VIEW_STATE.sortDirection
+
+    const hasActiveFilters = isSearchActive || isFilterTypeActive || isFilterSourceActive || isFilterRestrictionActive || isAffordableActive
+
+    return {
+      isSearchActive,
+      isFilterTypeActive,
+      isFilterSourceActive,
+      isFilterRestrictionActive,
+      isAffordableActive,
+      isSortNonDefault,
+      hasActiveFilters,
+    }
   }
 
   /* -------------------------------------------- */
