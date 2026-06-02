@@ -17,6 +17,7 @@ import { actionableNodeViewModel } from './actionable-node-view-model.mjs'
 import { buildConnectionAnchors, computeNodePosition } from './layout.mjs'
 import { selectDefaultTreeKey } from '../../lib/specialization-tree/default-tree-selector.mjs'
 import { getTreeNodesStates } from '../../lib/talent-node/talent-node-state.mjs'
+import { getOwnedSpecializations } from '../../lib/specializations/owned-specializations.mjs'
 
 /**
  * i18n label keys for specialization tree state labels.
@@ -77,7 +78,7 @@ export function buildSpecializationTreeContext(actor, selectedKey, deps) {
     actor: actor?.name ?? localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.UNKNOWN_ACTOR'),
   })
 
-  const specializations = Array.from(actor?.system?.details?.specializations || [])
+  const { items: specializations } = getOwnedSpecializations(actor)
 
   const specializationEntries = buildSpecializationEntries(specializations, resolutions, localize)
   const hasResolvedTrees = specializationEntries.some((entry) => entry.isAvailable)
