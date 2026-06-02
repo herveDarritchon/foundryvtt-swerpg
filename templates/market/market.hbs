@@ -157,43 +157,48 @@
 
   {{!-- Buy / Catalogue mode --}}
 
-  {{!-- Market type selector --}}
-  <div class="market-selector">
-    <label for="market-type-select" class="sr-only">{{localize "MARKET.MarketType.SelectorLabel"}}</label>
-    <select
-      id="market-type-select"
-      class="market-selector__select"
-      aria-label="{{localize 'MARKET.MarketType.SelectorLabel'}}"
-    >
-      {{#each marketTypeOptions as |opt|}}
-        <option
-          value="{{opt.value}}"
-          {{#if (eq opt.value ../viewState.activeMarketType)}}selected{{/if}}
-        >
-          {{localize opt.label}}
-        </option>
-      {{/each}}
-    </select>
-    {{#if catalog.activeMarketDef}}
-      <p class="market-selector__description">{{localize catalog.activeMarketDef.description}}</p>
-    {{/if}}
-  </div>
+  {{!-- Market header: identity zone (type selector + buyer bar) --}}
+  <header class="market-header">
 
-  {{!-- Buyer info bar (shows buyer credits when active, invitation message otherwise) --}}
-  {{#if buyer}}
-    <div class="market-buyer-bar">
-      <span class="market-buyer-bar__name">{{buyer.name}}</span>
-      <span class="market-buyer-bar__credits">
-        <i class="fa-solid fa-coins market-buyer-bar__credits-icon" aria-hidden="true"></i>
-        <span class="market-buyer-bar__credits-label">{{localize "MARKET.Buyer.Credits"}}</span>
-        <strong class="market-buyer-bar__credits-amount">{{buyer.formattedCredits}}</strong>
-      </span>
+    {{!-- Market type selector --}}
+    <div class="market-selector">
+      <label for="market-type-select" class="sr-only">{{localize "MARKET.MarketType.SelectorLabel"}}</label>
+      <select
+        id="market-type-select"
+        class="market-selector__select"
+        aria-label="{{localize 'MARKET.MarketType.SelectorLabel'}}"
+      >
+        {{#each marketTypeOptions as |opt|}}
+          <option
+            value="{{opt.value}}"
+            {{#if (eq opt.value ../viewState.activeMarketType)}}selected{{/if}}
+          >
+            {{localize opt.label}}
+          </option>
+        {{/each}}
+      </select>
+      {{#if catalog.activeMarketDef}}
+        <p class="market-selector__description">{{localize catalog.activeMarketDef.description}}</p>
+      {{/if}}
     </div>
-  {{else}}
-    <div class="market-buyer-bar market-buyer-bar--empty">
-      <span>{{localize "MARKET.Buyer.SelectCharacter"}}</span>
-    </div>
-  {{/if}}
+
+    {{!-- Buyer info bar (shows buyer credits when active, invitation message otherwise) --}}
+    {{#if buyer}}
+      <div class="market-buyer-bar">
+        <span class="market-buyer-bar__name">{{buyer.name}}</span>
+        <span class="market-buyer-bar__credits">
+          <i class="fa-solid fa-coins market-buyer-bar__credits-icon" aria-hidden="true"></i>
+          <span class="market-buyer-bar__credits-label">{{localize "MARKET.Buyer.Credits"}}</span>
+          <strong class="market-buyer-bar__credits-amount">{{buyer.formattedCredits}}</strong>
+        </span>
+      </div>
+    {{else}}
+      <div class="market-buyer-bar market-buyer-bar--empty">
+        <span>{{localize "MARKET.Buyer.SelectCharacter"}}</span>
+      </div>
+    {{/if}}
+
+  </header>
 
   {{!-- Toolbar: search, filters, sort, reset --}}
   <div class="market-toolbar">
