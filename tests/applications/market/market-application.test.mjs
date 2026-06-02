@@ -2652,9 +2652,103 @@ describe('MarketApplicationV2', () => {
       await action.call(app, {}, target)
 
       expect(actor.deleteEmbeddedDocuments).toHaveBeenCalledWith('Item', ['w1'])
-      // Credits: 500 + Math.floor(100 * 0.25) = 525
-      expect(actor.update).toHaveBeenCalledWith({ 'system.credits': 525 })
+      // Compensated formula: manualAdjustment(500) + resalePrice(25) - basePrice(100) = 425
+      // This prevents double-credit when deleteEmbeddedDocuments triggers automatic totalSpent refund.
+      expect(actor.update).toHaveBeenCalledWith({ 'system.credits': 425 })
       expect(globalThis.ui.notifications.info).toHaveBeenCalled()
+
+      delete globalThis.foundry.applications.api.DialogV2.confirm
+    })
+
+    it('uses system._source.credits as the manual adjustment base when creditBudget diverges from raw credits', async () => {
+      // Bug reproduction: before the fix, selling with creditBudget.availableCredits=800 and
+      // system.credits=300 (manual adjustment) would write 800+25=825 into system.credits,
+      // inflating the budget by basePrice (500 from the automatic totalSpent refund).
+      // After the fix: writes _source.credits(300) + resalePrice(25) - basePrice(500) = -175 (capped by domain).
+      // The key invariant is that system.credits is NOT fed from creditBudget.availableCredits.
+      const item = {
+        id: 'w1',
+        name: 'Expensive Blaster',
+        type: 'weapon',
+        system: { price: 500 },
+      }
+      const itemsArray = [item]
+      const actor = {
+        id: 'actor-1',
+        name: 'Test',
+        system: {
+          // creditBudget.availableCredits diverges from the raw manual adjustment
+          creditBudget: { availableCredits: 800 },
+          credits: 300,
+          _source: { credits: 300 },
+        },
+        items: {
+          get: vi.fn((id) => itemsArray.find((i) => i.id === id)),
+          some: vi.fn((fn) => itemsArray.some(fn)),
+        },
+        deleteEmbeddedDocuments: vi.fn().mockResolvedValue([]),
+        update: vi.fn().mockResolvedValue(undefined),
+      }
+      globalThis.foundry.applications.api.DialogV2.confirm = vi.fn().mockResolvedValueOnce(true).mockResolvedValueOnce(false)
+
+      const app = new MarketApplicationV2()
+      app.render = vi.fn().mockResolvedValue(undefined)
+      app.setBuyerActor(actor)
+
+      const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.sellItem
+      const target = { dataset: { itemId: 'w1' } }
+
+      await action.call(app, {}, target)
+
+      // Must use _source.credits (300) as base, NOT creditBudget.availableCredits (800)
+      // newManualAdjustment = 300 + Math.floor(500*0.25) - 500 = 300 + 125 - 500 = -75
+      expect(actor.update).toHaveBeenCalledWith({ 'system.credits': -75 })
+      // The update must NOT have been called with the inflated value (825)
+      expect(actor.update).not.toHaveBeenCalledWith({ 'system.credits': 825 })
+
+      delete globalThis.foundry.applications.api.DialogV2.confirm
+    })
+
+    it('availableCreditsAfter shown in success notification equals availableBefore + resalePrice', async () => {
+      // Invariant: the "remaining" credits in the notification must be availableBefore + resalePrice,
+      // not the raw system.credits value written to the document.
+      const item = {
+        id: 'w1',
+        name: 'Blaster',
+        type: 'weapon',
+        system: { price: 100 },
+      }
+      const itemsArray = [item]
+      const actor = {
+        id: 'actor-1',
+        name: 'Test',
+        system: {
+          creditBudget: { availableCredits: 600 },
+          credits: 200,
+          _source: { credits: 200 },
+        },
+        items: {
+          get: vi.fn((id) => itemsArray.find((i) => i.id === id)),
+          some: vi.fn((fn) => itemsArray.some(fn)),
+        },
+        deleteEmbeddedDocuments: vi.fn().mockResolvedValue([]),
+        update: vi.fn().mockResolvedValue(undefined),
+      }
+      globalThis.foundry.applications.api.DialogV2.confirm = vi.fn().mockResolvedValueOnce(true).mockResolvedValueOnce(false)
+
+      const app = new MarketApplicationV2()
+      app.render = vi.fn().mockResolvedValue(undefined)
+      app.setBuyerActor(actor)
+
+      const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.sellItem
+      const target = { dataset: { itemId: 'w1' } }
+
+      await action.call(app, {}, target)
+
+      // resalePrice = Math.floor(100 * 0.25) = 25
+      // availableCreditsAfter = 600 + 25 = 625
+      // The success notification must show the derived available amount, not the raw system.credits value.
+      expect(globalThis.ui.notifications.info).toHaveBeenCalledWith(expect.stringContaining('625'))
 
       delete globalThis.foundry.applications.api.DialogV2.confirm
     })
