@@ -139,3 +139,102 @@ export async function verifyOggDudeCompendiums(page: Page): Promise<void> {
     .first()
   await expect(oggDudeSection).toBeVisible({ timeout: 10000 })
 }
+
+// ---------------------------------------------------------------------------
+// Sentinel constants — locked by plan decision
+// ---------------------------------------------------------------------------
+
+/**
+ * The three sentinel items used to validate an OggDude import.
+ * These must be present in the imported data ZIP (e2e/fixtures/oggdude-data.zip).
+ */
+export const OGGDUDE_SENTINELS = [
+  { name: 'Holdout Blaster', type: 'weapon' },
+  { name: 'Armored Clothing', type: 'armor' },
+  { name: 'Bothan', type: 'species' },
+] as const
+
+// ---------------------------------------------------------------------------
+// World assertions
+// ---------------------------------------------------------------------------
+
+/**
+ * Verifies that the three OggDude sentinel items exist in `game.items` (world scope)
+ * with their expected name and type.
+ *
+ * Pré-condition : dialogs closed, page on /game, world import completed.
+ *
+ * @throws If any sentinel is missing or has the wrong type.
+ */
+export async function verifyOggDudeWorldItems(page: Page): Promise<void> {
+  for (const sentinel of OGGDUDE_SENTINELS) {
+    const found = await page.evaluate(
+      ({ sentinelName, sentinelType }: { sentinelName: string; sentinelType: string }) => {
+        const items = game?.items?.contents ?? []
+        const item = items.find((i) => i.name === sentinelName)
+        if (!item) return { found: false, reason: 'not found in game.items' }
+        if (item.type !== sentinelType) return { found: false, reason: `wrong type: expected ${sentinelType}, got ${item.type}` }
+        return { found: true, reason: '' }
+      },
+      { sentinelName: sentinel.name, sentinelType: sentinel.type },
+    )
+
+    if (!found.found) {
+      throw new Error(`[oggdude-assert] Sentinel "${sentinel.name}" (${sentinel.type}) not found in world: ${found.reason}`)
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Compendium assertions
+// ---------------------------------------------------------------------------
+
+/**
+ * Pack identifiers for the three sentinel compendium packs created by OggDude import.
+ * The pack collection IDs follow the pattern `world.<packName>`.
+ */
+export const OGGDUDE_SENTINEL_PACKS = {
+  weapons: 'world.swerpg-weapons',
+  armors: 'world.swerpg-armors',
+  species: 'world.swerpg-species',
+} as const
+
+/**
+ * Verifies that the three OggDude sentinel packs exist and contain the expected items.
+ *
+ * Checks:
+ * - `world.swerpg-weapons` contains "Holdout Blaster"
+ * - `world.swerpg-armors` contains "Armored Clothing"
+ * - `world.swerpg-species` contains "Bothan"
+ *
+ * Pré-condition : dialogs closed, page on /game, compendium import completed.
+ *
+ * @throws If any pack is missing or does not contain the expected sentinel.
+ */
+export async function verifyOggDudeCompendiumItems(page: Page): Promise<void> {
+  type SentinelCheck = { packId: string; name: string }
+  const checks: SentinelCheck[] = [
+    { packId: OGGDUDE_SENTINEL_PACKS.weapons, name: 'Holdout Blaster' },
+    { packId: OGGDUDE_SENTINEL_PACKS.armors, name: 'Armored Clothing' },
+    { packId: OGGDUDE_SENTINEL_PACKS.species, name: 'Bothan' },
+  ]
+
+  for (const check of checks) {
+    const result = await page.evaluate(
+      async ({ packId, sentinelName }: { packId: string; sentinelName: string }) => {
+        const pack = game?.packs?.get(packId)
+        if (!pack) return { found: false, reason: `pack "${packId}" not found in game.packs` }
+
+        const item = await pack.getName(sentinelName)
+        if (!item) return { found: false, reason: `"${sentinelName}" not found in pack "${packId}"` }
+
+        return { found: true, reason: '' }
+      },
+      { packId: check.packId, sentinelName: check.name },
+    )
+
+    if (!result.found) {
+      throw new Error(`[oggdude-assert] Compendium check failed: ${result.reason}`)
+    }
+  }
+}
