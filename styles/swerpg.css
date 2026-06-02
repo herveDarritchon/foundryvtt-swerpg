@@ -5128,6 +5128,12 @@ input[type='range'] {
 /* ----------------------------------------- */
 /*  Market Catalogue                         */
 /* ----------------------------------------- */
+/*
+ * Diegetic chrome: corner luminous brackets on the catalog container.
+ * Purely decorative — pointer-events and user-select off.
+ * Uses ::before (top-left + bottom-right) and ::after (top-right + bottom-left)
+ * via a background-clip corner gradient technique to stay DOM-free.
+ */
 .market-catalog {
   flex: 1;
   overflow-y: auto;
@@ -5135,6 +5141,78 @@ input[type='range'] {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  position: relative;
+  /* Top-left corner bracket */
+  /* Bottom-right corner bracket */
+}
+.market-catalog::before,
+.market-catalog::after {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  pointer-events: none;
+  user-select: none;
+  opacity: 0.65;
+  border-color: var(--color-glow-50);
+  border-style: solid;
+}
+.market-catalog::before {
+  top: 6px;
+  left: 6px;
+  border-width: 2px 0 0 2px;
+}
+.market-catalog::after {
+  bottom: 6px;
+  right: 6px;
+  border-width: 0 2px 2px 0;
+}
+/* ----------------------------------------- */
+/*  Market Header                            */
+/* ----------------------------------------- */
+/*
+ * Identity zone for buy mode: market selector + buyer bar.
+ * A top liseré (border-top) using --color-glow gives a terminal-frame feel.
+ * Two additional corner brackets via pseudo-elements complete the framing.
+ */
+.market-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem 0.75rem 0.5rem;
+  background: var(--color-frame-bg-50);
+  border: 1px solid var(--color-glow-22);
+  border-top: 2px solid var(--color-glow-50);
+  border-radius: 4px;
+  position: relative;
+  /* Top-right corner bracket */
+  /* Bottom-left corner bracket */
+}
+.market-header::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  right: -1px;
+  width: 14px;
+  height: 14px;
+  border-top: 2px solid var(--color-glow-50);
+  border-right: 2px solid var(--color-glow-50);
+  pointer-events: none;
+  user-select: none;
+  opacity: 0.65;
+}
+.market-header::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: -1px;
+  width: 14px;
+  height: 14px;
+  border-bottom: 2px solid var(--color-glow-22);
+  border-left: 2px solid var(--color-glow-22);
+  pointer-events: none;
+  user-select: none;
+  opacity: 0.65;
 }
 /* Empty state */
 .market-empty {
