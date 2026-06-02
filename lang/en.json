@@ -1594,6 +1594,13 @@
       "Reset": {
         "Label": "Reset",
         "Tooltip": "Reset filters and search"
+      },
+      "Group": {
+        "Filter": "Filter",
+        "Sort": "Sort"
+      },
+      "ResultCount": {
+        "AriaLabel": "Results"
       }
     },
     "Restriction": {

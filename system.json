@@ -18,8 +18,8 @@
   ],
   "flags": {
     "hotReload": {
-      "extensions": ["css", "hbs", "json"],
-      "paths": ["lang/en.json", "styles/swerpg.css", "templates"]
+      "extensions": ["less", "css", "hbs", "json"],
+      "paths": ["lang/en.json", "styles/swerpg.css", "styles/", "templates"]
     }
   },
   "media": [

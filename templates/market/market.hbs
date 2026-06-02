@@ -197,11 +197,13 @@
 
   {{!-- Toolbar: search, filters, sort, reset --}}
   <div class="market-toolbar">
+
+    {{!-- Search group --}}
     <div class="market-toolbar__search-group">
       <label for="market-search" class="sr-only">{{localize "MARKET.Toolbar.Search.Label"}}</label>
       <input
         id="market-search"
-        class="market-toolbar__search"
+        class="market-toolbar__search {{#if toolbarState.isSearchActive}}is-active{{/if}}"
         type="search"
         placeholder="{{localize 'MARKET.Toolbar.Search.Placeholder'}}"
         value="{{viewState.search}}"
@@ -209,9 +211,12 @@
       />
     </div>
 
-    <div class="market-toolbar__filters">
+    {{!-- Filter group --}}
+    <div class="market-toolbar__group" aria-label="{{localize 'MARKET.Toolbar.Group.Filter'}}">
+      <span class="market-toolbar__group-label" aria-hidden="true">{{localize "MARKET.Toolbar.Group.Filter"}}</span>
+
       <label for="market-filter-type" class="sr-only">{{localize "MARKET.Toolbar.Filter.TypeLabel"}}</label>
-      <select id="market-filter-type" class="market-toolbar__filter market-toolbar__filter--type" aria-label="{{localize 'MARKET.Toolbar.Filter.TypeLabel'}}">
+      <select id="market-filter-type" class="market-toolbar__filter market-toolbar__filter--type {{#if toolbarState.isFilterTypeActive}}is-active{{/if}}" aria-label="{{localize 'MARKET.Toolbar.Filter.TypeLabel'}}">
         {{#each typeFilterOptions as |opt|}}
           <option value="{{opt.value}}" {{#if (eq opt.value ../viewState.filterType)}}selected{{/if}}>
             {{localize opt.label}}
@@ -220,7 +225,7 @@
       </select>
 
       <label for="market-filter-source" class="sr-only">{{localize "MARKET.Toolbar.Filter.SourceLabel"}}</label>
-      <select id="market-filter-source" class="market-toolbar__filter market-toolbar__filter--source" aria-label="{{localize 'MARKET.Toolbar.Filter.SourceLabel'}}">
+      <select id="market-filter-source" class="market-toolbar__filter market-toolbar__filter--source {{#if toolbarState.isFilterSourceActive}}is-active{{/if}}" aria-label="{{localize 'MARKET.Toolbar.Filter.SourceLabel'}}">
         {{#each sourceFilterOptions as |opt|}}
           <option value="{{opt.value}}" {{#if (eq opt.value ../viewState.filterSource)}}selected{{/if}}>
             {{localize opt.label}}
@@ -229,7 +234,7 @@
       </select>
 
       <label for="market-filter-restriction" class="sr-only">{{localize "MARKET.Toolbar.Filter.RestrictionLabel"}}</label>
-      <select id="market-filter-restriction" class="market-toolbar__filter market-toolbar__filter--restriction" aria-label="{{localize 'MARKET.Toolbar.Filter.RestrictionLabel'}}">
+      <select id="market-filter-restriction" class="market-toolbar__filter market-toolbar__filter--restriction {{#if toolbarState.isFilterRestrictionActive}}is-active{{/if}}" aria-label="{{localize 'MARKET.Toolbar.Filter.RestrictionLabel'}}">
         {{#each restrictionFilterOptions as |opt|}}
           <option value="{{opt.value}}" {{#if (eq opt.value ../viewState.filterRestriction)}}selected{{/if}}>
             {{localize opt.label}}
@@ -237,7 +242,7 @@
         {{/each}}
       </select>
 
-      <label class="market-toolbar__filter-label market-toolbar__filter-label--affordable-only"
+      <label class="market-toolbar__filter-label market-toolbar__filter-label--affordable-only {{#if toolbarState.isAffordableActive}}is-active{{/if}}"
         data-tooltip="{{localize 'MARKET.Toolbar.Filter.AffordableOnlyTooltip'}}"
         aria-label="{{localize 'MARKET.Toolbar.Filter.AffordableOnlyLabel'}}"
       >
@@ -252,9 +257,12 @@
       </label>
     </div>
 
-    <div class="market-toolbar__sort">
+    {{!-- Sort group --}}
+    <div class="market-toolbar__group" aria-label="{{localize 'MARKET.Toolbar.Group.Sort'}}">
+      <span class="market-toolbar__group-label" aria-hidden="true">{{localize "MARKET.Toolbar.Group.Sort"}}</span>
+
       <label for="market-sort-field" class="sr-only">{{localize "MARKET.Toolbar.Sort.Label"}}</label>
-      <select id="market-sort-field" class="market-toolbar__sort--field" aria-label="{{localize 'MARKET.Toolbar.Sort.Label'}}">
+      <select id="market-sort-field" class="market-toolbar__sort--field {{#if toolbarState.isSortNonDefault}}is-active{{/if}}" aria-label="{{localize 'MARKET.Toolbar.Sort.Label'}}">
         {{#each sortOptions as |opt|}}
           <option value="{{opt.value}}" {{#if (eq opt.value ../viewState.sortBy)}}selected{{/if}}>
             {{localize opt.label}}
@@ -263,7 +271,7 @@
       </select>
 
       <label for="market-sort-dir" class="sr-only">{{localize "MARKET.Toolbar.Sort.DirectionLabel"}}</label>
-      <select id="market-sort-dir" class="market-toolbar__sort--direction" aria-label="{{localize 'MARKET.Toolbar.Sort.DirectionLabel'}}">
+      <select id="market-sort-dir" class="market-toolbar__sort--direction {{#if toolbarState.isSortNonDefault}}is-active{{/if}}" aria-label="{{localize 'MARKET.Toolbar.Sort.DirectionLabel'}}">
         <option value="asc" {{#if (eq viewState.sortDirection "asc")}}selected{{/if}}>
           {{localize "MARKET.Toolbar.Sort.Asc"}}
         </option>
@@ -273,9 +281,19 @@
       </select>
     </div>
 
+    {{!-- Result counter --}}
+    <span class="market-toolbar__result-count {{#if toolbarState.hasActiveFilters}}is-filtered{{/if}}"
+      aria-live="polite"
+      aria-label="{{localize 'MARKET.Toolbar.ResultCount.AriaLabel'}}: {{catalog.filteredCount}} / {{catalog.totalCount}}"
+    >
+      <span class="market-toolbar__result-count-value">{{catalog.filteredCount}}</span>
+      <span class="market-toolbar__result-count-sep" aria-hidden="true">/</span>
+      <span class="market-toolbar__result-count-total" aria-hidden="true">{{catalog.totalCount}}</span>
+    </span>
+
     <button
       type="button"
-      class="market-toolbar__reset"
+      class="market-toolbar__reset {{#if toolbarState.hasActiveFilters}}has-active-filters{{/if}}"
       data-action="resetCatalog"
       data-tooltip="{{localize 'MARKET.Toolbar.Reset.Tooltip'}}"
       aria-label="{{localize 'MARKET.Toolbar.Reset.Tooltip'}}"
