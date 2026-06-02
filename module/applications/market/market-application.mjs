@@ -541,10 +541,17 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
         showSupplyDelay: !obtainability.immediate,
       }
 
+      // Out-of-budget flag: true when a buyer is present, the item cannot be purchased,
+      // and the specific reason is insufficient credits.
+      // This is distinct from canBuy=false caused by other block reasons (broken, nonPurchasable, etc.)
+      // so the template can apply a visual attenuation specifically for budget-blocked rows.
+      const isOutOfBudget = hasBuyer && !validation.canPurchase && validation.reason === 'insufficient-credits'
+
       return {
         ...entry,
         canBuy: hasBuyer && validation.canPurchase,
         buyBlockedReason: hasBuyer && !validation.canPurchase ? validation.reason : null,
+        isOutOfBudget,
         obtainability,
         isNegotiable,
         isImperialSuspicion,

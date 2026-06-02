@@ -3252,4 +3252,169 @@ describe('MarketApplicationV2', () => {
       expect(entry.priceResult.finalPrice).toBe(150)
     })
   })
+
+  /* -------------------------------------------- */
+  /*  isOutOfBudget annotation (Issue #534)       */
+  /* -------------------------------------------- */
+
+  describe('isOutOfBudget annotation on catalog entries', () => {
+    it('annotates isOutOfBudget=false when no buyer actor is set', async () => {
+      const item = makeItem({ type: 'weapon', name: 'Blaster', price: 100 })
+      globalThis.game.items = makeItemsCollection([item])
+
+      const app = new MarketApplicationV2()
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.catalog.items[0].isOutOfBudget).toBe(false)
+    })
+
+    it('annotates isOutOfBudget=false when buyer has sufficient credits', async () => {
+      const item = makeItem({ type: 'weapon', name: 'Blaster', price: 100 })
+      globalThis.game.items = makeItemsCollection([item])
+
+      const actor = { id: 'actor-1', name: 'Rich', system: { credits: 500 } }
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.catalog.items[0].isOutOfBudget).toBe(false)
+    })
+
+    it('annotates isOutOfBudget=true when buyer has insufficient credits', async () => {
+      const item = makeItem({ type: 'weapon', name: 'Expensive', price: 1000 })
+      globalThis.game.items = makeItemsCollection([item])
+
+      const actor = { id: 'actor-1', name: 'Poor', system: { credits: 50 } }
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.catalog.items[0].isOutOfBudget).toBe(true)
+    })
+
+    it('annotates isOutOfBudget=false when item is blocked for reasons other than credits (e.g. nonPurchasable items are excluded)', async () => {
+      // nonPurchasable items are removed from the catalog entirely before annotation,
+      // so we test with a buyer who can afford the item — isOutOfBudget must be false.
+      const item = makeItem({ type: 'weapon', name: 'Affordable', price: 50 })
+      globalThis.game.items = makeItemsCollection([item])
+
+      const actor = { id: 'actor-1', name: 'Buyer', system: { credits: 200 } }
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.catalog.items[0].isOutOfBudget).toBe(false)
+    })
+
+    it('exposes isOutOfBudget on every catalog entry', async () => {
+      const items = [makeItem({ type: 'weapon', name: 'Cheap', price: 10 }), makeItem({ type: 'armor', name: 'Expensive', price: 9999 })]
+      globalThis.game.items = makeItemsCollection(items)
+
+      const actor = { id: 'actor-1', name: 'Test', system: { credits: 100 } }
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+      const context = await app._preparePartContext('catalog', {})
+
+      for (const entry of context.catalog.items) {
+        expect(entry).toHaveProperty('isOutOfBudget')
+        expect(typeof entry.isOutOfBudget).toBe('boolean')
+      }
+    })
+
+    it('isOutOfBudget=true only for items the buyer cannot afford, not all items', async () => {
+      const cheap = makeItem({ type: 'weapon', name: 'Cheap Blaster', price: 10 })
+      const expensive = makeItem({ type: 'armor', name: 'Expensive Armor', price: 9999 })
+      globalThis.game.items = makeItemsCollection([cheap, expensive])
+
+      const actor = { id: 'actor-1', name: 'Test', system: { credits: 100 } }
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+      const context = await app._preparePartContext('catalog', {})
+
+      const cheapEntry = context.catalog.items.find((e) => e.name === 'Cheap Blaster')
+      const expensiveEntry = context.catalog.items.find((e) => e.name === 'Expensive Armor')
+
+      expect(cheapEntry.isOutOfBudget).toBe(false)
+      expect(expensiveEntry.isOutOfBudget).toBe(true)
+    })
+
+    it('isOutOfBudget and canBuy are consistent: isOutOfBudget=true implies canBuy=false', async () => {
+      const expensive = makeItem({ type: 'weapon', name: 'Expensive', price: 9999 })
+      globalThis.game.items = makeItemsCollection([expensive])
+
+      const actor = { id: 'actor-1', name: 'Test', system: { credits: 1 } }
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+      const context = await app._preparePartContext('catalog', {})
+
+      const entry = context.catalog.items[0]
+      expect(entry.isOutOfBudget).toBe(true)
+      expect(entry.canBuy).toBe(false)
+    })
+  })
+
+  /* -------------------------------------------- */
+  /*  toolbarState contract (Issue #534)          */
+  /* -------------------------------------------- */
+
+  describe('toolbarState in catalog context', () => {
+    it('exposes toolbarState in catalog context', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.toolbarState).toBeDefined()
+    })
+
+    it('toolbarState.hasActiveFilters is false when all filters are default', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.toolbarState.hasActiveFilters).toBe(false)
+    })
+
+    it('toolbarState.hasActiveFilters is true when search is active', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, search: 'blaster' }
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.toolbarState.isSearchActive).toBe(true)
+      expect(context.toolbarState.hasActiveFilters).toBe(true)
+    })
+
+    it('toolbarState.isFilterTypeActive is true when filterType is set', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, filterType: 'weapon' }
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.toolbarState.isFilterTypeActive).toBe(true)
+    })
+
+    it('toolbarState.isSortNonDefault is false when sort is name/asc', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      // Default state
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.toolbarState.isSortNonDefault).toBe(false)
+    })
+
+    it('toolbarState.isSortNonDefault is true when sort field deviates from default', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, sortBy: 'price' }
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.toolbarState.isSortNonDefault).toBe(true)
+    })
+  })
 })

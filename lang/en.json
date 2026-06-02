@@ -1519,6 +1519,13 @@
     "Catalog": {
       "Empty": "No items available in the market.",
       "EmptySearch": "No items match your search or filters.",
+      "EmptyTitle": "Market Shelves Are Empty",
+      "EmptyHint": "No purchasable items have been added to this world yet.",
+      "FilteredEmptyTitle": "No Matching Items",
+      "FilteredEmptyHint": "No items match your current search or filters.",
+      "FilteredEmptyCta": "Reset filters",
+      "OutOfBudgetAriaLabel": "Insufficient credits",
+      "OutOfBudgetTooltip": "You do not have enough credits to buy this item.",
       "OpenSheet": "Open item sheet",
       "Column": {
         "Name": "Name",
@@ -1816,6 +1823,11 @@
       "SellAriaLabel": "Sell",
       "SellButton": "Sell",
       "Empty": "Your inventory contains no sellable items.",
+      "EmptyTitle": "Inventory is Empty",
+      "EmptyHint": "Your character carries no items that can be sold at this market.",
+      "FilteredEmptyTitle": "No Matching Items",
+      "FilteredEmptyHint": "No items in your inventory match the current search.",
+      "FilteredEmptyCta": "Clear search",
       "Toolbar": {
         "Search": {
           "Label": "Search inventory",
