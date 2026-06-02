@@ -398,11 +398,16 @@
             </td>
             <td class="market-col--type">{{localize entry.itemType}}</td>
             <td class="market-col--price">
-              {{#if entry.priceResult.modifiers.length}}
-                <span class="market-price market-price--modified"
+              {{#if entry.isModified}}
+                <span class="market-price market-price--modified {{entry.priceStateClass}}"
                   data-tooltip="{{localize 'MARKET.Price.BaseLabel'}}: {{entry.priceResult.basePrice}} → {{localize 'MARKET.Price.FinalLabel'}}: {{entry.priceResult.finalPrice}}"
                   aria-label="{{localize 'MARKET.Price.FinalLabel'}}: {{entry.priceResult.finalPrice}}"
-                >{{entry.priceResult.finalPrice}}</span>
+                >
+                  {{entry.priceResult.finalPrice}}
+                  {{#if entry.priceIndicator}}
+                    <span class="market-price__trend-indicator" aria-label="{{localize entry.priceTrendAriaKey}}" aria-hidden="false">{{entry.priceIndicator}}</span>
+                  {{/if}}
+                </span>
               {{else}}
                 <span class="market-price">{{entry.priceResult.finalPrice}}</span>
               {{/if}}
