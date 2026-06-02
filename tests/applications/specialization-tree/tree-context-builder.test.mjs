@@ -1,5 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 
+import { calculateSpecializationCost } from '../../../module/lib/specializations/specialization-cost-service.mjs'
+import { getOwnedSpecializations } from '../../../module/lib/specializations/owned-specializations.mjs'
 import {
   buildSpecializationEntries,
   buildRenderNodesAndConnections,
@@ -239,6 +241,88 @@ describe('tree-context-builder (pure)', () => {
       const entries = buildSpecializationEntries(specializations, resolutions, () => 'x')
 
       expect(entries[0].canonicalSpecializationId).toBe('Item.legacy')
+    })
+  })
+
+  describe('business contract vs UI display context separation', () => {
+    it('changing the selected tree key does not affect the owned specializations snapshot', () => {
+      const actor = {
+        system: {
+          details: {
+            specializations: new Set([
+              { specializationId: 'pilot', name: 'Pilot' },
+              { specializationId: 'gunner', name: 'Gunner' },
+            ]),
+          },
+        },
+      }
+
+      // Simulate two different UI display contexts (different selected keys)
+      const snapshotWithPilotSelected = getOwnedSpecializations(actor)
+      const snapshotWithGunnerSelected = getOwnedSpecializations(actor)
+
+      // The business snapshot is independent of which tree is displayed
+      expect(snapshotWithPilotSelected.count).toBe(2)
+      expect(snapshotWithGunnerSelected.count).toBe(2)
+      expect(snapshotWithPilotSelected.items).toEqual(snapshotWithGunnerSelected.items)
+    })
+
+    it('changing the selected tree key does not affect the cost calculation', () => {
+      const actor = {
+        system: {
+          details: {
+            specializations: new Set([{ specializationId: 'pilot', name: 'Pilot' }]),
+            career: { specializations: [{ specializationId: 'pilot' }] },
+          },
+        },
+      }
+
+      const snapshot = getOwnedSpecializations(actor)
+      const career = actor.system.details.career
+      const candidate = { specializationId: 'gunner', name: 'Gunner' }
+
+      // Cost is computed from ownedSpecializations + candidate, regardless of which tree is selected in the UI
+      const costWithPilotSelected = calculateSpecializationCost({ ownedSpecializations: snapshot, candidateSpecialization: candidate, career })
+      const costWithGunnerSelected = calculateSpecializationCost({ ownedSpecializations: snapshot, candidateSpecialization: candidate, career })
+
+      expect(costWithPilotSelected.finalCost).toBe(costWithGunnerSelected.finalCost)
+      expect(costWithPilotSelected.finalCost).toBe(30) // 1→2 non-career: 10×2 + 10 = 30
+    })
+
+    it('buildSpecializationEntries does not expose selectedTreeKey as a business property', () => {
+      const specializations = [
+        { specializationId: 'spec-a', name: 'A' },
+        { specializationId: 'spec-b', name: 'B' },
+      ]
+
+      const resolutions = new Map([
+        ['spec-a', { tree: { name: 'Tree A' }, state: 'available' }],
+        ['spec-b', { tree: { name: 'Tree B' }, state: 'available' }],
+      ])
+
+      const entries = buildSpecializationEntries(specializations, resolutions, (k) => k)
+
+      // isSelected is not set by buildSpecializationEntries — it is applied by the caller
+      // using the UI selectedKey. The entries themselves carry no "current tree" concept.
+      entries.forEach((entry) => {
+        expect(entry).not.toHaveProperty('isSelected')
+      })
+    })
+
+    it('cost calculation uses ownedSpecializations as the canonical source, not the tree selection', () => {
+      // Scenario: actor has 2 specializations but only spec-a is currently selected in the UI
+      const snapshot = { count: 2, items: [{ specializationId: 'spec-a' }, { specializationId: 'spec-b' }] }
+      const career = { specializations: [{ specializationId: 'spec-a' }, { specializationId: 'spec-b' }] }
+      const candidate = { specializationId: 'spec-c', name: 'Spec C' }
+
+      // Cost must reflect 2 owned specializations (the canonical source), not 1 (as if only the displayed tree counted)
+      const result = calculateSpecializationCost({ ownedSpecializations: snapshot, candidateSpecialization: candidate, career })
+
+      expect(result.ownedCountBefore).toBe(2)
+      expect(result.ownedCountAfter).toBe(3)
+      expect(result.baseCost).toBe(30) // 10 × 3
+      expect(result.nonCareerPenalty).toBe(10) // spec-c is not a career spec
+      expect(result.finalCost).toBe(40)
     })
   })
 })

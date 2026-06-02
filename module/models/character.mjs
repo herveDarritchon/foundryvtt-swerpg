@@ -200,6 +200,18 @@ export default class SwerpgCharacter extends SwerpgActorType {
         },
         { required: true, nullable: true, initial: null },
       ),
+      /**
+       * Canonical source for all owned specializations.
+       *
+       * Persisted as a Set of specialization entries; each entry is normalised
+       * by `getOwnedSpecializations` from `module/lib/specializations/owned-specializations.mjs`
+       * before being consumed by business-layer code.
+       *
+       * This field is the single source of truth for "what specializations does
+       * the character own". The currently displayed tree key
+       * (`SpecializationTreeApp#selectedTreeKey`) is a UI-only display context
+       * and must never influence ownership nor cost calculations.
+       */
       specializations: new fields.SetField(
         new fields.SchemaField({
           specializationId: new fields.StringField({ required: false, blank: false, initial: undefined }),

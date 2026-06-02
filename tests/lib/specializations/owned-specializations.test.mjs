@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest'
 
 import {
   getOwnedSpecializations,
+  getCanonicalSpecializationKey,
   normalizeSpecialization,
   isCareerSpecialization,
   isUniversalSpecialization,
@@ -192,6 +193,36 @@ describe('owned-specializations', () => {
       const career = { specializations: [{ specializationId: 'pilot' }] }
 
       expect(isTreatedAsCareerForCost(spec, career)).toBe(false)
+    })
+  })
+
+  describe('getCanonicalSpecializationKey', () => {
+    it('returns null for null/undefined input', () => {
+      expect(getCanonicalSpecializationKey(null)).toBeNull()
+      expect(getCanonicalSpecializationKey(undefined)).toBeNull()
+    })
+
+    it('returns specializationId when present', () => {
+      const spec = { specializationId: 'pilot', treeUuid: 'Item.tree-pilot', name: 'Pilot' }
+
+      expect(getCanonicalSpecializationKey(spec)).toBe('pilot')
+    })
+
+    it('returns treeUuid when specializationId is absent', () => {
+      const spec = { treeUuid: 'Item.tree-pilot', name: 'Pilot' }
+
+      expect(getCanonicalSpecializationKey(spec)).toBe('Item.tree-pilot')
+    })
+
+    it('returns name when both specializationId and treeUuid are absent', () => {
+      const spec = { name: 'Pilot' }
+
+      expect(getCanonicalSpecializationKey(spec)).toBe('Pilot')
+    })
+
+    it('returns null when all fields are absent or falsy', () => {
+      expect(getCanonicalSpecializationKey({})).toBeNull()
+      expect(getCanonicalSpecializationKey({ specializationId: null, treeUuid: null, name: '' })).toBeNull()
     })
   })
 })

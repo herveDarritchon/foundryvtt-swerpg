@@ -1,4 +1,5 @@
 import { logger } from '../../utils/logger.mjs'
+import { getOwnedSpecializations, getCanonicalSpecializationKey } from '../specializations/owned-specializations.mjs'
 
 /**
  * Find the specialization tree item that matches the given specialization data by name or slug.
@@ -112,15 +113,19 @@ export function resolveSpecializationTree(specializationData = {}) {
 
 /**
  * Resolve all owned specializations for an actor.
+ *
+ * Uses the canonical `getOwnedSpecializations` contract as the source of truth
+ * for the specialization list, and `getCanonicalSpecializationKey` for key derivation.
+ *
  * @param {Actor|object} actor The actor owning specializations.
  * @returns {Map<string, { tree: Item|object|null, state: 'available'|'unresolved'|'incomplete' }>}
  */
 export function resolveActorSpecializationTrees(actor) {
-  const specializations = Array.from(actor?.system?.details?.specializations || [])
+  const { items: specializations } = getOwnedSpecializations(actor)
 
   return new Map(
     specializations.map((specialization, index) => {
-      const key = specialization?.specializationId || specialization?.treeUuid || specialization?.name || `specialization-${index}`
+      const key = getCanonicalSpecializationKey(specialization) ?? `specialization-${index}`
       return [key, resolveSpecializationTree(specialization)]
     }),
   )
