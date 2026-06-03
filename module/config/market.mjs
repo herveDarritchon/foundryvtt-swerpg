@@ -176,6 +176,33 @@ export const SOURCE_TYPES = Object.freeze({
  */
 export const DEFAULT_AVAILABILITY = 'available'
 
+/* -------------------------------------------- */
+
+/**
+ * Rarity thresholds used to derive an {@link AVAILABILITY_STATUS} key from item rarity.
+ *
+ * Rules (evaluated in order, restriction level takes precedence):
+ *   - illegal → 'blackMarket'
+ *   - military | restricted → 'restricted'
+ *   - none + rarity >= VERY_RARE → 'veryRare'
+ *   - none + rarity >= RARE     → 'rare'
+ *   - none + rarity >= COMMON   → 'common'
+ *   - none + rarity < COMMON    → 'available'
+ *
+ * These thresholds are named constants to prevent magic numbers in the derivation logic.
+ * Change these values only via an ADR.
+ *
+ * @type {Readonly<{VERY_RARE: number, RARE: number, COMMON: number}>}
+ */
+export const AVAILABILITY_DERIVATION_THRESHOLDS = Object.freeze({
+  /** Minimum rarity (inclusive) to derive 'veryRare' for a legal item. */
+  VERY_RARE: 7,
+  /** Minimum rarity (inclusive) to derive 'rare' for a legal item. */
+  RARE: 5,
+  /** Minimum rarity (inclusive) to derive 'common' for a legal item. */
+  COMMON: 3,
+})
+
 /**
  * The default source type key applied when none is provided.
  * Must be a key of {@link SOURCE_TYPES}.
@@ -262,8 +289,8 @@ export const DEFAULT_MARKET_CONFIG = Object.freeze({
  * Rules per type:
  * - `standard`    : all purchasable types, all normal availability statuses, no extra price modifier, negotiation allowed.
  * - `local`       : all purchasable types, only available/common items, -10% price discount (proximity bonus), negotiation allowed.
- * - `specialized` : all purchasable types, rare/veryRare items unlocked, +25% price premium, negotiation allowed.
- * - `black-market`: all purchasable types, restricted/blackMarket/illegal items visible, +50% price premium, negotiation allowed (risky).
+ * - `specialized` : all purchasable types, rare/veryRare/restricted items unlocked (military/restricted restriction levels allowed), +25% price premium, negotiation allowed.
+ * - `black-market`: all purchasable types, restricted/blackMarket/illegal items visible (all restriction levels allowed), +50% price premium, negotiation allowed (risky).
  *
  * Consumers must iterate this registry — never hardcode market type keys.
  * @enum {MarketTypeDefinition}
@@ -296,7 +323,11 @@ export const MARKET_TYPES = Object.freeze({
     label: 'MARKET.MarketType.Specialized.Label',
     description: 'MARKET.MarketType.Specialized.Description',
     allowedItemTypes: Object.freeze(['*']),
-    allowedAvailability: Object.freeze(['available', 'common', 'rare', 'veryRare']),
+    // 'restricted' is included because items with restrictionLevel='restricted'|'military'
+    // derive availability='restricted' via deriveAvailability().
+    // Both axes must be coherent: allowedAvailability lists the derived keys that are visible,
+    // and allowedRestrictionLevels lists the restriction levels that are allowed.
+    allowedAvailability: Object.freeze(['available', 'common', 'rare', 'veryRare', 'restricted']),
     allowedRestrictionLevels: Object.freeze(['none', 'restricted', 'military']),
     priceModifier: 0.25,
     uiVariant: 'market--specialized',

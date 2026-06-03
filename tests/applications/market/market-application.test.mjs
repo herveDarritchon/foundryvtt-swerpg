@@ -44,7 +44,9 @@ function makeItem(overrides = {}) {
       rarity: overrides.rarity ?? systemOverrides.rarity ?? 2,
       quality: overrides.quality ?? systemOverrides.quality ?? 'standard',
       restrictionLevel: overrides.restrictionLevel ?? systemOverrides.restrictionLevel ?? 'none',
-      availability: overrides.availability ?? systemOverrides.availability ?? 'available',
+      // NOTE: `availability` is NOT a field in the physical item schema.
+      // Market availability is always derived from rarity + restrictionLevel via deriveAvailability().
+      // Callers must NOT set `availability` here — use rarity/restrictionLevel to control derived availability.
       nonPurchasable: overrides.nonPurchasable ?? systemOverrides.nonPurchasable ?? false,
       broken: overrides.broken ?? systemOverrides.broken ?? false,
       ...systemOverrides,
@@ -783,8 +785,9 @@ describe('MarketApplicationV2', () => {
 
   describe('sort by rarity', () => {
     it('sorts ascending (most common first)', async () => {
+      // rarity=1 → 'available', rarity=5 → 'rare': both visible in standard market
       const common = makeItem({ type: 'weapon', name: 'Common', rarity: 1 })
-      const rare = makeItem({ type: 'weapon', name: 'Rare', rarity: 7 })
+      const rare = makeItem({ type: 'weapon', name: 'Rare', rarity: 5 })
       globalThis.game.items = makeItemsCollection([rare, common])
 
       const app = new MarketApplicationV2()
@@ -936,8 +939,9 @@ describe('MarketApplicationV2', () => {
 
   describe('market-type visibility filtering in catalog', () => {
     it('standard market excludes veryRare items', async () => {
-      const veryRareItem = makeItem({ type: 'weapon', name: 'Very Rare Weapon', availability: 'veryRare' })
-      const commonItem = makeItem({ type: 'weapon', name: 'Common Blaster', availability: 'available' })
+      // rarity=7 → derives 'veryRare' (threshold is 7); rarity=1 → derives 'available'
+      const veryRareItem = makeItem({ type: 'weapon', name: 'Very Rare Weapon', rarity: 7 })
+      const commonItem = makeItem({ type: 'weapon', name: 'Common Blaster', rarity: 1 })
       globalThis.game.items = makeItemsCollection([veryRareItem, commonItem])
 
       const app = new MarketApplicationV2()
@@ -952,7 +956,8 @@ describe('MarketApplicationV2', () => {
     })
 
     it('black-market includes restricted items invisible in standard market', async () => {
-      const restrictedItem = makeItem({ type: 'weapon', name: 'Restricted Blaster', availability: 'restricted' })
+      // restrictionLevel='restricted' derives availability='restricted'
+      const restrictedItem = makeItem({ type: 'weapon', name: 'Restricted Blaster', restrictionLevel: 'restricted', rarity: 0 })
       globalThis.game.items = makeItemsCollection([restrictedItem])
 
       const app = new MarketApplicationV2()
@@ -970,8 +975,9 @@ describe('MarketApplicationV2', () => {
     })
 
     it('local market excludes rare items', async () => {
-      const rareItem = makeItem({ type: 'weapon', name: 'Rare Blaster', availability: 'rare' })
-      const commonItem = makeItem({ type: 'armor', name: 'Common Armor', availability: 'common' })
+      // rarity=5 → derives 'rare'; rarity=3 → derives 'common'
+      const rareItem = makeItem({ type: 'weapon', name: 'Rare Blaster', rarity: 5 })
+      const commonItem = makeItem({ type: 'armor', name: 'Common Armor', rarity: 3 })
       globalThis.game.items = makeItemsCollection([rareItem, commonItem])
 
       const app = new MarketApplicationV2()
@@ -985,7 +991,8 @@ describe('MarketApplicationV2', () => {
     })
 
     it('specialized market includes veryRare items not visible in standard market', async () => {
-      const veryRareItem = makeItem({ type: 'weapon', name: 'Very Rare Blaster', availability: 'veryRare' })
+      // rarity=7 → derives 'veryRare' (threshold is 7)
+      const veryRareItem = makeItem({ type: 'weapon', name: 'Very Rare Blaster', rarity: 7 })
       globalThis.game.items = makeItemsCollection([veryRareItem])
 
       const app = new MarketApplicationV2()
@@ -1864,10 +1871,12 @@ describe('MarketApplicationV2', () => {
     })
 
     it('caps rarityPips at 10 even when rarity exceeds 10', async () => {
-      const item = makeItem({ type: 'weapon', name: 'Ultra Rare', rarity: 15, availability: 'available' })
+      // rarity=15 → derives 'veryRare'; use specialized market to ensure visibility
+      const item = makeItem({ type: 'weapon', name: 'Ultra Rare', rarity: 15 })
       globalThis.game.items = makeItemsCollection([item])
 
       const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, activeMarketType: 'specialized' }
       const context = await app._preparePartContext('catalog', {})
 
       const entry = context.catalog.items[0]
@@ -3125,7 +3134,8 @@ describe('MarketApplicationV2', () => {
         getFlag: vi.fn((_scope, _key) => existingDebts),
         setFlag: vi.fn().mockResolvedValue(undefined),
       }
-      const item = makeItem({ uuid: 'Item.cheap', type: 'weapon', price: 100, rarity: 0, availability: 'blackMarket' })
+      // restrictionLevel='illegal' → derives availability='blackMarket' → triggers blackMarketDebt consequence
+      const item = makeItem({ uuid: 'Item.cheap', type: 'weapon', price: 100, rarity: 0, restrictionLevel: 'illegal' })
       item.toObject = vi.fn(() => ({ type: 'weapon', name: item.name, system: item.system }))
       globalThis.fromUuid = vi.fn().mockResolvedValue(item)
 
@@ -3201,7 +3211,8 @@ describe('MarketApplicationV2', () => {
         getFlag: vi.fn().mockReturnValue([existingDebt]),
         setFlag: vi.fn().mockResolvedValue(undefined),
       }
-      const item = makeItem({ uuid: 'Item.new', type: 'weapon', price: 100, rarity: 0, availability: 'blackMarket' })
+      // restrictionLevel='illegal' → derives availability='blackMarket' → triggers blackMarketDebt consequence
+      const item = makeItem({ uuid: 'Item.new', type: 'weapon', price: 100, rarity: 0, restrictionLevel: 'illegal' })
       item.toObject = vi.fn(() => ({ type: 'weapon', name: item.name, system: item.system }))
       globalThis.fromUuid = vi.fn().mockResolvedValue(item)
 

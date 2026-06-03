@@ -25,7 +25,7 @@ export async function loadCompendiumItems() {
     let indexEntries = []
     try {
       const index = await pack.getIndex({
-        fields: ['name', 'img', 'type', 'system.price', 'system.rarity', 'system.restrictionLevel', 'system.quality', 'system.availability'],
+        fields: ['name', 'img', 'type', 'system.price', 'system.rarity', 'system.restrictionLevel', 'system.quality'],
       })
       indexEntries = Array.from(index.values())
     } catch (err) {
@@ -46,7 +46,6 @@ export async function loadCompendiumItems() {
         rarity: doc.system?.rarity ?? 0,
         quality: doc.system?.quality ?? '',
         restrictionLevel: doc.system?.restrictionLevel ?? '',
-        availability: doc.system?.availability ?? undefined,
         nonPurchasable: false,
         broken: false,
         _sourceId: pack.collection,

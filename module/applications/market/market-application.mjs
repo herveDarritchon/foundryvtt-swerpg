@@ -102,7 +102,6 @@ function itemToRawItem(item) {
     rarity: system.rarity ?? 0,
     quality: system.quality ?? '',
     restrictionLevel: system.restrictionLevel ?? '',
-    availability: system.availability ?? undefined,
     nonPurchasable: system.nonPurchasable === true,
     broken: system.broken === true,
   }

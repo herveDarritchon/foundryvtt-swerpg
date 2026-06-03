@@ -1,9 +1,10 @@
 import { describe, test, expect } from 'vitest'
-import { createMarketEntry, resolveMarketCatalogVisibility } from '../../../module/lib/market/market-entry.mjs'
-import { DEFAULT_AVAILABILITY, DEFAULT_SOURCE_TYPE } from '../../../module/config/market.mjs'
+import { deriveAvailability, createMarketEntry, resolveMarketCatalogVisibility } from '../../../module/lib/market/market-entry.mjs'
+import { DEFAULT_SOURCE_TYPE, AVAILABILITY_DERIVATION_THRESHOLDS } from '../../../module/config/market.mjs'
 
 /**
  * Build a minimal valid raw item.
+ * Note: `availability` is intentionally absent — it is always derived from rarity + restrictionLevel.
  * @param {object} [overrides]
  */
 function makeRawItem(overrides = {}) {
@@ -16,16 +17,108 @@ function makeRawItem(overrides = {}) {
     rarity: 2,
     quality: 'standard',
     restrictionLevel: 'none',
-    availability: 'available',
     ...overrides,
   }
 }
 
 const validSourceInfo = { sourceType: 'compendium', sourceId: 'swerpg.weapons' }
 
+/* -------------------------------------------- */
+
+describe('deriveAvailability', () => {
+  describe('legal items (restrictionLevel="none") — rarity bands', () => {
+    test('rarity below COMMON threshold → "available"', () => {
+      expect(deriveAvailability(0, 'none')).toBe('available')
+      expect(deriveAvailability(AVAILABILITY_DERIVATION_THRESHOLDS.COMMON - 1, 'none')).toBe('available')
+    })
+
+    test('rarity at COMMON threshold → "common"', () => {
+      expect(deriveAvailability(AVAILABILITY_DERIVATION_THRESHOLDS.COMMON, 'none')).toBe('common')
+    })
+
+    test('rarity between COMMON and RARE thresholds → "common"', () => {
+      expect(deriveAvailability(AVAILABILITY_DERIVATION_THRESHOLDS.RARE - 1, 'none')).toBe('common')
+    })
+
+    test('rarity at RARE threshold → "rare"', () => {
+      expect(deriveAvailability(AVAILABILITY_DERIVATION_THRESHOLDS.RARE, 'none')).toBe('rare')
+    })
+
+    test('rarity between RARE and VERY_RARE thresholds → "rare"', () => {
+      expect(deriveAvailability(AVAILABILITY_DERIVATION_THRESHOLDS.VERY_RARE - 1, 'none')).toBe('rare')
+    })
+
+    test('rarity at VERY_RARE threshold → "veryRare"', () => {
+      expect(deriveAvailability(AVAILABILITY_DERIVATION_THRESHOLDS.VERY_RARE, 'none')).toBe('veryRare')
+    })
+
+    test('rarity above VERY_RARE threshold → "veryRare"', () => {
+      expect(deriveAvailability(10, 'none')).toBe('veryRare')
+    })
+  })
+
+  describe('restricted items — restrictionLevel overrides rarity', () => {
+    test('"restricted" → "restricted" regardless of rarity', () => {
+      expect(deriveAvailability(0, 'restricted')).toBe('restricted')
+      expect(deriveAvailability(10, 'restricted')).toBe('restricted')
+    })
+
+    test('"military" → "restricted" regardless of rarity', () => {
+      expect(deriveAvailability(0, 'military')).toBe('restricted')
+      expect(deriveAvailability(10, 'military')).toBe('restricted')
+    })
+
+    test('"illegal" → "blackMarket" regardless of rarity', () => {
+      expect(deriveAvailability(0, 'illegal')).toBe('blackMarket')
+      expect(deriveAvailability(10, 'illegal')).toBe('blackMarket')
+    })
+  })
+
+  describe('edge cases', () => {
+    test('non-finite rarity treated as 0 → "available" for legal item', () => {
+      expect(deriveAvailability(NaN, 'none')).toBe('available')
+      expect(deriveAvailability(Infinity, 'none')).toBe('available')
+    })
+
+    test('unknown restrictionLevel falls through to rarity band logic', () => {
+      // Unknown restriction levels are not in the named checks; they fall through to rarity logic
+      expect(deriveAvailability(0, 'unknown-level')).toBe('available')
+      expect(deriveAvailability(AVAILABILITY_DERIVATION_THRESHOLDS.VERY_RARE, 'unknown-level')).toBe('veryRare')
+    })
+
+    test('deterministic — same inputs always produce same output', () => {
+      expect(deriveAvailability(5, 'none')).toBe(deriveAvailability(5, 'none'))
+      expect(deriveAvailability(0, 'illegal')).toBe(deriveAvailability(0, 'illegal'))
+    })
+  })
+
+  describe('contractual — result is always a valid AVAILABILITY_STATUS key', () => {
+    const cases = [
+      [0, 'none'],
+      [2, 'none'],
+      [3, 'none'],
+      [5, 'none'],
+      [7, 'none'],
+      [10, 'none'],
+      [0, 'restricted'],
+      [0, 'military'],
+      [0, 'illegal'],
+    ]
+    const validKeys = ['available', 'common', 'rare', 'veryRare', 'restricted', 'blackMarket', 'unavailable']
+
+    test.each(cases)('deriveAvailability(%i, %s) returns a valid AVAILABILITY_STATUS key', (rarity, restrictionLevel) => {
+      const result = deriveAvailability(rarity, restrictionLevel)
+      expect(validKeys).toContain(result)
+    })
+  })
+})
+
+/* -------------------------------------------- */
+
 describe('createMarketEntry', () => {
   describe('valid item', () => {
     test('returns a complete MarketEntry with all fields', () => {
+      // rarity=2, restrictionLevel='none' → availability derived as 'available'
       const entry = createMarketEntry(makeRawItem(), validSourceInfo)
       expect(entry).toMatchObject({
         uuid: 'Item.abc123',
@@ -51,7 +144,8 @@ describe('createMarketEntry', () => {
     })
 
     test('exposes priceResult with basePrice, finalPrice, and modifiers', () => {
-      const entry = createMarketEntry(makeRawItem({ basePrice: 100, rarity: 0, availability: 'available' }), validSourceInfo)
+      // rarity=0, restrictionLevel='none' → availability='available', no modifier
+      const entry = createMarketEntry(makeRawItem({ basePrice: 100, rarity: 0, restrictionLevel: 'none' }), validSourceInfo)
       expect(entry.priceResult).toBeDefined()
       expect(entry.priceResult.basePrice).toBe(100)
       expect(entry.priceResult.finalPrice).toBe(100)
@@ -60,19 +154,20 @@ describe('createMarketEntry', () => {
 
     test('priceResult.finalPrice reflects rarity modifier', () => {
       // rarity=5 → 10% * 5 = 50% → 100 * 1.5 = 150
-      const entry = createMarketEntry(makeRawItem({ basePrice: 100, rarity: 5, availability: 'available' }), validSourceInfo)
-      expect(entry.priceResult.finalPrice).toBe(150)
+      // rarity=5 also derives availability='rare' (+25%), so total modifier: 0.5 + 0.25 = 0.75 → 175
+      const entry = createMarketEntry(makeRawItem({ basePrice: 100, rarity: 5, restrictionLevel: 'none' }), validSourceInfo)
+      expect(entry.priceResult.finalPrice).toBe(175)
     })
 
-    test('priceResult.finalPrice reflects availability modifier', () => {
-      // availability=rare → +25% → 100 * 1.25 = 125
-      const entry = createMarketEntry(makeRawItem({ basePrice: 100, rarity: 0, availability: 'rare' }), validSourceInfo)
-      expect(entry.priceResult.finalPrice).toBe(125)
+    test('priceResult.finalPrice reflects derived availability modifier for restricted items', () => {
+      // restrictionLevel='restricted' → availability='restricted' (+100%) → 100 * 2.0 = 200
+      const entry = createMarketEntry(makeRawItem({ basePrice: 100, rarity: 0, restrictionLevel: 'restricted' }), validSourceInfo)
+      expect(entry.priceResult.finalPrice).toBe(200)
     })
 
     test('priceResult.finalPrice reflects manualModifier from marketContext', () => {
-      // manualModifier=+50 → 100 * 1.5 = 150
-      const entry = createMarketEntry(makeRawItem({ basePrice: 100, rarity: 0, availability: 'available' }), validSourceInfo, { manualModifier: 50 })
+      // rarity=0, restrictionLevel='none' → availability='available', +50% manual → 100 * 1.5 = 150
+      const entry = createMarketEntry(makeRawItem({ basePrice: 100, rarity: 0, restrictionLevel: 'none' }), validSourceInfo, { manualModifier: 50 })
       expect(entry.priceResult.finalPrice).toBe(150)
     })
 
@@ -147,12 +242,42 @@ describe('createMarketEntry', () => {
     })
   })
 
-  describe('availability default', () => {
-    test('uses DEFAULT_AVAILABILITY when availability is absent', () => {
-      const raw = makeRawItem()
-      delete raw.availability
-      const entry = createMarketEntry(raw, validSourceInfo)
-      expect(entry.availability).toBe(DEFAULT_AVAILABILITY)
+  describe('availability derivation', () => {
+    test('derives "available" for rarity=0, restrictionLevel="none"', () => {
+      const entry = createMarketEntry(makeRawItem({ rarity: 0, restrictionLevel: 'none' }), validSourceInfo)
+      expect(entry.availability).toBe('available')
+    })
+
+    test('derives "rare" for rarity=5, restrictionLevel="none"', () => {
+      const entry = createMarketEntry(makeRawItem({ rarity: 5, restrictionLevel: 'none' }), validSourceInfo)
+      expect(entry.availability).toBe('rare')
+    })
+
+    test('derives "veryRare" for rarity=7, restrictionLevel="none"', () => {
+      const entry = createMarketEntry(makeRawItem({ rarity: 7, restrictionLevel: 'none' }), validSourceInfo)
+      expect(entry.availability).toBe('veryRare')
+    })
+
+    test('derives "restricted" for restrictionLevel="restricted" regardless of rarity', () => {
+      const entry = createMarketEntry(makeRawItem({ rarity: 0, restrictionLevel: 'restricted' }), validSourceInfo)
+      expect(entry.availability).toBe('restricted')
+    })
+
+    test('derives "restricted" for restrictionLevel="military" regardless of rarity', () => {
+      const entry = createMarketEntry(makeRawItem({ rarity: 0, restrictionLevel: 'military' }), validSourceInfo)
+      expect(entry.availability).toBe('restricted')
+    })
+
+    test('derives "blackMarket" for restrictionLevel="illegal" regardless of rarity', () => {
+      const entry = createMarketEntry(makeRawItem({ rarity: 0, restrictionLevel: 'illegal' }), validSourceInfo)
+      expect(entry.availability).toBe('blackMarket')
+    })
+
+    test('availability is always derived — rawItem.availability field is ignored', () => {
+      // Even if a caller mistakenly passes an availability field, it must not affect the derived value
+      const rawWithAvailability = { ...makeRawItem({ rarity: 0, restrictionLevel: 'none' }), availability: 'blackMarket' }
+      const entry = createMarketEntry(rawWithAvailability, validSourceInfo)
+      expect(entry.availability).toBe('available')
     })
   })
 
@@ -316,8 +441,15 @@ describe('resolveMarketCatalogVisibility', () => {
       expect(visible).toBe(true)
     })
 
-    test('restricted item is NOT visible in specialized market', () => {
+    test('restricted item IS visible in specialized market (derived from restrictionLevel=restricted|military)', () => {
+      // 'restricted' is now in specialized.allowedAvailability (aligned with derivation from restrictionLevel)
       const { visible, blocked } = resolveMarketCatalogVisibility(makeEntry({ availability: 'restricted' }), 'specialized')
+      expect(visible).toBe(true)
+      expect(blocked).toBe(false)
+    })
+
+    test('blackMarket item is NOT visible in specialized market', () => {
+      const { visible, blocked } = resolveMarketCatalogVisibility(makeEntry({ availability: 'blackMarket' }), 'specialized')
       expect(visible).toBe(false)
       expect(blocked).toBe(true)
     })

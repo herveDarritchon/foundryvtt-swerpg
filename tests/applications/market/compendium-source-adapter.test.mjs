@@ -67,7 +67,9 @@ describe('loadCompendiumItems', () => {
             id: 'w1',
             name: 'Blaster',
             type: 'weapon',
-            system: { price: 750, rarity: 3, quality: 'superior', restrictionLevel: 'restricted', availability: 'rare' },
+            // NOTE: `availability` is intentionally absent — it is not a field in the physical item schema.
+            // Market availability is derived by the domain layer from rarity + restrictionLevel.
+            system: { price: 750, rarity: 3, quality: 'superior', restrictionLevel: 'restricted' },
           },
         ],
       },
@@ -83,7 +85,8 @@ describe('loadCompendiumItems', () => {
     expect(item.rarity).toBe(3)
     expect(item.quality).toBe('superior')
     expect(item.restrictionLevel).toBe('restricted')
-    expect(item.availability).toBe('rare')
+    // `availability` is NOT in the RawItem shape — it is derived by createMarketEntry() via deriveAvailability()
+    expect(item).not.toHaveProperty('availability')
     expect(item.nonPurchasable).toBe(false)
     expect(item.broken).toBe(false)
   })
@@ -226,6 +229,7 @@ describe('loadCompendiumItems', () => {
     expect(item.rarity).toBe(0)
     expect(item.quality).toBe('')
     expect(item.restrictionLevel).toBe('')
-    expect(item.availability).toBeUndefined()
+    // `availability` is not part of the RawItem shape — it is derived by the domain layer
+    expect(item).not.toHaveProperty('availability')
   })
 })

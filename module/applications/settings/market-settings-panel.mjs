@@ -357,7 +357,7 @@ export default class MarketSettingsPanel extends api.HandlebarsApplicationMixin(
         type: item.type ?? '',
         basePrice: item.system?._source?.price ?? item.system?.price ?? 0,
         rarity: item.system?.rarity ?? 0,
-        availability: item.system?.availability ?? undefined,
+        restrictionLevel: item.system?.restrictionLevel ?? '',
         nonPurchasable: item.system?.nonPurchasable === true,
         broken: item.system?.broken === true,
       }))

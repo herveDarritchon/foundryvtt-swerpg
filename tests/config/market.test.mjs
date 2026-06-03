@@ -12,6 +12,7 @@ import {
   MARKET_EXCLUDED_FLAG,
   MARKET_TYPES,
   DEFAULT_MARKET_TYPE,
+  AVAILABILITY_DERIVATION_THRESHOLDS,
 } from '../../module/config/market.mjs'
 import { SYSTEM } from '../../module/config/system.mjs'
 
@@ -426,10 +427,13 @@ describe('MARKET_TYPES — V1 registry', () => {
     expect(allowedAvailability.includes('restricted')).toBe(false)
   })
 
-  test('specialized unlocks veryRare items', () => {
+  test('specialized unlocks veryRare and restricted items (derived from restrictionLevel)', () => {
     const { allowedAvailability } = MARKET_TYPES.specialized
+    // veryRare: legal items with high rarity
     expect(allowedAvailability).toContain('veryRare')
-    expect(allowedAvailability.includes('restricted')).toBe(false)
+    // restricted: derived from restrictionLevel='restricted'|'military' via deriveAvailability()
+    expect(allowedAvailability).toContain('restricted')
+    // blackMarket (illegal) is not unlocked by specialized
     expect(allowedAvailability.includes('blackMarket')).toBe(false)
   })
 
@@ -471,5 +475,43 @@ describe('DEFAULT_MARKET_TYPE', () => {
   test('is a non-empty string', () => {
     expect(typeof DEFAULT_MARKET_TYPE).toBe('string')
     expect(DEFAULT_MARKET_TYPE.length).toBeGreaterThan(0)
+  })
+})
+
+/* -------------------------------------------- */
+
+describe('AVAILABILITY_DERIVATION_THRESHOLDS — canonical availability derivation', () => {
+  test('is defined and frozen (ADR-0018 contractual constant)', () => {
+    expect(AVAILABILITY_DERIVATION_THRESHOLDS).toBeDefined()
+    expect(Object.isFrozen(AVAILABILITY_DERIVATION_THRESHOLDS)).toBe(true)
+  })
+
+  test('has COMMON, RARE, and VERY_RARE threshold keys', () => {
+    expect(AVAILABILITY_DERIVATION_THRESHOLDS).toHaveProperty('COMMON')
+    expect(AVAILABILITY_DERIVATION_THRESHOLDS).toHaveProperty('RARE')
+    expect(AVAILABILITY_DERIVATION_THRESHOLDS).toHaveProperty('VERY_RARE')
+  })
+
+  test('all thresholds are positive integers', () => {
+    for (const value of Object.values(AVAILABILITY_DERIVATION_THRESHOLDS)) {
+      expect(typeof value).toBe('number')
+      expect(Number.isInteger(value)).toBe(true)
+      expect(value).toBeGreaterThan(0)
+    }
+  })
+
+  test('thresholds are ordered: COMMON < RARE < VERY_RARE', () => {
+    expect(AVAILABILITY_DERIVATION_THRESHOLDS.COMMON).toBeLessThan(AVAILABILITY_DERIVATION_THRESHOLDS.RARE)
+    expect(AVAILABILITY_DERIVATION_THRESHOLDS.RARE).toBeLessThan(AVAILABILITY_DERIVATION_THRESHOLDS.VERY_RARE)
+  })
+
+  test('is exposed on SYSTEM.MARKET.AVAILABILITY_DERIVATION_THRESHOLDS', () => {
+    expect(SYSTEM.MARKET.AVAILABILITY_DERIVATION_THRESHOLDS).toBe(AVAILABILITY_DERIVATION_THRESHOLDS)
+  })
+
+  test('canonical values: COMMON=3, RARE=5, VERY_RARE=7 (change only via ADR)', () => {
+    expect(AVAILABILITY_DERIVATION_THRESHOLDS.COMMON).toBe(3)
+    expect(AVAILABILITY_DERIVATION_THRESHOLDS.RARE).toBe(5)
+    expect(AVAILABILITY_DERIVATION_THRESHOLDS.VERY_RARE).toBe(7)
   })
 })
