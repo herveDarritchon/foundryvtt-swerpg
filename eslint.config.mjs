@@ -2,10 +2,12 @@ import jsdoc from 'eslint-plugin-jsdoc'
 import unusedImports from 'eslint-plugin-unused-imports'
 import globals from 'globals'
 import configPrettier from 'eslint-config-prettier'
+import tsParser from '@typescript-eslint/parser'
+import tsPlugin from '@typescript-eslint/eslint-plugin'
 
 export default [
   {
-    ignores: ['node_modules/', 'eslint.config.mjs', 'build.mjs', 'gulpfile.mjs'],
+    ignores: ['node_modules/', 'eslint.config.mjs', 'build.mjs', 'gulpfile.mjs', 'e2e/**/*.d.ts'],
     languageOptions: {
       globals: { ...globals.browser, ...globals.node, jquery: 'readonly' },
       ecmaVersion: 2022,
@@ -225,6 +227,49 @@ export default [
   // any existing documentation in tests is not misleading.
   {
     files: ['tests/**/*.mjs', 'tests/**/*.js'],
+    rules: {
+      'jsdoc/require-description': 'off',
+      'jsdoc/require-param-type': 'off',
+      'jsdoc/require-jsdoc': 'off',
+      'jsdoc/require-param': 'off',
+    },
+  },
+
+  // E2E tests override — TypeScript support and lighter JSDoc rules.
+  // Uses @typescript-eslint/parser to handle .ts syntax (interfaces, type annotations, etc.).
+  // Type-aware linting (project tsconfig) is intentionally disabled — e2e files are test glue,
+  // not production code that needs full type checking via ESLint.
+  {
+    files: ['e2e/**/*.ts'],
+    languageOptions: {
+      parser: tsParser,
+      parserOptions: {
+        project: null,
+        ecmaVersion: 2022,
+        sourceType: 'module',
+      },
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
+    },
+    plugins: {
+      '@typescript-eslint': tsPlugin,
+    },
+    rules: {
+      'no-undef': 'off',
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+      'jsdoc/require-description': 'off',
+      'jsdoc/require-param-type': 'off',
+      'jsdoc/require-jsdoc': 'off',
+      'jsdoc/require-param': 'off',
+    },
+  },
+
+  // E2E .mjs files — same lighter JSDoc rules as tests
+  {
+    files: ['e2e/**/*.mjs'],
     rules: {
       'jsdoc/require-description': 'off',
       'jsdoc/require-param-type': 'off',

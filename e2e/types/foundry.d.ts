@@ -50,8 +50,59 @@ interface FoundryUsers {
   size?: number
 }
 
+interface FoundryItemDocument {
+  id: string
+  name?: string
+  type?: string
+  flags?: Record<string, unknown>
+  system?: Record<string, unknown>
+  delete(): Promise<unknown>
+}
+
+interface FoundryItems {
+  size?: number
+  contents?: FoundryItemDocument[]
+  getName(name: string): FoundryItemDocument | undefined
+  get(id: string): FoundryItemDocument | undefined
+}
+
+interface FoundryCompendiumPackMetadata {
+  packageType?: string
+  packageName?: string
+  name?: string
+  id?: string
+  label?: string
+  type?: string
+}
+
+interface FoundryCompendiumPack {
+  metadata: FoundryCompendiumPackMetadata
+  locked?: boolean
+  collection?: string
+  getName(name: string): Promise<FoundryItemDocument | null>
+  getDocuments(): Promise<FoundryItemDocument[]>
+  configure(options: Record<string, unknown>): Promise<unknown>
+  deleteCompendium(): Promise<unknown>
+}
+
+interface FoundryPacks {
+  size?: number
+  contents?: FoundryCompendiumPack[]
+  get(id: string): FoundryCompendiumPack | undefined
+  filter(predicate: (pack: FoundryCompendiumPack) => boolean): FoundryCompendiumPack[]
+  find(predicate: (pack: FoundryCompendiumPack) => boolean): FoundryCompendiumPack | undefined
+}
+
+interface FoundryWorld {
+  id?: string
+  title?: string
+}
+
 interface FoundryGame {
   actors?: FoundryActors
+  items?: FoundryItems
+  packs?: FoundryPacks
+  world?: FoundryWorld
   messages?: FoundryChatMessages
   users?: FoundryUsers
   user?: FoundryUser
@@ -78,6 +129,25 @@ declare const ChatMessage: {
   create(data: Record<string, unknown>): Promise<FoundryChatMessage | null>
   getSpeaker(options: { actor?: FoundryActorDocument | null }): Record<string, unknown>
   getWhisperRecipients(role: string): string[]
+}
+
+/**
+ * Item Foundry global — available in the browser context.
+ * Provides static document operations such as bulk deletion.
+ */
+declare const Item: {
+  deleteDocuments(ids: string[], options?: Record<string, unknown>): Promise<FoundryItemDocument[]>
+}
+
+/**
+ * Hooks Foundry global — available in the browser context.
+ * Minimal interface covering only what is used in e2e evaluate callbacks.
+ */
+declare const Hooks: {
+  once(event: string, callback: (...args: unknown[]) => void): number
+  on(event: string, callback: (...args: unknown[]) => void): number
+  off(event: string, id: number): void
+  callAll(event: string, ...args: unknown[]): void
 }
 
 /**

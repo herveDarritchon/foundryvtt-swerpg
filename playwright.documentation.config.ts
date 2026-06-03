@@ -14,7 +14,7 @@ export default defineConfig({
   globalSetup: './e2e/documentation/global-setup.ts',
   workers: 1,
   // Délais généreux : les specs documentation peuvent capturer des états complexes
-  timeout: process.env.PLAYWRIGHT_TEST_TIMEOUT ? parseInt(process.env.PLAYWRIGHT_TEST_TIMEOUT) : 90000,
+  timeout: process.env.PLAYWRIGHT_TEST_TIMEOUT ? parseInt(process.env.PLAYWRIGHT_TEST_TIMEOUT) : 120000,
   expect: {
     timeout: process.env.PLAYWRIGHT_EXPECT_TIMEOUT ? parseInt(process.env.PLAYWRIGHT_EXPECT_TIMEOUT) : 20000,
   },

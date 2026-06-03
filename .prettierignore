@@ -10,3 +10,6 @@ templates/**/*.hbs
 
 # Generated files — do not format
 styles/swerpg.css
+
+# Lockfile — machine-generated, pnpm controls its own format
+pnpm-lock.yaml
