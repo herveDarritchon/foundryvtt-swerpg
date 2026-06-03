@@ -1542,9 +1542,8 @@
         "OriginalPrice": "Prix initial",
         "Difficulty": "Difficulté",
         "SkillLabel": "Compétence",
-        "SuccessRanksLabel": "Rangs de succès",
-        "DisasterLabel": "Désastre",
-        "DisasterTooltip": "Cochez si le jet a produit un Désastre — le vendeur est offensé et augmente le prix.",
+        "RollInstruction": "Sélectionnez une compétence et lancez le dé pour négocier le prix.",
+        "RollButton": "Lancer la négociation",
         "NegotiatedPrice": "Prix négocié",
         "Confirm": "Acheter à ce prix",
         "Cancel": "Annuler",
@@ -1552,6 +1551,8 @@
         "ConfirmSell": "Vendre à ce prix",
         "NegotiatedPriceSell": "Prix de vente"
       },
+      "RollTitle": "Test de négociation : {skill}",
+      "RollFlavor": "Tentative de négociation d'un meilleur prix.",
       "Skill": {
         "Negotiation": "Négociation",
         "Persuasion": "Persuasion",
@@ -1560,6 +1561,7 @@
       "Outcome": {
         "Success": "Succès ! Le vendeur accepte un prix réduit.",
         "Failure": "Échec. Le prix reste inchangé.",
+        "Triumph": "Triomphe ! Le vendeur est très impressionné et propose le meilleur prix.",
         "Disaster": "Désastre ! Le vendeur est offensé et augmente le prix.",
         "SuccessNotification": "Négociation réussie ! Nouveau prix : {price} crédits.",
         "DisasterNotification": "La négociation a mal tourné ! Le vendeur a augmenté le prix."
