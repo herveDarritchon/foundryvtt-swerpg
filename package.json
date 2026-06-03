@@ -34,8 +34,8 @@
     "e2e:documentation:report": "playwright test --config playwright.documentation.config.ts --pass-with-no-tests && playwright show-report playwright-documentation-report",
     "fmt": "prettier --write .",
     "fmt:check": "prettier --check .",
-    "lint": "eslint module tests --ext .js,.mjs",
-    "lint:fix": "eslint module tests --ext .js,.mjs --fix",
+    "lint": "eslint module tests e2e --ext .js,.mjs,.ts",
+    "lint:fix": "eslint module tests e2e --ext .js,.mjs,.ts --fix",
     "foundry:e2e:start": "bash ./scripts/e2e-foundry-start.sh start",
     "foundry:e2e:stop": "bash ./scripts/e2e-foundry-start.sh stop",
     "foundry:e2e:restart": "bash ./scripts/e2e-foundry-start.sh restart",
@@ -59,6 +59,8 @@
     "@semantic-release/github": "^11.0.3",
     "@semantic-release/release-notes-generator": "^14.0.3",
     "@types/node": "^25.9.1",
+    "@typescript-eslint/eslint-plugin": "^8.60.1",
+    "@typescript-eslint/parser": "^8.60.1",
     "@vitest/coverage-v8": "^3.1.1",
     "commander": "^11.1.0",
     "dotenv": "^17.2.3",
@@ -84,7 +86,7 @@
     "vitest": "^3.1.1"
   },
   "lint-staged": {
-    "*.{js,mjs}": [
+    "*.{js,mjs,ts}": [
       "prettier --write",
       "eslint --fix"
     ],

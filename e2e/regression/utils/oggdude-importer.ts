@@ -95,9 +95,9 @@ export async function triggerOggDudeImport(page: Page): Promise<void> {
   // Register completion flag before clicking — avoids race where import finishes
   // before waitForOggDudeImportComplete sets up its listener.
   await page.evaluate(() => {
-    ;(window as unknown as Record<string, unknown>)['__oggdudeImportDone'] = false
+    ;(window as unknown as Record<string, unknown>).__oggdudeImportDone = false
     Hooks.once('oggdudeImport.completed', () => {
-      ;(window as unknown as Record<string, unknown>)['__oggdudeImportDone'] = true
+      ;(window as unknown as Record<string, unknown>).__oggdudeImportDone = true
     })
   })
   await page.getByRole('button', { name: /^Load$/i }).click()
@@ -113,9 +113,9 @@ export async function triggerOggDudeImport(page: Page): Promise<void> {
  * @param timeout en ms (défaut: 120s — l'import complet peut être long)
  */
 export async function waitForOggDudeImportComplete(page: Page, timeout = 120_000): Promise<void> {
-  await page.waitForFunction(() => (window as unknown as Record<string, unknown>)['__oggdudeImportDone'] === true, undefined, { timeout })
+  await page.waitForFunction(() => (window as unknown as Record<string, unknown>).__oggdudeImportDone === true, undefined, { timeout })
   await page.evaluate(() => {
-    delete (window as unknown as Record<string, unknown>)['__oggdudeImportDone']
+    delete (window as unknown as Record<string, unknown>).__oggdudeImportDone
   })
 
   // Vérifier absence d'erreur : aucune notification d'erreur dans #notifications
@@ -175,15 +175,11 @@ export async function verifyOggDudeCompendiums(page: Page): Promise<void> {
  * Assertions are intentionally NOT included — keep them in the spec
  * to preserve the separation between execution and verification.
  *
- * @param page - Playwright page (must be on /game)
- * @param options - zipPath and importMode
- * @param timeout - wait timeout for import completion in ms (default: 120s)
+ * @param page Playwright page (must be on /game)
+ * @param options zipPath and importMode
+ * @param timeout wait timeout for import completion in ms (default: 120s)
  */
-export async function runOggDudeImportScenario(
-  page: Page,
-  options: { importMode: ImportMode; zipPath: string },
-  timeout = 120_000,
-): Promise<void> {
+export async function runOggDudeImportScenario(page: Page, options: { importMode: ImportMode; zipPath: string }, timeout = 120_000): Promise<void> {
   const { importMode, zipPath } = options
   await openOggDudeImporterDialog(page)
   await uploadOggDudeZip(page, { zipPath, importMode, selectAll: true })
