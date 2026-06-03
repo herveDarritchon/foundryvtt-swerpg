@@ -1456,9 +1456,11 @@
     },
     "Purchase": {
       "BuyButton": "Acheter",
+      "QuantityLabel": "Quantité",
       "Confirm": {
         "Title": "Acheter {name}",
         "Content": "Acheter {name} pour {price} crédits ? Vous avez {credits} crédits et il vous en restera {remaining}.",
+        "ContentMultiple": "Acheter {quantity}× {name} à {unitPrice} l'unité (total : {total} crédits) ? Vous avez {credits} crédits et il vous en restera {remaining}.",
         "Buy": "Acheter ({price} crédits)",
         "Cancel": "Annuler"
       },
@@ -1667,6 +1669,7 @@
       "Confirm": {
         "Title": "Vendre {name}",
         "Content": "Confirmer la vente de {name} pour {price} crédits. Crédits actuels : {credits} → {remaining} après vente.",
+        "ContentMultiple": "Confirmer la vente de {quantity}× {name} à {unitPrice} l'unité (total : {total} crédits). Crédits actuels : {credits} → {remaining} après vente.",
         "Sell": "Vendre pour {price} crédits",
         "Cancel": "Annuler"
       },
@@ -1718,6 +1721,8 @@
       "Description": "Sélectionnez des articles de votre inventaire à vendre.",
       "BasePrice": "Prix de base",
       "ResaleEstimate": "Revente (25%)",
+      "Quantity": "Qté",
+      "QuantityLabel": "Quantité à vendre",
       "SellAriaLabel": "Vendre",
       "SellButton": "Vendre",
       "Empty": "Votre inventaire ne contient aucun article vendable.",

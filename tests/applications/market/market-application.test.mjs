@@ -1161,7 +1161,7 @@ describe('MarketApplicationV2', () => {
       const app = new MarketApplicationV2()
       app.setBuyerActor(actor)
       const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.buyItem
-      const target = { closest: vi.fn(() => ({ dataset: { uuid: 'Item.expensive' } })) }
+      const target = { closest: vi.fn(() => ({ dataset: { uuid: 'Item.expensive' }, querySelector: vi.fn().mockReturnValue(null) })) }
 
       await action.call(app, {}, target)
 
@@ -1188,7 +1188,7 @@ describe('MarketApplicationV2', () => {
       const app = new MarketApplicationV2()
       app.setBuyerActor(actor)
       const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.buyItem
-      const target = { closest: vi.fn(() => ({ dataset: { uuid: 'Item.cheap' } })) }
+      const target = { closest: vi.fn(() => ({ dataset: { uuid: 'Item.cheap' }, querySelector: vi.fn().mockReturnValue(null) })) }
 
       await action.call(app, {}, target)
 
@@ -1215,7 +1215,7 @@ describe('MarketApplicationV2', () => {
       app.render = vi.fn().mockResolvedValue(undefined)
       app.setBuyerActor(actor)
       const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.buyItem
-      const target = { closest: vi.fn(() => ({ dataset: { uuid: 'Item.cheap' } })) }
+      const target = { closest: vi.fn(() => ({ dataset: { uuid: 'Item.cheap' }, querySelector: vi.fn().mockReturnValue(null) })) }
 
       await action.call(app, {}, target)
 
@@ -1268,7 +1268,7 @@ describe('MarketApplicationV2', () => {
       const app = new MarketApplicationV2()
       app.setBuyerActor(actor)
       const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.buyItem
-      const target = { closest: vi.fn(() => ({ dataset: { uuid: 'Item.cheap' } })) }
+      const target = { closest: vi.fn(() => ({ dataset: { uuid: 'Item.cheap' }, querySelector: vi.fn().mockReturnValue(null) })) }
 
       await action.call(app, {}, target)
 
@@ -1377,7 +1377,7 @@ describe('MarketApplicationV2', () => {
       const app = new MarketApplicationV2()
       app.setBuyerActor(actor)
       const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.negotiateItem
-      const target = { closest: vi.fn(() => ({ dataset: { uuid: 'Item.cheap' } })) }
+      const target = { closest: vi.fn(() => ({ dataset: { uuid: 'Item.cheap' }, querySelector: vi.fn().mockReturnValue(null) })) }
 
       await action.call(app, {}, target)
 
@@ -1398,7 +1398,7 @@ describe('MarketApplicationV2', () => {
       const app = new MarketApplicationV2()
       app.setBuyerActor(actor)
       const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.negotiateItem
-      const target = { closest: vi.fn(() => ({ dataset: { uuid: 'Item.cheap' } })) }
+      const target = { closest: vi.fn(() => ({ dataset: { uuid: 'Item.cheap' }, querySelector: vi.fn().mockReturnValue(null) })) }
 
       await action.call(app, {}, target)
 
@@ -1425,7 +1425,7 @@ describe('MarketApplicationV2', () => {
       const app = new MarketApplicationV2()
       app.setBuyerActor(actor)
       const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.negotiateItem
-      const target = { closest: vi.fn(() => ({ dataset: { uuid: 'Item.cheap' } })) }
+      const target = { closest: vi.fn(() => ({ dataset: { uuid: 'Item.cheap' }, querySelector: vi.fn().mockReturnValue(null) })) }
 
       await action.call(app, {}, target)
 
@@ -1449,7 +1449,7 @@ describe('MarketApplicationV2', () => {
       const app = new MarketApplicationV2()
       app.setBuyerActor(actor)
       const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.negotiateItem
-      const target = { closest: vi.fn(() => ({ dataset: { uuid: 'Item.cheap' } })) }
+      const target = { closest: vi.fn(() => ({ dataset: { uuid: 'Item.cheap' }, querySelector: vi.fn().mockReturnValue(null) })) }
 
       await action.call(app, {}, target)
 
@@ -1474,7 +1474,7 @@ describe('MarketApplicationV2', () => {
       const app = new MarketApplicationV2()
       app.setBuyerActor(actor)
       const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.negotiateItem
-      const target = { closest: vi.fn(() => ({ dataset: { uuid: 'Item.cheap' } })) }
+      const target = { closest: vi.fn(() => ({ dataset: { uuid: 'Item.cheap' }, querySelector: vi.fn().mockReturnValue(null) })) }
 
       await action.call(app, {}, target)
 
@@ -1619,7 +1619,7 @@ describe('MarketApplicationV2', () => {
       const app = new MarketApplicationV2()
       app.setBuyerActor(actor)
       const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.negotiateItem
-      const target = { closest: vi.fn(() => ({ dataset: { uuid: 'Item.common' } })) }
+      const target = { closest: vi.fn(() => ({ dataset: { uuid: 'Item.common' }, querySelector: vi.fn().mockReturnValue(null) })) }
 
       await action.call(app, {}, target)
 
@@ -2802,7 +2802,7 @@ describe('MarketApplicationV2', () => {
       app.setBuyerActor(actor)
 
       const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.sellItem
-      const target = { dataset: { itemId: 'w1' } }
+      const target = { dataset: { itemId: 'w1' }, closest: vi.fn(() => ({ querySelector: vi.fn().mockReturnValue(null) })) }
 
       await action.call(app, {}, target)
 
@@ -2839,7 +2839,7 @@ describe('MarketApplicationV2', () => {
       app.setBuyerActor(actor)
 
       const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.sellItem
-      const target = { dataset: { itemId: 'w1' } }
+      const target = { dataset: { itemId: 'w1' }, closest: vi.fn(() => ({ querySelector: vi.fn().mockReturnValue(null) })) }
 
       await action.call(app, {}, target)
 
@@ -2888,7 +2888,7 @@ describe('MarketApplicationV2', () => {
       app.setBuyerActor(actor)
 
       const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.sellItem
-      const target = { dataset: { itemId: 'w1' } }
+      const target = { dataset: { itemId: 'w1' }, closest: vi.fn(() => ({ querySelector: vi.fn().mockReturnValue(null) })) }
 
       await action.call(app, {}, target)
 
@@ -2933,7 +2933,7 @@ describe('MarketApplicationV2', () => {
       app.setBuyerActor(actor)
 
       const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.sellItem
-      const target = { dataset: { itemId: 'w1' } }
+      const target = { dataset: { itemId: 'w1' }, closest: vi.fn(() => ({ querySelector: vi.fn().mockReturnValue(null) })) }
 
       await action.call(app, {}, target)
 
@@ -3086,7 +3086,7 @@ describe('MarketApplicationV2', () => {
       const app = new MarketApplicationV2()
       app.setBuyerActor(actor)
       const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.buyItem
-      const target = { closest: vi.fn(() => ({ dataset: { uuid: 'Item.cheap' } })) }
+      const target = { closest: vi.fn(() => ({ dataset: { uuid: 'Item.cheap' }, querySelector: vi.fn().mockReturnValue(null) })) }
 
       await action.call(app, {}, target)
 
@@ -3114,7 +3114,7 @@ describe('MarketApplicationV2', () => {
       const app = new MarketApplicationV2()
       app.setBuyerActor(actor)
       const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.buyItem
-      const target = { closest: vi.fn(() => ({ dataset: { uuid: 'Item.cheap' } })) }
+      const target = { closest: vi.fn(() => ({ dataset: { uuid: 'Item.cheap' }, querySelector: vi.fn().mockReturnValue(null) })) }
 
       await action.call(app, {}, target)
 
@@ -3150,7 +3150,7 @@ describe('MarketApplicationV2', () => {
       const app = new MarketApplicationV2()
       app.setBuyerActor(actor)
       const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.buyItem
-      const target = { closest: vi.fn(() => ({ dataset: { uuid: 'Item.cheap' } })) }
+      const target = { closest: vi.fn(() => ({ dataset: { uuid: 'Item.cheap' }, querySelector: vi.fn().mockReturnValue(null) })) }
 
       await action.call(app, {}, target)
 
@@ -3191,7 +3191,7 @@ describe('MarketApplicationV2', () => {
       const app = new MarketApplicationV2()
       app.setBuyerActor(actor)
       const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.buyItem
-      const target = { closest: vi.fn(() => ({ dataset: { uuid: 'Item.cheap' } })) }
+      const target = { closest: vi.fn(() => ({ dataset: { uuid: 'Item.cheap' }, querySelector: vi.fn().mockReturnValue(null) })) }
 
       await action.call(app, {}, target)
 
@@ -3226,7 +3226,7 @@ describe('MarketApplicationV2', () => {
       const app = new MarketApplicationV2()
       app.setBuyerActor(actor)
       const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.buyItem
-      const target = { closest: vi.fn(() => ({ dataset: { uuid: 'Item.new' } })) }
+      const target = { closest: vi.fn(() => ({ dataset: { uuid: 'Item.new' }, querySelector: vi.fn().mockReturnValue(null) })) }
 
       await action.call(app, {}, target)
 

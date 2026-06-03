@@ -12,13 +12,16 @@
  *   Plain actor-like object. Credit balance is read from `system.creditBudget.availableCredits` (derived budget)
  *   when available, falling back to `system.credits` for backward compatibility.
  * @property {{ uuid: string, name: string, priceResult: { finalPrice: number } }} entry  Market entry to purchase.
+ * @property {number} [quantity=1]  Number of units to purchase. Must be a positive integer. Defaults to 1.
  */
 
 /**
  * @typedef {Object} PurchaseResult
  * @property {boolean}  canPurchase        Whether all pre-conditions are satisfied.
  * @property {string}   reason             Machine-readable reason key (empty string when canPurchase is true).
- * @property {number}   [finalPrice]       The price that will be charged (present when canPurchase is true).
+ * @property {number}   [finalPrice]       Unit price (present when canPurchase is true).
+ * @property {number}   [totalPrice]       Total price = finalPrice × quantity (present when canPurchase is true).
+ * @property {number}   [quantity]         The validated quantity (present when canPurchase is true).
  * @property {number}   [creditsAfter]     Remaining credits after purchase (present when canPurchase is true).
  * @property {string}   [messageKey]       i18n key for the user-facing message (present when canPurchase is false).
  */
@@ -42,7 +45,7 @@ function resolveActorCredits(actor) {
 }
 
 /**
- * Validate whether an actor can purchase a market entry at the given price.
+ * Validate whether an actor can purchase a market entry at the given price and quantity.
  *
  * Credit balance resolution (in priority order):
  * 1. `actor.system.creditBudget.availableCredits` — derived credit budget (preferred)
@@ -51,13 +54,14 @@ function resolveActorCredits(actor) {
  * Rules (in order of evaluation):
  * 1. Actor must be provided.
  * 2. Entry must be provided and have a resolvable UUID.
- * 3. `entry.priceResult.finalPrice` must be a non-negative finite integer — the canonical price; no recalculation allowed.
- * 4. Actor credits must be sufficient.
+ * 3. `entry.priceResult.finalPrice` must be a non-negative finite integer — the canonical unit price; no recalculation allowed.
+ * 4. `quantity` must be a positive integer >= 1.
+ * 5. Actor credits must be sufficient for the total price (finalPrice × quantity).
  *
  * @param {PurchaseInput} input
  * @returns {PurchaseResult}
  */
-export function validatePurchase({ actor, entry } = {}) {
+export function validatePurchase({ actor, entry, quantity = 1 } = {}) {
   if (!actor || typeof actor !== 'object') {
     return {
       canPurchase: false,
@@ -83,8 +87,11 @@ export function validatePurchase({ actor, entry } = {}) {
     }
   }
 
+  const qty = Number.isInteger(quantity) && quantity >= 1 ? quantity : 1
+  const totalPrice = finalPrice * qty
+
   const credits = resolveActorCredits(actor)
-  if (typeof credits !== 'number' || !Number.isFinite(credits) || credits < finalPrice) {
+  if (typeof credits !== 'number' || !Number.isFinite(credits) || credits < totalPrice) {
     return {
       canPurchase: false,
       reason: 'insufficient-credits',
@@ -96,6 +103,8 @@ export function validatePurchase({ actor, entry } = {}) {
     canPurchase: true,
     reason: '',
     finalPrice,
-    creditsAfter: credits - finalPrice,
+    totalPrice,
+    quantity: qty,
+    creditsAfter: credits - totalPrice,
   }
 }

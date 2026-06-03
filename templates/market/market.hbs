@@ -122,6 +122,7 @@
               <th class="market-col--type">{{localize "MARKET.Catalog.Column.Type"}}</th>
               <th class="market-col--price">{{localize "MARKET.Inventory.BasePrice"}}</th>
               <th class="market-col--price">{{localize "MARKET.Inventory.ResaleEstimate"}}</th>
+              <th class="market-col--quantity">{{localize "MARKET.Inventory.Quantity"}}</th>
               <th class="market-col--sell" aria-label="{{localize 'MARKET.Inventory.SellButton'}}"></th>
             </tr>
           </thead>
@@ -138,6 +139,19 @@
                 <td class="market-col--price">{{item.basePrice}}</td>
                 <td class="market-col--price">
                   <span class="market-resale-estimate">{{item.resaleEstimate}} ({{item.resaleFraction}}%)</span>
+                </td>
+                <td class="market-col--quantity">
+                  <label class="sr-only" for="sell-qty-{{item.id}}">{{localize "MARKET.Inventory.QuantityLabel"}}</label>
+                  <input
+                    id="sell-qty-{{item.id}}"
+                    class="market-item__quantity-input"
+                    type="number"
+                    min="1"
+                    max="{{item.quantity}}"
+                    value="1"
+                    aria-label="{{localize 'MARKET.Inventory.QuantityLabel'}}"
+                  />
+                  <span class="market-item__quantity-max">/{{item.quantity}}</span>
                 </td>
                 <td class="market-col--sell">
                   <button
@@ -472,6 +486,16 @@
             </td>
             {{#if ../buyer}}
               <td class="market-col--buy">
+                <label class="sr-only" for="buy-qty-{{entry.uuid}}">{{localize "MARKET.Purchase.QuantityLabel"}}</label>
+                <input
+                  id="buy-qty-{{entry.uuid}}"
+                  class="market-item__quantity-input"
+                  type="number"
+                  min="1"
+                  value="1"
+                  {{#unless entry.canBuy}}disabled aria-disabled="true"{{/unless}}
+                  aria-label="{{localize 'MARKET.Purchase.QuantityLabel'}}"
+                />
                 {{#if entry.isNegotiable}}
                   <button
                     type="button"

@@ -750,7 +750,12 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
       ui.notifications.warn(i18n.localize('MARKET.Negotiation.Outcome.DisasterNotification'))
     }
 
-    await MarketApplicationV2.#executePurchase.call(this, { item, entry: negotiatedEntry, buyer })
+    // Read quantity from the sibling input within the same row
+    const negotiateRow = target.closest('[data-uuid]')
+    const negotiateQtyInput = negotiateRow?.querySelector('.market-item__quantity-input')
+    const negotiateQuantity = negotiateQtyInput ? Math.max(1, parseInt(negotiateQtyInput.value, 10) || 1) : 1
+
+    await MarketApplicationV2.#executePurchase.call(this, { item, entry: negotiatedEntry, buyer, quantity: negotiateQuantity })
   }
 
   /**
@@ -808,7 +813,11 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
     const checkedEntry = await MarketApplicationV2.#runAvailabilityCheck.call(this, { entry, buyer, uuid })
     if (checkedEntry === null) return
 
-    await MarketApplicationV2.#executePurchase.call(this, { item, entry: checkedEntry, buyer })
+    // Read quantity from the quantity input within the same row (row already declared above)
+    const quantityInput = row?.querySelector('.market-item__quantity-input')
+    const quantity = quantityInput ? Math.max(1, parseInt(quantityInput.value, 10) || 1) : 1
+
+    await MarketApplicationV2.#executePurchase.call(this, { item, entry: checkedEntry, buyer, quantity })
   }
 
   /**
@@ -894,13 +903,15 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
    *
    * @this {MarketApplicationV2}
    * @param {object} params
-   * @param {Item}   params.item     The resolved Foundry Item document.
+   * @param {Item}   params.item       The resolved Foundry Item document.
    * @param {import('../../lib/market/market-entry.mjs').MarketEntry} params.entry  The market entry (may have negotiated price).
-   * @param {Actor}  params.buyer    The buyer actor.
+   * @param {Actor}  params.buyer      The buyer actor.
+   * @param {number} [params.quantity=1]  Number of units to purchase.
    * @returns {Promise<void>}
    */
-  static async #executePurchase({ item, entry, buyer }) {
-    const validation = validatePurchase({ actor: buyer, entry })
+  static async #executePurchase({ item, entry, buyer, quantity = 1 }) {
+    const qty = Number.isInteger(quantity) && quantity >= 1 ? quantity : 1
+    const validation = validatePurchase({ actor: buyer, entry, quantity: qty })
     if (!validation.canPurchase) {
       const msgKey = validation.messageKey ?? 'MARKET.Purchase.Error.InsufficientCredits'
       ui.notifications.warn(game.i18n.localize(msgKey))
@@ -915,21 +926,33 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
       return
     }
 
-    // Confirmation dialog
+    // Confirmation dialog — show unit price and total when qty > 1
     const i18n = game.i18n
     const currentCredits = buyer.system?.creditBudget?.availableCredits ?? buyer.system?.credits ?? 0
+    const confirmContent =
+      qty > 1
+        ? i18n.format('MARKET.Purchase.Confirm.ContentMultiple', {
+            name: entry.name,
+            quantity: qty,
+            unitPrice: validation.finalPrice,
+            total: validation.totalPrice,
+            credits: currentCredits,
+            remaining: validation.creditsAfter,
+          })
+        : i18n.format('MARKET.Purchase.Confirm.Content', {
+            name: entry.name,
+            price: validation.finalPrice,
+            credits: currentCredits,
+            remaining: validation.creditsAfter,
+          })
+
     const confirmed = await foundry.applications.api.DialogV2.confirm({
       window: {
         title: i18n.format('MARKET.Purchase.Confirm.Title', { name: entry.name }),
       },
-      content: `<p>${i18n.format('MARKET.Purchase.Confirm.Content', {
-        name: entry.name,
-        price: validation.finalPrice,
-        credits: currentCredits,
-        remaining: validation.creditsAfter,
-      })}</p>`,
+      content: `<p>${confirmContent}</p>`,
       yes: {
-        label: i18n.format('MARKET.Purchase.Confirm.Buy', { price: validation.finalPrice }),
+        label: i18n.format('MARKET.Purchase.Confirm.Buy', { price: validation.totalPrice }),
         icon: 'fa-solid fa-coins',
       },
       no: {
@@ -941,17 +964,18 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
     if (!confirmed) return
 
     // Re-validate at mutation time (credits might have changed since dialog opened)
-    const finalValidation = validatePurchase({ actor: buyer, entry })
+    const finalValidation = validatePurchase({ actor: buyer, entry, quantity: qty })
     if (!finalValidation.canPurchase) {
       ui.notifications.warn(game.i18n.localize(finalValidation.messageKey ?? 'MARKET.Purchase.Error.InsufficientCredits'))
       return
     }
 
     try {
-      // Add a copy of the item to the buyer's inventory.
-      // Credit deduction is now derived automatically via _prepareCredits() when the item
+      // Add a copy of the item to the buyer's inventory with the requested quantity.
+      // Credit deduction is derived automatically via _prepareCredits() when the item
       // is added — no direct update of system.credits is needed.
       const itemData = item.toObject()
+      itemData.system = { ...itemData.system, quantity: qty }
       await buyer.createEmbeddedDocuments('Item', [itemData])
 
       // Phase 7a: Store all accepted consequences as actor flags (generalised from blackMarketDebt only)
@@ -960,7 +984,7 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
       for (const acceptedType of consequencesResult.acceptedTypes) {
         const consequence = allConsequences.find((c) => c.type === acceptedType)
         if (consequence) {
-          await MarketApplicationV2.#storeMarketConsequence({ buyer, consequence, finalPrice: finalValidation.finalPrice })
+          await MarketApplicationV2.#storeMarketConsequence({ buyer, consequence, finalPrice: finalValidation.totalPrice })
         }
       }
 
@@ -971,7 +995,7 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
           itemName: entry.name,
           itemType: item.type,
           price: finalValidation.finalPrice,
-          quantity: 1,
+          quantity: qty,
           creditsAfter: finalValidation.creditsAfter,
           itemId: item.id,
           outcome: entry.priceResult?.appliedOutcome ?? null,
@@ -983,7 +1007,7 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
       ui.notifications.info(
         i18n.format('MARKET.Purchase.Success', {
           name: entry.name,
-          price: finalValidation.finalPrice,
+          price: finalValidation.totalPrice,
           remaining: finalValidation.creditsAfter,
         }),
       )
@@ -993,7 +1017,9 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
         actorName: buyer.name,
         itemUuid: entry.uuid,
         itemName: entry.name,
-        price: finalValidation.finalPrice,
+        unitPrice: finalValidation.finalPrice,
+        quantity: qty,
+        totalPrice: finalValidation.totalPrice,
         creditsAfter: finalValidation.creditsAfter,
         acceptedConsequences: consequencesResult.acceptedTypes,
       })
@@ -1058,6 +1084,8 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
       const valuation = computeResalePrice({ basePrice, negotiationOutcome: 'failure' })
       const typeConfig = PURCHASABLE_ITEM_TYPES[item.type]
 
+      const quantity = item.system?.quantity ?? 1
+
       allItems.push({
         id: item.id,
         name: item.name,
@@ -1067,6 +1095,7 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
         basePrice,
         resaleEstimate: valuation.resalePrice,
         resaleFraction: Math.round(valuation.fraction * 100),
+        quantity,
       })
     }
 
@@ -1159,33 +1188,54 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
       return
     }
 
-    // Validate sale eligibility
+    // Validate sale eligibility — also resolves maxQuantity from system.quantity
     const validation = validateSale({ actor: seller, item })
     if (!validation.canSell) {
       ui.notifications.warn(game.i18n.localize(validation.messageKey))
       return
     }
 
+    // Read quantity from the sibling input within the same row
+    const sellRow = target.closest('[data-item-id]')
+    const sellQtyInput = sellRow?.querySelector('.market-item__quantity-input')
+    const rawQty = sellQtyInput ? parseInt(sellQtyInput.value, 10) : 1
+    const maxQuantity = validation.maxQuantity ?? 1
+    const sellQuantity = Math.min(Math.max(1, isNaN(rawQty) ? 1 : rawQty), maxQuantity)
+
     // Compute base resale estimate (25% — may be improved by negotiation)
+    // resalePrice here is the per-unit resale price; total = resalePrice × sellQuantity
     const baseValuation = computeResalePrice({ basePrice: validation.basePrice, negotiationOutcome: 'failure' })
+    const baseResaleTotal = baseValuation.resalePrice * sellQuantity
 
     // Confirmation dialog
     const i18n = game.i18n
     const currentCredits = seller.system?.creditBudget?.availableCredits ?? seller.system?.credits ?? 0
-    const creditsAfterBase = currentCredits + baseValuation.resalePrice
+    const creditsAfterBase = currentCredits + baseResaleTotal
+
+    const confirmContent =
+      sellQuantity > 1
+        ? i18n.format('MARKET.Sell.Confirm.ContentMultiple', {
+            name: item.name,
+            quantity: sellQuantity,
+            unitPrice: baseValuation.resalePrice,
+            total: baseResaleTotal,
+            credits: currentCredits,
+            remaining: creditsAfterBase,
+          })
+        : i18n.format('MARKET.Sell.Confirm.Content', {
+            name: item.name,
+            price: baseResaleTotal,
+            credits: currentCredits,
+            remaining: creditsAfterBase,
+          })
 
     const confirmed = await foundry.applications.api.DialogV2.confirm({
       window: {
         title: i18n.format('MARKET.Sell.Confirm.Title', { name: item.name }),
       },
-      content: `<p>${i18n.format('MARKET.Sell.Confirm.Content', {
-        name: item.name,
-        price: baseValuation.resalePrice,
-        credits: currentCredits,
-        remaining: creditsAfterBase,
-      })}</p>`,
+      content: `<p>${confirmContent}</p>`,
       yes: {
-        label: i18n.format('MARKET.Sell.Confirm.Sell', { price: baseValuation.resalePrice }),
+        label: i18n.format('MARKET.Sell.Confirm.Sell', { price: baseResaleTotal }),
         icon: 'fa-solid fa-coins',
       },
       no: {
@@ -1212,32 +1262,48 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
       },
     })
 
-    let finalValuation = baseValuation
+    let finalUnitValuation = baseValuation
     if (offerNegotiation) {
       const negotiationResult = await NegotiationDialog.prompt({ entry: { name: item.name, rarity: item.system?.rarity ?? 0 }, buyer: seller, forSale: true })
 
       if (negotiationResult?.confirmed) {
-        finalValuation = computeResalePrice({
+        finalUnitValuation = computeResalePrice({
           basePrice: validation.basePrice,
           negotiationOutcome: negotiationResult.outcome,
         })
       }
     }
 
-    // Execute sale: delete item then credit actor
-    // The manual adjustment stored in system.credits is the raw base for writing.
-    // When the item is deleted, totalSpent drops by basePrice automatically (via _prepareCredits),
-    // which would inflate availableCredits by basePrice. To compensate, we write:
-    //   system.credits = manualAdjustmentBefore + resalePrice - basePrice
-    // so that availableCredits after = (manualAdjustmentBefore + resalePrice - basePrice) - (totalSpent - basePrice)
-    //                                = manualAdjustmentBefore + resalePrice - totalSpent
-    //                                = availableCreditsBefore + resalePrice  ✓
+    const resaleTotalPrice = finalUnitValuation.resalePrice * sellQuantity
+    const isFullSale = sellQuantity >= maxQuantity
+
+    // Execute sale:
+    // - Full sale (sellQuantity === maxQuantity): delete the item.
+    //   When the item is deleted, totalSpent drops by basePrice × maxQuantity (via _prepareCredits),
+    //   which would inflate availableCredits by that amount. To compensate, we write:
+    //   system.credits = manualAdjustmentBefore + resaleTotalPrice - (basePrice × sellQuantity)
+    //   so that availableCredits after = manualAdjustmentBefore + resaleTotalPrice - totalSpent  ✓
+    //
+    // - Partial sale (sellQuantity < maxQuantity): decrement system.quantity; do NOT delete.
+    //   The item stays in totalSpent, but at a reduced quantity:
+    //   system.credits = manualAdjustmentBefore + resaleTotalPrice
+    //   (totalSpent decreases by basePrice × sellQuantity via _prepareCredits, so no further adjustment needed)
     const manualAdjustmentBefore = seller.system?._source?.credits ?? seller.system?.credits ?? 0
-    const availableCreditsAfter = currentCredits + finalValuation.resalePrice
-    const newManualAdjustment = manualAdjustmentBefore + finalValuation.resalePrice - validation.basePrice
+    const availableCreditsAfter = currentCredits + resaleTotalPrice
+
+    let newManualAdjustment
+    if (isFullSale) {
+      newManualAdjustment = manualAdjustmentBefore + resaleTotalPrice - validation.basePrice * sellQuantity
+    } else {
+      newManualAdjustment = manualAdjustmentBefore + resaleTotalPrice
+    }
 
     try {
-      await seller.deleteEmbeddedDocuments('Item', [item.id])
+      if (isFullSale) {
+        await seller.deleteEmbeddedDocuments('Item', [item.id])
+      } else {
+        await item.update({ 'system.quantity': maxQuantity - sellQuantity })
+      }
       await seller.update({ 'system.credits': newManualAdjustment })
 
       // Record in audit log (non-blocking)
@@ -1247,9 +1313,10 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
           itemName: item.name,
           itemType: item.type,
           basePrice: validation.basePrice,
-          resalePrice: finalValuation.resalePrice,
-          fraction: finalValuation.fraction,
-          negotiationOutcome: finalValuation.outcome,
+          resalePrice: resaleTotalPrice,
+          fraction: finalUnitValuation.fraction,
+          quantity: sellQuantity,
+          negotiationOutcome: finalUnitValuation.outcome,
           creditsAfter: availableCreditsAfter,
           itemId: item.id,
         })
@@ -1260,7 +1327,7 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
       ui.notifications.info(
         i18n.format('MARKET.Sale.Success', {
           name: item.name,
-          price: finalValuation.resalePrice,
+          price: resaleTotalPrice,
           remaining: availableCreditsAfter,
         }),
       )
@@ -1271,7 +1338,9 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
         itemId: item.id,
         itemName: item.name,
         basePrice: validation.basePrice,
-        resalePrice: finalValuation.resalePrice,
+        quantity: sellQuantity,
+        resaleTotalPrice,
+        isFullSale,
         creditsAfter: availableCreditsAfter,
       })
 
