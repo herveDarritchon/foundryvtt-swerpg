@@ -1646,9 +1646,8 @@
         "OriginalPrice": "Original price",
         "Difficulty": "Difficulty",
         "SkillLabel": "Skill",
-        "SuccessRanksLabel": "Success ranks",
-        "DisasterLabel": "Disaster",
-        "DisasterTooltip": "Check if the roll produced a Disaster result — the vendor is offended and raises the price.",
+        "RollInstruction": "Select a skill and roll to negotiate the price.",
+        "RollButton": "Roll Negotiation",
         "NegotiatedPrice": "Negotiated price",
         "Confirm": "Buy at this price",
         "Cancel": "Cancel",
@@ -1656,6 +1655,8 @@
         "ConfirmSell": "Sell at this price",
         "NegotiatedPriceSell": "Sale Price"
       },
+      "RollTitle": "Negotiation Check: {skill}",
+      "RollFlavor": "Attempting to negotiate a better price.",
       "Skill": {
         "Negotiation": "Negotiation",
         "Persuasion": "Persuasion",
@@ -1664,6 +1665,7 @@
       "Outcome": {
         "Success": "Success! The vendor agrees to a lower price.",
         "Failure": "No deal. The price remains unchanged.",
+        "Triumph": "Triumph! The vendor is very impressed and offers the best price.",
         "Disaster": "Disaster! The vendor is offended and raises the price.",
         "SuccessNotification": "Negotiation successful! New price: {price} credits.",
         "DisasterNotification": "Negotiation backfired! The vendor raised the price."
