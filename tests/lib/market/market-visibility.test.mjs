@@ -142,9 +142,16 @@ describe('isItemVisibleForMarket', () => {
       expect(result.reason).toBe('restriction-not-allowed')
     })
 
-    it('hides items whose availability is not in allowedAvailability (restricted not in list)', () => {
-      // restricted (AVAILABILITY_STATUS key) is not in specialized allowedAvailability
-      const result = isItemVisibleForMarket(makeEntry({ availability: 'restricted', restrictionLevel: 'none' }), 'specialized')
+    it('shows items with "restricted" availability (derived from restrictionLevel=restricted|military)', () => {
+      // With derivation, availability='restricted' comes from restrictionLevel='restricted'/'military'.
+      // Specialized market allows these items (both allowedAvailability and allowedRestrictionLevels include 'restricted').
+      const result = isItemVisibleForMarket(makeEntry({ availability: 'restricted', restrictionLevel: 'restricted' }), 'specialized')
+      expect(result.visible).toBe(true)
+    })
+
+    it('hides items whose availability is "blackMarket" (illegal items — not in allowedAvailability)', () => {
+      // blackMarket availability is not in specialized allowedAvailability; only black-market allows it
+      const result = isItemVisibleForMarket(makeEntry({ availability: 'blackMarket', restrictionLevel: 'illegal' }), 'specialized')
       expect(result.visible).toBe(false)
       expect(result.reason).toBe('availability-not-allowed')
     })

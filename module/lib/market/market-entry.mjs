@@ -1,4 +1,12 @@
-import { PURCHASABLE_ITEM_TYPES, SOURCE_TYPES, DEFAULT_SOURCE_TYPE, DEFAULT_AVAILABILITY, MARKET_TYPES, DEFAULT_MARKET_TYPE } from '../../config/market.mjs'
+import {
+  PURCHASABLE_ITEM_TYPES,
+  SOURCE_TYPES,
+  DEFAULT_SOURCE_TYPE,
+  DEFAULT_AVAILABILITY,
+  MARKET_TYPES,
+  DEFAULT_MARKET_TYPE,
+  AVAILABILITY_DERIVATION_THRESHOLDS,
+} from '../../config/market.mjs'
 import { evaluateEligibility } from './eligibility.mjs'
 import { calculateItemPrice } from './price-engine.mjs'
 
@@ -14,7 +22,7 @@ import { calculateItemPrice } from './price-engine.mjs'
  * @property {number}      rarity              Rarity score (0–10)
  * @property {string}      quality             Quality tier key
  * @property {string}      restrictionLevel    Restriction level key
- * @property {string}      availability        Computed availability status key
+ * @property {string}      availability        Derived availability status key — always computed from rarity and restrictionLevel via deriveAvailability()
  * @property {import('./price-engine.mjs').PriceResult} priceResult  Computed price with breakdown
  * @property {boolean}     eligible            Whether this entry passes all eligibility rules
  * @property {string|null} ineligibilityReason Machine-readable reason if not eligible, null otherwise
@@ -30,7 +38,6 @@ import { calculateItemPrice } from './price-engine.mjs'
  * @property {number}      [rarity]
  * @property {string}      [quality]
  * @property {string}      [restrictionLevel]
- * @property {string}      [availability]
  * @property {boolean}     [nonPurchasable]
  * @property {boolean}     [broken]
  */
@@ -40,6 +47,43 @@ import { calculateItemPrice } from './price-engine.mjs'
  * @property {string}  sourceType  Key of SOURCE_TYPES
  * @property {string}  sourceId    Pack/folder/collection identifier
  */
+
+/* -------------------------------------------- */
+
+/**
+ * Derive the canonical availability status key from an item's rarity and restriction level.
+ *
+ * This is the single source of truth for availability in the Market domain.
+ * Availability is NOT a stored field on physical items; it is always derived from:
+ *   - `restrictionLevel`: the item's legal status (persisted on the item schema)
+ *   - `rarity`: the item's scarcity score (persisted on the item schema)
+ *
+ * Derivation rules (evaluated in priority order):
+ *   1. `illegal`    → 'blackMarket'
+ *   2. `military`   → 'restricted'
+ *   3. `restricted` → 'restricted'
+ *   4. `none` + rarity >= AVAILABILITY_DERIVATION_THRESHOLDS.VERY_RARE → 'veryRare'
+ *   5. `none` + rarity >= AVAILABILITY_DERIVATION_THRESHOLDS.RARE      → 'rare'
+ *   6. `none` + rarity >= AVAILABILITY_DERIVATION_THRESHOLDS.COMMON    → 'common'
+ *   7. `none` + rarity < AVAILABILITY_DERIVATION_THRESHOLDS.COMMON     → 'available'
+ *
+ * This function is pure — no Foundry dependencies, no side effects.
+ *
+ * @param {number} rarity            Item rarity (0–10). Non-finite values are treated as 0.
+ * @param {string} restrictionLevel  Item restriction level key ('none', 'restricted', 'military', 'illegal').
+ * @returns {string} A key of AVAILABILITY_STATUS.
+ */
+export function deriveAvailability(rarity, restrictionLevel) {
+  const safeRarity = Number.isFinite(rarity) ? rarity : 0
+
+  if (restrictionLevel === 'illegal') return 'blackMarket'
+  if (restrictionLevel === 'military' || restrictionLevel === 'restricted') return 'restricted'
+
+  if (safeRarity >= AVAILABILITY_DERIVATION_THRESHOLDS.VERY_RARE) return 'veryRare'
+  if (safeRarity >= AVAILABILITY_DERIVATION_THRESHOLDS.RARE) return 'rare'
+  if (safeRarity >= AVAILABILITY_DERIVATION_THRESHOLDS.COMMON) return 'common'
+  return 'available'
+}
 
 /* -------------------------------------------- */
 
@@ -78,7 +122,8 @@ export function createMarketEntry(rawItem, sourceInfo, marketContext = {}) {
 
   const rarity = Number.isFinite(rawItem.rarity) ? rawItem.rarity : 0
   const name = typeof rawItem.name === 'string' && rawItem.name.trim().length > 0 ? rawItem.name : 'unknown'
-  const availability = rawItem.availability ?? DEFAULT_AVAILABILITY
+  const restrictionLevelForDerivation = typeof rawItem.restrictionLevel === 'string' ? rawItem.restrictionLevel : 'none'
+  const availability = deriveAvailability(rarity, restrictionLevelForDerivation)
 
   const eligibilityItem = {
     itemType,
