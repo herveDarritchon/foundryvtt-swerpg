@@ -140,6 +140,17 @@ declare const Item: {
 }
 
 /**
+ * Hooks Foundry global — available in the browser context.
+ * Minimal interface covering only what is used in e2e evaluate callbacks.
+ */
+declare const Hooks: {
+  once(event: string, callback: (...args: unknown[]) => void): number
+  on(event: string, callback: (...args: unknown[]) => void): number
+  off(event: string, id: number): void
+  callAll(event: string, ...args: unknown[]): void
+}
+
+/**
  * The Foundry VTT `game` global, available in the browser context after the world is loaded.
  * May be undefined during page initialisation or before the world is ready.
  */

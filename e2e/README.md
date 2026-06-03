@@ -408,12 +408,33 @@ La suite de régression Tier 1 repose sur un **cleanup ciblé par spec**, pas su
 
 ### Données minimales requises par domaine
 
-| Spec                           | Données communes attendues                | Artefacts éphémères (créés / supprimés par la spec)                |
-| ------------------------------ | ----------------------------------------- | ------------------------------------------------------------------ |
-| 01 — smoke                     | monde actif, système swerpg chargé        | aucun                                                              |
-| 02 — OggDude import            | monde actif, settings système accessibles | aucun                                                              |
-| 03 — création personnage       | monde actif                               | acteurs préfixés `Test-Personnage-*`                               |
-| 04 — XP / arbre spécialisation | monde actif                               | acteurs préfixés `Test-XP-*`, `Test-XP-Skill-*`, `Test-SpecTree-*` |
+| Spec                              | Données communes attendues                             | Artefacts éphémères (créés / supprimés par la spec)                |
+| --------------------------------- | ------------------------------------------------------ | ------------------------------------------------------------------ |
+| 01 — smoke                        | monde actif, système swerpg chargé                     | aucun                                                              |
+| 02 — OggDude import (world)       | monde actif, settings système accessibles, ZIP OggDude | items `game.items` (conservés après le test)                       |
+| 02b — OggDude import (compendium) | monde actif, settings système accessibles, ZIP OggDude | packs world OggDude (supprimés en beforeEach du prochain run)      |
+| 03 — création personnage          | monde actif                                            | acteurs préfixés `Test-Personnage-*`                               |
+| 04 — XP / arbre spécialisation    | monde actif                                            | acteurs préfixés `Test-XP-*`, `Test-XP-Skill-*`, `Test-SpecTree-*` |
+
+### Fichier ZIP OggDude
+
+Les specs `02` et `02b` nécessitent un fichier ZIP OggDude valide contenant les données de test.
+
+**Emplacement par défaut** : `resources/oggdude-data.zip` (à la racine du projet)
+
+**Override via variable d'environnement** : `E2E_OGGDUDE_ZIP_PATH=/chemin/absolu/vers/oggdude-data.zip`
+
+Le fichier ZIP doit contenir au minimum :
+
+- `Weapons.xml` avec l'entrée `Holdout Blaster`
+- `Armor.xml` avec l'entrée `Armored Clothing`
+- `Species.xml` avec l'entrée `Bothan`
+
+Ajouter dans `.env.e2e.regression` si le ZIP n'est pas à l'emplacement par défaut :
+
+```env
+E2E_OGGDUDE_ZIP_PATH=/chemin/absolu/vers/oggdude-data.zip
+```
 
 ### Primitives de cleanup disponibles
 
