@@ -10,12 +10,12 @@ import { validateSale } from '../../../module/lib/market/sell-validation.mjs'
  * Build a minimal item-like plain object that can be sold.
  * @param {object} [overrides]
  */
-function makeItem({ id = 'item-1', uuid = 'Item.item-1', type = 'weapon', price = 100 } = {}) {
+function makeItem({ id = 'item-1', uuid = 'Item.item-1', type = 'weapon', price = 100, quantity = 1 } = {}) {
   return {
     id,
     uuid,
     type,
-    system: { price },
+    system: { price, quantity },
   }
 }
 
@@ -84,6 +84,22 @@ describe('validateSale', () => {
       const result = validateSale({ actor, item })
       expect(result.canSell).toBe(true)
       expect(result.basePrice).toBe(0)
+    })
+
+    it('returns maxQuantity equal to item system.quantity', () => {
+      const item = makeItem({ price: 100, quantity: 5 })
+      const actor = makeActorWithItem(item)
+      const result = validateSale({ actor, item })
+      expect(result.canSell).toBe(true)
+      expect(result.maxQuantity).toBe(5)
+    })
+
+    it('returns maxQuantity of 1 when system.quantity is absent', () => {
+      const item = { id: 'item-1', uuid: 'Item.item-1', type: 'weapon', system: { price: 100 } }
+      const actor = makeActorWithItem(item)
+      const result = validateSale({ actor, item })
+      expect(result.canSell).toBe(true)
+      expect(result.maxQuantity).toBe(1)
     })
 
     it('matches by uuid when item has no id match but uuid matches', () => {

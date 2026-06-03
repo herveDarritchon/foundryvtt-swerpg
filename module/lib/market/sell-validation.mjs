@@ -13,10 +13,11 @@ import { PURCHASABLE_ITEM_TYPES } from '../../config/market.mjs'
 
 /**
  * @typedef {Object} SaleValidationResult
- * @property {boolean} canSell      Whether all pre-conditions are satisfied.
- * @property {string}  reason       Machine-readable reason key (empty string when canSell is true).
- * @property {string}  [messageKey] i18n key for the user-facing message (present when canSell is false).
- * @property {number}  [basePrice]  Resolved base price (present when canSell is true).
+ * @property {boolean} canSell       Whether all pre-conditions are satisfied.
+ * @property {string}  reason        Machine-readable reason key (empty string when canSell is true).
+ * @property {string}  [messageKey]  i18n key for the user-facing message (present when canSell is false).
+ * @property {number}  [basePrice]   Resolved base price (present when canSell is true).
+ * @property {number}  [maxQuantity] Maximum sellable quantity = item's current stack size (present when canSell is true).
  */
 
 /* -------------------------------------------- */
@@ -86,9 +87,12 @@ export function validateSale({ actor, item } = {}) {
     }
   }
 
+  const maxQuantity = item.system?.quantity ?? 1
+
   return {
     canSell: true,
     reason: '',
     basePrice,
+    maxQuantity,
   }
 }

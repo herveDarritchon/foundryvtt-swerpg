@@ -543,13 +543,17 @@ async function recordItemPurchase(actor, { itemName, itemType, price, quantity =
  * @param {string} saleData.itemName
  * @param {string} saleData.itemType
  * @param {number} saleData.basePrice
- * @param {number} saleData.resalePrice
+ * @param {number} saleData.resalePrice      Total resale credit received (resaleUnitPrice × quantity).
  * @param {number} saleData.fraction
+ * @param {number} [saleData.quantity=1]     Number of units sold.
  * @param {string} [saleData.negotiationOutcome='failure']
  * @param {number} saleData.creditsAfter
  * @param {string} [saleData.itemId]
  */
-async function recordItemSale(actor, { itemName, itemType, basePrice, resalePrice, fraction, negotiationOutcome = 'failure', creditsAfter, itemId }) {
+async function recordItemSale(
+  actor,
+  { itemName, itemType, basePrice, resalePrice, fraction, quantity = 1, negotiationOutcome = 'failure', creditsAfter, itemId },
+) {
   const ts = Date.now()
   const creditsBefore = actor.system?.creditBudget?.availableCredits ?? actor.system?.credits ?? null
   const creditsDelta = creditsBefore !== null && creditsAfter !== null ? creditsAfter - creditsBefore : null
@@ -565,6 +569,7 @@ async function recordItemSale(actor, { itemName, itemType, basePrice, resalePric
         basePrice,
         resalePrice,
         fraction,
+        quantity,
         negotiationOutcome,
         itemId,
       },

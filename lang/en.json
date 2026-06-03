@@ -1560,9 +1560,11 @@
     },
     "Purchase": {
       "BuyButton": "Buy",
+      "QuantityLabel": "Quantity",
       "Confirm": {
         "Title": "Purchase {name}",
         "Content": "Buy {name} for {price} credits? You have {credits} and will have {remaining} after.",
+        "ContentMultiple": "Buy {quantity}× {name} at {unitPrice} each (total: {total} credits)? You have {credits} and will have {remaining} after.",
         "Buy": "Buy ({price} credits)",
         "Cancel": "Cancel"
       },
@@ -1771,6 +1773,7 @@
       "Confirm": {
         "Title": "Sell {name}",
         "Content": "Confirm sale of {name} for {price} credits. Current credits: {credits} → {remaining} after sale.",
+        "ContentMultiple": "Confirm sale of {quantity}× {name} at {unitPrice} each (total: {total} credits). Current credits: {credits} → {remaining} after sale.",
         "Sell": "Sell for {price} credits",
         "Cancel": "Cancel"
       },
@@ -1822,6 +1825,8 @@
       "Description": "Select items from your inventory to sell.",
       "BasePrice": "Base Price",
       "ResaleEstimate": "Resale (25%)",
+      "Quantity": "Qty",
+      "QuantityLabel": "Quantity to sell",
       "SellAriaLabel": "Sell",
       "SellButton": "Sell",
       "Empty": "Your inventory contains no sellable items.",

@@ -1876,3 +1876,161 @@ describe('recordItemPurchase', () => {
     expect(entry.snapshot.creditsDelta).toBeNull()
   })
 })
+
+/* ============================================ */
+/*  recordItemSale                              */
+/* ============================================ */
+
+describe('recordItemSale', () => {
+  /**
+   *
+   * @param overrides
+   */
+  function makeActor(overrides = {}) {
+    return {
+      type: 'character',
+      id: 'actor-001',
+      name: 'Test Character',
+      _source: {
+        system: {
+          skills: {},
+          characteristics: {},
+          progression: { totalXP: 0, spentXP: 0 },
+          details: {},
+          advancement: {},
+        },
+        flags: {},
+      },
+      system: {
+        credits: 100,
+        progression: {
+          experience: { spent: 0, gained: 0, available: 0, total: 0 },
+          freeSkillRanks: {
+            career: { spent: 0, gained: 0, available: 0 },
+            specialization: { spent: 0, gained: 0, available: 0 },
+          },
+        },
+      },
+      update: vi.fn(),
+      ...overrides,
+    }
+  }
+
+  test('creates an item.sale entry with all required fields', async () => {
+    const { recordItemSale } = await import('../../module/utils/audit-log.mjs')
+    globalThis.foundry.utils.deepClone = vi.fn((o) => structuredClone(o))
+    globalThis.game.users = { get: vi.fn(() => ({ id: 'gm-1', name: 'Game Master' })) }
+
+    const actor = makeActor()
+    await recordItemSale(actor, {
+      itemName: 'Blaster Pistol',
+      itemType: 'weapon',
+      basePrice: 400,
+      resalePrice: 100,
+      fraction: 0.25,
+      quantity: 1,
+      creditsAfter: 200,
+    })
+
+    expect(actor.update).toHaveBeenCalledTimes(1)
+    const updateArg = actor.update.mock.calls[0][0]
+    const logs = updateArg['flags.swerpg.logs']
+    expect(logs).toHaveLength(1)
+    const entry = logs[0]
+    expect(entry.type).toBe('item.sale')
+    expect(entry.data).toMatchObject({
+      itemName: 'Blaster Pistol',
+      itemType: 'weapon',
+      basePrice: 400,
+      resalePrice: 100,
+      fraction: 0.25,
+      quantity: 1,
+    })
+    expect(entry.creditDelta).toBe(100)
+    expect(entry.xpDelta).toBe(0)
+  })
+
+  test('defaults quantity to 1 when not provided', async () => {
+    const { recordItemSale } = await import('../../module/utils/audit-log.mjs')
+    globalThis.foundry.utils.deepClone = vi.fn((o) => structuredClone(o))
+
+    const actor = makeActor()
+    await recordItemSale(actor, {
+      itemName: 'Blaster Pistol',
+      itemType: 'weapon',
+      basePrice: 400,
+      resalePrice: 100,
+      fraction: 0.25,
+      creditsAfter: 200,
+    })
+
+    const updateArg = actor.update.mock.calls[0][0]
+    const entry = updateArg['flags.swerpg.logs'][0]
+    expect(entry.data.quantity).toBe(1)
+  })
+
+  test('stores quantity > 1 in entry.data for multi-unit sale', async () => {
+    const { recordItemSale } = await import('../../module/utils/audit-log.mjs')
+    globalThis.foundry.utils.deepClone = vi.fn((o) => structuredClone(o))
+
+    const actor = makeActor()
+    await recordItemSale(actor, {
+      itemName: 'Stun Grenade',
+      itemType: 'gear',
+      basePrice: 100,
+      resalePrice: 75, // total resale for 3 units = 25 each × 3
+      fraction: 0.25,
+      quantity: 3,
+      creditsAfter: 175,
+    })
+
+    const updateArg = actor.update.mock.calls[0][0]
+    const entry = updateArg['flags.swerpg.logs'][0]
+    expect(entry.data.quantity).toBe(3)
+    expect(entry.creditDelta).toBe(75) // total resale
+  })
+
+  test('creditDelta equals resalePrice (total, not per-unit)', async () => {
+    const { recordItemSale } = await import('../../module/utils/audit-log.mjs')
+    globalThis.foundry.utils.deepClone = vi.fn((o) => structuredClone(o))
+
+    const actor = makeActor()
+    await recordItemSale(actor, {
+      itemName: 'Armor',
+      itemType: 'armor',
+      basePrice: 200,
+      resalePrice: 150, // this is the total amount received
+      fraction: 0.25,
+      quantity: 2,
+      creditsAfter: 250,
+    })
+
+    const updateArg = actor.update.mock.calls[0][0]
+    const entry = updateArg['flags.swerpg.logs'][0]
+    expect(entry.creditDelta).toBe(150)
+  })
+
+  test('defaults negotiationOutcome to failure when not provided', async () => {
+    const { recordItemSale } = await import('../../module/utils/audit-log.mjs')
+    globalThis.foundry.utils.deepClone = vi.fn((o) => structuredClone(o))
+
+    const actor = makeActor()
+    await recordItemSale(actor, {
+      itemName: 'Gear',
+      itemType: 'gear',
+      basePrice: 50,
+      resalePrice: 12,
+      fraction: 0.25,
+      creditsAfter: 112,
+    })
+
+    const updateArg = actor.update.mock.calls[0][0]
+    const entry = updateArg['flags.swerpg.logs'][0]
+    expect(entry.data.negotiationOutcome).toBe('failure')
+  })
+
+  test('is exported from the module', async () => {
+    const module = await import('../../module/utils/audit-log.mjs')
+    expect(typeof module.recordItemSale).toBe('function')
+  })
+})

@@ -67,6 +67,12 @@ describe('validatePurchase', () => {
       expect(result.creditsAfter).toBe(400)
     })
 
+    it('includes totalPrice equal to finalPrice when quantity defaults to 1', () => {
+      const result = validatePurchase({ actor: makeActor({ credits: 500 }), entry: makeEntry({ finalPrice: 100 }) })
+      expect(result.totalPrice).toBe(100)
+      expect(result.quantity).toBe(1)
+    })
+
     it('allows purchase when credits exactly equal the price', () => {
       const result = validatePurchase({ actor: makeActor({ credits: 100 }), entry: makeEntry({ finalPrice: 100 }) })
       expect(result.canPurchase).toBe(true)
@@ -190,6 +196,61 @@ describe('validatePurchase', () => {
 
       expect(JSON.stringify(actor)).toBe(actorBefore)
       expect(JSON.stringify(entry)).toBe(entryBefore)
+    })
+  })
+
+  /* -------------------------------------------- */
+  /*  Multi-quantity purchase                      */
+  /* -------------------------------------------- */
+
+  describe('multi-quantity purchase', () => {
+    it('charges totalPrice = finalPrice × quantity for quantity > 1', () => {
+      const result = validatePurchase({ actor: makeActor({ credits: 500 }), entry: makeEntry({ finalPrice: 100 }), quantity: 3 })
+      expect(result.canPurchase).toBe(true)
+      expect(result.finalPrice).toBe(100)
+      expect(result.totalPrice).toBe(300)
+      expect(result.quantity).toBe(3)
+      expect(result.creditsAfter).toBe(200)
+    })
+
+    it('blocks purchase when credits are insufficient for quantity × price', () => {
+      const result = validatePurchase({ actor: makeActor({ credits: 250 }), entry: makeEntry({ finalPrice: 100 }), quantity: 3 })
+      expect(result.canPurchase).toBe(false)
+      expect(result.reason).toBe('insufficient-credits')
+    })
+
+    it('allows purchase when credits exactly equal quantity × price', () => {
+      const result = validatePurchase({ actor: makeActor({ credits: 300 }), entry: makeEntry({ finalPrice: 100 }), quantity: 3 })
+      expect(result.canPurchase).toBe(true)
+      expect(result.creditsAfter).toBe(0)
+    })
+
+    it('treats non-integer quantity as 1', () => {
+      const result = validatePurchase({ actor: makeActor({ credits: 500 }), entry: makeEntry({ finalPrice: 100 }), quantity: 2.5 })
+      expect(result.canPurchase).toBe(true)
+      expect(result.quantity).toBe(1)
+      expect(result.totalPrice).toBe(100)
+    })
+
+    it('treats zero quantity as 1', () => {
+      const result = validatePurchase({ actor: makeActor({ credits: 500 }), entry: makeEntry({ finalPrice: 100 }), quantity: 0 })
+      expect(result.canPurchase).toBe(true)
+      expect(result.quantity).toBe(1)
+      expect(result.totalPrice).toBe(100)
+    })
+
+    it('treats negative quantity as 1', () => {
+      const result = validatePurchase({ actor: makeActor({ credits: 500 }), entry: makeEntry({ finalPrice: 100 }), quantity: -2 })
+      expect(result.canPurchase).toBe(true)
+      expect(result.quantity).toBe(1)
+      expect(result.totalPrice).toBe(100)
+    })
+
+    it('handles quantity=1 explicitly like the default', () => {
+      const result = validatePurchase({ actor: makeActor({ credits: 500 }), entry: makeEntry({ finalPrice: 100 }), quantity: 1 })
+      expect(result.canPurchase).toBe(true)
+      expect(result.totalPrice).toBe(100)
+      expect(result.quantity).toBe(1)
     })
   })
 
