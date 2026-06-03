@@ -16,6 +16,12 @@ vi.mock('../../../module/applications/market/consequences-dialog.mjs', () => ({
   },
 }))
 
+vi.mock('../../../module/applications/market/availability-check-dialog.mjs', () => ({
+  default: {
+    prompt: vi.fn(),
+  },
+}))
+
 /* -------------------------------------------- */
 /*  Helpers                                     */
 /* -------------------------------------------- */
@@ -69,6 +75,7 @@ describe('MarketApplicationV2', () => {
   let MarketApplicationV2
   let NegotiationDialogMock
   let ConsequencesDialogMock
+  let AvailabilityCheckDialogMock
 
   beforeEach(async () => {
     setupFoundryMock({
@@ -119,10 +126,15 @@ describe('MarketApplicationV2', () => {
     ;({ default: MarketApplicationV2 } = await import('../../../module/applications/market/market-application.mjs'))
     ;({ default: NegotiationDialogMock } = await import('../../../module/applications/market/negotiation-dialog.mjs'))
     ;({ default: ConsequencesDialogMock } = await import('../../../module/applications/market/consequences-dialog.mjs'))
+    ;({ default: AvailabilityCheckDialogMock } = await import('../../../module/applications/market/availability-check-dialog.mjs'))
 
     // Default: consequences dialog confirms with no consequences (no narrative risks).
     // Tests that need different behavior override this before calling the action.
     ConsequencesDialogMock.prompt.mockResolvedValue({ confirmed: true, acceptedTypes: [], rejectedTypes: [] })
+
+    // Default: availability check passes (not required for low-rarity, non-restricted items).
+    // Tests involving rare/restricted items override this to simulate specific check results.
+    AvailabilityCheckDialogMock.prompt.mockResolvedValue({ passed: true, testResult: null })
   })
 
   afterEach(() => {
@@ -1259,6 +1271,31 @@ describe('MarketApplicationV2', () => {
       delete globalThis.fromUuid
       delete globalThis.foundry.applications.api.DialogV2.confirm
     })
+
+    it('[non-regression] buyItem still triggers AvailabilityCheckDialog for a rare item and aborts if it fails', async () => {
+      const actor = { id: 'actor-1', name: 'Test', system: { credits: 500 } }
+      // rarity=4 triggers check in buy flow too
+      const item = makeItem({ uuid: 'Item.rare', type: 'weapon', price: 200, rarity: 4, restrictionLevel: 'none' })
+      item.toObject = vi.fn(() => ({ type: 'weapon', name: item.name, system: item.system }))
+      globalThis.fromUuid = vi.fn().mockResolvedValue(item)
+
+      // Check fails
+      AvailabilityCheckDialogMock.prompt.mockResolvedValue({ passed: false, testResult: null })
+
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+      const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.buyItem
+      const target = { closest: vi.fn(() => ({ dataset: { uuid: 'Item.rare' } })) }
+
+      await action.call(app, {}, target)
+
+      expect(AvailabilityCheckDialogMock.prompt).toHaveBeenCalled()
+      // Purchase must be aborted — no confirmation dialog opened
+      expect(globalThis.foundry?.applications?.api?.DialogV2?.confirm ?? vi.fn()).not.toHaveBeenCalled()
+      expect(globalThis.ui.notifications.warn).toHaveBeenCalled()
+
+      delete globalThis.fromUuid
+    })
   })
 
   /* -------------------------------------------- */
@@ -1435,6 +1472,152 @@ describe('MarketApplicationV2', () => {
       await action.call(app, {}, target)
 
       expect(globalThis.ui.notifications.warn).toHaveBeenCalledWith('MARKET.Negotiation.Outcome.DisasterNotification')
+
+      delete globalThis.fromUuid
+      delete globalThis.foundry.applications.api.DialogV2.confirm
+    })
+
+    /* -------------------------------------------- */
+    /*  Anti-bypass: availability check in negotiate */
+    /* -------------------------------------------- */
+
+    it('triggers AvailabilityCheckDialog before NegotiationDialog for a rare item (rarity >= 4)', async () => {
+      const actor = { id: 'actor-1', name: 'Test', system: { credits: 500 } }
+      // rarity=4 triggers availability check (AVAILABILITY_CHECK_RARITY_THRESHOLD = 4)
+      const item = makeItem({ uuid: 'Item.rare', type: 'weapon', price: 200, rarity: 4, restrictionLevel: 'none' })
+      item.toObject = vi.fn(() => ({ type: 'weapon', name: item.name, system: item.system }))
+      globalThis.fromUuid = vi.fn().mockResolvedValue(item)
+
+      // Check passes — proceed to negotiation
+      AvailabilityCheckDialogMock.prompt.mockResolvedValue({ passed: true, testResult: null })
+      // Negotiation cancelled to isolate the call order check
+      NegotiationDialogMock.prompt.mockResolvedValue(null)
+
+      const callOrder = []
+      AvailabilityCheckDialogMock.prompt.mockImplementation(async () => {
+        callOrder.push('availabilityCheck')
+        return { passed: true, testResult: null }
+      })
+      NegotiationDialogMock.prompt.mockImplementation(async () => {
+        callOrder.push('negotiation')
+        return null
+      })
+
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+      const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.negotiateItem
+      const target = { closest: vi.fn(() => ({ dataset: { uuid: 'Item.rare' } })) }
+
+      await action.call(app, {}, target)
+
+      // AvailabilityCheckDialog must be called before NegotiationDialog
+      expect(callOrder[0]).toBe('availabilityCheck')
+      expect(callOrder[1]).toBe('negotiation')
+
+      delete globalThis.fromUuid
+    })
+
+    it('triggers AvailabilityCheckDialog before NegotiationDialog for a restricted item', async () => {
+      const actor = { id: 'actor-1', name: 'Test', system: { credits: 500 } }
+      // restrictionLevel=restricted always requires a check regardless of rarity
+      const item = makeItem({ uuid: 'Item.restricted', type: 'weapon', price: 150, rarity: 1, restrictionLevel: 'restricted' })
+      item.toObject = vi.fn(() => ({ type: 'weapon', name: item.name, system: item.system }))
+      globalThis.fromUuid = vi.fn().mockResolvedValue(item)
+
+      // Use black-market so restricted items are visible
+      const callOrder = []
+      AvailabilityCheckDialogMock.prompt.mockImplementation(async () => {
+        callOrder.push('availabilityCheck')
+        return { passed: true, testResult: null }
+      })
+      NegotiationDialogMock.prompt.mockImplementation(async () => {
+        callOrder.push('negotiation')
+        return null
+      })
+
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+      app._viewState = { ...app._viewState, activeMarketType: 'black-market' }
+      const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.negotiateItem
+      const target = { closest: vi.fn(() => ({ dataset: { uuid: 'Item.restricted' } })) }
+
+      await action.call(app, {}, target)
+
+      expect(callOrder[0]).toBe('availabilityCheck')
+      expect(callOrder[1]).toBe('negotiation')
+
+      delete globalThis.fromUuid
+    })
+
+    it('aborts negotiate flow — does not open NegotiationDialog — when availability check is cancelled', async () => {
+      const actor = { id: 'actor-1', name: 'Test', system: { credits: 500 } }
+      const item = makeItem({ uuid: 'Item.rare', type: 'weapon', price: 200, rarity: 4, restrictionLevel: 'none' })
+      item.toObject = vi.fn(() => ({ type: 'weapon', name: item.name, system: item.system }))
+      globalThis.fromUuid = vi.fn().mockResolvedValue(item)
+
+      // User cancels the availability check (returns null)
+      AvailabilityCheckDialogMock.prompt.mockResolvedValue(null)
+
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+      const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.negotiateItem
+      const target = { closest: vi.fn(() => ({ dataset: { uuid: 'Item.rare' } })) }
+
+      await action.call(app, {}, target)
+
+      // NegotiationDialog must NOT have been opened
+      expect(NegotiationDialogMock.prompt).not.toHaveBeenCalled()
+
+      delete globalThis.fromUuid
+    })
+
+    it('aborts negotiate flow — does not open NegotiationDialog — when availability check fails (passed=false)', async () => {
+      const actor = { id: 'actor-1', name: 'Test', system: { credits: 500 } }
+      const item = makeItem({ uuid: 'Item.rare', type: 'weapon', price: 200, rarity: 4, restrictionLevel: 'none' })
+      item.toObject = vi.fn(() => ({ type: 'weapon', name: item.name, system: item.system }))
+      globalThis.fromUuid = vi.fn().mockResolvedValue(item)
+
+      // Roll failed
+      AvailabilityCheckDialogMock.prompt.mockResolvedValue({ passed: false, testResult: null })
+
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+      const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.negotiateItem
+      const target = { closest: vi.fn(() => ({ dataset: { uuid: 'Item.rare' } })) }
+
+      await action.call(app, {}, target)
+
+      expect(NegotiationDialogMock.prompt).not.toHaveBeenCalled()
+      expect(globalThis.ui.notifications.warn).toHaveBeenCalled()
+
+      delete globalThis.fromUuid
+    })
+
+    it('does NOT call AvailabilityCheckDialog for a common item (rarity < 4, no restriction) in negotiate flow', async () => {
+      const actor = {
+        id: 'actor-1',
+        name: 'Test',
+        system: { credits: 500 },
+        createEmbeddedDocuments: vi.fn().mockResolvedValue([]),
+      }
+      // rarity=0, restrictionLevel=none — no check required
+      const item = makeItem({ uuid: 'Item.common', type: 'weapon', price: 100, rarity: 0, restrictionLevel: 'none' })
+      item.toObject = vi.fn(() => ({ type: 'weapon', name: item.name, system: item.system }))
+      globalThis.fromUuid = vi.fn().mockResolvedValue(item)
+
+      // Negotiation succeeds immediately
+      NegotiationDialogMock.prompt.mockResolvedValue({ confirmed: true, finalPrice: 90, outcome: 'success', successRanks: 1 })
+      globalThis.foundry.applications.api.DialogV2.confirm = vi.fn().mockResolvedValue(false)
+
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+      const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.negotiateItem
+      const target = { closest: vi.fn(() => ({ dataset: { uuid: 'Item.common' } })) }
+
+      await action.call(app, {}, target)
+
+      // For a common item no check dialog is required
+      expect(AvailabilityCheckDialogMock.prompt).not.toHaveBeenCalled()
 
       delete globalThis.fromUuid
       delete globalThis.foundry.applications.api.DialogV2.confirm

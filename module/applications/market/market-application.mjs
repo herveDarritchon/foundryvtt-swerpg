@@ -720,6 +720,14 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
       return
     }
 
+    // Availability check: run before opening the negotiation dialog.
+    // Rare/restricted items require a successful skill test; if the check is cancelled or fails,
+    // the negotiation is blocked entirely (anti-bypass enforcement).
+    // Commerce outcome price modifier is NOT applied here — the negotiated price is determined
+    // later in the negotiation step and supersedes any pre-negotiation modifier.
+    const availabilityPassedEntry = await MarketApplicationV2.#runAvailabilityCheck.call(this, { entry, buyer, uuid, applyCommerceOutcome: false })
+    if (availabilityPassedEntry === null) return
+
     const negotiationResult = await NegotiationDialog.prompt({ entry, buyer })
     if (!negotiationResult?.confirmed) {
       logger.debug('[Market] Negotiation cancelled by user', { uuid })
@@ -798,59 +806,87 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
       return
     }
 
-    // Availability check: items with high rarity or restricted status require a skill test before purchase.
+    const checkedEntry = await MarketApplicationV2.#runAvailabilityCheck.call(this, { entry, buyer, uuid })
+    if (checkedEntry === null) return
+
+    await MarketApplicationV2.#executePurchase.call(this, { item, entry: checkedEntry, buyer })
+  }
+
+  /**
+   * Run the availability check gate shared by the buy and negotiate flows.
+   *
+   * Resolves the check spec, shows `AvailabilityCheckDialog` when required, and applies the
+   * commerce outcome modifier to the entry price (buy flow only — the negotiate flow receives
+   * the same pre-negotiation check but the price modifier is intentionally omitted because the
+   * negotiation price is determined afterwards).
+   *
+   * Returns the (possibly price-modified) entry when the check passes or is not required.
+   * Returns `null` when the check is required but the user cancelled or the roll failed,
+   * signalling the caller to abort the flow.
+   *
+   * @this {MarketApplicationV2}
+   * @param {object} params
+   * @param {import('../../lib/market/market-entry.mjs').MarketEntry} params.entry  The market entry to check.
+   * @param {Actor}  params.buyer   The buyer actor.
+   * @param {string} params.uuid    Item UUID — used only for debug logging.
+   * @param {boolean} [params.applyCommerceOutcome=true]  When false, skip the price-modifier step (negotiate flow).
+   * @returns {Promise<import('../../lib/market/market-entry.mjs').MarketEntry|null>}
+   */
+  static async #runAvailabilityCheck({ entry, buyer, uuid, applyCommerceOutcome = true }) {
     const checkSpec = resolveAvailabilityCheck({
       rarity: entry.rarity,
       restrictionLevel: entry.restrictionLevel,
     })
 
-    if (checkSpec.required) {
-      const checkResult = await AvailabilityCheckDialog.prompt({ entry, buyer, checkSpec })
+    if (!checkSpec.required) return entry
 
-      if (!checkResult?.passed) {
-        logger.debug('[Market] Availability check not passed — purchase aborted', { uuid, checkSpec })
-        const skillName = SYSTEM.SKILLS[checkSpec.skillKey]?.name ?? checkSpec.skillKey
-        ui.notifications.warn(
-          game.i18n.format('MARKET.AvailabilityCheck.FailedNotification', {
-            skill: skillName,
-            item: entry.name,
-          }),
-        )
-        return
-      }
+    const checkResult = await AvailabilityCheckDialog.prompt({ entry, buyer, checkSpec })
 
-      logger.info('[Market] Availability check passed — proceeding with purchase', { uuid, skillKey: checkSpec.skillKey })
-
-      // Apply commerce outcome if the check result carries narrative dice data (Tranche 2).
-      // Non-blocking: if testResult is absent or malformed, the purchase proceeds unchanged.
-      const testResult = checkResult?.testResult ?? null
-      if (testResult) {
-        try {
-          const commerceOutcome = computeCommerceOutcome(testResult)
-          const basePrice = entry.priceResult.finalPrice
-          const modifiedPrice = Math.max(0, Math.floor(basePrice * (1 + commerceOutcome.priceModifier)))
-          entry = {
-            ...entry,
-            priceResult: {
-              ...entry.priceResult,
-              finalPrice: modifiedPrice,
-              appliedOutcome: commerceOutcome,
-            },
-          }
-          logger.info('[Market] Commerce outcome applied', {
-            uuid,
-            outcomeLabel: commerceOutcome.outcomeLabel,
-            priceModifier: commerceOutcome.priceModifier,
-            basePrice,
-            modifiedPrice,
-          })
-        } catch (outcomeErr) {
-          logger.warn('[Market] Could not apply commerce outcome — proceeding with base price', outcomeErr)
-        }
-      }
+    if (!checkResult?.passed) {
+      logger.debug('[Market] Availability check not passed — flow aborted', { uuid, checkSpec })
+      const skillName = SYSTEM.SKILLS[checkSpec.skillKey]?.name ?? checkSpec.skillKey
+      ui.notifications.warn(
+        game.i18n.format('MARKET.AvailabilityCheck.FailedNotification', {
+          skill: skillName,
+          item: entry.name,
+        }),
+      )
+      return null
     }
 
-    await MarketApplicationV2.#executePurchase.call(this, { item, entry, buyer })
+    logger.info('[Market] Availability check passed', { uuid, skillKey: checkSpec.skillKey })
+
+    if (!applyCommerceOutcome) return entry
+
+    // Apply commerce outcome if the check result carries narrative dice data (Tranche 2).
+    // Non-blocking: if testResult is absent or malformed, the purchase proceeds unchanged.
+    const testResult = checkResult?.testResult ?? null
+    if (!testResult) return entry
+
+    try {
+      const commerceOutcome = computeCommerceOutcome(testResult)
+      const basePrice = entry.priceResult.finalPrice
+      const modifiedPrice = Math.max(0, Math.floor(basePrice * (1 + commerceOutcome.priceModifier)))
+      const modifiedEntry = {
+        ...entry,
+        priceResult: {
+          ...entry.priceResult,
+          finalPrice: modifiedPrice,
+          appliedOutcome: commerceOutcome,
+        },
+      }
+      logger.info('[Market] Commerce outcome applied', {
+        uuid,
+        outcomeLabel: commerceOutcome.outcomeLabel,
+        priceModifier: commerceOutcome.priceModifier,
+        basePrice,
+        modifiedPrice,
+      })
+      return modifiedEntry
+    } catch (outcomeErr) {
+      logger.warn('[Market] Could not apply commerce outcome — proceeding with base price', outcomeErr)
+      return entry
+    }
   }
 
   /**
