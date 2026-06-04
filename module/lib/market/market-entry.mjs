@@ -102,10 +102,11 @@ export function deriveAvailability(rarity, restrictionLevel) {
  * @param {RawItem}    rawItem       The raw item data to normalize
  * @param {SourceInfo} sourceInfo    Source metadata for this item
  * @param {Partial<import('../../config/market.mjs').MarketContext>} [marketContext]  Optional market context for price computation
+ * @param {import('./price-engine.mjs').PriceEngineOptions} [priceOptions]  Optional GM modifier options (typeModifiers, globalModifier)
  * @returns {MarketEntry}
  * @throws {TypeError} If itemType is not a key of PURCHASABLE_ITEM_TYPES
  */
-export function createMarketEntry(rawItem, sourceInfo, marketContext = {}) {
+export function createMarketEntry(rawItem, sourceInfo, marketContext = {}, priceOptions = {}) {
   const itemType = rawItem.type ?? rawItem.itemType ?? ''
 
   if (!(itemType in PURCHASABLE_ITEM_TYPES)) {
@@ -139,7 +140,7 @@ export function createMarketEntry(rawItem, sourceInfo, marketContext = {}) {
     sourceTypes: SOURCE_TYPES,
   })
 
-  const priceResult = calculateItemPrice({ basePrice, rarity, availability }, marketContext)
+  const priceResult = calculateItemPrice({ basePrice, rarity, availability, itemType }, marketContext, priceOptions)
 
   return {
     uuid: rawItem.uuid ?? '',

@@ -179,6 +179,74 @@ describe('createMarketEntry', () => {
     })
   })
 
+  describe('priceOptions forwarding (GM modifiers)', () => {
+    test('applies globalModifier from priceOptions', () => {
+      // base=100, rarity=0, globalModifier=20 → 100 * (1 + 0.2) = 120
+      const entry = createMarketEntry(makeRawItem({ basePrice: 100, rarity: 0, restrictionLevel: 'none' }), validSourceInfo, {}, { globalModifier: 20 })
+      expect(entry.priceResult.finalPrice).toBe(120)
+    })
+
+    test('applies negative globalModifier from priceOptions', () => {
+      // base=100, rarity=0, globalModifier=-10 → 100 * (1 - 0.1) = 90
+      const entry = createMarketEntry(makeRawItem({ basePrice: 100, rarity: 0, restrictionLevel: 'none' }), validSourceInfo, {}, { globalModifier: -10 })
+      expect(entry.priceResult.finalPrice).toBe(90)
+    })
+
+    test('applies typeModifier for matching item type', () => {
+      // base=100, rarity=0, weapon typeModifier=0.1 → 100 * (1 + 0.1) = 110
+      const entry = createMarketEntry(
+        makeRawItem({ type: 'weapon', basePrice: 100, rarity: 0, restrictionLevel: 'none' }),
+        validSourceInfo,
+        {},
+        { typeModifiers: { weapon: { priceModifier: 0.1 } } },
+      )
+      expect(entry.priceResult.finalPrice).toBe(110)
+    })
+
+    test('does not apply typeModifier for non-matching item type', () => {
+      // base=100, rarity=0, weapon typeModifier=0.5, but item is armor → no change
+      const entry = createMarketEntry(
+        makeRawItem({ type: 'armor', basePrice: 100, rarity: 0, restrictionLevel: 'none' }),
+        validSourceInfo,
+        {},
+        { typeModifiers: { weapon: { priceModifier: 0.5 } } },
+      )
+      expect(entry.priceResult.finalPrice).toBe(100)
+    })
+
+    test('stacks globalModifier and typeModifier together', () => {
+      // base=100, rarity=0, globalModifier=10(+0.1) + weapon typeModifier=0.1 → 100 * (1 + 0.2) = 120
+      const entry = createMarketEntry(
+        makeRawItem({ type: 'weapon', basePrice: 100, rarity: 0, restrictionLevel: 'none' }),
+        validSourceInfo,
+        {},
+        { globalModifier: 10, typeModifiers: { weapon: { priceModifier: 0.1 } } },
+      )
+      expect(entry.priceResult.finalPrice).toBe(120)
+    })
+
+    test('priceResult.finalPrice is same as without options when priceOptions is empty', () => {
+      const raw = makeRawItem({ basePrice: 100, rarity: 0, restrictionLevel: 'none' })
+      const withoutOptions = createMarketEntry(raw, validSourceInfo)
+      const withEmptyOptions = createMarketEntry(raw, validSourceInfo, {}, {})
+      expect(withoutOptions.priceResult.finalPrice).toBe(withEmptyOptions.priceResult.finalPrice)
+    })
+
+    test('typeModifier appears in modifiers array with label "marketType"', () => {
+      // The type modifier is combined into the marketTypeModifier slot in pricing.mjs,
+      // so it appears under the "marketType" label in the breakdown.
+      const entry = createMarketEntry(
+        makeRawItem({ type: 'weapon', basePrice: 100, rarity: 0, restrictionLevel: 'none' }),
+        validSourceInfo,
+        {},
+        { typeModifiers: { weapon: { priceModifier: 0.15 } } },
+      )
+      const step = entry.priceResult.modifiers.find((m) => m.label === 'marketType')
+      expect(step).toBeDefined()
+      expect(step.modifier).toBeCloseTo(0.15)
+    })
+  })
+
   describe('name normalization', () => {
     test('preserves valid name', () => {
       const entry = createMarketEntry(makeRawItem({ name: 'Vibroblade' }), validSourceInfo)
