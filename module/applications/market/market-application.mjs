@@ -185,6 +185,12 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
       width: 740,
       height: 600,
     },
+    form: {
+      // Market controls are UI-only view state — no document persistence needed.
+      // submitOnChange=false keeps the default AppV2 form handling while still
+      // routing form change events through _onChangeForm.
+      submitOnChange: false,
+    },
     actions: {
       openItem: MarketApplicationV2.#onOpenItem,
       resetCatalog: MarketApplicationV2.#onResetCatalog,
@@ -1414,116 +1420,98 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
   }
 
   /* -------------------------------------------- */
-  /*  Event Listeners                             */
+  /*  Form Change Handler (AppV2 idiom)           */
   /* -------------------------------------------- */
 
-  /** @override */
-  _onRender(context, options) {
-    super._onRender?.(context, options)
-    const html = this.element
-    if (!html) return
+  /**
+   * Handle form field changes for all Market view-state controls.
+   *
+   * This single handler replaces the per-element `addEventListener` wiring that was
+   * previously spread across `_onRender`. Each field is identified by its `name`
+   * attribute; the handler dispatches the appropriate `_viewState` mutation and then
+   * triggers a re-render (immediate or debounced depending on the field).
+   *
+   * Contracts:
+   * - `name="market-type"` → updates `activeMarketType`; **invalidates the catalogue
+   *    cache** because a market-type switch changes the visible item set.
+   * - `name="market-search"` → updates `search`; render is **debounced** (250 ms) to
+   *    avoid firing a full pipeline on every keystroke.
+   * - `name="market-filter-type"` → updates `filterType`; immediate render.
+   * - `name="market-filter-source"` → updates `filterSource`; immediate render.
+   * - `name="market-filter-restriction"` → updates `filterRestriction`; immediate render.
+   * - `name="market-affordable-only"` → updates `affordableOnly` (checkbox); immediate render.
+   * - `name="market-sort-by"` → updates `sortBy`; immediate render.
+   * - `name="market-sort-direction"` → updates `sortDirection`; immediate render.
+   * - `name="market-inventory-search"` → updates `inventorySearch`; render is **debounced**.
+   * - `name="market-inventory-sort-by"` → updates `inventorySortBy`; immediate render.
+   * - `name="market-inventory-sort-direction"` → updates `inventorySortDirection`; immediate render.
+   *
+   * @override
+   * @param {object} formConfig   The form configuration object (from `DEFAULT_OPTIONS.form`).
+   * @param {Event}  event        The raw DOM change or input event.
+   */
+  _onChangeForm(formConfig, event) {
+    const target = event.target
+    if (!target?.name) return
 
-    // Market type selector — updates activeMarketType and re-renders catalogue.
-    // Cache must be invalidated because a different market type means different content.
-    const marketTypeSelect = html.querySelector('.market-selector__select')
-    if (marketTypeSelect) {
-      marketTypeSelect.addEventListener('change', (event) => {
-        const marketType = event.currentTarget.value ?? DEFAULT_MARKET_TYPE
-        if (!(marketType in MARKET_TYPES)) return
+    const value = target.type === 'checkbox' ? target.checked : (target.value ?? '')
+
+    switch (target.name) {
+      case 'market-type': {
+        const marketType = value
+        if (!(marketType in MARKET_TYPES)) {
+          logger.warn('[Market] _onChangeForm: unknown market type, ignoring', { marketType })
+          return
+        }
         this._viewState = { ...this._viewState, activeMarketType: marketType }
         this.#invalidateCatalogCache()
-        logger.debug('[Market] Market type changed via selector', { marketType })
+        logger.debug('[Market] Market type changed via form', { marketType })
         this.render()
-      })
-    }
-
-    // Search input — debounced to avoid a full render on every keystroke.
-    // _viewState is updated immediately so the value is always current when render fires.
-    const searchInput = html.querySelector('.market-toolbar__search')
-    if (searchInput) {
-      searchInput.addEventListener('input', (event) => {
-        this._viewState = { ...this._viewState, search: event.currentTarget.value ?? '' }
+        break
+      }
+      case 'market-search':
+        this._viewState = { ...this._viewState, search: value }
         this._debouncedRender()
-      })
-    }
-
-    // Filter selects — update on change
-    const typeSelect = html.querySelector('.market-toolbar__filter--type')
-    if (typeSelect) {
-      typeSelect.addEventListener('change', (event) => {
-        this._viewState = { ...this._viewState, filterType: event.currentTarget.value ?? '' }
+        break
+      case 'market-filter-type':
+        this._viewState = { ...this._viewState, filterType: value }
         this.render()
-      })
-    }
-
-    const sourceSelect = html.querySelector('.market-toolbar__filter--source')
-    if (sourceSelect) {
-      sourceSelect.addEventListener('change', (event) => {
-        this._viewState = { ...this._viewState, filterSource: event.currentTarget.value ?? '' }
+        break
+      case 'market-filter-source':
+        this._viewState = { ...this._viewState, filterSource: value }
         this.render()
-      })
-    }
-
-    const restrictionSelect = html.querySelector('.market-toolbar__filter--restriction')
-    if (restrictionSelect) {
-      restrictionSelect.addEventListener('change', (event) => {
-        this._viewState = { ...this._viewState, filterRestriction: event.currentTarget.value ?? '' }
+        break
+      case 'market-filter-restriction':
+        this._viewState = { ...this._viewState, filterRestriction: value }
         this.render()
-      })
-    }
-
-    // Affordable only checkbox — only active when a buyer is set
-    const affordableOnlyCheckbox = html.querySelector('.market-toolbar__filter--affordable-only')
-    if (affordableOnlyCheckbox) {
-      affordableOnlyCheckbox.addEventListener('change', (event) => {
-        this._viewState = { ...this._viewState, affordableOnly: event.currentTarget.checked }
+        break
+      case 'market-affordable-only':
+        this._viewState = { ...this._viewState, affordableOnly: value }
         this.render()
-      })
-    }
-
-    // Sort field select
-    const sortBySelect = html.querySelector('.market-toolbar__sort--field')
-    if (sortBySelect) {
-      sortBySelect.addEventListener('change', (event) => {
-        this._viewState = { ...this._viewState, sortBy: event.currentTarget.value ?? MARKET_SORT_FIELDS.name }
+        break
+      case 'market-sort-by':
+        this._viewState = { ...this._viewState, sortBy: value || MARKET_SORT_FIELDS.name }
         this.render()
-      })
-    }
-
-    // Sort direction toggle
-    const sortDirSelect = html.querySelector('.market-toolbar__sort--direction')
-    if (sortDirSelect) {
-      sortDirSelect.addEventListener('change', (event) => {
-        this._viewState = { ...this._viewState, sortDirection: event.currentTarget.value === 'desc' ? 'desc' : 'asc' }
+        break
+      case 'market-sort-direction':
+        this._viewState = { ...this._viewState, sortDirection: value === 'desc' ? 'desc' : 'asc' }
         this.render()
-      })
-    }
-
-    // Sell-mode toolbar: inventory search input — debounced like the catalogue search
-    const inventorySearchInput = html.querySelector('.market-inventory-toolbar__search')
-    if (inventorySearchInput) {
-      inventorySearchInput.addEventListener('input', (event) => {
-        this._viewState = { ...this._viewState, inventorySearch: event.currentTarget.value ?? '' }
+        break
+      case 'market-inventory-search':
+        this._viewState = { ...this._viewState, inventorySearch: value }
         this._debouncedRender()
-      })
-    }
-
-    // Sell-mode toolbar: inventory sort field
-    const inventorySortBySelect = html.querySelector('.market-inventory-toolbar__sort--field')
-    if (inventorySortBySelect) {
-      inventorySortBySelect.addEventListener('change', (event) => {
-        this._viewState = { ...this._viewState, inventorySortBy: event.currentTarget.value ?? INVENTORY_SORT_FIELDS.name }
+        break
+      case 'market-inventory-sort-by':
+        this._viewState = { ...this._viewState, inventorySortBy: value || INVENTORY_SORT_FIELDS.name }
         this.render()
-      })
-    }
-
-    // Sell-mode toolbar: inventory sort direction
-    const inventorySortDirSelect = html.querySelector('.market-inventory-toolbar__sort--direction')
-    if (inventorySortDirSelect) {
-      inventorySortDirSelect.addEventListener('change', (event) => {
-        this._viewState = { ...this._viewState, inventorySortDirection: event.currentTarget.value === 'desc' ? 'desc' : 'asc' }
+        break
+      case 'market-inventory-sort-direction':
+        this._viewState = { ...this._viewState, inventorySortDirection: value === 'desc' ? 'desc' : 'asc' }
         this.render()
-      })
+        break
+      default:
+        // Unrecognised field — no _viewState mutation, no render.
+        break
     }
   }
 }

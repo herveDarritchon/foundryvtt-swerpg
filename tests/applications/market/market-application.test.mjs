@@ -897,60 +897,287 @@ describe('MarketApplicationV2', () => {
     })
   })
 
-  describe('market type selector (changeMarket via _onRender listener)', () => {
-    it('does not declare a changeMarket AppV2 action — market type changes through the selector listener', () => {
+  describe('market type selector (_onChangeForm AppV2 contract)', () => {
+    it('does not declare a changeMarket AppV2 action — market type changes through _onChangeForm', () => {
       expect(MarketApplicationV2.DEFAULT_OPTIONS.actions).not.toHaveProperty('changeMarket')
     })
 
-    it('updates activeMarketType and invalidates cache when the selector emits a valid market type', () => {
-      const app = new MarketApplicationV2()
-      app.render = vi.fn()
-
-      // Simulate the selector change event wired in _onRender
-      app._viewState = { ...app._viewState, activeMarketType: 'black-market' }
-      app._catalogCache = null
-
-      expect(app._viewState.activeMarketType).toBe('black-market')
-      expect(app._catalogCache).toBeNull()
+    it('DEFAULT_OPTIONS.form is declared (enables _onChangeForm routing)', () => {
+      expect(MarketApplicationV2.DEFAULT_OPTIONS.form).toBeDefined()
+      expect(typeof MarketApplicationV2.DEFAULT_OPTIONS.form).toBe('object')
     })
 
-    it('catalog cache is null after activeMarketType changes (cache invalidated)', async () => {
+    it('exposes _onChangeForm as a method', () => {
+      const app = new MarketApplicationV2()
+      expect(typeof app._onChangeForm).toBe('function')
+    })
+
+    it('_onChangeForm with name="market-type" updates activeMarketType and invalidates cache', async () => {
       const item = makeItem({ type: 'weapon', name: 'Blaster', price: 100, rarity: 0 })
       globalThis.game.items = makeItemsCollection([item])
 
       const app = new MarketApplicationV2()
+      app.render = vi.fn()
 
-      // First render populates the cache
+      // Populate cache first
       await app._preparePartContext('catalog', {})
       expect(app._catalogCache).not.toBeNull()
+
+      // Simulate AppV2 form change event for the market type selector
+      const event = { target: { name: 'market-type', type: 'select-one', value: 'black-market' } }
+      app._onChangeForm({}, event)
+
+      expect(app._viewState.activeMarketType).toBe('black-market')
+      expect(app._catalogCache).toBeNull()
+      expect(app.render).toHaveBeenCalled()
+    })
+
+    it('_onChangeForm with name="market-type" ignores unknown market types', () => {
+      const app = new MarketApplicationV2()
+      app.render = vi.fn()
+
+      const event = { target: { name: 'market-type', type: 'select-one', value: 'unknown-market' } }
+      app._onChangeForm({}, event)
+
+      // Guard prevents the mutation — activeMarketType stays at default
+      expect(app._viewState.activeMarketType).toBe('standard')
+      expect(app.render).not.toHaveBeenCalled()
+    })
+
+    it('catalog cache is rebuilt on next _preparePartContext after market-type change', async () => {
+      const item = makeItem({ type: 'weapon', name: 'Blaster', price: 100, rarity: 0 })
+      globalThis.game.items = makeItemsCollection([item])
+
+      const app = new MarketApplicationV2()
+      app.render = vi.fn()
+
+      // First render populates cache for standard
+      await app._preparePartContext('catalog', {})
       expect(app._catalogCache.marketType).toBe('standard')
 
-      // Simulating what the _onRender listener does: update market type and invalidate cache
-      app._viewState = { ...app._viewState, activeMarketType: 'black-market' }
-      app._catalogCache = null
-
+      // Change market type via _onChangeForm
+      const event = { target: { name: 'market-type', type: 'select-one', value: 'black-market' } }
+      app._onChangeForm({}, event)
       expect(app._catalogCache).toBeNull()
 
-      // Next render rebuilds cache for the new market type
+      // Next _preparePartContext rebuilds cache for black-market
       await app._preparePartContext('catalog', {})
       expect(app._catalogCache).not.toBeNull()
       expect(app._catalogCache.marketType).toBe('black-market')
     })
+  })
 
-    it('activeMarketType remains "standard" when an unrecognised type is not applied', () => {
+  /* -------------------------------------------- */
+  /*  _onChangeForm — full contract               */
+  /* -------------------------------------------- */
+
+  describe('_onChangeForm — view state mutations', () => {
+    it('name="market-search" updates search and calls _debouncedRender (not immediate render)', () => {
       const app = new MarketApplicationV2()
+      app.render = vi.fn()
+      app._debouncedRender = vi.fn()
 
-      // The _onRender listener guards with `if (!(marketType in MARKET_TYPES)) return` before
-      // mutating _viewState. This test asserts the invariant: a bad value leaves the state unchanged.
-      // We simulate the guard logic directly without going through the DOM event.
-      const knownTypes = { standard: true, local: true, specialized: true, 'black-market': true }
-      const unknownType = 'unknown-market'
+      const event = { target: { name: 'market-search', type: 'text', value: 'blaster' } }
+      app._onChangeForm({}, event)
 
-      if (unknownType in knownTypes) {
-        app._viewState = { ...app._viewState, activeMarketType: unknownType }
-      }
-      // Guard prevented the mutation — activeMarketType stays at its default
-      expect(app._viewState.activeMarketType).toBe('standard')
+      expect(app._viewState.search).toBe('blaster')
+      expect(app._debouncedRender).toHaveBeenCalled()
+      expect(app.render).not.toHaveBeenCalled()
+    })
+
+    it('name="market-filter-type" updates filterType and calls render immediately', () => {
+      const app = new MarketApplicationV2()
+      app.render = vi.fn()
+      app._debouncedRender = vi.fn()
+
+      const event = { target: { name: 'market-filter-type', type: 'select-one', value: 'weapon' } }
+      app._onChangeForm({}, event)
+
+      expect(app._viewState.filterType).toBe('weapon')
+      expect(app.render).toHaveBeenCalled()
+      expect(app._debouncedRender).not.toHaveBeenCalled()
+    })
+
+    it('name="market-filter-source" updates filterSource and calls render immediately', () => {
+      const app = new MarketApplicationV2()
+      app.render = vi.fn()
+
+      const event = { target: { name: 'market-filter-source', type: 'select-one', value: 'world' } }
+      app._onChangeForm({}, event)
+
+      expect(app._viewState.filterSource).toBe('world')
+      expect(app.render).toHaveBeenCalled()
+    })
+
+    it('name="market-filter-restriction" updates filterRestriction and calls render immediately', () => {
+      const app = new MarketApplicationV2()
+      app.render = vi.fn()
+
+      const event = { target: { name: 'market-filter-restriction', type: 'select-one', value: 'restricted' } }
+      app._onChangeForm({}, event)
+
+      expect(app._viewState.filterRestriction).toBe('restricted')
+      expect(app.render).toHaveBeenCalled()
+    })
+
+    it('name="market-affordable-only" updates affordableOnly (checkbox=true) and calls render', () => {
+      const app = new MarketApplicationV2()
+      app.render = vi.fn()
+
+      const event = { target: { name: 'market-affordable-only', type: 'checkbox', checked: true, value: 'on' } }
+      app._onChangeForm({}, event)
+
+      expect(app._viewState.affordableOnly).toBe(true)
+      expect(app.render).toHaveBeenCalled()
+    })
+
+    it('name="market-affordable-only" updates affordableOnly (checkbox=false) and calls render', () => {
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, affordableOnly: true }
+      app.render = vi.fn()
+
+      const event = { target: { name: 'market-affordable-only', type: 'checkbox', checked: false, value: 'on' } }
+      app._onChangeForm({}, event)
+
+      expect(app._viewState.affordableOnly).toBe(false)
+      expect(app.render).toHaveBeenCalled()
+    })
+
+    it('name="market-sort-by" updates sortBy and calls render immediately', () => {
+      const app = new MarketApplicationV2()
+      app.render = vi.fn()
+
+      const event = { target: { name: 'market-sort-by', type: 'select-one', value: 'price' } }
+      app._onChangeForm({}, event)
+
+      expect(app._viewState.sortBy).toBe('price')
+      expect(app.render).toHaveBeenCalled()
+    })
+
+    it('name="market-sort-by" falls back to "name" when value is empty', () => {
+      const app = new MarketApplicationV2()
+      app.render = vi.fn()
+
+      const event = { target: { name: 'market-sort-by', type: 'select-one', value: '' } }
+      app._onChangeForm({}, event)
+
+      expect(app._viewState.sortBy).toBe('name')
+    })
+
+    it('name="market-sort-direction" updates sortDirection to "desc"', () => {
+      const app = new MarketApplicationV2()
+      app.render = vi.fn()
+
+      const event = { target: { name: 'market-sort-direction', type: 'select-one', value: 'desc' } }
+      app._onChangeForm({}, event)
+
+      expect(app._viewState.sortDirection).toBe('desc')
+      expect(app.render).toHaveBeenCalled()
+    })
+
+    it('name="market-sort-direction" normalises unrecognised value to "asc"', () => {
+      const app = new MarketApplicationV2()
+      app.render = vi.fn()
+
+      const event = { target: { name: 'market-sort-direction', type: 'select-one', value: 'unknown' } }
+      app._onChangeForm({}, event)
+
+      expect(app._viewState.sortDirection).toBe('asc')
+    })
+
+    it('name="market-inventory-search" updates inventorySearch and calls _debouncedRender (not immediate render)', () => {
+      const app = new MarketApplicationV2()
+      app.render = vi.fn()
+      app._debouncedRender = vi.fn()
+
+      const event = { target: { name: 'market-inventory-search', type: 'text', value: 'rifle' } }
+      app._onChangeForm({}, event)
+
+      expect(app._viewState.inventorySearch).toBe('rifle')
+      expect(app._debouncedRender).toHaveBeenCalled()
+      expect(app.render).not.toHaveBeenCalled()
+    })
+
+    it('name="market-inventory-sort-by" updates inventorySortBy and calls render immediately', () => {
+      const app = new MarketApplicationV2()
+      app.render = vi.fn()
+
+      const event = { target: { name: 'market-inventory-sort-by', type: 'select-one', value: 'basePrice' } }
+      app._onChangeForm({}, event)
+
+      expect(app._viewState.inventorySortBy).toBe('basePrice')
+      expect(app.render).toHaveBeenCalled()
+    })
+
+    it('name="market-inventory-sort-by" falls back to "name" when value is empty', () => {
+      const app = new MarketApplicationV2()
+      app.render = vi.fn()
+
+      const event = { target: { name: 'market-inventory-sort-by', type: 'select-one', value: '' } }
+      app._onChangeForm({}, event)
+
+      expect(app._viewState.inventorySortBy).toBe('name')
+    })
+
+    it('name="market-inventory-sort-direction" updates inventorySortDirection to "desc"', () => {
+      const app = new MarketApplicationV2()
+      app.render = vi.fn()
+
+      const event = { target: { name: 'market-inventory-sort-direction', type: 'select-one', value: 'desc' } }
+      app._onChangeForm({}, event)
+
+      expect(app._viewState.inventorySortDirection).toBe('desc')
+      expect(app.render).toHaveBeenCalled()
+    })
+
+    it('name="market-inventory-sort-direction" normalises unrecognised value to "asc"', () => {
+      const app = new MarketApplicationV2()
+      app.render = vi.fn()
+
+      const event = { target: { name: 'market-inventory-sort-direction', type: 'select-one', value: '' } }
+      app._onChangeForm({}, event)
+
+      expect(app._viewState.inventorySortDirection).toBe('asc')
+    })
+
+    it('unknown name does not mutate _viewState or call render', () => {
+      const app = new MarketApplicationV2()
+      app.render = vi.fn()
+      app._debouncedRender = vi.fn()
+      const originalState = { ...app._viewState }
+
+      const event = { target: { name: 'some-unrelated-field', type: 'text', value: 'foo' } }
+      app._onChangeForm({}, event)
+
+      expect(app._viewState).toEqual(originalState)
+      expect(app.render).not.toHaveBeenCalled()
+      expect(app._debouncedRender).not.toHaveBeenCalled()
+    })
+
+    it('missing target.name does not throw and does not mutate _viewState', () => {
+      const app = new MarketApplicationV2()
+      app.render = vi.fn()
+      const originalState = { ...app._viewState }
+
+      // Event with target but no name attribute
+      const event = { target: { type: 'text', value: 'foo' } }
+      expect(() => app._onChangeForm({}, event)).not.toThrow()
+      expect(app._viewState).toEqual(originalState)
+    })
+
+    it('_onChangeForm preserves all other _viewState fields when mutating one', () => {
+      const app = new MarketApplicationV2()
+      app.render = vi.fn()
+      app._viewState = { ...app._viewState, search: 'blaster', filterType: 'weapon', sortBy: 'price' }
+
+      const event = { target: { name: 'market-filter-source', type: 'select-one', value: 'world' } }
+      app._onChangeForm({}, event)
+
+      // Only filterSource changed
+      expect(app._viewState.filterSource).toBe('world')
+      expect(app._viewState.search).toBe('blaster')
+      expect(app._viewState.filterType).toBe('weapon')
+      expect(app._viewState.sortBy).toBe('price')
     })
   })
 
@@ -4158,18 +4385,20 @@ describe('MarketApplicationV2', () => {
       expect(loadCompendiumItemsMock).toHaveBeenCalledTimes(1)
     })
 
-    it('loadCompendiumItems is called again when activeMarketType changes (cache invalidated)', async () => {
+    it('loadCompendiumItems is called again when activeMarketType changes (cache invalidated via _onChangeForm)', async () => {
       globalThis.game.items = makeItemsCollection([makeItem({ type: 'weapon', name: 'Blaster' })])
 
       const app = new MarketApplicationV2()
+      app.render = vi.fn()
 
       // First render with standard market
       await app._preparePartContext('catalog', {})
       expect(loadCompendiumItemsMock).toHaveBeenCalledTimes(1)
 
-      // Simulate the selector change: update market type and invalidate cache (as _onRender listener does)
-      app._viewState = { ...app._viewState, activeMarketType: 'black-market' }
-      app._catalogCache = null
+      // Simulate market-type change through _onChangeForm (AppV2 idiom)
+      const event = { target: { name: 'market-type', type: 'select-one', value: 'black-market' } }
+      app._onChangeForm({}, event)
+      expect(app._catalogCache).toBeNull()
 
       // Second render with new market type must load compendiums again
       await app._preparePartContext('catalog', {})
