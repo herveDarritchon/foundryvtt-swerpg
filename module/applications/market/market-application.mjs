@@ -2,7 +2,7 @@ import { createMarketEntry } from '../../lib/market/market-entry.mjs'
 import { isItemVisibleForMarket } from '../../lib/market/market-visibility.mjs'
 import { loadMarketCatalog } from '../../lib/market/catalog-loader.mjs'
 import { validatePurchase } from '../../lib/market/purchase.mjs'
-import { readMarketConfig, readMarketExcludedItems } from '../../lib/market/market-settings.mjs'
+import { readMarketConfig, readMarketExcludedItems, readMarketGlobalPriceModifier, readMarketTypeModifiers } from '../../lib/market/market-settings.mjs'
 import { evaluateObtainability } from '../../lib/market/rarity-engine.mjs'
 import { CONSEQUENCE_TYPES, evaluateMarketConsequences } from '../../lib/market/consequences.mjs'
 import { serializeConsequence } from '../../lib/market/consequence-persistence.mjs'
@@ -481,6 +481,9 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
     const marketContext = { ...DEFAULT_MARKET_CONTEXT, marketType: activeMarketType }
     const marketConfig = readMarketConfig('swerpg')
     const excludedIds = readMarketExcludedItems('swerpg')
+    const globalModifier = readMarketGlobalPriceModifier('swerpg')
+    const typeModifiers = readMarketTypeModifiers('swerpg')
+    const priceOptions = { globalModifier, typeModifiers }
 
     // 1. Load world items
     const worldItems = Array.from(game.items).map((item) => itemToRawItem(item))
@@ -502,6 +505,7 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
         config: marketConfig,
         marketContext,
         excludedIds,
+        priceOptions,
       })
     } catch (err) {
       logger.error('[Market] Catalog loading failed', err)
@@ -778,7 +782,14 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
     try {
       const rawItem = itemToRawItem(item)
       const activeMarketType = this._viewState.activeMarketType ?? DEFAULT_MARKET_TYPE
-      entry = createMarketEntry(rawItem, { sourceType: 'world', sourceId: item.uuid ?? '' }, { ...DEFAULT_MARKET_CONTEXT, marketType: activeMarketType })
+      const globalModifier = readMarketGlobalPriceModifier('swerpg')
+      const typeModifiers = readMarketTypeModifiers('swerpg')
+      entry = createMarketEntry(
+        rawItem,
+        { sourceType: 'world', sourceId: item.uuid ?? '' },
+        { ...DEFAULT_MARKET_CONTEXT, marketType: activeMarketType },
+        { globalModifier, typeModifiers },
+      )
     } catch (err) {
       logger.warn(`[Market] Could not build market entry for "${uuid}" (negotiation): ${err.message}`)
       ui.notifications.error(game.i18n.localize('MARKET.Purchase.Error.ItemNotFound'))
@@ -869,7 +880,14 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
     try {
       const rawItem = itemToRawItem(item)
       const activeMarketType = this._viewState.activeMarketType ?? DEFAULT_MARKET_TYPE
-      entry = createMarketEntry(rawItem, { sourceType: 'world', sourceId: item.uuid ?? '' }, { ...DEFAULT_MARKET_CONTEXT, marketType: activeMarketType })
+      const globalModifier = readMarketGlobalPriceModifier('swerpg')
+      const typeModifiers = readMarketTypeModifiers('swerpg')
+      entry = createMarketEntry(
+        rawItem,
+        { sourceType: 'world', sourceId: item.uuid ?? '' },
+        { ...DEFAULT_MARKET_CONTEXT, marketType: activeMarketType },
+        { globalModifier, typeModifiers },
+      )
     } catch (err) {
       logger.warn(`[Market] Could not build market entry for "${uuid}": ${err.message}`)
       ui.notifications.error(game.i18n.localize('MARKET.Purchase.Error.ItemNotFound'))

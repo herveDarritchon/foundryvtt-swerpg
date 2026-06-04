@@ -21,9 +21,10 @@ import { createMarketEntry } from './market-entry.mjs'
  * @param {import('../../config/market.mjs').MarketConfig} options.config          Market runtime config
  * @param {Partial<import('../../config/market.mjs').MarketContext>} options.marketContext  Price context
  * @param {string[]} [options.excludedIds]  Array of item UUIDs manually excluded by the GM
+ * @param {import('./price-engine.mjs').PriceEngineOptions} [options.priceOptions]  Optional GM modifier options forwarded to the price engine
  * @returns {import('./market-entry.mjs').MarketEntry[]}  Eligible, deduplicated, priced entries
  */
-export function loadMarketCatalog({ worldItems, compendiumItems, config, marketContext, excludedIds = [] }) {
+export function loadMarketCatalog({ worldItems, compendiumItems, config, marketContext, excludedIds = [], priceOptions = {} }) {
   const excludedSet = new Set(excludedIds)
 
   // 1. Merge sources with proper source type tagging
@@ -38,7 +39,7 @@ export function loadMarketCatalog({ worldItems, compendiumItems, config, marketC
       try {
         // For world items, uuid is the source identifier; for compendium items, _sourceId (pack collection) is used.
         const sourceId = rawItem._sourceType === 'compendium' ? (rawItem._sourceId ?? '') : (rawItem.uuid ?? '')
-        return createMarketEntry(rawItem, { sourceType: rawItem._sourceType, sourceId }, marketContext)
+        return createMarketEntry(rawItem, { sourceType: rawItem._sourceType, sourceId }, marketContext, priceOptions)
       } catch {
         // createMarketEntry throws TypeError for non-purchasable item types — skip silently
         return null

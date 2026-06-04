@@ -1058,6 +1058,166 @@ describe('MarketApplicationV2', () => {
   })
 
   /* -------------------------------------------- */
+  /*  GM modifier wiring to displayed price       */
+  /* -------------------------------------------- */
+
+  describe('GM global and type modifiers wired to catalog pricing', () => {
+    it('global GM modifier of +20% increases finalPrice by 20%', async () => {
+      // base=100, rarity=0, globalModifier=20 → 100 * (1 + 0.2) = 120
+      const item = makeItem({ type: 'weapon', name: 'Blaster', price: 100, rarity: 0 })
+      item.system._source = { price: 100, rarity: 0 }
+      globalThis.game.items = makeItemsCollection([item])
+
+      // Configure game.settings.get to return the global modifier
+      globalThis.game.settings.get = vi.fn((systemId, key) => {
+        if (key === 'marketGlobalPriceModifier') return 20
+        if (key === 'marketTypeModifiers') return JSON.stringify({})
+        if (key === 'marketEnabledSources') return JSON.stringify(['compendium', 'world', 'import'])
+        if (key === 'marketAllowedItemTypes') return JSON.stringify(['weapon', 'armor', 'gear'])
+        if (key === 'marketDedupStrategy') return 'prefer-compendium'
+        if (key === 'marketExcludedItems') return JSON.stringify([])
+        return undefined
+      })
+
+      const app = new MarketApplicationV2()
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.catalog.items).toHaveLength(1)
+      const entry = context.catalog.items[0]
+      expect(entry.priceResult.finalPrice).toBe(120)
+    })
+
+    it('global GM modifier of -10% decreases finalPrice by 10%', async () => {
+      // base=100, rarity=0, globalModifier=-10 → 100 * (1 - 0.1) = 90
+      const item = makeItem({ type: 'weapon', name: 'Blaster', price: 100, rarity: 0 })
+      item.system._source = { price: 100, rarity: 0 }
+      globalThis.game.items = makeItemsCollection([item])
+
+      globalThis.game.settings.get = vi.fn((systemId, key) => {
+        if (key === 'marketGlobalPriceModifier') return -10
+        if (key === 'marketTypeModifiers') return JSON.stringify({})
+        if (key === 'marketEnabledSources') return JSON.stringify(['compendium', 'world', 'import'])
+        if (key === 'marketAllowedItemTypes') return JSON.stringify(['weapon', 'armor', 'gear'])
+        if (key === 'marketDedupStrategy') return 'prefer-compendium'
+        if (key === 'marketExcludedItems') return JSON.stringify([])
+        return undefined
+      })
+
+      const app = new MarketApplicationV2()
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.catalog.items).toHaveLength(1)
+      const entry = context.catalog.items[0]
+      expect(entry.priceResult.finalPrice).toBe(90)
+    })
+
+    it('per-type modifier applies only to the matching item type', async () => {
+      // weapon typeModifier=+10% → weapon=110, armor=100
+      const weapon = makeItem({ type: 'weapon', name: 'Blaster', price: 100, rarity: 0 })
+      weapon.system._source = { price: 100, rarity: 0 }
+      const armor = makeItem({ type: 'armor', name: 'Light Armor', price: 100, rarity: 0 })
+      armor.system._source = { price: 100, rarity: 0 }
+      globalThis.game.items = makeItemsCollection([weapon, armor])
+
+      globalThis.game.settings.get = vi.fn((systemId, key) => {
+        if (key === 'marketGlobalPriceModifier') return 0
+        if (key === 'marketTypeModifiers') return JSON.stringify({ weapon: { priceModifier: 0.1 } })
+        if (key === 'marketEnabledSources') return JSON.stringify(['compendium', 'world', 'import'])
+        if (key === 'marketAllowedItemTypes') return JSON.stringify(['weapon', 'armor', 'gear'])
+        if (key === 'marketDedupStrategy') return 'prefer-compendium'
+        if (key === 'marketExcludedItems') return JSON.stringify([])
+        return undefined
+      })
+
+      const app = new MarketApplicationV2()
+      const context = await app._preparePartContext('catalog', {})
+
+      const weaponEntry = context.catalog.items.find((e) => e.itemType === 'weapon')
+      const armorEntry = context.catalog.items.find((e) => e.itemType === 'armor')
+
+      expect(weaponEntry.priceResult.finalPrice).toBe(110)
+      expect(armorEntry.priceResult.finalPrice).toBe(100)
+    })
+
+    it('global modifier and type modifier stack — cumulative final price reflects both', async () => {
+      // weapon: base=100, globalModifier=10(+0.1), weapon typeModifier=0.1 → 100*(1+0.2)=120
+      const item = makeItem({ type: 'weapon', name: 'Blaster', price: 100, rarity: 0 })
+      item.system._source = { price: 100, rarity: 0 }
+      globalThis.game.items = makeItemsCollection([item])
+
+      globalThis.game.settings.get = vi.fn((systemId, key) => {
+        if (key === 'marketGlobalPriceModifier') return 10
+        if (key === 'marketTypeModifiers') return JSON.stringify({ weapon: { priceModifier: 0.1 } })
+        if (key === 'marketEnabledSources') return JSON.stringify(['compendium', 'world', 'import'])
+        if (key === 'marketAllowedItemTypes') return JSON.stringify(['weapon', 'armor', 'gear'])
+        if (key === 'marketDedupStrategy') return 'prefer-compendium'
+        if (key === 'marketExcludedItems') return JSON.stringify([])
+        return undefined
+      })
+
+      const app = new MarketApplicationV2()
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.catalog.items).toHaveLength(1)
+      const entry = context.catalog.items[0]
+      expect(entry.priceResult.finalPrice).toBe(120)
+    })
+
+    it('zero global modifier and no type modifier produce same price as without any GM config', async () => {
+      const item = makeItem({ type: 'weapon', name: 'Blaster', price: 100, rarity: 0 })
+      item.system._source = { price: 100, rarity: 0 }
+      globalThis.game.items = makeItemsCollection([item])
+
+      globalThis.game.settings.get = vi.fn((systemId, key) => {
+        if (key === 'marketGlobalPriceModifier') return 0
+        if (key === 'marketTypeModifiers') return JSON.stringify({})
+        if (key === 'marketEnabledSources') return JSON.stringify(['compendium', 'world', 'import'])
+        if (key === 'marketAllowedItemTypes') return JSON.stringify(['weapon', 'armor', 'gear'])
+        if (key === 'marketDedupStrategy') return 'prefer-compendium'
+        if (key === 'marketExcludedItems') return JSON.stringify([])
+        return undefined
+      })
+
+      const app = new MarketApplicationV2()
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.catalog.items).toHaveLength(1)
+      expect(context.catalog.items[0].priceResult.finalPrice).toBe(100)
+    })
+
+    it('catalog cache is invalidated and GM modifier is re-read on market type change', async () => {
+      const item = makeItem({ type: 'weapon', name: 'Blaster', price: 100, rarity: 0 })
+      item.system._source = { price: 100, rarity: 0 }
+      globalThis.game.items = makeItemsCollection([item])
+
+      let globalModifier = 0
+      globalThis.game.settings.get = vi.fn((systemId, key) => {
+        if (key === 'marketGlobalPriceModifier') return globalModifier
+        if (key === 'marketTypeModifiers') return JSON.stringify({})
+        if (key === 'marketEnabledSources') return JSON.stringify(['compendium', 'world', 'import'])
+        if (key === 'marketAllowedItemTypes') return JSON.stringify(['weapon', 'armor', 'gear'])
+        if (key === 'marketDedupStrategy') return 'prefer-compendium'
+        if (key === 'marketExcludedItems') return JSON.stringify([])
+        return undefined
+      })
+
+      const app = new MarketApplicationV2()
+
+      // First render: modifier=0 → price=100
+      const ctx1 = await app._preparePartContext('catalog', {})
+      expect(ctx1.catalog.items[0].priceResult.finalPrice).toBe(100)
+
+      // Change modifier to +20 and invalidate cache (simulates GM changing configuration)
+      globalModifier = 20
+      app._catalogCache = null
+
+      // Second render: modifier=20 → price=120
+      const ctx2 = await app._preparePartContext('catalog', {})
+      expect(ctx2.catalog.items[0].priceResult.finalPrice).toBe(120)
+    })
+  })
+
+  /* -------------------------------------------- */
   /*  openItem action                             */
   /* -------------------------------------------- */
 
