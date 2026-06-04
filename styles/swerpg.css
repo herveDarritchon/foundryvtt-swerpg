@@ -932,7 +932,7 @@ input[type='range'] {
   flex-direction: column;
   gap: 0.75rem;
   padding: 1rem;
-  border-bottom: 1px solid var(--color-cool-4);
+  border-bottom: 1px solid var(--color-frame);
   background: linear-gradient(180deg, rgba(17, 25, 36, 0.92), rgba(10, 15, 24, 0.85));
 }
 .swerpg.application.character-audit-log .audit-log__title {
@@ -972,7 +972,7 @@ input[type='range'] {
   flex-direction: column;
   gap: 0.5rem;
   padding: 0.85rem 1rem;
-  border: 1px solid var(--color-cool-4);
+  border: 1px solid var(--color-frame);
   border-radius: 8px;
   background: rgba(12, 18, 27, 0.8);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
@@ -4206,12 +4206,12 @@ input[type='range'] {
   color: var(--color-accent-blue);
 }
 .swerpg.chat-message.audit-entry.audit-entry--fail .audit-entry__badge {
-  color: var(--color-error);
-  border: 1px solid var(--color-error);
+  color: var(--color-danger);
+  border: 1px solid var(--color-danger);
 }
 .swerpg.chat-message.audit-entry.audit-entry--change .audit-entry__badge {
-  color: var(--color-text-dark-secondary);
-  border: 1px solid var(--color-underline);
+  color: var(--color-secondary);
+  border: 1px solid var(--color-frame);
 }
 /* -------------------------------------------- */
 /*  Audit Log Warning (GM whisper)              */
