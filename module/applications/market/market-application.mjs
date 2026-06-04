@@ -99,7 +99,11 @@ function itemToRawItem(item) {
     // always receives the raw base price, not the post-derivation value.
     // This mirrors the pattern used by _prepareCredits() in character.mjs.
     basePrice: system._source?.price ?? system.price ?? 0,
-    rarity: system.rarity ?? 0,
+    // Read the schema source rarity (same canonical fallback as price) so that world items and
+    // compendium index entries (which expose the persisted value directly) are treated identically.
+    // A world item with a prepareDerivedData override on rarity would otherwise diverge from the
+    // compendium path, causing inconsistent sort, pips, availability and pricing.
+    rarity: system._source?.rarity ?? system.rarity ?? 0,
     quality: system.quality ?? '',
     restrictionLevel: system.restrictionLevel ?? '',
     nonPurchasable: system.nonPurchasable === true,

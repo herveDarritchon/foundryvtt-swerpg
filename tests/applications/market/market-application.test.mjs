@@ -2348,6 +2348,133 @@ describe('MarketApplicationV2', () => {
   })
 
   /* -------------------------------------------- */
+  /*  Canonical rarity source: world vs compendium */
+  /* -------------------------------------------- */
+
+  describe('canonical rarity source alignment — world items vs compendium items', () => {
+    it('uses system._source.rarity (not system.rarity) for a world item when both differ', async () => {
+      // Simulate a world item where prepareDerivedData has overridden system.rarity to a higher value.
+      // The Market must always use the persisted source value (system._source.rarity).
+      const item = makeItem({ type: 'weapon', name: 'Test Blaster', price: 100 })
+      // _source holds the persisted schema value (rarity=2)
+      item.system._source = { price: 100, rarity: 2 }
+      // system.rarity is overridden by prepareDerivedData to a different value (rarity=5)
+      item.system.rarity = 5
+      globalThis.game.items = makeItemsCollection([item])
+
+      const app = new MarketApplicationV2()
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.catalog.items).toHaveLength(1)
+      // Market must retain the canonical source value, not the derived value
+      expect(context.catalog.items[0].rarity).toBe(2)
+    })
+
+    it('falls back to system.rarity when system._source.rarity is absent', async () => {
+      // World item without a _source object: fallback to system.rarity
+      const item = makeItem({ type: 'weapon', name: 'Fallback Blaster', price: 100, rarity: 3 })
+      // No _source on system — simulates an item that has never had prepareDerivedData run
+      // or a simple mock without _source.
+      item.system._source = undefined
+      globalThis.game.items = makeItemsCollection([item])
+
+      const app = new MarketApplicationV2()
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.catalog.items).toHaveLength(1)
+      expect(context.catalog.items[0].rarity).toBe(3)
+    })
+
+    it('world item with _source.rarity=2 and compendium item with rarity=2 produce the same entry rarity', async () => {
+      // World item: _source.rarity=2, system.rarity=5 (derived override)
+      const worldItem = makeItem({ type: 'weapon', name: 'World Blaster', price: 100, rarity: 5 })
+      worldItem.system._source = { price: 100, rarity: 2 }
+      globalThis.game.items = makeItemsCollection([worldItem])
+
+      // Compendium item: index entry with system.rarity=2 (already the persisted value)
+      loadCompendiumItemsMock.mockResolvedValue([
+        {
+          uuid: 'Compendium.swerpg.items.Item.compBlaster',
+          name: 'Compendium Blaster',
+          img: '',
+          type: 'weapon',
+          basePrice: 100,
+          rarity: 2,
+          quality: '',
+          restrictionLevel: 'none',
+          nonPurchasable: false,
+          broken: false,
+          _sourceId: 'swerpg.items',
+        },
+      ])
+
+      const app = new MarketApplicationV2()
+      const context = await app._preparePartContext('catalog', {})
+
+      const worldEntry = context.catalog.items.find((e) => e.name === 'World Blaster')
+      const compendiumEntry = context.catalog.items.find((e) => e.name === 'Compendium Blaster')
+
+      expect(worldEntry).toBeDefined()
+      expect(compendiumEntry).toBeDefined()
+      // Both must expose the same canonical rarity value
+      expect(worldEntry.rarity).toBe(2)
+      expect(compendiumEntry.rarity).toBe(2)
+    })
+
+    it('rarity divergence between world and compendium is eliminated: sort by rarity treats both identically', async () => {
+      // World item: _source.rarity=2 (canonical), system.rarity=6 (derived override)
+      const worldItem = makeItem({ type: 'weapon', name: 'World Rare', price: 100, rarity: 6 })
+      worldItem.system._source = { price: 100, rarity: 2 }
+      globalThis.game.items = makeItemsCollection([worldItem])
+
+      // Compendium item at canonical rarity=5 (no override — index gives the persisted value)
+      loadCompendiumItemsMock.mockResolvedValue([
+        {
+          uuid: 'Compendium.swerpg.items.Item.compRare',
+          name: 'Compendium Rare',
+          img: '',
+          type: 'weapon',
+          basePrice: 80,
+          rarity: 5,
+          quality: '',
+          restrictionLevel: 'none',
+          nonPurchasable: false,
+          broken: false,
+          _sourceId: 'swerpg.items',
+        },
+      ])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, sortBy: 'rarity', sortDirection: 'asc' }
+      const context = await app._preparePartContext('catalog', {})
+
+      const entries = context.catalog.items
+      expect(entries).toHaveLength(2)
+
+      // With canonical rarity: World=2, Compendium=5 → World comes first ascending
+      // Without the fix (using system.rarity=6 for World): World=6, Compendium=5 → Compendium first
+      expect(entries[0].name).toBe('World Rare')
+      expect(entries[0].rarity).toBe(2)
+      expect(entries[1].name).toBe('Compendium Rare')
+      expect(entries[1].rarity).toBe(5)
+    })
+
+    it('rarityPips reflect the canonical source rarity, not the derived runtime value', async () => {
+      // World item: _source.rarity=2 → expect 2 pips; system.rarity=7 would give 7 pips if wrong
+      const item = makeItem({ type: 'weapon', name: 'Pip Test', price: 100, rarity: 7 })
+      item.system._source = { price: 100, rarity: 2 }
+      globalThis.game.items = makeItemsCollection([item])
+
+      const app = new MarketApplicationV2()
+      const context = await app._preparePartContext('catalog', {})
+
+      const entry = context.catalog.items[0]
+      expect(entry.rarity).toBe(2)
+      expect(entry.rarityPips).toHaveLength(2)
+    })
+  })
+
+  /* -------------------------------------------- */
   /*  Adaptive restriction filter dropdown        */
   /* -------------------------------------------- */
 
