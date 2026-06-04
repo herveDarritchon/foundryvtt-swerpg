@@ -22,6 +22,10 @@ vi.mock('../../../module/applications/market/availability-check-dialog.mjs', () 
   },
 }))
 
+vi.mock('../../../module/applications/market/compendium-source-adapter.mjs', () => ({
+  loadCompendiumItems: vi.fn().mockResolvedValue([]),
+}))
+
 /* -------------------------------------------- */
 /*  Helpers                                     */
 /* -------------------------------------------- */
@@ -78,6 +82,7 @@ describe('MarketApplicationV2', () => {
   let NegotiationDialogMock
   let ConsequencesDialogMock
   let AvailabilityCheckDialogMock
+  let loadCompendiumItemsMock
 
   beforeEach(async () => {
     setupFoundryMock({
@@ -129,6 +134,10 @@ describe('MarketApplicationV2', () => {
     ;({ default: NegotiationDialogMock } = await import('../../../module/applications/market/negotiation-dialog.mjs'))
     ;({ default: ConsequencesDialogMock } = await import('../../../module/applications/market/consequences-dialog.mjs'))
     ;({ default: AvailabilityCheckDialogMock } = await import('../../../module/applications/market/availability-check-dialog.mjs'))
+    ;({ loadCompendiumItems: loadCompendiumItemsMock } = await import('../../../module/applications/market/compendium-source-adapter.mjs'))
+
+    // Default: compendium adapter returns no items (tests can override per-test).
+    loadCompendiumItemsMock.mockResolvedValue([])
 
     // Default: consequences dialog confirms with no consequences (no narrative risks).
     // Tests that need different behavior override this before calling the action.
@@ -3703,6 +3712,239 @@ describe('MarketApplicationV2', () => {
       const context = await app._preparePartContext('catalog', {})
 
       expect(context.toolbarState.isSortNonDefault).toBe(true)
+    })
+  })
+
+  /* -------------------------------------------- */
+  /*  Catalogue cache — performance contract       */
+  /* -------------------------------------------- */
+
+  describe('catalogue cache — performance contract', () => {
+    it('_catalogCache starts null on a new instance', () => {
+      const app = new MarketApplicationV2()
+      expect(app._catalogCache).toBeNull()
+    })
+
+    it('after a first _preparePartContext call, _catalogCache is populated', async () => {
+      globalThis.game.items = makeItemsCollection([makeItem({ type: 'weapon', name: 'Blaster' })])
+
+      const app = new MarketApplicationV2()
+      await app._preparePartContext('catalog', {})
+
+      expect(app._catalogCache).not.toBeNull()
+      expect(app._catalogCache.marketType).toBe('standard')
+      expect(Array.isArray(app._catalogCache.entries)).toBe(true)
+    })
+
+    it('loadCompendiumItems is called only once when search changes between two renders', async () => {
+      globalThis.game.items = makeItemsCollection([makeItem({ type: 'weapon', name: 'Blaster' })])
+
+      const app = new MarketApplicationV2()
+
+      // First render — populates cache
+      await app._preparePartContext('catalog', {})
+      expect(loadCompendiumItemsMock).toHaveBeenCalledTimes(1)
+
+      // Second render with changed search — should reuse cache
+      app._viewState = { ...app._viewState, search: 'blaster' }
+      await app._preparePartContext('catalog', {})
+
+      // loadCompendiumItems must not be called again
+      expect(loadCompendiumItemsMock).toHaveBeenCalledTimes(1)
+    })
+
+    it('loadCompendiumItems is called only once when filterType changes between renders', async () => {
+      globalThis.game.items = makeItemsCollection([makeItem({ type: 'weapon', name: 'Blaster' })])
+
+      const app = new MarketApplicationV2()
+
+      await app._preparePartContext('catalog', {})
+      expect(loadCompendiumItemsMock).toHaveBeenCalledTimes(1)
+
+      app._viewState = { ...app._viewState, filterType: 'weapon' }
+      await app._preparePartContext('catalog', {})
+
+      expect(loadCompendiumItemsMock).toHaveBeenCalledTimes(1)
+    })
+
+    it('loadCompendiumItems is called only once when sortBy changes between renders', async () => {
+      globalThis.game.items = makeItemsCollection([makeItem({ type: 'weapon', name: 'Blaster' })])
+
+      const app = new MarketApplicationV2()
+
+      await app._preparePartContext('catalog', {})
+      expect(loadCompendiumItemsMock).toHaveBeenCalledTimes(1)
+
+      app._viewState = { ...app._viewState, sortBy: 'price' }
+      await app._preparePartContext('catalog', {})
+
+      expect(loadCompendiumItemsMock).toHaveBeenCalledTimes(1)
+    })
+
+    it('loadCompendiumItems is called again when activeMarketType changes (cache invalidated)', async () => {
+      globalThis.game.items = makeItemsCollection([makeItem({ type: 'weapon', name: 'Blaster' })])
+
+      const app = new MarketApplicationV2()
+
+      // First render with standard market
+      await app._preparePartContext('catalog', {})
+      expect(loadCompendiumItemsMock).toHaveBeenCalledTimes(1)
+
+      // Change market type — triggers cache invalidation
+      const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.changeMarket
+      app.render = vi.fn().mockResolvedValue(undefined)
+      await action.call(app, {}, { dataset: { marketType: 'black-market' } })
+
+      // Second render with new market type must load compendiums again
+      await app._preparePartContext('catalog', {})
+      expect(loadCompendiumItemsMock).toHaveBeenCalledTimes(2)
+    })
+
+    it('resetCatalog action invalidates the cache', async () => {
+      globalThis.game.items = makeItemsCollection([makeItem({ type: 'weapon', name: 'Blaster' })])
+
+      const app = new MarketApplicationV2()
+      app.render = vi.fn().mockResolvedValue(undefined)
+
+      // Populate cache
+      await app._preparePartContext('catalog', {})
+      expect(app._catalogCache).not.toBeNull()
+
+      // Reset catalog — must invalidate cache
+      const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.resetCatalog
+      await action.call(app, {}, {})
+
+      expect(app._catalogCache).toBeNull()
+    })
+
+    it('cached entries produce the same filteredCount as uncached for identical inputs', async () => {
+      const weapon = makeItem({ type: 'weapon', name: 'Blaster Pistol' })
+      const armor = makeItem({ type: 'armor', name: 'Light Armor' })
+      globalThis.game.items = makeItemsCollection([weapon, armor])
+
+      const app = new MarketApplicationV2()
+
+      // First render (cold cache)
+      const ctx1 = await app._preparePartContext('catalog', {})
+      expect(app._catalogCache).not.toBeNull()
+
+      // Second render (warm cache) — same view state
+      const ctx2 = await app._preparePartContext('catalog', {})
+
+      expect(ctx1.catalog.filteredCount).toBe(ctx2.catalog.filteredCount)
+      expect(ctx1.catalog.totalCount).toBe(ctx2.catalog.totalCount)
+    })
+
+    it('cache hit still applies search filter correctly (non-regression)', async () => {
+      const blaster = makeItem({ type: 'weapon', name: 'Blaster Pistol' })
+      const vibro = makeItem({ type: 'weapon', name: 'Vibro Knife' })
+      globalThis.game.items = makeItemsCollection([blaster, vibro])
+
+      const app = new MarketApplicationV2()
+
+      // First render — cold cache, no filter
+      const ctx1 = await app._preparePartContext('catalog', {})
+      expect(ctx1.catalog.filteredCount).toBe(2)
+
+      // Second render — warm cache, search applied
+      app._viewState = { ...app._viewState, search: 'blaster' }
+      const ctx2 = await app._preparePartContext('catalog', {})
+
+      expect(loadCompendiumItemsMock).toHaveBeenCalledTimes(1)
+      expect(ctx2.catalog.filteredCount).toBe(1)
+      expect(ctx2.catalog.items[0].name).toBe('Blaster Pistol')
+    })
+
+    it('cache hit still applies type filter correctly (non-regression)', async () => {
+      const weapon = makeItem({ type: 'weapon', name: 'Blaster' })
+      const armor = makeItem({ type: 'armor', name: 'Armor' })
+      globalThis.game.items = makeItemsCollection([weapon, armor])
+
+      const app = new MarketApplicationV2()
+
+      // Cold cache
+      await app._preparePartContext('catalog', {})
+
+      // Warm cache with type filter
+      app._viewState = { ...app._viewState, filterType: 'armor' }
+      const ctx = await app._preparePartContext('catalog', {})
+
+      expect(loadCompendiumItemsMock).toHaveBeenCalledTimes(1)
+      expect(ctx.catalog.filteredCount).toBe(1)
+      expect(ctx.catalog.items[0].name).toBe('Armor')
+    })
+
+    it('cache hit still applies sort correctly (non-regression)', async () => {
+      const z = makeItem({ type: 'weapon', name: 'Z-Rifle' })
+      const a = makeItem({ type: 'weapon', name: 'A-Pistol' })
+      globalThis.game.items = makeItemsCollection([z, a])
+
+      const app = new MarketApplicationV2()
+
+      // Cold cache
+      await app._preparePartContext('catalog', {})
+
+      // Warm cache with different sort
+      app._viewState = { ...app._viewState, sortBy: 'name', sortDirection: 'desc' }
+      const ctx = await app._preparePartContext('catalog', {})
+
+      expect(loadCompendiumItemsMock).toHaveBeenCalledTimes(1)
+      expect(ctx.catalog.items[0].name).toBe('Z-Rifle')
+      expect(ctx.catalog.items[1].name).toBe('A-Pistol')
+    })
+
+    it('cache hit still annotates canBuy correctly (non-regression)', async () => {
+      const item = makeItem({ type: 'weapon', name: 'Blaster', price: 100 })
+      globalThis.game.items = makeItemsCollection([item])
+
+      const actor = { id: 'actor-1', name: 'Test', system: { credits: 500 } }
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+
+      // Cold cache
+      await app._preparePartContext('catalog', {})
+
+      // Warm cache — canBuy must still be annotated
+      const ctx = await app._preparePartContext('catalog', {})
+
+      expect(loadCompendiumItemsMock).toHaveBeenCalledTimes(1)
+      expect(ctx.catalog.items[0].canBuy).toBe(true)
+    })
+
+    it('isFilteredEmpty is correct on warm cache when search matches nothing', async () => {
+      const item = makeItem({ type: 'weapon', name: 'Vibro Knife' })
+      globalThis.game.items = makeItemsCollection([item])
+
+      const app = new MarketApplicationV2()
+
+      // Cold cache
+      await app._preparePartContext('catalog', {})
+
+      // Warm cache — search that matches nothing
+      app._viewState = { ...app._viewState, search: 'lightsaber' }
+      const ctx = await app._preparePartContext('catalog', {})
+
+      expect(loadCompendiumItemsMock).toHaveBeenCalledTimes(1)
+      expect(ctx.catalog.isFilteredEmpty).toBe(true)
+      expect(ctx.catalog.totalCount).toBe(1)
+      expect(ctx.catalog.filteredCount).toBe(0)
+    })
+  })
+
+  /* -------------------------------------------- */
+  /*  Debounced render — instance contract         */
+  /* -------------------------------------------- */
+
+  describe('debounced render — instance contract', () => {
+    it('exposes _debouncedRender as a function on every new instance', () => {
+      const app = new MarketApplicationV2()
+      expect(typeof app._debouncedRender).toBe('function')
+    })
+
+    it('each instance has its own independent _debouncedRender', () => {
+      const app1 = new MarketApplicationV2()
+      const app2 = new MarketApplicationV2()
+      expect(app1._debouncedRender).not.toBe(app2._debouncedRender)
     })
   })
 })

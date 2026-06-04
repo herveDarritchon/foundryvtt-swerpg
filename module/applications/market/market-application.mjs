@@ -221,6 +221,22 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
    */
   _buyerActor = null
 
+  /**
+   * Local cache for the expensive base catalogue pipeline (world items + compendiums + loadMarketCatalog + visibility filter).
+   * Keyed by activeMarketType. Null when the cache is cold or has been explicitly invalidated.
+   * The light phase (search, filters, sort, canBuy annotation) always runs on every render and
+   * never reads from this cache directly — it consumes `_catalogCache.entries`.
+   * @type {{ marketType: string, entries: import('../../lib/market/market-entry.mjs').MarketEntry[] }|null}
+   */
+  _catalogCache = null
+
+  /**
+   * Debounced version of this.render() used for the search input to avoid firing a full render
+   * on every keystroke. Initialised once per instance; delay matches other applications in the project.
+   * @type {Function}
+   */
+  _debouncedRender = foundry.utils.debounce(() => this.render(), 250)
+
   /* -------------------------------------------- */
 
   /**
@@ -427,23 +443,34 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
   /* -------------------------------------------- */
 
   /**
-   * Build the filtered, sorted catalogue from World and Compendium Items as a flat list.
-   * Pipeline: load world+compendium items → domain catalog loader (eligibility, dedup, config)
-   *           → apply market-type visibility → apply search → apply filters → sort → annotate with canBuy.
-   * @param {Actor|null} buyer        The buyer actor, or null when browsing without a character context.
-   * @param {number|null} buyerCredits  The buyer's current credit balance (null when no buyer).
-   * @returns {Promise<{
-   *   items: import('../../lib/market/market-entry.mjs').MarketEntry[],
-   *   isEmpty: boolean,
-   *   isFilteredEmpty: boolean,
-   *   totalCount: number,
-   *   filteredCount: number,
-   *   activeMarketType: string,
-   *   activeMarketDef: import('../../config/market.mjs').MarketTypeDefinition|null
-   * }>}
+   * Invalidate the local catalogue base cache.
+   * Must be called whenever the content source changes: market type switch, explicit reset,
+   * or any hook that modifies world items or compendium packs.
    */
-  async #prepareCatalog(buyer = null, buyerCredits = null) {
-    const activeMarketType = this._viewState.activeMarketType ?? DEFAULT_MARKET_TYPE
+  #invalidateCatalogCache() {
+    this._catalogCache = null
+    logger.debug('[Market] Catalog cache invalidated')
+  }
+
+  /**
+   * Load the expensive base of the catalogue: world items, compendium items, domain loader,
+   * and market-type visibility filter.
+   * The result is cached per active market type so subsequent renders caused by search/filter/sort
+   * changes do not re-read compendium indexes.
+   *
+   * @param {string} activeMarketType  The active market type key.
+   * @returns {Promise<import('../../lib/market/market-entry.mjs').MarketEntry[]>}
+   *   Visibility-filtered entries, ready for the light phase.
+   */
+  async #loadCatalogBase(activeMarketType) {
+    // Return cached entries when the market type has not changed
+    if (this._catalogCache !== null && this._catalogCache.marketType === activeMarketType) {
+      logger.debug('[Market] Catalog cache hit', { marketType: activeMarketType })
+      return this._catalogCache.entries
+    }
+
+    logger.debug('[Market] Catalog cache miss — loading base', { marketType: activeMarketType })
+
     const marketContext = { ...DEFAULT_MARKET_CONTEXT, marketType: activeMarketType }
     const marketConfig = readMarketConfig('swerpg')
     const excludedIds = readMarketExcludedItems('swerpg')
@@ -451,7 +478,7 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
     // 1. Load world items
     const worldItems = Array.from(game.items).map((item) => itemToRawItem(item))
 
-    // 2. Load compendium items (async)
+    // 2. Load compendium items (async) — the costly operation avoided on repeated light-phase calls
     let compendiumItems = []
     try {
       compendiumItems = await loadCompendiumItems()
@@ -481,17 +508,46 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
       return visible
     })
 
+    // Store in cache keyed by market type
+    this._catalogCache = { marketType: activeMarketType, entries: visibleEntries }
+    logger.debug('[Market] Catalog cache populated', { marketType: activeMarketType, count: visibleEntries.length })
+
+    return visibleEntries
+  }
+
+  /**
+   * Build the filtered, sorted catalogue from World and Compendium Items as a flat list.
+   * Pipeline (heavy, cached): load world+compendium items → domain catalog loader (eligibility, dedup, config)
+   *                           → apply market-type visibility
+   * Pipeline (light, always runs): apply search → apply filters → sort → annotate with canBuy.
+   * @param {Actor|null} buyer        The buyer actor, or null when browsing without a character context.
+   * @param {number|null} buyerCredits  The buyer's current credit balance (null when no buyer).
+   * @returns {Promise<{
+   *   items: import('../../lib/market/market-entry.mjs').MarketEntry[],
+   *   isEmpty: boolean,
+   *   isFilteredEmpty: boolean,
+   *   totalCount: number,
+   *   filteredCount: number,
+   *   activeMarketType: string,
+   *   activeMarketDef: import('../../config/market.mjs').MarketTypeDefinition|null
+   * }>}
+   */
+  async #prepareCatalog(buyer = null, buyerCredits = null) {
+    const activeMarketType = this._viewState.activeMarketType ?? DEFAULT_MARKET_TYPE
+
+    // Heavy phase — uses cache when market type is unchanged
+    const visibleEntries = await this.#loadCatalogBase(activeMarketType)
+
     const totalCount = visibleEntries.length
 
-    // 3. Apply search and filters
+    // Light phase — always runs (search, filters, sort, annotation)
     const { search, filterType, filterSource, filterRestriction, affordableOnly, sortBy, sortDirection } = this._viewState
     let filtered = filterBySearch(visibleEntries, search)
     filtered = filterByFilters(filtered, { filterType, filterSource, filterRestriction })
 
-    // 4. Sort globally across all types
     const sorted = sortEntries(filtered, sortBy, sortDirection)
 
-    // 5. Annotate each entry with canBuy, obtainability, and narrative badges
+    // Annotate each entry with canBuy, obtainability, and narrative badges
     const hasBuyer = buyer !== null
     const annotated = sorted.map((entry) => {
       const validation = validatePurchase({ actor: buyer, entry })
@@ -567,7 +623,7 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
       }
     })
 
-    // 6. Apply affordableOnly filter after canBuy annotation (buyer must be present for this filter to take effect)
+    // Apply affordableOnly filter after canBuy annotation (buyer must be present for this filter to take effect)
     const items = affordableOnly && buyer !== null ? annotated.filter((entry) => entry.canBuy) : annotated
 
     const filteredCount = items.length
@@ -628,6 +684,7 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
    */
   static async #onResetCatalog(_event, _target) {
     this._viewState = { ...DEFAULT_VIEW_STATE }
+    this.#invalidateCatalogCache()
     await this.render()
   }
 
@@ -666,6 +723,8 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
       return
     }
     this._viewState = { ...this._viewState, activeMarketType: marketType }
+    // Market type change means different content — invalidate the base cache
+    this.#invalidateCatalogCache()
     logger.debug('[Market] Active market type changed', { marketType })
     await this.render()
   }
@@ -1361,24 +1420,27 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
     const html = this.element
     if (!html) return
 
-    // Market type selector — updates activeMarketType and re-renders catalogue
+    // Market type selector — updates activeMarketType and re-renders catalogue.
+    // Cache must be invalidated because a different market type means different content.
     const marketTypeSelect = html.querySelector('.market-selector__select')
     if (marketTypeSelect) {
       marketTypeSelect.addEventListener('change', (event) => {
         const marketType = event.currentTarget.value ?? DEFAULT_MARKET_TYPE
         if (!(marketType in MARKET_TYPES)) return
         this._viewState = { ...this._viewState, activeMarketType: marketType }
+        this.#invalidateCatalogCache()
         logger.debug('[Market] Market type changed via selector', { marketType })
         this.render()
       })
     }
 
-    // Search input — update on every keystroke
+    // Search input — debounced to avoid a full render on every keystroke.
+    // _viewState is updated immediately so the value is always current when render fires.
     const searchInput = html.querySelector('.market-toolbar__search')
     if (searchInput) {
       searchInput.addEventListener('input', (event) => {
         this._viewState = { ...this._viewState, search: event.currentTarget.value ?? '' }
-        this.render()
+        this._debouncedRender()
       })
     }
 
@@ -1434,12 +1496,12 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
       })
     }
 
-    // Sell-mode toolbar: inventory search input
+    // Sell-mode toolbar: inventory search input — debounced like the catalogue search
     const inventorySearchInput = html.querySelector('.market-inventory-toolbar__search')
     if (inventorySearchInput) {
       inventorySearchInput.addEventListener('input', (event) => {
         this._viewState = { ...this._viewState, inventorySearch: event.currentTarget.value ?? '' }
-        this.render()
+        this._debouncedRender()
       })
     }
 
