@@ -1004,10 +1004,10 @@ input[type='range'] {
   font-family: var(--font-h1);
 }
 .swerpg.application.character-audit-log .audit-log-entry__delta.is-gain {
-  color: #77d38a;
+  color: var(--color-success);
 }
 .swerpg.application.character-audit-log .audit-log-entry__delta.is-spend {
-  color: #f07a7a;
+  color: var(--color-danger);
 }
 .swerpg.application.character-audit-log .audit-log-entry__delta.is-neutral {
   color: var(--color-secondary);
