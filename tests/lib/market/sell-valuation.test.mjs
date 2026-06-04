@@ -154,6 +154,63 @@ describe('computeResalePrice', () => {
   })
 
   /* -------------------------------------------- */
+  /*  Broken item multiplier                      */
+  /* -------------------------------------------- */
+
+  describe('brokenMultiplier', () => {
+    it('applies brokenMultiplier=50 to the normal resale value (failure outcome)', () => {
+      // basePrice=100, failure=25%, then 50% of 25 = 12 (floor)
+      const result = computeResalePrice({ basePrice: 100, negotiationOutcome: 'failure', brokenMultiplier: 50 })
+      expect(result.resalePrice).toBe(12)
+      expect(result.brokenApplied).toBe(true)
+    })
+
+    it('applies brokenMultiplier=50 to success outcome resale value', () => {
+      // basePrice=100, success=50%, then 50% of 50 = 25
+      const result = computeResalePrice({ basePrice: 100, negotiationOutcome: 'success', brokenMultiplier: 50 })
+      expect(result.resalePrice).toBe(25)
+      expect(result.brokenApplied).toBe(true)
+    })
+
+    it('applies brokenMultiplier=100 leaves the resale price unchanged', () => {
+      // 100% of the normal resale value = no reduction
+      const result = computeResalePrice({ basePrice: 100, negotiationOutcome: 'failure', brokenMultiplier: 100 })
+      expect(result.resalePrice).toBe(25)
+      expect(result.brokenApplied).toBe(true)
+    })
+
+    it('applies brokenMultiplier=0 yields resale price of 0', () => {
+      const result = computeResalePrice({ basePrice: 100, negotiationOutcome: 'success', brokenMultiplier: 0 })
+      expect(result.resalePrice).toBe(0)
+      expect(result.brokenApplied).toBe(true)
+    })
+
+    it('brokenApplied=false when brokenMultiplier is null (default)', () => {
+      const result = computeResalePrice({ basePrice: 100 })
+      expect(result.brokenApplied).toBe(false)
+    })
+
+    it('brokenApplied=false when brokenMultiplier is not provided', () => {
+      const result = computeResalePrice({ basePrice: 100, negotiationOutcome: 'failure' })
+      expect(result.brokenApplied).toBe(false)
+    })
+
+    it('floors the result after applying brokenMultiplier', () => {
+      // basePrice=33, failure=25% → 8, then 50% of 8 = 4 (exact here, but test general floor)
+      const result = computeResalePrice({ basePrice: 33, negotiationOutcome: 'failure', brokenMultiplier: 50 })
+      expect(Number.isInteger(result.resalePrice)).toBe(true)
+      expect(result.resalePrice).toBe(4)
+    })
+
+    it('applies custom multiplier (e.g. 75%)', () => {
+      // basePrice=100, failure=25%, then 75% of 25 = 18 (floor 18.75)
+      const result = computeResalePrice({ basePrice: 100, negotiationOutcome: 'failure', brokenMultiplier: 75 })
+      expect(result.resalePrice).toBe(18)
+      expect(result.brokenApplied).toBe(true)
+    })
+  })
+
+  /* -------------------------------------------- */
   /*  Immutability                                */
   /* -------------------------------------------- */
 

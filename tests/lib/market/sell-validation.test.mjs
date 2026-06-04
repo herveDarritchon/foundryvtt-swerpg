@@ -300,16 +300,69 @@ describe('validateSale', () => {
   })
 
   /* -------------------------------------------- */
+  /*  Broken item sale policy                     */
+  /* -------------------------------------------- */
+
+  describe('broken item sale policy', () => {
+    it('returns canSell=false for a broken item when allowBrokenItemSale=false', () => {
+      const item = { ...makeItem({ type: 'weapon', price: 100 }), system: { price: 100, quantity: 1, broken: true } }
+      const actor = makeActorWithItem(item)
+      const result = validateSale({ actor, item, policy: { allowBrokenItemSale: false } })
+      expect(result.canSell).toBe(false)
+      expect(result.reason).toBe('broken-item-not-sellable')
+      expect(result.messageKey).toBe('MARKET.Sale.Error.BrokenItemNotSellable')
+    })
+
+    it('returns canSell=true for a broken item when allowBrokenItemSale=true', () => {
+      const item = { ...makeItem({ type: 'weapon', price: 100 }), system: { price: 100, quantity: 1, broken: true } }
+      const actor = makeActorWithItem(item)
+      const result = validateSale({ actor, item, policy: { allowBrokenItemSale: true } })
+      expect(result.canSell).toBe(true)
+      expect(result.reason).toBe('')
+    })
+
+    it('returns canSell=true for a broken item when no policy is provided (permissive default)', () => {
+      const item = { ...makeItem({ type: 'weapon', price: 100 }), system: { price: 100, quantity: 1, broken: true } }
+      const actor = makeActorWithItem(item)
+      const result = validateSale({ actor, item })
+      expect(result.canSell).toBe(true)
+    })
+
+    it('returns canSell=true for a non-broken item regardless of allowBrokenItemSale=false', () => {
+      const item = makeItem({ type: 'weapon', price: 100 })
+      const actor = makeActorWithItem(item)
+      const result = validateSale({ actor, item, policy: { allowBrokenItemSale: false } })
+      expect(result.canSell).toBe(true)
+    })
+
+    it('evaluates broken=false as not broken (allows sale)', () => {
+      const item = { ...makeItem({ type: 'gear', price: 50 }), system: { price: 50, quantity: 1, broken: false } }
+      const actor = makeActorWithItem(item)
+      const result = validateSale({ actor, item, policy: { allowBrokenItemSale: false } })
+      expect(result.canSell).toBe(true)
+    })
+
+    it('evaluates missing system.broken as not broken (allows sale)', () => {
+      const item = makeItem({ type: 'armor', price: 200 })
+      const actor = makeActorWithItem(item)
+      const result = validateSale({ actor, item, policy: { allowBrokenItemSale: false } })
+      expect(result.canSell).toBe(true)
+    })
+  })
+
+  /* -------------------------------------------- */
   /*  messageKey completeness                     */
   /* -------------------------------------------- */
 
   describe('messageKey completeness', () => {
+    const brokenItem = { id: 'item-broken', uuid: 'Item.item-broken', type: 'weapon', system: { price: 100, quantity: 1, broken: true } }
     const failureCases = [
       { desc: 'missing-actor', params: { actor: null, item: makeItem() } },
       { desc: 'missing-item', params: { actor: makeActor(), item: null } },
       { desc: 'unsellable-type', params: { actor: makeActorWithItem(makeItem({ type: 'talent' })), item: makeItem({ type: 'talent' }) } },
       { desc: 'not-in-inventory', params: { actor: makeActor(), item: makeItem() } },
       { desc: 'invalid-price', params: { actor: makeActorWithItem(makeItem({ price: -1 })), item: makeItem({ price: -1 }) } },
+      { desc: 'broken-item-not-sellable', params: { actor: makeActor({ items: [brokenItem] }), item: brokenItem, policy: { allowBrokenItemSale: false } } },
     ]
 
     for (const { desc, params } of failureCases) {

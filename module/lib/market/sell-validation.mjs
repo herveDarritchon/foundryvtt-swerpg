@@ -20,6 +20,11 @@ import { PURCHASABLE_ITEM_TYPES } from '../../config/market.mjs'
  * @property {number}  [maxQuantity] Maximum sellable quantity = item's current stack size (present when canSell is true).
  */
 
+/**
+ * @typedef {Object} BrokenSalePolicy
+ * @property {boolean} allowBrokenItemSale  Whether broken items may be sold at all.
+ */
+
 /* -------------------------------------------- */
 /*  Pure function                               */
 /* -------------------------------------------- */
@@ -33,16 +38,18 @@ import { PURCHASABLE_ITEM_TYPES } from '../../config/market.mjs'
  * 3. Item type must be listed in `PURCHASABLE_ITEM_TYPES`.
  * 4. Item must be present in the actor's inventory (matched by `id` or `uuid`).
  * 5. Item's `system.price` must be a non-negative number (or 0).
+ * 6. If `policy.allowBrokenItemSale` is false and the item is broken, sale is rejected.
  *
  * The actor's `items` may be any iterable collection with a `.some()` method, or a plain array.
  * This matches both Foundry's `EmbeddedCollection` and plain test stubs.
  *
- * @param {object} params
- * @param {{ items?: { some: Function } }} params.actor  Actor-like plain object.
- * @param {{ id?: string, uuid?: string, type?: string, system?: { price?: number } }} params.item  Item-like plain object.
+ * @param {object}            params
+ * @param {{ items?: { some: Function } }}                                      params.actor   Actor-like plain object.
+ * @param {{ id?: string, uuid?: string, type?: string, system?: { price?: number, broken?: boolean } }} params.item  Item-like plain object.
+ * @param {BrokenSalePolicy}  [params.policy]  Broken item sale policy. Defaults to allowing sale (permissive).
  * @returns {SaleValidationResult}
  */
-export function validateSale({ actor, item } = {}) {
+export function validateSale({ actor, item, policy } = {}) {
   if (!actor || typeof actor !== 'object') {
     return {
       canSell: false,
@@ -84,6 +91,17 @@ export function validateSale({ actor, item } = {}) {
       canSell: false,
       reason: 'invalid-price',
       messageKey: 'MARKET.Sale.Error.InvalidPrice',
+    }
+  }
+
+  // Enforce broken item policy: if the item is broken and the policy forbids selling broken items, reject.
+  const isBroken = item.system?.broken === true
+  const allowBrokenItemSale = policy?.allowBrokenItemSale ?? true
+  if (isBroken && !allowBrokenItemSale) {
+    return {
+      canSell: false,
+      reason: 'broken-item-not-sellable',
+      messageKey: 'MARKET.Sale.Error.BrokenItemNotSellable',
     }
   }
 

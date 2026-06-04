@@ -381,3 +381,32 @@ export const DEFAULT_MARKET_CONTEXT = Object.freeze({
   marketType: DEFAULT_MARKET_TYPE,
   manualModifier: 0,
 })
+
+/* -------------------------------------------- */
+
+/**
+ * Whether broken items are allowed to be sold by default.
+ * When false, selling a broken item is rejected regardless of multiplier.
+ * @type {boolean}
+ */
+export const DEFAULT_ALLOW_BROKEN_ITEM_SALE = false
+
+/**
+ * Default resale price multiplier (as a percentage, 0–100) applied to broken items when
+ * their resale is allowed.
+ * A value of 50 means broken items sell for 50% of the normal resale value.
+ * @type {number}
+ */
+export const DEFAULT_BROKEN_ITEM_SALE_MULTIPLIER = 50
+
+/**
+ * Minimum allowed value (inclusive) for the broken item sale multiplier (%).
+ * @type {number}
+ */
+export const BROKEN_ITEM_SALE_MULTIPLIER_MIN = 0
+
+/**
+ * Maximum allowed value (inclusive) for the broken item sale multiplier (%).
+ * @type {number}
+ */
+export const BROKEN_ITEM_SALE_MULTIPLIER_MAX = 100

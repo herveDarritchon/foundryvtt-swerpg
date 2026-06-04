@@ -38,8 +38,8 @@ describe('System Settings Registration', () => {
     test('should register all system settings', () => {
       registerSystemSettings()
 
-      // Verify all settings were registered (8 core + 3 original market + 4 phase-9 market = 15 total)
-      expect(mockGameSettings.register).toHaveBeenCalledTimes(15) // 15 settings total
+      // Verify all settings were registered (8 core + 3 original market + 4 phase-9 market + 2 broken-sale market = 17 total)
+      expect(mockGameSettings.register).toHaveBeenCalledTimes(17) // 17 settings total
       expect(mockKeybindings.register).toHaveBeenCalledTimes(1) // 1 keybinding
     })
 
@@ -155,9 +155,9 @@ describe('System Settings Registration', () => {
 
         const calls = mockGameSettings.register.mock.calls
 
-        // World-scoped settings (7 core + 3 original market + 4 phase-9 market = 14)
+        // World-scoped settings (7 core + 3 original market + 4 phase-9 market + 2 broken-sale market = 16)
         const worldSettings = calls.filter((call) => call[2].scope === 'world')
-        expect(worldSettings).toHaveLength(14)
+        expect(worldSettings).toHaveLength(16)
 
         // Client-scoped settings
         const clientSettings = calls.filter((call) => call[2].scope === 'client')
@@ -170,9 +170,9 @@ describe('System Settings Registration', () => {
 
         const calls = mockGameSettings.register.mock.calls
 
-        // Hidden settings (config: false) — 5 core + 3 original market + 4 phase-9 market = 12
+        // Hidden settings (config: false) — 5 core + 3 original market + 4 phase-9 market + 2 broken-sale market = 14
         const hiddenSettings = calls.filter((call) => call[2].config === false)
-        expect(hiddenSettings).toHaveLength(12)
+        expect(hiddenSettings).toHaveLength(14)
 
         // Visible settings (config: true)
         const visibleSettings = calls.filter((call) => call[2].config === true)
@@ -208,14 +208,14 @@ describe('System Settings Registration', () => {
 
         // Boolean settings
         const booleanSettings = calls.filter((call) => call[2].type === Boolean)
-        expect(booleanSettings).toHaveLength(3)
-        expect(booleanSettings.map((call) => call[1])).toEqual(expect.arrayContaining(['devMode', 'actionAnimations', 'welcome']))
+        expect(booleanSettings).toHaveLength(4)
+        expect(booleanSettings.map((call) => call[1])).toEqual(expect.arrayContaining(['devMode', 'actionAnimations', 'welcome', 'marketAllowBrokenItemSale']))
 
-        // Number settings (autoConfirm, heroism, auditLogMaxEntries, marketGlobalPriceModifier)
+        // Number settings (autoConfirm, heroism, auditLogMaxEntries, marketGlobalPriceModifier, marketBrokenItemSaleMultiplier)
         const numberSettings = calls.filter((call) => call[2].type === Number)
-        expect(numberSettings).toHaveLength(4)
+        expect(numberSettings).toHaveLength(5)
         expect(numberSettings.map((call) => call[1])).toEqual(
-          expect.arrayContaining(['autoConfirm', 'heroism', 'auditLogMaxEntries', 'marketGlobalPriceModifier']),
+          expect.arrayContaining(['autoConfirm', 'heroism', 'auditLogMaxEntries', 'marketGlobalPriceModifier', 'marketBrokenItemSaleMultiplier']),
         )
       })
 
@@ -300,8 +300,8 @@ describe('System Settings Registration', () => {
         registerSystemSettings()
         registerSystemSettings()
 
-        // Should have been called twice for each setting (15 settings x 2 calls)
-        expect(mockGameSettings.register).toHaveBeenCalledTimes(30) // 15 settings x 2 calls
+        // Should have been called twice for each setting (17 settings x 2 calls)
+        expect(mockGameSettings.register).toHaveBeenCalledTimes(34) // 17 settings x 2 calls
         expect(mockKeybindings.register).toHaveBeenCalledTimes(2) // 1 keybinding x 2 calls
       })
     })
@@ -327,6 +327,8 @@ describe('System Settings Registration', () => {
           'marketTypeModifiers',
           'marketGlobalPriceModifier',
           'marketLocationConfigs',
+          'marketAllowBrokenItemSale',
+          'marketBrokenItemSaleMultiplier',
         ]
 
         for (const key of expectedKeys) {

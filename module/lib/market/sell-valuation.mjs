@@ -48,6 +48,7 @@ export const SELL_DISASTER_FRACTION = 0.1
  * @property {number}             fraction          Fraction of base price applied (0–1).
  * @property {number}             basePrice         The original base price passed in.
  * @property {NegotiationOutcome} outcome           The negotiation outcome applied.
+ * @property {boolean}            brokenApplied     Whether the broken item multiplier was applied.
  */
 
 /* -------------------------------------------- */
@@ -63,15 +64,20 @@ export const SELL_DISASTER_FRACTION = 0.1
  * - `'triumph'`  → 75%
  * - `'disaster'` → 10%
  *
+ * When `brokenMultiplier` is provided (0–100), the negotiation-based resale price is
+ * further multiplied by `brokenMultiplier / 100`. This step is applied after the negotiation
+ * fraction and is always floored to the nearest integer.
+ *
  * The result is always floored to the nearest integer.
  *
  * @param {object}             params
- * @param {number}             params.basePrice          Non-negative base price of the item.
- * @param {NegotiationOutcome} [params.negotiationOutcome='failure']  Outcome of the negotiation roll.
+ * @param {number}             params.basePrice                         Non-negative base price of the item.
+ * @param {NegotiationOutcome} [params.negotiationOutcome='failure']    Outcome of the negotiation roll.
+ * @param {number|null}        [params.brokenMultiplier=null]           Broken item percentage multiplier (0–100), or null to skip.
  * @returns {ResalePriceResult}
  * @throws {TypeError} When basePrice is not a non-negative finite number.
  */
-export function computeResalePrice({ basePrice, negotiationOutcome = 'failure' } = {}) {
+export function computeResalePrice({ basePrice, negotiationOutcome = 'failure', brokenMultiplier = null } = {}) {
   if (!Number.isFinite(basePrice) || basePrice < 0) {
     throw new TypeError(`basePrice must be a non-negative finite number, got ${basePrice}`)
   }
@@ -86,12 +92,19 @@ export function computeResalePrice({ basePrice, negotiationOutcome = 'failure' }
     fraction = SELL_DISASTER_FRACTION
   }
 
-  const resalePrice = Math.floor(basePrice * fraction)
+  let resalePrice = Math.floor(basePrice * fraction)
+
+  // Apply broken item multiplier after the negotiation fraction, when provided.
+  const brokenApplied = brokenMultiplier !== null && Number.isFinite(brokenMultiplier)
+  if (brokenApplied) {
+    resalePrice = Math.floor(resalePrice * (brokenMultiplier / 100))
+  }
 
   return {
     resalePrice,
     fraction,
     basePrice,
     outcome: negotiationOutcome,
+    brokenApplied,
   }
 }

@@ -14,6 +14,12 @@ export {
   SETTING_MARKET_ENABLED_SOURCES,
   SETTING_MARKET_ALLOWED_ITEM_TYPES,
   SETTING_MARKET_DEDUP_STRATEGY,
+  SETTING_MARKET_ALLOW_BROKEN_ITEM_SALE,
+  SETTING_MARKET_BROKEN_ITEM_SALE_MULTIPLIER,
+  readMarketAllowBrokenItemSale,
+  writeMarketAllowBrokenItemSale,
+  readMarketBrokenItemSaleMultiplier,
+  writeMarketBrokenItemSaleMultiplier,
 } from './market-settings.mjs'
 export {
   computeNegotiatedPrice,
