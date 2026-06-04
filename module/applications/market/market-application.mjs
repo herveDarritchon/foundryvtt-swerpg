@@ -191,7 +191,6 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
       resetInventory: MarketApplicationV2.#onResetInventory,
       buyItem: MarketApplicationV2.#onBuyItem,
       negotiateItem: MarketApplicationV2.#onNegotiateItem,
-      changeMarket: MarketApplicationV2.#onChangeMarket,
       toggleMode: MarketApplicationV2.#onToggleMode,
       sellItem: MarketApplicationV2.#onSellItem,
     },
@@ -546,19 +545,20 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
   async #prepareCatalog(buyer = null, buyerCredits = null) {
     const activeMarketType = this._viewState.activeMarketType ?? DEFAULT_MARKET_TYPE
 
-    // Heavy phase — uses cache when market type is unchanged
+    // 1. Heavy phase — load and cache the base catalogue (world items + compendiums + domain loader + visibility filter)
     const visibleEntries = await this.#loadCatalogBase(activeMarketType)
 
     const totalCount = visibleEntries.length
 
-    // Light phase — always runs (search, filters, sort, annotation)
+    // 2. Light phase — apply text search and field filters
     const { search, filterType, filterSource, filterRestriction, affordableOnly, sortBy, sortDirection } = this._viewState
     let filtered = filterBySearch(visibleEntries, search)
     filtered = filterByFilters(filtered, { filterType, filterSource, filterRestriction })
 
+    // 3. Sort
     const sorted = sortEntries(filtered, sortBy, sortDirection)
 
-    // Annotate each entry with canBuy, obtainability, and narrative badges
+    // 4. Annotate each entry with canBuy, obtainability, and narrative badges
     const hasBuyer = buyer !== null
     const annotated = sorted.map((entry) => {
       const validation = validatePurchase({ actor: buyer, entry })
@@ -634,7 +634,7 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
       }
     })
 
-    // Apply affordableOnly filter after canBuy annotation (buyer must be present for this filter to take effect)
+    // 5. Apply affordableOnly filter after canBuy annotation (buyer must be present for this filter to take effect)
     const items = affordableOnly && buyer !== null ? annotated.filter((entry) => entry.canBuy) : annotated
 
     const filteredCount = items.length
@@ -715,28 +715,6 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
       inventorySortDirection: DEFAULT_VIEW_STATE.inventorySortDirection,
     }
     logger.debug('[Market] Inventory search/sort reset')
-    await this.render()
-  }
-
-  /**
-   * Change the active market type and re-render the catalogue.
-   * Validates that the requested type key is in MARKET_TYPES before applying.
-   *
-   * @this {MarketApplicationV2}
-   * @param {PointerEvent} _event   The initiating event
-   * @param {HTMLElement}  target   The element bearing data-action="changeMarket" and data-market-type
-   * @returns {Promise<void>}
-   */
-  static async #onChangeMarket(_event, target) {
-    const marketType = target.dataset?.marketType
-    if (!marketType || !(marketType in MARKET_TYPES)) {
-      logger.warn(`[Market] changeMarket action received unknown market type "${marketType}"`)
-      return
-    }
-    this._viewState = { ...this._viewState, activeMarketType: marketType }
-    // Market type change means different content — invalidate the base cache
-    this.#invalidateCatalogCache()
-    logger.debug('[Market] Active market type changed', { marketType })
     await this.render()
   }
 
