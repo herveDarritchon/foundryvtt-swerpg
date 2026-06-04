@@ -277,15 +277,22 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
       : null
 
     if (partId === 'catalog') {
-      context.catalog = await this.#prepareCatalog(buyer, buyerCredits)
-      context.sortOptions = this.#buildSortOptions()
-      context.typeFilterOptions = this.#buildTypeFilterOptions()
-      context.sourceFilterOptions = this.#buildSourceFilterOptions()
-      context.restrictionFilterOptions = this.#buildRestrictionFilterOptions()
-      context.marketTypeOptions = this.#buildMarketTypeOptions()
-      context.inventorySortOptions = this.#buildInventorySortOptions()
-      context.inventory = buyer ? this.#prepareInventory(buyer) : { items: [], isEmpty: true, isFilteredEmpty: false }
-      context.toolbarState = this.#buildToolbarState(buyer)
+      if (mode === 'sell') {
+        // Sell mode: only prepare the inventory branch — catalogue pipeline is not needed.
+        context.catalog = null
+        context.inventory = buyer ? this.#prepareInventory(buyer) : { items: [], isEmpty: true, isFilteredEmpty: false }
+        context.inventorySortOptions = this.#buildInventorySortOptions()
+      } else {
+        // Buy mode (default): only prepare the catalogue branch — inventory is not needed.
+        context.catalog = await this.#prepareCatalog(buyer, buyerCredits)
+        context.sortOptions = this.#buildSortOptions()
+        context.typeFilterOptions = this.#buildTypeFilterOptions()
+        context.sourceFilterOptions = this.#buildSourceFilterOptions()
+        context.restrictionFilterOptions = this.#buildRestrictionFilterOptions()
+        context.marketTypeOptions = this.#buildMarketTypeOptions()
+        context.inventory = null
+        context.toolbarState = this.#buildToolbarState(buyer)
+      }
     }
 
     return context

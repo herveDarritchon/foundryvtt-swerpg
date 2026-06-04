@@ -2163,17 +2163,29 @@ describe('MarketApplicationV2', () => {
       expect(context.mode).toBe('sell')
     })
 
-    it('exposes empty inventory when no buyer is set', async () => {
+    it('exposes null inventory in buy mode', async () => {
       globalThis.game.items = makeItemsCollection([])
 
       const app = new MarketApplicationV2()
+      // mode defaults to 'buy' — inventory must not be prepared
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.inventory).toBeNull()
+    })
+
+    it('exposes empty inventory in sell mode when no buyer is set', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, mode: 'sell' }
       const context = await app._preparePartContext('catalog', {})
 
       expect(context.inventory).toBeDefined()
+      expect(context.inventory).not.toBeNull()
       expect(context.inventory.items).toHaveLength(0)
     })
 
-    it('exposes sellable items when buyer is set', async () => {
+    it('exposes sellable items in sell mode when buyer is set', async () => {
       globalThis.game.items = makeItemsCollection([])
 
       const sellableItem = {
@@ -2192,6 +2204,7 @@ describe('MarketApplicationV2', () => {
 
       const app = new MarketApplicationV2()
       app.setBuyerActor(actor)
+      app._viewState = { ...app._viewState, mode: 'sell' }
       const context = await app._preparePartContext('catalog', {})
 
       expect(context.inventory.items).toHaveLength(1)
@@ -2202,7 +2215,7 @@ describe('MarketApplicationV2', () => {
       expect(entry.basePrice).toBe(400)
     })
 
-    it('excludes items with non-purchasable types (e.g. talent)', async () => {
+    it('excludes items with non-purchasable types (e.g. talent) in sell mode', async () => {
       globalThis.game.items = makeItemsCollection([])
 
       const talentItem = {
@@ -2221,12 +2234,13 @@ describe('MarketApplicationV2', () => {
 
       const app = new MarketApplicationV2()
       app.setBuyerActor(actor)
+      app._viewState = { ...app._viewState, mode: 'sell' }
       const context = await app._preparePartContext('catalog', {})
 
       expect(context.inventory.items).toHaveLength(0)
     })
 
-    it('includes only weapon, armor, and gear types', async () => {
+    it('includes only weapon, armor, and gear types in sell mode', async () => {
       globalThis.game.items = makeItemsCollection([])
 
       const items = [
@@ -2245,6 +2259,7 @@ describe('MarketApplicationV2', () => {
 
       const app = new MarketApplicationV2()
       app.setBuyerActor(actor)
+      app._viewState = { ...app._viewState, mode: 'sell' }
       const context = await app._preparePartContext('catalog', {})
 
       // Only weapon, armor, gear are sellable
@@ -2257,7 +2272,7 @@ describe('MarketApplicationV2', () => {
       expect(types).not.toContain('career')
     })
 
-    it('computes resaleEstimate as 25% of basePrice (floored)', async () => {
+    it('computes resaleEstimate as 25% of basePrice (floored) in sell mode', async () => {
       globalThis.game.items = makeItemsCollection([])
 
       const item = { id: 'w1', name: 'Blaster', img: '', type: 'weapon', system: { price: 400 } }
@@ -2270,6 +2285,7 @@ describe('MarketApplicationV2', () => {
 
       const app = new MarketApplicationV2()
       app.setBuyerActor(actor)
+      app._viewState = { ...app._viewState, mode: 'sell' }
       const context = await app._preparePartContext('catalog', {})
 
       const entry = context.inventory.items[0]
@@ -2277,7 +2293,7 @@ describe('MarketApplicationV2', () => {
       expect(entry.resaleFraction).toBe(25)
     })
 
-    it('uses _source.price over system.price when available', async () => {
+    it('uses _source.price over system.price when available in sell mode', async () => {
       globalThis.game.items = makeItemsCollection([])
 
       // _source.price is 300, but post-derivation system.price is 999
@@ -2291,6 +2307,7 @@ describe('MarketApplicationV2', () => {
 
       const app = new MarketApplicationV2()
       app.setBuyerActor(actor)
+      app._viewState = { ...app._viewState, mode: 'sell' }
       const context = await app._preparePartContext('catalog', {})
 
       const entry = context.inventory.items[0]
@@ -2298,7 +2315,7 @@ describe('MarketApplicationV2', () => {
       expect(entry.resaleEstimate).toBe(Math.floor(300 * 0.25)) // 75
     })
 
-    it('sorts inventory items by name ascending', async () => {
+    it('sorts inventory items by name ascending in sell mode', async () => {
       globalThis.game.items = makeItemsCollection([])
 
       const items = [
@@ -2315,13 +2332,14 @@ describe('MarketApplicationV2', () => {
 
       const app = new MarketApplicationV2()
       app.setBuyerActor(actor)
+      app._viewState = { ...app._viewState, mode: 'sell' }
       const context = await app._preparePartContext('catalog', {})
 
       const names = context.inventory.items.map((i) => i.name)
       expect(names).toEqual([...names].sort((a, b) => a.localeCompare(b)))
     })
 
-    it('exposes typeLabel from PURCHASABLE_ITEM_TYPES config', async () => {
+    it('exposes typeLabel from PURCHASABLE_ITEM_TYPES config in sell mode', async () => {
       globalThis.game.items = makeItemsCollection([])
 
       const item = { id: 'w1', name: 'Blaster', img: '', type: 'weapon', system: { price: 100 } }
@@ -2334,6 +2352,7 @@ describe('MarketApplicationV2', () => {
 
       const app = new MarketApplicationV2()
       app.setBuyerActor(actor)
+      app._viewState = { ...app._viewState, mode: 'sell' }
       const context = await app._preparePartContext('catalog', {})
 
       const entry = context.inventory.items[0]
@@ -2368,7 +2387,7 @@ describe('MarketApplicationV2', () => {
 
       const app = new MarketApplicationV2()
       app.setBuyerActor(actor)
-      app._viewState = { ...app._viewState, inventorySearch: 'blaster' }
+      app._viewState = { ...app._viewState, mode: 'sell', inventorySearch: 'blaster' }
       const context = await app._preparePartContext('catalog', {})
 
       expect(context.inventory.items).toHaveLength(1)
@@ -2388,7 +2407,7 @@ describe('MarketApplicationV2', () => {
 
       const app = new MarketApplicationV2()
       app.setBuyerActor(actor)
-      app._viewState = { ...app._viewState, inventorySearch: 'BLASTER' }
+      app._viewState = { ...app._viewState, mode: 'sell', inventorySearch: 'BLASTER' }
       const context = await app._preparePartContext('catalog', {})
 
       expect(context.inventory.items).toHaveLength(1)
@@ -2410,7 +2429,7 @@ describe('MarketApplicationV2', () => {
 
       const app = new MarketApplicationV2()
       app.setBuyerActor(actor)
-      app._viewState = { ...app._viewState, inventorySearch: '' }
+      app._viewState = { ...app._viewState, mode: 'sell', inventorySearch: '' }
       const context = await app._preparePartContext('catalog', {})
 
       expect(context.inventory.items).toHaveLength(2)
@@ -2429,7 +2448,7 @@ describe('MarketApplicationV2', () => {
 
       const app = new MarketApplicationV2()
       app.setBuyerActor(actor)
-      app._viewState = { ...app._viewState, inventorySearch: 'lightsaber' }
+      app._viewState = { ...app._viewState, mode: 'sell', inventorySearch: 'lightsaber' }
       const context = await app._preparePartContext('catalog', {})
 
       expect(context.inventory.isEmpty).toBe(false)
@@ -2461,7 +2480,7 @@ describe('MarketApplicationV2', () => {
 
       const app = new MarketApplicationV2()
       app.setBuyerActor(actor)
-      app._viewState = { ...app._viewState, inventorySortBy: 'name', inventorySortDirection: 'asc' }
+      app._viewState = { ...app._viewState, mode: 'sell', inventorySortBy: 'name', inventorySortDirection: 'asc' }
       const context = await app._preparePartContext('catalog', {})
 
       const names = context.inventory.items.map((i) => i.name)
@@ -2484,7 +2503,7 @@ describe('MarketApplicationV2', () => {
 
       const app = new MarketApplicationV2()
       app.setBuyerActor(actor)
-      app._viewState = { ...app._viewState, inventorySortBy: 'name', inventorySortDirection: 'desc' }
+      app._viewState = { ...app._viewState, mode: 'sell', inventorySortBy: 'name', inventorySortDirection: 'desc' }
       const context = await app._preparePartContext('catalog', {})
 
       const names = context.inventory.items.map((i) => i.name)
@@ -2508,7 +2527,7 @@ describe('MarketApplicationV2', () => {
 
       const app = new MarketApplicationV2()
       app.setBuyerActor(actor)
-      app._viewState = { ...app._viewState, inventorySortBy: 'basePrice', inventorySortDirection: 'asc' }
+      app._viewState = { ...app._viewState, mode: 'sell', inventorySortBy: 'basePrice', inventorySortDirection: 'asc' }
       const context = await app._preparePartContext('catalog', {})
 
       const prices = context.inventory.items.map((i) => i.basePrice)
@@ -2531,7 +2550,7 @@ describe('MarketApplicationV2', () => {
 
       const app = new MarketApplicationV2()
       app.setBuyerActor(actor)
-      app._viewState = { ...app._viewState, inventorySortBy: 'basePrice', inventorySortDirection: 'desc' }
+      app._viewState = { ...app._viewState, mode: 'sell', inventorySortBy: 'basePrice', inventorySortDirection: 'desc' }
       const context = await app._preparePartContext('catalog', {})
 
       const prices = context.inventory.items.map((i) => i.basePrice)
@@ -2554,17 +2573,18 @@ describe('MarketApplicationV2', () => {
 
       const app = new MarketApplicationV2()
       app.setBuyerActor(actor)
-      app._viewState = { ...app._viewState, inventorySortBy: 'resaleEstimate', inventorySortDirection: 'asc' }
+      app._viewState = { ...app._viewState, mode: 'sell', inventorySortBy: 'resaleEstimate', inventorySortDirection: 'asc' }
       const context = await app._preparePartContext('catalog', {})
 
       const estimates = context.inventory.items.map((i) => i.resaleEstimate)
       expect(estimates[0]).toBeLessThanOrEqual(estimates[1])
     })
 
-    it('exposes inventorySortOptions in catalog context', async () => {
+    it('exposes inventorySortOptions in sell mode context', async () => {
       globalThis.game.items = makeItemsCollection([])
 
       const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, mode: 'sell' }
       const context = await app._preparePartContext('catalog', {})
 
       expect(context.inventorySortOptions).toBeDefined()
@@ -2575,6 +2595,16 @@ describe('MarketApplicationV2', () => {
       expect(values).toContain('name')
       expect(values).toContain('basePrice')
       expect(values).toContain('resaleEstimate')
+    })
+
+    it('does not expose inventorySortOptions in buy mode', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      // mode defaults to 'buy'
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.inventorySortOptions).toBeUndefined()
     })
   })
 
@@ -2674,7 +2704,7 @@ describe('MarketApplicationV2', () => {
       const app = new MarketApplicationV2()
       app.setBuyerActor(actor)
       // Search for "blaster" then sort by basePrice ascending
-      app._viewState = { ...app._viewState, inventorySearch: 'blaster', inventorySortBy: 'basePrice', inventorySortDirection: 'asc' }
+      app._viewState = { ...app._viewState, mode: 'sell', inventorySearch: 'blaster', inventorySortBy: 'basePrice', inventorySortDirection: 'asc' }
       const context = await app._preparePartContext('catalog', {})
 
       // Only blaster items, sorted by base price ascending
@@ -2710,6 +2740,181 @@ describe('MarketApplicationV2', () => {
 
       expect(app._viewState.mode).toBe('buy')
       expect(app._viewState.search).toBe('blaster')
+    })
+  })
+
+  /* -------------------------------------------- */
+  /*  Mode-conditional preparation contract        */
+  /* -------------------------------------------- */
+
+  describe('mode-conditional context preparation', () => {
+    it('sell mode does not call loadCompendiumItems (catalogue pipeline not started)', async () => {
+      const sellableItem = {
+        id: 'item-1',
+        name: 'Blaster',
+        img: '',
+        type: 'weapon',
+        system: { price: 100 },
+      }
+      const actor = {
+        id: 'actor-1',
+        name: 'Test',
+        system: { credits: 500 },
+        items: makeItemsCollection([sellableItem]),
+      }
+      globalThis.game.items = makeItemsCollection([makeItem({ type: 'weapon', name: 'World Blaster' })])
+
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+      app._viewState = { ...app._viewState, mode: 'sell' }
+
+      await app._preparePartContext('catalog', {})
+
+      // The catalogue pipeline must not have been invoked in sell mode
+      expect(loadCompendiumItemsMock).not.toHaveBeenCalled()
+    })
+
+    it('sell mode does not populate context.catalog', async () => {
+      globalThis.game.items = makeItemsCollection([makeItem({ type: 'weapon', name: 'Blaster' })])
+
+      const actor = {
+        id: 'actor-1',
+        name: 'Test',
+        system: { credits: 500 },
+        items: makeItemsCollection([]),
+      }
+
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+      app._viewState = { ...app._viewState, mode: 'sell' }
+
+      const context = await app._preparePartContext('catalog', {})
+
+      // context.catalog must be null — the catalogue was never built
+      expect(context.catalog).toBeNull()
+    })
+
+    it('sell mode does not populate buy-mode options (sortOptions, typeFilterOptions, marketTypeOptions, toolbarState)', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, mode: 'sell' }
+
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.sortOptions).toBeUndefined()
+      expect(context.typeFilterOptions).toBeUndefined()
+      expect(context.sourceFilterOptions).toBeUndefined()
+      expect(context.restrictionFilterOptions).toBeUndefined()
+      expect(context.marketTypeOptions).toBeUndefined()
+      expect(context.toolbarState).toBeUndefined()
+    })
+
+    it('buy mode does not call #prepareInventory (context.inventory is null)', async () => {
+      const actor = {
+        id: 'actor-1',
+        name: 'Test',
+        system: { credits: 500 },
+        items: makeItemsCollection([{ id: 'w1', name: 'Blaster', img: '', type: 'weapon', system: { price: 100 } }]),
+      }
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+      // mode defaults to 'buy'
+
+      const context = await app._preparePartContext('catalog', {})
+
+      // context.inventory must be null — the inventory pipeline was never run
+      expect(context.inventory).toBeNull()
+    })
+
+    it('buy mode does not expose inventorySortOptions', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      // mode defaults to 'buy'
+
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.inventorySortOptions).toBeUndefined()
+    })
+
+    it('buy mode exposes catalog with expected shape', async () => {
+      const item = makeItem({ type: 'weapon', name: 'Blaster', price: 100 })
+      globalThis.game.items = makeItemsCollection([item])
+
+      const app = new MarketApplicationV2()
+      // mode defaults to 'buy'
+
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.catalog).not.toBeNull()
+      expect(context.catalog.items).toBeDefined()
+      expect(context.sortOptions).toBeDefined()
+      expect(context.typeFilterOptions).toBeDefined()
+      expect(context.marketTypeOptions).toBeDefined()
+      expect(context.toolbarState).toBeDefined()
+    })
+
+    it('sell mode exposes inventory with expected shape', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const actor = {
+        id: 'actor-1',
+        name: 'Test',
+        system: { credits: 500 },
+        items: makeItemsCollection([{ id: 'w1', name: 'Blaster', img: '', type: 'weapon', system: { price: 100 } }]),
+      }
+
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+      app._viewState = { ...app._viewState, mode: 'sell' }
+
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.inventory).not.toBeNull()
+      expect(context.inventory.items).toBeDefined()
+      expect(context.inventorySortOptions).toBeDefined()
+      expect(context.catalog).toBeNull()
+    })
+
+    it('sell mode does not populate _catalogCache (cache stays null after sell render)', async () => {
+      globalThis.game.items = makeItemsCollection([makeItem({ type: 'weapon', name: 'Blaster' })])
+
+      const actor = {
+        id: 'actor-1',
+        name: 'Test',
+        system: { credits: 500 },
+        items: makeItemsCollection([]),
+      }
+
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+      app._viewState = { ...app._viewState, mode: 'sell' }
+
+      await app._preparePartContext('catalog', {})
+
+      // Cache must remain cold — no catalogue loading happened
+      expect(app._catalogCache).toBeNull()
+    })
+
+    it('switching from sell to buy prepares catalog and populates _catalogCache', async () => {
+      const item = makeItem({ type: 'weapon', name: 'Blaster' })
+      globalThis.game.items = makeItemsCollection([item])
+
+      const app = new MarketApplicationV2()
+
+      // First render in sell mode — cache must stay cold
+      app._viewState = { ...app._viewState, mode: 'sell' }
+      await app._preparePartContext('catalog', {})
+      expect(app._catalogCache).toBeNull()
+
+      // Switch to buy mode — cache must be populated
+      app._viewState = { ...app._viewState, mode: 'buy' }
+      await app._preparePartContext('catalog', {})
+      expect(app._catalogCache).not.toBeNull()
+      expect(loadCompendiumItemsMock).toHaveBeenCalledTimes(1)
     })
   })
 
