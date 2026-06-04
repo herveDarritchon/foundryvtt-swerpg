@@ -4679,4 +4679,175 @@ describe('MarketApplicationV2', () => {
       expect(app1._debouncedRender).not.toBe(app2._debouncedRender)
     })
   })
+
+  /* -------------------------------------------- */
+  /*  Search focus preservation (#547)            */
+  /* -------------------------------------------- */
+
+  describe('search focus preservation — _searchFocusState contract', () => {
+    it('starts with _searchFocusState as null', () => {
+      const app = new MarketApplicationV2()
+      expect(app._searchFocusState).toBeNull()
+    })
+
+    it('_onChangeForm for market-search captures fieldName, selectionStart, selectionEnd', () => {
+      const app = new MarketApplicationV2()
+      app._debouncedRender = vi.fn()
+
+      const target = { name: 'market-search', type: 'text', value: 'bla', selectionStart: 3, selectionEnd: 3 }
+      app._onChangeForm({}, { target })
+
+      expect(app._searchFocusState).toEqual({
+        fieldName: 'market-search',
+        selectionStart: 3,
+        selectionEnd: 3,
+      })
+    })
+
+    it('_onChangeForm for market-search captures mid-word selection (selectionStart < selectionEnd)', () => {
+      const app = new MarketApplicationV2()
+      app._debouncedRender = vi.fn()
+
+      const target = { name: 'market-search', type: 'text', value: 'blaster', selectionStart: 2, selectionEnd: 5 }
+      app._onChangeForm({}, { target })
+
+      expect(app._searchFocusState).toEqual({
+        fieldName: 'market-search',
+        selectionStart: 2,
+        selectionEnd: 5,
+      })
+    })
+
+    it('_onChangeForm for market-inventory-search captures its fieldName', () => {
+      const app = new MarketApplicationV2()
+      app._debouncedRender = vi.fn()
+
+      const target = { name: 'market-inventory-search', type: 'text', value: 'rifle', selectionStart: 5, selectionEnd: 5 }
+      app._onChangeForm({}, { target })
+
+      expect(app._searchFocusState).toEqual({
+        fieldName: 'market-inventory-search',
+        selectionStart: 5,
+        selectionEnd: 5,
+      })
+    })
+
+    it('_onChangeForm for market-search falls back to value.length when selectionStart is null', () => {
+      const app = new MarketApplicationV2()
+      app._debouncedRender = vi.fn()
+
+      const target = { name: 'market-search', type: 'text', value: 'abc', selectionStart: null, selectionEnd: null }
+      app._onChangeForm({}, { target })
+
+      expect(app._searchFocusState.selectionStart).toBe(3)
+      expect(app._searchFocusState.selectionEnd).toBe(3)
+    })
+
+    it('_onChangeForm for non-search fields does not set _searchFocusState', () => {
+      const app = new MarketApplicationV2()
+      app.render = vi.fn()
+      app._debouncedRender = vi.fn()
+
+      const target = { name: 'market-filter-type', type: 'select-one', value: 'weapon' }
+      app._onChangeForm({}, { target })
+
+      expect(app._searchFocusState).toBeNull()
+    })
+
+    it('_onRender restores focus and caret on the matching search input', () => {
+      const app = new MarketApplicationV2()
+      app._searchFocusState = { fieldName: 'market-search', selectionStart: 4, selectionEnd: 4 }
+
+      const mockInput = {
+        focus: vi.fn(),
+        setSelectionRange: vi.fn(),
+      }
+      const mockElement = { querySelector: vi.fn((selector) => (selector === '[name="market-search"]' ? mockInput : null)) }
+      app.element = mockElement
+
+      app._onRender({}, {})
+
+      expect(mockInput.focus).toHaveBeenCalled()
+      expect(mockInput.setSelectionRange).toHaveBeenCalledWith(4, 4)
+    })
+
+    it('_onRender clears _searchFocusState after restoration', () => {
+      const app = new MarketApplicationV2()
+      app._searchFocusState = { fieldName: 'market-search', selectionStart: 2, selectionEnd: 2 }
+
+      const mockInput = { focus: vi.fn(), setSelectionRange: vi.fn() }
+      app.element = { querySelector: vi.fn(() => mockInput) }
+
+      app._onRender({}, {})
+
+      expect(app._searchFocusState).toBeNull()
+    })
+
+    it('_onRender clears _searchFocusState even when the input is not found (mode switch)', () => {
+      const app = new MarketApplicationV2()
+      // Capture was recorded for market-search but the DOM now shows sell mode (no market-search input)
+      app._searchFocusState = { fieldName: 'market-search', selectionStart: 2, selectionEnd: 2 }
+
+      app.element = { querySelector: vi.fn(() => null) }
+
+      app._onRender({}, {})
+
+      // Must not leave a stale capture
+      expect(app._searchFocusState).toBeNull()
+    })
+
+    it('_onRender is a no-op when _searchFocusState is null', () => {
+      const app = new MarketApplicationV2()
+      // No capture recorded
+      const mockElement = { querySelector: vi.fn() }
+      app.element = mockElement
+
+      app._onRender({}, {})
+
+      expect(mockElement.querySelector).not.toHaveBeenCalled()
+    })
+
+    it('_onRender does not throw when element is null', () => {
+      const app = new MarketApplicationV2()
+      app._searchFocusState = { fieldName: 'market-search', selectionStart: 0, selectionEnd: 0 }
+      app.element = null
+
+      expect(() => app._onRender({}, {})).not.toThrow()
+      expect(app._searchFocusState).toBeNull()
+    })
+
+    it('_onChangeForm for market-search followed by _onRender restores the same caret position (integration)', () => {
+      const app = new MarketApplicationV2()
+      app._debouncedRender = vi.fn()
+
+      // Simulate user typing at position 7
+      const target = { name: 'market-search', type: 'text', value: 'blaster', selectionStart: 7, selectionEnd: 7 }
+      app._onChangeForm({}, { target })
+
+      // Simulate AppV2 re-render having recreated the input
+      const newInput = { focus: vi.fn(), setSelectionRange: vi.fn() }
+      app.element = { querySelector: vi.fn(() => newInput) }
+      app._onRender({}, {})
+
+      expect(newInput.focus).toHaveBeenCalled()
+      expect(newInput.setSelectionRange).toHaveBeenCalledWith(7, 7)
+      expect(app._searchFocusState).toBeNull()
+    })
+
+    it('_onChangeForm for market-inventory-search followed by _onRender restores caret (sell mode integration)', () => {
+      const app = new MarketApplicationV2()
+      app._debouncedRender = vi.fn()
+
+      const target = { name: 'market-inventory-search', type: 'text', value: 'rifle', selectionStart: 3, selectionEnd: 3 }
+      app._onChangeForm({}, { target })
+
+      const newInput = { focus: vi.fn(), setSelectionRange: vi.fn() }
+      app.element = { querySelector: vi.fn((sel) => (sel === '[name="market-inventory-search"]' ? newInput : null)) }
+      app._onRender({}, {})
+
+      expect(newInput.focus).toHaveBeenCalled()
+      expect(newInput.setSelectionRange).toHaveBeenCalledWith(3, 3)
+      expect(app._searchFocusState).toBeNull()
+    })
+  })
 })

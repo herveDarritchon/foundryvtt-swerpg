@@ -253,6 +253,20 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
    */
   _debouncedRender = foundry.utils.debounce(() => this.render(), 250)
 
+  /**
+   * Pending focus-restore request captured just before a search-triggered debounced re-render.
+   * Holds the minimum state needed to restore the active search field after the DOM is recreated.
+   * Cleared immediately after restoration in `_onRender`.
+   *
+   * @typedef {Object} SearchFocusState
+   * @property {string} fieldName       The `name` attribute of the active search input.
+   * @property {number} selectionStart  Caret position start.
+   * @property {number} selectionEnd    Caret position end (equals `selectionStart` when no selection).
+   *
+   * @type {SearchFocusState|null}
+   */
+  _searchFocusState = null
+
   /* -------------------------------------------- */
 
   /**
@@ -263,6 +277,47 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
   setBuyerActor(actor) {
     this._buyerActor = actor ?? null
     logger.debug('[Market] Buyer actor set', { actorId: actor?.id ?? null, actorName: actor?.name ?? null })
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * After each re-render, restore the search field's focus and caret position if a capture
+   * was recorded by `_onChangeForm` before the debounced render fired.
+   *
+   * Only the two search inputs (`market-search` and `market-inventory-search`) need this treatment
+   * because they are the only controls that trigger `_debouncedRender` and get fully recreated
+   * in the DOM on each render cycle.
+   *
+   * @override
+   * @param {object} context  The prepared render context.
+   * @param {object} options  The render options passed by ApplicationV2.
+   */
+  _onRender(context, options) {
+    super._onRender?.(context, options)
+
+    const state = this._searchFocusState
+    if (!state) return
+
+    // Clear the pending state immediately — even if restoration fails below, we must not
+    // keep a stale capture that would wrongly trigger on the next unrelated render.
+    this._searchFocusState = null
+
+    const html = this.element
+    if (!html) return
+
+    const input = html.querySelector(`[name="${state.fieldName}"]`)
+    if (!input) return
+
+    input.focus()
+    // Restore caret / selection only when the API is available (text/search inputs).
+    if (typeof input.setSelectionRange === 'function') {
+      try {
+        input.setSelectionRange(state.selectionStart, state.selectionEnd)
+      } catch {
+        // setSelectionRange can throw on some input types — silently ignore.
+      }
+    }
   }
 
   /* -------------------------------------------- */
@@ -1500,6 +1555,11 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
       }
       case 'market-search':
         this._viewState = { ...this._viewState, search: value }
+        this._searchFocusState = {
+          fieldName: 'market-search',
+          selectionStart: target.selectionStart ?? value.length,
+          selectionEnd: target.selectionEnd ?? value.length,
+        }
         this._debouncedRender()
         break
       case 'market-filter-type':
@@ -1528,6 +1588,11 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
         break
       case 'market-inventory-search':
         this._viewState = { ...this._viewState, inventorySearch: value }
+        this._searchFocusState = {
+          fieldName: 'market-inventory-search',
+          selectionStart: target.selectionStart ?? value.length,
+          selectionEnd: target.selectionEnd ?? value.length,
+        }
         this._debouncedRender()
         break
       case 'market-inventory-sort-by':
