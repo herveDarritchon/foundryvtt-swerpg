@@ -39,6 +39,22 @@
     </tbody>
   </table>
 
+  <h3>{{localize "MARKET.Settings.Prices.BrokenItemSale"}}</h3>
+  <p class="notes">{{localize "MARKET.Settings.Prices.BrokenItemSaleHint"}}</p>
+  <div class="form-group">
+    <label>{{localize "MARKET.Settings.Prices.AllowBrokenItemSaleLabel"}}</label>
+    <input type="checkbox" name="allowBrokenItemSale"
+           {{#if allowBrokenItemSale}}checked{{/if}} />
+  </div>
+  <div class="form-group">
+    <label>{{localize "MARKET.Settings.Prices.BrokenItemSaleMultiplierLabel"}}</label>
+    <input type="number" name="brokenItemSaleMultiplier"
+           value="{{brokenItemSaleMultiplier}}"
+           min="{{brokenItemSaleMultiplierMin}}" max="{{brokenItemSaleMultiplierMax}}" step="1"
+           placeholder="50" />
+    <span class="units">%</span>
+  </div>
+
   <div class="market-settings-panel__actions">
     <button type="button" data-action="saveSettings" class="market-settings-panel__save-btn">
       <i class="fa-solid fa-floppy-disk"></i>

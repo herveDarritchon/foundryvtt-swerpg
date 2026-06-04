@@ -13,6 +13,10 @@ import {
   MARKET_TYPES,
   DEFAULT_MARKET_TYPE,
   AVAILABILITY_DERIVATION_THRESHOLDS,
+  DEFAULT_ALLOW_BROKEN_ITEM_SALE,
+  DEFAULT_BROKEN_ITEM_SALE_MULTIPLIER,
+  BROKEN_ITEM_SALE_MULTIPLIER_MIN,
+  BROKEN_ITEM_SALE_MULTIPLIER_MAX,
 } from '../../module/config/market.mjs'
 import { SYSTEM } from '../../module/config/system.mjs'
 
@@ -513,5 +517,41 @@ describe('AVAILABILITY_DERIVATION_THRESHOLDS — canonical availability derivati
     expect(AVAILABILITY_DERIVATION_THRESHOLDS.COMMON).toBe(3)
     expect(AVAILABILITY_DERIVATION_THRESHOLDS.RARE).toBe(5)
     expect(AVAILABILITY_DERIVATION_THRESHOLDS.VERY_RARE).toBe(7)
+  })
+})
+
+/* -------------------------------------------- */
+
+describe('Broken item sale policy constants', () => {
+  test('DEFAULT_ALLOW_BROKEN_ITEM_SALE is false (broken items cannot be sold by default)', () => {
+    expect(DEFAULT_ALLOW_BROKEN_ITEM_SALE).toBe(false)
+  })
+
+  test('DEFAULT_BROKEN_ITEM_SALE_MULTIPLIER is 50 (50% of normal resale value)', () => {
+    expect(DEFAULT_BROKEN_ITEM_SALE_MULTIPLIER).toBe(50)
+  })
+
+  test('BROKEN_ITEM_SALE_MULTIPLIER_MIN is 0', () => {
+    expect(BROKEN_ITEM_SALE_MULTIPLIER_MIN).toBe(0)
+  })
+
+  test('BROKEN_ITEM_SALE_MULTIPLIER_MAX is 100', () => {
+    expect(BROKEN_ITEM_SALE_MULTIPLIER_MAX).toBe(100)
+  })
+
+  test('MIN < MAX for multiplier bounds', () => {
+    expect(BROKEN_ITEM_SALE_MULTIPLIER_MIN).toBeLessThan(BROKEN_ITEM_SALE_MULTIPLIER_MAX)
+  })
+
+  test('DEFAULT multiplier is within [MIN, MAX]', () => {
+    expect(DEFAULT_BROKEN_ITEM_SALE_MULTIPLIER).toBeGreaterThanOrEqual(BROKEN_ITEM_SALE_MULTIPLIER_MIN)
+    expect(DEFAULT_BROKEN_ITEM_SALE_MULTIPLIER).toBeLessThanOrEqual(BROKEN_ITEM_SALE_MULTIPLIER_MAX)
+  })
+
+  test('all four constants are numbers', () => {
+    expect(typeof DEFAULT_ALLOW_BROKEN_ITEM_SALE).toBe('boolean')
+    expect(typeof DEFAULT_BROKEN_ITEM_SALE_MULTIPLIER).toBe('number')
+    expect(typeof BROKEN_ITEM_SALE_MULTIPLIER_MIN).toBe('number')
+    expect(typeof BROKEN_ITEM_SALE_MULTIPLIER_MAX).toBe('number')
   })
 })

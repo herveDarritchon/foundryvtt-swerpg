@@ -2,7 +2,14 @@ import { createMarketEntry } from '../../lib/market/market-entry.mjs'
 import { isItemVisibleForMarket } from '../../lib/market/market-visibility.mjs'
 import { loadMarketCatalog } from '../../lib/market/catalog-loader.mjs'
 import { validatePurchase } from '../../lib/market/purchase.mjs'
-import { readMarketConfig, readMarketExcludedItems, readMarketGlobalPriceModifier, readMarketTypeModifiers } from '../../lib/market/market-settings.mjs'
+import {
+  readMarketConfig,
+  readMarketExcludedItems,
+  readMarketGlobalPriceModifier,
+  readMarketTypeModifiers,
+  readMarketAllowBrokenItemSale,
+  readMarketBrokenItemSaleMultiplier,
+} from '../../lib/market/market-settings.mjs'
 import { evaluateObtainability } from '../../lib/market/rarity-engine.mjs'
 import { CONSEQUENCE_TYPES, evaluateMarketConsequences } from '../../lib/market/consequences.mjs'
 import { serializeConsequence } from '../../lib/market/consequence-persistence.mjs'
@@ -1147,13 +1154,21 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
    * @returns {{ items: Array<object>, isEmpty: boolean, isFilteredEmpty: boolean }}
    */
   #prepareInventory(actor) {
+    // Read broken item policy once for the whole inventory build
+    const allowBrokenItemSale = readMarketAllowBrokenItemSale('swerpg')
+    const brokenItemSaleMultiplier = readMarketBrokenItemSaleMultiplier('swerpg')
+
     // 1. Collect all sellable items and normalise fields
     const allItems = []
 
     for (const item of actor.items ?? []) {
       if (!(item.type in PURCHASABLE_ITEM_TYPES)) continue
       const basePrice = item.system?._source?.price ?? item.system?.price ?? 0
-      const valuation = computeResalePrice({ basePrice, negotiationOutcome: 'failure' })
+      const isBroken = item.system?.broken === true
+      // Items that cannot be sold (broken + policy = deny) show a resale estimate of 0.
+      const brokenBlocked = isBroken && !allowBrokenItemSale
+      const brokenMultiplier = isBroken && allowBrokenItemSale ? brokenItemSaleMultiplier : null
+      const valuation = brokenBlocked ? { resalePrice: 0, fraction: 0 } : computeResalePrice({ basePrice, negotiationOutcome: 'failure', brokenMultiplier })
       const typeConfig = PURCHASABLE_ITEM_TYPES[item.type]
 
       const quantity = item.system?.quantity ?? 1
@@ -1168,6 +1183,8 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
         resaleEstimate: valuation.resalePrice,
         resaleFraction: Math.round(valuation.fraction * 100),
         quantity,
+        isBroken,
+        brokenBlocked,
       })
     }
 
@@ -1260,8 +1277,13 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
       return
     }
 
+    // Read broken item sale policy from settings
+    const allowBrokenItemSale = readMarketAllowBrokenItemSale('swerpg')
+    const brokenItemSaleMultiplier = readMarketBrokenItemSaleMultiplier('swerpg')
+    const isBroken = item.system?.broken === true
+
     // Validate sale eligibility — also resolves maxQuantity from system.quantity
-    const validation = validateSale({ actor: seller, item })
+    const validation = validateSale({ actor: seller, item, policy: { allowBrokenItemSale } })
     if (!validation.canSell) {
       ui.notifications.warn(game.i18n.localize(validation.messageKey))
       return
@@ -1274,9 +1296,11 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
     const maxQuantity = validation.maxQuantity ?? 1
     const sellQuantity = Math.min(Math.max(1, isNaN(rawQty) ? 1 : rawQty), maxQuantity)
 
-    // Compute base resale estimate (25% — may be improved by negotiation)
+    // Compute base resale estimate (25% — may be improved by negotiation).
+    // When the item is broken and broken sale is allowed, apply the broken multiplier.
     // resalePrice here is the per-unit resale price; total = resalePrice × sellQuantity
-    const baseValuation = computeResalePrice({ basePrice: validation.basePrice, negotiationOutcome: 'failure' })
+    const brokenMultiplierForValuation = isBroken && allowBrokenItemSale ? brokenItemSaleMultiplier : null
+    const baseValuation = computeResalePrice({ basePrice: validation.basePrice, negotiationOutcome: 'failure', brokenMultiplier: brokenMultiplierForValuation })
     const baseResaleTotal = baseValuation.resalePrice * sellQuantity
 
     // Confirmation dialog
@@ -1342,6 +1366,7 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
         finalUnitValuation = computeResalePrice({
           basePrice: validation.basePrice,
           negotiationOutcome: negotiationResult.outcome,
+          brokenMultiplier: brokenMultiplierForValuation,
         })
       }
     }

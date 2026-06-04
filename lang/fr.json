@@ -1714,7 +1714,8 @@
         "NotInInventory": "L'article n'est pas dans votre inventaire.",
         "InvalidPrice": "L'article n'a pas de prix de base valide.",
         "ItemNotFound": "L'article n'a pas été trouvé dans votre inventaire.",
-        "WriteFailed": "Impossible de compléter la vente. Consultez la console pour plus de détails."
+        "WriteFailed": "Impossible de compléter la vente. Consultez la console pour plus de détails.",
+        "BrokenItemNotSellable": "Cet objet est cassé et ne peut pas être vendu."
       }
     },
     "Inventory": {
@@ -1779,7 +1780,11 @@
         "TypeModifiers": "Modificateurs de prix par type",
         "TypeModifiersHint": "Définissez un modificateur de pourcentage supplémentaire par type d'objet. Ces modificateurs s'ajoutent au modificateur global.",
         "TypeColumn": "Type d'objet",
-        "ModifierColumn": "Modificateur"
+        "ModifierColumn": "Modificateur",
+        "BrokenItemSale": "Revente des objets cassés",
+        "BrokenItemSaleHint": "Configurez si les objets cassés peuvent être vendus et à quelle valeur réduite.",
+        "AllowBrokenItemSaleLabel": "Autoriser la revente des objets cassés",
+        "BrokenItemSaleMultiplierLabel": "Multiplicateur de revente des objets cassés"
       },
       "Exclusions": {
         "ManuallyExcluded": "Objets exclus manuellement",

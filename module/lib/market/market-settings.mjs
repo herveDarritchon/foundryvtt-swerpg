@@ -1,4 +1,12 @@
-import { DEFAULT_MARKET_CONFIG, MARKET_FLAG_NAMESPACE, MARKET_EXCLUDED_FLAG } from '../../config/market.mjs'
+import {
+  DEFAULT_MARKET_CONFIG,
+  MARKET_FLAG_NAMESPACE,
+  MARKET_EXCLUDED_FLAG,
+  DEFAULT_ALLOW_BROKEN_ITEM_SALE,
+  DEFAULT_BROKEN_ITEM_SALE_MULTIPLIER,
+  BROKEN_ITEM_SALE_MULTIPLIER_MIN,
+  BROKEN_ITEM_SALE_MULTIPLIER_MAX,
+} from '../../config/market.mjs'
 import { parseLocationConfigMap } from './location-config.mjs'
 import { logger } from '../../utils/logger.mjs'
 
@@ -50,6 +58,21 @@ export const SETTING_MARKET_GLOBAL_PRICE_MOD = 'marketGlobalPriceModifier'
  * @type {string}
  */
 export const SETTING_MARKET_LOCATION_CONFIGS = 'marketLocationConfigs'
+
+/**
+ * Foundry settings key controlling whether broken items can be sold.
+ * Stored as a boolean.
+ * @type {string}
+ */
+export const SETTING_MARKET_ALLOW_BROKEN_ITEM_SALE = 'marketAllowBrokenItemSale'
+
+/**
+ * Foundry settings key for the broken item sale price multiplier (percentage, 0–100).
+ * Applied to the normal resale value when broken item sale is allowed.
+ * Stored as a number.
+ * @type {string}
+ */
+export const SETTING_MARKET_BROKEN_ITEM_SALE_MULTIPLIER = 'marketBrokenItemSaleMultiplier'
 
 /* -------------------------------------------- */
 
@@ -121,6 +144,24 @@ export function registerMarketSettings(systemId) {
     config: false,
     type: String,
     default: JSON.stringify({}),
+  })
+
+  game.settings.register(systemId, SETTING_MARKET_ALLOW_BROKEN_ITEM_SALE, {
+    name: 'SWERPG.SETTINGS.MARKET_ALLOW_BROKEN_ITEM_SALE_NAME',
+    hint: 'SWERPG.SETTINGS.MARKET_ALLOW_BROKEN_ITEM_SALE_HINT',
+    scope: 'world',
+    config: false,
+    type: Boolean,
+    default: DEFAULT_ALLOW_BROKEN_ITEM_SALE,
+  })
+
+  game.settings.register(systemId, SETTING_MARKET_BROKEN_ITEM_SALE_MULTIPLIER, {
+    name: 'SWERPG.SETTINGS.MARKET_BROKEN_ITEM_SALE_MULTIPLIER_NAME',
+    hint: 'SWERPG.SETTINGS.MARKET_BROKEN_ITEM_SALE_MULTIPLIER_HINT',
+    scope: 'world',
+    config: false,
+    type: Number,
+    default: DEFAULT_BROKEN_ITEM_SALE_MULTIPLIER,
   })
 }
 
@@ -347,4 +388,69 @@ export async function writeMarketConfig(systemId, config) {
   await game.settings.set(systemId, SETTING_MARKET_ENABLED_SOURCES, JSON.stringify(config.enabledSources))
   await game.settings.set(systemId, SETTING_MARKET_ALLOWED_ITEM_TYPES, JSON.stringify(config.allowedItemTypes))
   await game.settings.set(systemId, SETTING_MARKET_DEDUP_STRATEGY, config.dedupStrategy)
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Read whether broken items are allowed to be sold from Foundry settings.
+ * Falls back to `DEFAULT_ALLOW_BROKEN_ITEM_SALE` on any access error.
+ *
+ * @param {string} systemId  The system ID (e.g. 'swerpg')
+ * @returns {boolean}
+ */
+export function readMarketAllowBrokenItemSale(systemId) {
+  try {
+    const raw = game.settings.get(systemId, SETTING_MARKET_ALLOW_BROKEN_ITEM_SALE)
+    if (typeof raw === 'boolean') return raw
+  } catch (err) {
+    logger.warn(`[Market] Could not read setting "${SETTING_MARKET_ALLOW_BROKEN_ITEM_SALE}", using default`, err)
+  }
+  return DEFAULT_ALLOW_BROKEN_ITEM_SALE
+}
+
+/**
+ * Write the broken item sale flag to Foundry settings.
+ *
+ * @param {string}  systemId  The system ID (e.g. 'swerpg')
+ * @param {boolean} allowed   Whether broken items may be sold
+ * @returns {Promise<void>}
+ */
+export async function writeMarketAllowBrokenItemSale(systemId, allowed) {
+  return game.settings.set(systemId, SETTING_MARKET_ALLOW_BROKEN_ITEM_SALE, allowed === true)
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Read the broken item sale multiplier (%) from Foundry settings.
+ * The value is clamped to [BROKEN_ITEM_SALE_MULTIPLIER_MIN, BROKEN_ITEM_SALE_MULTIPLIER_MAX].
+ * Falls back to `DEFAULT_BROKEN_ITEM_SALE_MULTIPLIER` on any access or range error.
+ *
+ * @param {string} systemId  The system ID (e.g. 'swerpg')
+ * @returns {number}  Percentage multiplier (0–100)
+ */
+export function readMarketBrokenItemSaleMultiplier(systemId) {
+  try {
+    const raw = game.settings.get(systemId, SETTING_MARKET_BROKEN_ITEM_SALE_MULTIPLIER)
+    if (typeof raw === 'number' && Number.isFinite(raw)) {
+      return Math.min(BROKEN_ITEM_SALE_MULTIPLIER_MAX, Math.max(BROKEN_ITEM_SALE_MULTIPLIER_MIN, Math.round(raw)))
+    }
+  } catch (err) {
+    logger.warn(`[Market] Could not read setting "${SETTING_MARKET_BROKEN_ITEM_SALE_MULTIPLIER}", using default`, err)
+  }
+  return DEFAULT_BROKEN_ITEM_SALE_MULTIPLIER
+}
+
+/**
+ * Write the broken item sale multiplier (%) to Foundry settings.
+ * The value is clamped to [BROKEN_ITEM_SALE_MULTIPLIER_MIN, BROKEN_ITEM_SALE_MULTIPLIER_MAX] before writing.
+ *
+ * @param {string} systemId    The system ID (e.g. 'swerpg')
+ * @param {number} multiplier  Percentage multiplier (0–100)
+ * @returns {Promise<void>}
+ */
+export async function writeMarketBrokenItemSaleMultiplier(systemId, multiplier) {
+  const clamped = Math.min(BROKEN_ITEM_SALE_MULTIPLIER_MAX, Math.max(BROKEN_ITEM_SALE_MULTIPLIER_MIN, Math.round(multiplier)))
+  return game.settings.set(systemId, SETTING_MARKET_BROKEN_ITEM_SALE_MULTIPLIER, clamped)
 }

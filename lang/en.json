@@ -1818,7 +1818,8 @@
         "NotInInventory": "Item is not in your inventory.",
         "InvalidPrice": "Item has no valid base price.",
         "ItemNotFound": "Item was not found in your inventory.",
-        "WriteFailed": "Failed to complete the sale. Check the console for details."
+        "WriteFailed": "Failed to complete the sale. Check the console for details.",
+        "BrokenItemNotSellable": "This item is broken and cannot be sold."
       }
     },
     "Inventory": {
@@ -1883,7 +1884,11 @@
         "TypeModifiers": "Per-Type Price Modifiers",
         "TypeModifiersHint": "Set an additional percentage modifier per item type. These stack with the global modifier.",
         "TypeColumn": "Item Type",
-        "ModifierColumn": "Modifier"
+        "ModifierColumn": "Modifier",
+        "BrokenItemSale": "Broken Item Resale",
+        "BrokenItemSaleHint": "Configure whether broken items can be sold and at what reduced value.",
+        "AllowBrokenItemSaleLabel": "Allow resale of broken items",
+        "BrokenItemSaleMultiplierLabel": "Broken item resale multiplier"
       },
       "Exclusions": {
         "ManuallyExcluded": "Manually Excluded Items",

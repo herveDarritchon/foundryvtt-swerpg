@@ -9,11 +9,24 @@ import {
   writeMarketGlobalPriceModifier,
   readMarketLocationConfigs,
   writeMarketLocationConfigs,
+  readMarketAllowBrokenItemSale,
+  writeMarketAllowBrokenItemSale,
+  readMarketBrokenItemSaleMultiplier,
+  writeMarketBrokenItemSaleMultiplier,
 } from '../../lib/market/market-settings.mjs'
 import { createLocationConfig, upsertLocationConfig, removeLocationConfig } from '../../lib/market/location-config.mjs'
 import { loadMarketCatalog } from '../../lib/market/catalog-loader.mjs'
 import { loadCompendiumItems } from '../market/compendium-source-adapter.mjs'
-import { PURCHASABLE_ITEM_TYPES, SOURCE_TYPES, MARKET_TYPES, DEFAULT_MARKET_CONFIG } from '../../config/market.mjs'
+import {
+  PURCHASABLE_ITEM_TYPES,
+  SOURCE_TYPES,
+  MARKET_TYPES,
+  DEFAULT_MARKET_CONFIG,
+  DEFAULT_ALLOW_BROKEN_ITEM_SALE,
+  DEFAULT_BROKEN_ITEM_SALE_MULTIPLIER,
+  BROKEN_ITEM_SALE_MULTIPLIER_MIN,
+  BROKEN_ITEM_SALE_MULTIPLIER_MAX,
+} from '../../config/market.mjs'
 import { logger } from '../../utils/logger.mjs'
 
 const { api } = foundry.applications
@@ -104,6 +117,10 @@ export default class MarketSettingsPanel extends api.HandlebarsApplicationMixin(
     context.typeModifiers = readMarketTypeModifiers(systemId)
     context.globalPriceModifier = readMarketGlobalPriceModifier(systemId)
     context.locationConfigs = readMarketLocationConfigs(systemId)
+    context.allowBrokenItemSale = readMarketAllowBrokenItemSale(systemId)
+    context.brokenItemSaleMultiplier = readMarketBrokenItemSaleMultiplier(systemId)
+    context.brokenItemSaleMultiplierMin = BROKEN_ITEM_SALE_MULTIPLIER_MIN
+    context.brokenItemSaleMultiplierMax = BROKEN_ITEM_SALE_MULTIPLIER_MAX
     context.locationList = Object.values(context.locationConfigs)
     context.lastScanCount = this._lastScanCount
 
@@ -190,6 +207,15 @@ export default class MarketSettingsPanel extends api.HandlebarsApplicationMixin(
         }
       })
       await writeMarketTypeModifiers(systemId, typeModifiers)
+
+      // --- Broken item sale policy ---
+      const allowBrokenEl = html.querySelector('[name="allowBrokenItemSale"]')
+      const allowBrokenItemSale = allowBrokenEl ? allowBrokenEl.checked : false
+      await writeMarketAllowBrokenItemSale(systemId, allowBrokenItemSale)
+
+      const brokenMultiplierEl = html.querySelector('[name="brokenItemSaleMultiplier"]')
+      const brokenItemSaleMultiplier = brokenMultiplierEl ? Number(brokenMultiplierEl.value) || 0 : 0
+      await writeMarketBrokenItemSaleMultiplier(systemId, brokenItemSaleMultiplier)
 
       ui.notifications.info(game.i18n.localize('MARKET.Settings.SavedSuccess'))
       logger.info('[MarketSettingsPanel] Settings saved successfully')
@@ -448,6 +474,8 @@ export default class MarketSettingsPanel extends api.HandlebarsApplicationMixin(
     await writeMarketTypeModifiers(systemId, {})
     await writeMarketGlobalPriceModifier(systemId, 0)
     await writeMarketLocationConfigs(systemId, {})
+    await writeMarketAllowBrokenItemSale(systemId, DEFAULT_ALLOW_BROKEN_ITEM_SALE)
+    await writeMarketBrokenItemSaleMultiplier(systemId, DEFAULT_BROKEN_ITEM_SALE_MULTIPLIER)
 
     this._lastScanCount = null
     logger.info('[MarketSettingsPanel] All Market settings reset to defaults')
