@@ -1610,6 +1610,187 @@ describe('sendChatForAuditEntries', () => {
 })
 
 /* ============================================ */
+/*  readAuditChatSummaryEnabled                 */
+/* ============================================ */
+
+describe('readAuditChatSummaryEnabled', () => {
+  test('returns false when setting is not set', async () => {
+    const { readAuditChatSummaryEnabled } = await import('../../module/utils/audit-log.mjs')
+    globalThis.game.settings.get = vi.fn((namespace, key) => {
+      if (namespace === 'swerpg' && key === 'auditLogChatSummary') return false
+      return undefined
+    })
+    expect(readAuditChatSummaryEnabled()).toBe(false)
+  })
+
+  test('returns true when setting is enabled', async () => {
+    const { readAuditChatSummaryEnabled } = await import('../../module/utils/audit-log.mjs')
+    globalThis.game.settings.get = vi.fn((namespace, key) => {
+      if (namespace === 'swerpg' && key === 'auditLogChatSummary') return true
+      return undefined
+    })
+    expect(readAuditChatSummaryEnabled()).toBe(true)
+  })
+
+  test('falls back to false when game.settings.get throws', async () => {
+    const { readAuditChatSummaryEnabled } = await import('../../module/utils/audit-log.mjs')
+    globalThis.game.settings.get = vi.fn(() => {
+      throw new Error('settings not ready')
+    })
+    expect(readAuditChatSummaryEnabled()).toBe(false)
+  })
+})
+
+/* ============================================ */
+/*  sendChatForAuditEntries — summary mode      */
+/* ============================================ */
+
+describe('sendChatForAuditEntries — summary mode', () => {
+  /**
+   *
+   * @param overrides
+   */
+  function makeActor(overrides = {}) {
+    return {
+      type: 'character',
+      id: 'actor-001',
+      uuid: 'Actor.actor-001',
+      name: 'Test Character',
+      img: 'icons/test-character.svg',
+      update: vi.fn(),
+      ...overrides,
+    }
+  }
+
+  /**
+   *
+   * @param overrides
+   */
+  function makeEntry(overrides = {}) {
+    return {
+      id: `entry-${Math.random().toString(36).slice(2)}`,
+      timestamp: 1000,
+      userId: 'user-1',
+      userName: 'Player One',
+      type: 'skill.train',
+      data: { skillId: 'athletics', skillName: 'Athletics', oldRank: 2, newRank: 3, cost: 10, isFree: false, isCareer: true },
+      xpDelta: -10,
+      snapshot: { xpAvailable: 90 },
+      ...overrides,
+    }
+  }
+
+  test('setting disabled + multi-entry batch → sends one card per entry', async () => {
+    globalThis.game.settings.get = vi.fn((namespace, key) => {
+      if (namespace === 'swerpg' && key === 'auditLogChatSummary') return false
+      if (namespace === 'swerpg' && key === 'auditLogMaxEntries') return 500
+      return undefined
+    })
+
+    const { sendChatForAuditEntries } = await import('../../module/utils/audit-log.mjs')
+    const actor = makeActor()
+    const entries = [makeEntry(), makeEntry({ type: 'characteristic.increase', data: { characteristicId: 'brawn', oldValue: 2, newValue: 3, cost: 40 } })]
+
+    await sendChatForAuditEntries(actor, entries)
+
+    expect(globalThis.ChatMessage.create).toHaveBeenCalledTimes(2)
+  })
+
+  test('setting enabled + multi-entry batch → sends exactly one summary card', async () => {
+    globalThis.game.settings.get = vi.fn((namespace, key) => {
+      if (namespace === 'swerpg' && key === 'auditLogChatSummary') return true
+      if (namespace === 'swerpg' && key === 'auditLogMaxEntries') return 500
+      return undefined
+    })
+    globalThis.game.i18n.format = vi.fn((key, data) => `${key}:${JSON.stringify(data)}`)
+
+    const { sendChatForAuditEntries } = await import('../../module/utils/audit-log.mjs')
+    const actor = makeActor()
+    const entries = [makeEntry(), makeEntry({ type: 'characteristic.increase', data: { characteristicId: 'brawn', oldValue: 2, newValue: 3, cost: 40 } })]
+
+    await sendChatForAuditEntries(actor, entries)
+
+    expect(globalThis.ChatMessage.create).toHaveBeenCalledTimes(1)
+  })
+
+  test('setting enabled + multi-entry batch → summary card uses audit-entry-summary.hbs', async () => {
+    globalThis.game.settings.get = vi.fn((namespace, key) => {
+      if (namespace === 'swerpg' && key === 'auditLogChatSummary') return true
+      return undefined
+    })
+    globalThis.game.i18n.format = vi.fn((key, data) => `${key}:${JSON.stringify(data)}`)
+
+    const { sendChatForAuditEntries } = await import('../../module/utils/audit-log.mjs')
+    const actor = makeActor()
+    const entries = [makeEntry(), makeEntry({ type: 'species.set', data: { oldSpecies: null, newSpecies: 'Human' } })]
+
+    await sendChatForAuditEntries(actor, entries)
+
+    expect(globalThis.foundry.applications.handlebars.renderTemplate).toHaveBeenCalledWith(
+      'systems/swerpg/templates/chat/audit-entry-summary.hbs',
+      expect.objectContaining({
+        actorImg: 'icons/test-character.svg',
+        actorName: 'Test Character',
+        count: 2,
+        items: expect.arrayContaining([expect.objectContaining({ variant: expect.any(String) })]),
+      }),
+    )
+  })
+
+  test('setting enabled + multi-entry batch → summary flags carry auditSummary and auditEntryIds', async () => {
+    globalThis.game.settings.get = vi.fn((namespace, key) => {
+      if (namespace === 'swerpg' && key === 'auditLogChatSummary') return true
+      return undefined
+    })
+    globalThis.game.i18n.format = vi.fn((key) => key)
+
+    const { sendChatForAuditEntries } = await import('../../module/utils/audit-log.mjs')
+    const actor = makeActor()
+    const e1 = makeEntry({ id: 'id-1' })
+    const e2 = makeEntry({ id: 'id-2', type: 'characteristic.increase', data: { characteristicId: 'brawn', oldValue: 2, newValue: 3, cost: 40 } })
+
+    await sendChatForAuditEntries(actor, [e1, e2])
+
+    const createArg = globalThis.ChatMessage.create.mock.calls[0][0]
+    expect(createArg.flags.swerpg.auditSummary).toBe(true)
+    expect(createArg.flags.swerpg.auditEntryIds).toEqual(['id-1', 'id-2'])
+  })
+
+  test('setting enabled + single entry → falls through to historical one-card path', async () => {
+    globalThis.game.settings.get = vi.fn((namespace, key) => {
+      if (namespace === 'swerpg' && key === 'auditLogChatSummary') return true
+      return undefined
+    })
+
+    const { sendChatForAuditEntries } = await import('../../module/utils/audit-log.mjs')
+    const actor = makeActor()
+    const entry = makeEntry()
+
+    await sendChatForAuditEntries(actor, [entry])
+
+    // Uses audit-entry.hbs, not summary
+    expect(globalThis.foundry.applications.handlebars.renderTemplate).toHaveBeenCalledWith('systems/swerpg/templates/chat/audit-entry.hbs', expect.any(Object))
+    expect(globalThis.ChatMessage.create).toHaveBeenCalledTimes(1)
+    const createArg = globalThis.ChatMessage.create.mock.calls[0][0]
+    expect(createArg.flags.swerpg.auditSummary).toBeUndefined()
+  })
+
+  test('setting enabled + summary renderTemplate failure → does not propagate', async () => {
+    globalThis.game.settings.get = vi.fn((namespace, key) => {
+      if (namespace === 'swerpg' && key === 'auditLogChatSummary') return true
+      return undefined
+    })
+    globalThis.game.i18n.format = vi.fn((key) => key)
+    globalThis.foundry.applications.handlebars.renderTemplate = vi.fn().mockRejectedValue(new Error('Render failed'))
+
+    const { sendChatForAuditEntries } = await import('../../module/utils/audit-log.mjs')
+    const actor = makeActor()
+
+    await expect(sendChatForAuditEntries(actor, [makeEntry(), makeEntry()])).resolves.toBeUndefined()
+  })
+})
+
+/* ============================================ */
 /*  recordItemPurchase                          */
 /* ============================================ */
 

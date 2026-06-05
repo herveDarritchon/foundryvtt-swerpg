@@ -107,6 +107,19 @@ export const registerSystemSettings = function () {
   // Market configuration settings (Phase 1–9)
   registerMarketSettings(SYSTEM.id)
 
+  // Audit Log chat summary setting
+  game.settings.register(SYSTEM.id, 'auditLogChatSummary', {
+    name: 'SWERPG.SETTINGS.AUDIT_LOG_CHAT_SUMMARY_NAME',
+    hint: 'SWERPG.SETTINGS.AUDIT_LOG_CHAT_SUMMARY_HINT',
+    scope: 'world',
+    config: true,
+    type: Boolean,
+    default: false,
+    onChange: (value) => {
+      logger.debug(`[AuditLog] Chat summary setting changed to ${value}`)
+    },
+  })
+
   // Audit Log max entries setting
   game.settings.register(SYSTEM.id, 'auditLogMaxEntries', {
     name: 'SWERPG.SETTINGS.AUDIT_LOG_MAX_ENTRIES_NAME',

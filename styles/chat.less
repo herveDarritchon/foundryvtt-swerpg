@@ -378,6 +378,150 @@
 }
 
 /* -------------------------------------------- */
+/*  Audit Log Summary (grouped chat card)       */
+/* -------------------------------------------- */
+
+.swerpg.chat-message.audit-entry-summary {
+  padding: 0.35rem 0.5rem 0.4rem;
+
+  .audit-entry-summary__header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .audit-entry-summary__avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 4px;
+    border: 1px solid var(--color-frame);
+    flex: none;
+  }
+
+  .audit-entry-summary__meta {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .audit-entry-summary__actor {
+    display: block;
+    font-family: var(--font-h3);
+    font-size: var(--font-size-11);
+    color: var(--color-tertiary);
+    line-height: 1.2;
+  }
+
+  .audit-entry-summary__title {
+    display: block;
+    font-family: var(--font-h2);
+    font-size: var(--font-size-13);
+    color: var(--color-text);
+    line-height: 1.3;
+  }
+
+  .audit-entry-summary__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--color-frame);
+    padding-top: 0.3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .audit-entry-summary__item {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: var(--font-size-11);
+    min-width: 0;
+  }
+
+  .audit-entry-summary__glyph {
+    flex: none;
+    font-size: var(--font-size-12);
+    width: 1.1em;
+    text-align: center;
+    color: var(--color-secondary);
+  }
+
+  .audit-entry-summary__label {
+    color: var(--color-text);
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .audit-entry-summary__previous {
+    color: var(--color-text-dark-secondary);
+    opacity: 0.7;
+    white-space: nowrap;
+  }
+
+  .audit-entry-summary__arrow {
+    color: var(--color-secondary);
+    flex: none;
+  }
+
+  .audit-entry-summary__value {
+    font-family: var(--font-mono, monospace);
+    padding: 0.1rem 0.35rem;
+    border-radius: 3px;
+    background: var(--color-frame-bg);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 40%;
+  }
+
+  // Variant glyph colours match audit-entry variants
+  .audit-entry-summary__item--add .audit-entry-summary__glyph,
+  .audit-entry-summary__item--add .audit-entry-summary__value {
+    color: var(--color-success);
+  }
+
+  .audit-entry-summary__item--add .audit-entry-summary__value {
+    border: 1px solid var(--color-success);
+  }
+
+  .audit-entry-summary__item--remove .audit-entry-summary__glyph,
+  .audit-entry-summary__item--remove .audit-entry-summary__value {
+    color: var(--color-box-warm-1);
+  }
+
+  .audit-entry-summary__item--remove .audit-entry-summary__value {
+    border: 1px solid var(--color-box-warm-1);
+  }
+
+  .audit-entry-summary__item--gain .audit-entry-summary__glyph,
+  .audit-entry-summary__item--gain .audit-entry-summary__value {
+    color: var(--color-accent-blue);
+  }
+
+  .audit-entry-summary__item--gain .audit-entry-summary__value {
+    border: 1px solid var(--color-accent-blue);
+  }
+
+  .audit-entry-summary__item--fail .audit-entry-summary__glyph,
+  .audit-entry-summary__item--fail .audit-entry-summary__value {
+    color: var(--color-danger);
+  }
+
+  .audit-entry-summary__item--fail .audit-entry-summary__value {
+    border: 1px solid var(--color-danger);
+  }
+
+  .audit-entry-summary__item--change .audit-entry-summary__value {
+    color: var(--color-secondary);
+    border: 1px solid var(--color-frame);
+  }
+}
+
+/* -------------------------------------------- */
 /*  Audit Log Warning (GM whisper)              */
 /* -------------------------------------------- */
 
