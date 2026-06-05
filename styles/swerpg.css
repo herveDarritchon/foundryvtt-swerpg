@@ -957,7 +957,7 @@ input[type='range'] {
   --button-text-color: var(--color-primary);
   --button-background-color: var(--color-frame-bg-75);
   --button-border-color: var(--color-primary);
-  box-shadow: 0 0 10px rgba(79, 168, 255, 0.22);
+  box-shadow: 0 0 10px var(--color-glow-22);
 }
 .swerpg.application.character-audit-log .audit-log__filter.is-empty {
   opacity: 0.45;
@@ -4434,7 +4434,7 @@ input[type='range'] {
   min-width: 0;
 }
 .swerpg.chat-message.audit-entry .audit-entry__previous {
-  font-family: 'Orbitron', sans-serif;
+  font-family: var(--font-h1);
   font-size: var(--font-size-11);
   color: var(--color-text-dark-secondary);
   max-width: 45%;
@@ -4464,7 +4464,7 @@ input[type='range'] {
   color: var(--color-secondary);
 }
 .swerpg.chat-message.audit-entry .audit-entry__badge {
-  font-family: 'Orbitron', sans-serif;
+  font-family: var(--font-h1);
   font-size: 1rem;
   padding: 0.15rem 0.5rem;
   border-radius: 3px;
