@@ -37,16 +37,36 @@
   {{#if hasEntries}}
     <section class='audit-log__entries'>
       {{#each entries as |entry|}}
-        <article class='audit-log-entry'>
-          <div class='audit-log-entry__meta'>
-            <span class='audit-log-entry__date'>{{entry.formattedTimestamp}}</span>
-            <span class='audit-log-entry__type'>{{entry.typeLabel}}</span>
-          </div>
+        <article class='audit-log-entry audit-log-entry--{{entry.variant}}'>
+
+          <header class='audit-log-entry__header'>
+            {{#if entry.actorImg}}
+              <img class='audit-log-entry__avatar' src='{{entry.actorImg}}' alt='{{entry.actorName}}'>
+            {{/if}}
+            <div class='audit-log-entry__meta'>
+              <span class='audit-log-entry__date'>{{entry.formattedTimestamp}}</span>
+              <span class='audit-log-entry__type'>{{entry.eventLabel}}</span>
+            </div>
+          </header>
 
           <div class='audit-log-entry__body'>
+            <div class='audit-log-entry__change'>
+              {{#if entry.hasPreviousValue}}
+                <span class='audit-log-entry__previous' title='{{entry.previousValue}}'>{{entry.previousValue}}</span>
+                <span class='audit-log-entry__arrow' aria-hidden='true'>→</span>
+              {{/if}}
+              <span class='audit-log-entry__badge' title='{{entry.nextValue}}'>{{entry.nextValue}}</span>
+            </div>
+
             <p class='audit-log-entry__description'>{{entry.description}}</p>
-            <span class='audit-log-entry__delta {{entry.deltaClass}}'>{{entry.formattedDelta}}</span>
           </div>
+
+          {{#if entry.hasDelta}}
+            <footer class='audit-log-entry__footer'>
+              <span class='audit-log-entry__delta {{entry.deltaClass}}'>{{entry.formattedDelta}}</span>
+            </footer>
+          {{/if}}
+
         </article>
       {{/each}}
     </section>

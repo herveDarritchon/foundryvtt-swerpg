@@ -314,6 +314,160 @@ export function buildAuditLogDescription(entry) {
 }
 
 /**
+ * Build the visual presentation fields for a single audit log entry.
+ * Mirrors the contract of `_buildChatContext()` in `audit-log.mjs` so that the
+ * application and the chat card share the same visual language.
+ *
+ * @param {Actor|object} actor
+ * @param {object} entry  A single raw audit log entry
+ * @returns {{ variant: string, eventLabel: string, previousValue: string|null, nextValue: string, hasPreviousValue: boolean }}
+ */
+export function buildAuditLogEntryVisual(actor, entry) {
+  const type = entry.type
+  const data = entry.data ?? {}
+
+  const visual = {
+    actorImg: actor.img ?? '',
+    actorName: actor.name ?? '',
+    variant: 'change',
+    eventLabel: '',
+    previousValue: null,
+    nextValue: '',
+    hasPreviousValue: false,
+  }
+
+  switch (type) {
+    case 'skill.train': {
+      visual.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.SKILL_TRAIN')
+      visual.previousValue = String(data.oldRank ?? 0)
+      visual.nextValue = String(data.newRank ?? 0)
+      visual.variant = data.isFree === true ? 'gain' : 'add'
+      break
+    }
+
+    case 'skill.forget': {
+      visual.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.SKILL_FORGET')
+      visual.previousValue = String(data.oldRank ?? 0)
+      visual.nextValue = String(data.newRank ?? 0)
+      visual.variant = 'remove'
+      break
+    }
+
+    case 'characteristic.increase': {
+      visual.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.CHARACTERISTIC_INCREASE')
+      visual.previousValue = String(data.oldValue ?? 0)
+      visual.nextValue = String(data.newValue ?? 0)
+      visual.variant = 'add'
+      break
+    }
+
+    case 'xp.spend':
+    case 'xp.refund':
+    case 'xp.grant':
+    case 'xp.remove': {
+      const isGain = type === 'xp.grant' || type === 'xp.refund'
+      const labelKey =
+        type === 'xp.spend'
+          ? 'SWERPG.AUDIT_LOG.TYPE.XP_SPEND'
+          : type === 'xp.refund'
+            ? 'SWERPG.AUDIT_LOG.TYPE.XP_REFUND'
+            : type === 'xp.grant'
+              ? 'SWERPG.AUDIT_LOG.TYPE.XP_GRANT'
+              : 'SWERPG.AUDIT_LOG.TYPE.XP_REMOVE'
+      visual.eventLabel = game.i18n.localize(labelKey)
+      visual.nextValue = isGain ? `+${data.amount ?? 0} XP` : `-${data.amount ?? 0} XP`
+      visual.variant = isGain ? 'gain' : 'remove'
+      break
+    }
+
+    case 'species.set':
+    case 'career.set': {
+      const isSpecies = type === 'species.set'
+      visual.eventLabel = game.i18n.localize(isSpecies ? 'SWERPG.AUDIT_LOG.TYPE.SPECIES_SET' : 'SWERPG.AUDIT_LOG.TYPE.CAREER_SET')
+      const noneLabel = game.i18n.localize('SWERPG.AUDIT_LOG.NONE')
+      visual.previousValue = data.oldSpecies ?? data.oldCareer ?? noneLabel
+      visual.nextValue = data.newSpecies ?? data.newCareer ?? noneLabel
+      visual.variant = 'change'
+      break
+    }
+
+    case 'specialization.add':
+    case 'specialization.remove': {
+      const isAdd = type === 'specialization.add'
+      visual.eventLabel = game.i18n.localize(isAdd ? 'SWERPG.AUDIT_LOG.TYPE.SPECIALIZATION_ADD' : 'SWERPG.AUDIT_LOG.TYPE.SPECIALIZATION_REMOVE')
+      visual.nextValue = data.specializationName ?? data.specializationId ?? ''
+      visual.variant = isAdd ? 'add' : 'remove'
+      break
+    }
+
+    case 'talent.purchase': {
+      visual.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.TALENT_PURCHASE')
+      visual.nextValue = data.talentName ?? data.talentId ?? ''
+      visual.variant = 'add'
+      break
+    }
+
+    case 'talent-node-purchase-succeeded':
+    case 'talent-node-purchase-failed':
+    case 'talent-node-forget-succeeded':
+    case 'talent-node-forget-failed': {
+      const isSuccess = type.endsWith('succeeded')
+      const isPurchase = type.includes('purchase')
+      visual.eventLabel = game.i18n.localize(`SWERPG.AUDIT_LOG.TYPE.${type.replace(/[-.]/g, '_').toUpperCase()}`)
+      if (isSuccess) {
+        visual.nextValue = data.talentId ?? data.nodeId ?? ''
+        visual.variant = isPurchase ? 'add' : 'remove'
+      } else {
+        visual.nextValue = data.nodeId ?? ''
+        visual.variant = 'fail'
+      }
+      break
+    }
+
+    case 'talent-node-purchase': {
+      visual.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.TALENT_NODE_PURCHASE')
+      visual.nextValue = data.talentId ?? data.nodeId ?? ''
+      visual.variant = 'add'
+      break
+    }
+
+    case 'advancement.level': {
+      visual.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.ADVANCEMENT_LEVEL')
+      visual.previousValue = String(data.oldLevel ?? 0)
+      visual.nextValue = String(data.newLevel ?? 0)
+      visual.variant = 'change'
+      break
+    }
+
+    case 'item.purchase': {
+      visual.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.ITEM_PURCHASE')
+      visual.nextValue = `${data.itemName ?? ''} (${data.itemType ?? ''})`
+      visual.variant = 'add'
+      break
+    }
+
+    case 'item.sale': {
+      visual.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.ITEM_SALE')
+      visual.nextValue = `${data.itemName ?? ''} (${data.itemType ?? ''})`
+      visual.variant = 'gain'
+      break
+    }
+
+    default: {
+      const xpDelta = entry.xpDelta ?? 0
+      visual.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.UNKNOWN')
+      visual.nextValue = buildAuditLogDescription(entry)
+      visual.variant = xpDelta > 0 ? 'gain' : xpDelta < 0 ? 'remove' : 'change'
+      break
+    }
+  }
+
+  visual.hasPreviousValue = visual.previousValue !== null
+
+  return visual
+}
+
+/**
  * Build the display-ready audit log entries for a character.
  * @param {Actor|object} actor
  * @param {string} [filter=AUDIT_LOG_FAMILIES.all]
@@ -331,6 +485,7 @@ export function buildAuditLogEntries(actor, filter = AUDIT_LOG_FAMILIES.all) {
       const creditDelta = Number(entry.creditDelta) || 0
       const deltaValue = isCreditEntry ? creditDelta : xpDelta
       const formattedDelta = isCreditEntry ? formatAuditLogCreditDelta(creditDelta) : formatAuditLogDelta(xpDelta)
+      const visual = buildAuditLogEntryVisual(actor, entry)
 
       return {
         ...entry,
@@ -345,6 +500,7 @@ export function buildAuditLogEntries(actor, filter = AUDIT_LOG_FAMILIES.all) {
         formattedXpDelta: formatAuditLogDelta(xpDelta),
         xpDeltaClass: xpDelta > 0 ? 'is-gain' : xpDelta < 0 ? 'is-spend' : 'is-neutral',
         hasXpDelta: xpDelta !== 0,
+        ...visual,
       }
     })
     .filter((entry) => filter === AUDIT_LOG_FAMILIES.all || entry.family === filter)
