@@ -264,7 +264,7 @@ describe('Scénario 1 — happy path complet', () => {
       return keys.reduce((o, k) => o?.[k], obj)
     })
 
-    const entries = buildAuditLogEntries(actor, 'purchases')
+    const { entries } = buildAuditLogEntries(actor, 'purchases')
 
     expect(entries).toHaveLength(1)
     expect(entries[0].type).toBe('item.purchase')

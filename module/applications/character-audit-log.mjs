@@ -524,18 +524,75 @@ export function buildAuditLogEntryVisual(actor, entry) {
 }
 
 /**
+ * Normalize a string for text search by lowercasing and collapsing whitespace.
+ * @param {string|null|undefined} value
+ * @returns {string}
+ */
+function normalizeSearchText(value) {
+  if (value === null || value === undefined) return ''
+  return String(value).toLowerCase().trim()
+}
+
+/**
+ * Return true if the entry matches the text query.
+ * Searches against typeLabel, description, eventLabel, and nextValue.
+ * @param {object} entry  A display-ready audit log entry
+ * @param {string} query  Already normalized query (lowercase, trimmed)
+ * @returns {boolean}
+ */
+function entryMatchesTextQuery(entry, query) {
+  if (!query) return true
+  const searchIn = [entry.typeLabel, entry.description, entry.eventLabel, entry.nextValue, entry.previousValue]
+  return searchIn.some((field) => normalizeSearchText(field).includes(query))
+}
+
+/**
+ * Parse an ISO date string (YYYY-MM-DD) to a UTC midnight timestamp.
+ * Returns null when the string is absent or invalid.
+ * @param {string|null|undefined} dateStr
+ * @returns {number|null}
+ */
+function parseDateBound(dateStr) {
+  if (!dateStr) return null
+  const date = new Date(dateStr)
+  if (isNaN(date.getTime())) return null
+  return date.getTime()
+}
+
+/**
+ * Return true if the entry timestamp falls within the inclusive date bounds.
+ * A null bound is treated as open (unbounded).
+ * When from > to both bounds are ignored (invalid range treated as open).
+ * @param {object} entry
+ * @param {number|null} fromTs  UTC timestamp for start-of-day (inclusive)
+ * @param {number|null} toTs    UTC timestamp for end-of-day (inclusive)
+ * @returns {boolean}
+ */
+function entryMatchesDateRange(entry, fromTs, toTs) {
+  if (fromTs !== null && toTs !== null && fromTs > toTs) return true
+  const ts = entry.timestamp ?? 0
+  if (fromTs !== null && ts < fromTs) return false
+  if (toTs !== null && ts > toTs) return false
+  return true
+}
+
+/**
  * Build the display-ready audit log entries for a character.
  * @param {Actor|object} actor
- * @param {string} [filter=AUDIT_LOG_FAMILIES.all]
- * @returns {Array<object>}
+ * @param {string} [family=AUDIT_LOG_FAMILIES.all]  Family filter
+ * @param {object} [searchOptions={}]
+ * @param {string} [searchOptions.query='']          Text search query (raw, will be normalized)
+ * @param {string|null} [searchOptions.dateFrom=null] ISO date string (YYYY-MM-DD) for range start
+ * @param {string|null} [searchOptions.dateTo=null]   ISO date string (YYYY-MM-DD) for range end
+ * @returns {{ entries: Array<object>, totalCount: number, filteredCount: number }}
  */
-export function buildAuditLogEntries(actor, filter = AUDIT_LOG_FAMILIES.all) {
+export function buildAuditLogEntries(actor, family = AUDIT_LOG_FAMILIES.all, { query = '', dateFrom = null, dateTo = null } = {}) {
   const logs = foundry.utils.getProperty(actor, AUDIT_LOG_PATH) ?? []
 
-  return [...logs]
+  const allEntries = [...logs]
     .sort((left, right) => (right.timestamp ?? 0) - (left.timestamp ?? 0))
     .map((entry) => {
-      const family = getAuditLogFamily(entry.type)
+      const entryFamily = getAuditLogFamily(entry.type)
       const xpDelta = Number(entry.xpDelta) || 0
       const isCreditEntry = entry.type === 'item.purchase' || entry.type === 'item.sale'
       const creditDelta = Number(entry.creditDelta) || 0
@@ -545,9 +602,9 @@ export function buildAuditLogEntries(actor, filter = AUDIT_LOG_FAMILIES.all) {
 
       return {
         ...entry,
-        family,
-        familyLabel: game.i18n.localize(AUDIT_LOG_FILTER_LABELS[family] ?? 'SWERPG.AUDIT_LOG.FILTER.ALL'),
-        familyIcon: getAuditLogFamilyIcon(family),
+        family: entryFamily,
+        familyLabel: game.i18n.localize(AUDIT_LOG_FILTER_LABELS[entryFamily] ?? 'SWERPG.AUDIT_LOG.FILTER.ALL'),
+        familyIcon: getAuditLogFamilyIcon(entryFamily),
         typeLabel: getAuditLogTypeLabel(entry.type),
         description: buildAuditLogDescription(entry),
         formattedTimestamp: formatAuditLogTimestamp(entry.timestamp),
@@ -562,13 +619,34 @@ export function buildAuditLogEntries(actor, filter = AUDIT_LOG_FAMILIES.all) {
         variantGlyphLabel: game.i18n.localize(getVariantGlyphLabel(visual.variant)),
       }
     })
-    .filter((entry) => filter === AUDIT_LOG_FAMILIES.all || entry.family === filter)
+
+  const totalCount = allEntries.length
+
+  const normalizedQuery = normalizeSearchText(query)
+  const fromTs = parseDateBound(dateFrom)
+  // For toTs, advance to end-of-day (23:59:59.999) so the date is inclusive
+  const toTs = dateTo ? parseDateBound(dateTo) + 86399999 : null
+
+  const filteredEntries = allEntries.filter((entry) => {
+    if (family !== AUDIT_LOG_FAMILIES.all && entry.family !== family) return false
+    if (!entryMatchesTextQuery(entry, normalizedQuery)) return false
+    if (!entryMatchesDateRange(entry, fromTs, toTs)) return false
+    return true
+  })
+
+  return { entries: filteredEntries, totalCount, filteredCount: filteredEntries.length }
 }
 
 export default class CharacterAuditLogApp extends api.HandlebarsApplicationMixin(api.DocumentSheetV2) {
   constructor({ filter = AUDIT_LOG_FAMILIES.all, ...options } = {}) {
     super(options)
     this.filter = AUDIT_LOG_FILTER_ORDER.includes(filter) ? filter : AUDIT_LOG_FAMILIES.all
+    /** @type {string} Current text search query */
+    this.searchQuery = ''
+    /** @type {string|null} ISO date string for range start (inclusive) */
+    this.dateFrom = null
+    /** @type {string|null} ISO date string for range end (inclusive) */
+    this.dateTo = null
   }
 
   static DEFAULT_OPTIONS = {
@@ -578,6 +656,7 @@ export default class CharacterAuditLogApp extends api.HandlebarsApplicationMixin
     actions: {
       setFilter: CharacterAuditLogApp.#onSetFilter,
       exportCsv: CharacterAuditLogApp.#onExportCsv,
+      clearSearch: CharacterAuditLogApp.#onClearSearch,
     },
     window: {
       minimizable: true,
@@ -612,7 +691,14 @@ export default class CharacterAuditLogApp extends api.HandlebarsApplicationMixin
   }
 
   async _prepareContext(_options) {
-    const entries = buildAuditLogEntries(this.actor, this.filter)
+    const { entries, totalCount, filteredCount } = buildAuditLogEntries(this.actor, this.filter, {
+      query: this.searchQuery,
+      dateFrom: this.dateFrom,
+      dateTo: this.dateTo,
+    })
+
+    const hasActiveSearch = this.searchQuery !== '' || this.dateFrom !== null || this.dateTo !== null
+    const isFiltered = this.filter !== AUDIT_LOG_FAMILIES.all || hasActiveSearch
 
     return {
       actor: this.actor,
@@ -630,9 +716,17 @@ export default class CharacterAuditLogApp extends api.HandlebarsApplicationMixin
         cssClass: filterId === this.filter ? 'is-active' : '',
         isPressed: filterId === this.filter,
       })),
+      searchQuery: this.searchQuery,
+      dateFrom: this.dateFrom ?? '',
+      dateTo: this.dateTo ?? '',
       entries,
-      hasEntries: entries.length > 0,
+      hasEntries: totalCount > 0,
+      hasFilteredEntries: filteredCount > 0,
+      totalCount,
+      filteredCount,
+      isFiltered,
       emptyLabel: game.i18n.localize('SWERPG.AUDIT_LOG.EMPTY'),
+      emptyFilteredLabel: game.i18n.localize('SWERPG.AUDIT_LOG.EMPTY_FILTERED'),
     }
   }
 
@@ -645,6 +739,51 @@ export default class CharacterAuditLogApp extends api.HandlebarsApplicationMixin
 
     this.filter = filter
     await this.render({ force: true })
+  }
+
+  static async #onClearSearch(event) {
+    event.preventDefault()
+    this.searchQuery = ''
+    this.dateFrom = null
+    this.dateTo = null
+    await this.render({ force: true })
+  }
+
+  /**
+   * Bind change listeners for the search input and date range inputs.
+   * These are live inputs whose values must persist across renders without
+   * triggering a full re-render on every keystroke.
+   * @param {jQuery|HTMLElement} html
+   */
+  activateListeners(html) {
+    super.activateListeners(html)
+
+    const root = html instanceof HTMLElement ? html : html[0]
+    if (!root) return
+
+    const searchInput = root.querySelector('.audit-log__search-input')
+    if (searchInput) {
+      searchInput.addEventListener('change', (event) => {
+        this.searchQuery = event.target.value ?? ''
+        this.render({ force: true })
+      })
+    }
+
+    const dateFromInput = root.querySelector('.audit-log__date-from')
+    if (dateFromInput) {
+      dateFromInput.addEventListener('change', (event) => {
+        this.dateFrom = event.target.value || null
+        this.render({ force: true })
+      })
+    }
+
+    const dateToInput = root.querySelector('.audit-log__date-to')
+    if (dateToInput) {
+      dateToInput.addEventListener('change', (event) => {
+        this.dateTo = event.target.value || null
+        this.render({ force: true })
+      })
+    }
   }
 
   static async #onExportCsv(event, target) {

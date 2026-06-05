@@ -20,8 +20,62 @@
       {{/each}}
     </div>
 
-    {{#if canExport}}
-      <div class='audit-log__export'>
+    <div class='audit-log__toolbar'>
+      <div class='audit-log__search'>
+        <label for='audit-log-search' class='audit-log__search-label'>
+          <i class='fa-solid fa-magnifying-glass' aria-hidden='true'></i>
+          <span class='visually-hidden'>{{localize 'SWERPG.AUDIT_LOG.SEARCH.LABEL'}}</span>
+        </label>
+        <input
+          id='audit-log-search'
+          type='search'
+          class='audit-log__search-input'
+          placeholder='{{localize "SWERPG.AUDIT_LOG.SEARCH.PLACEHOLDER"}}'
+          value='{{searchQuery}}'
+          aria-label='{{localize "SWERPG.AUDIT_LOG.SEARCH.LABEL"}}'
+        />
+      </div>
+
+      <div class='audit-log__date-range'>
+        <label for='audit-log-date-from' class='audit-log__date-label'>
+          {{localize 'SWERPG.AUDIT_LOG.DATE.FROM_LABEL'}}
+        </label>
+        <input
+          id='audit-log-date-from'
+          type='date'
+          class='audit-log__date-from'
+          value='{{dateFrom}}'
+          aria-label='{{localize "SWERPG.AUDIT_LOG.DATE.FROM_LABEL"}}'
+        />
+        <label for='audit-log-date-to' class='audit-log__date-label'>
+          {{localize 'SWERPG.AUDIT_LOG.DATE.TO_LABEL'}}
+        </label>
+        <input
+          id='audit-log-date-to'
+          type='date'
+          class='audit-log__date-to'
+          value='{{dateTo}}'
+          aria-label='{{localize "SWERPG.AUDIT_LOG.DATE.TO_LABEL"}}'
+        />
+      </div>
+
+      <div class='audit-log__counter' aria-live='polite' aria-atomic='true'>
+        {{filteredCount}} / {{totalCount}}
+      </div>
+
+      {{#if isFiltered}}
+        <button
+          type='button'
+          class='audit-log__clear-search button framed'
+          data-action='clearSearch'
+          aria-label='{{localize "SWERPG.AUDIT_LOG.SEARCH.CLEAR"}}'
+          data-tooltip='{{localize "SWERPG.AUDIT_LOG.SEARCH.CLEAR"}}'
+        >
+          <i class='fa-solid fa-xmark' aria-hidden='true'></i>
+        </button>
+      {{/if}}
+
+      {{#if canExport}}
         <button
           type='button'
           class='audit-log__export-button button framed'
@@ -32,11 +86,11 @@
           <i class='fa-solid fa-download' aria-hidden='true'></i>
           {{localize 'SWERPG.AUDIT_LOG.EXPORT'}}
         </button>
-      </div>
-    {{/if}}
+      {{/if}}
+    </div>
   </header>
 
-  {{#if hasEntries}}
+  {{#if hasFilteredEntries}}
     <section class='audit-log__entries'>
       {{#each entries as |entry|}}
         <article class='audit-log-entry audit-log-entry--{{entry.variant}}'>
@@ -75,6 +129,11 @@
 
         </article>
       {{/each}}
+    </section>
+  {{else if hasEntries}}
+    <section class='audit-log__empty audit-log__empty--filtered'>
+      <i class='fa-solid fa-magnifying-glass audit-log__empty-icon' aria-hidden='true'></i>
+      <p>{{emptyFilteredLabel}}</p>
     </section>
   {{else}}
     <section class='audit-log__empty'>
