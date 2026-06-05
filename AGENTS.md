@@ -12,6 +12,12 @@ Swerpg is a Foundry Virtual Tabletop v13+ game system for Star Wars Edge RPG, bu
 - **Package manager**: `pnpm`
 - **Logger**: `module/utils/logger.mjs` — **never** `console.log`
 
+## ADR Index
+
+Avant toute decision d'architecture, de conventions transverses, de modelisation, d'integration Foundry, de strategie de test, d'UI systeme ou de styles, consulter `documentation/architecture/adr/INDEX.md` puis l'ADR cible.
+
+Toute creation, suppression ou evolution significative d'un ADR doit mettre a jour `documentation/architecture/adr/INDEX.md` dans le meme changement.
+
 ## Quick commands
 
 ```bash

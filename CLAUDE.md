@@ -18,6 +18,12 @@
 - **Package manager**: `pnpm`
 - **Foundry compatibility**: minimum v14, verified v14.309
 
+## ADR Index
+
+Avant toute decision d'architecture, de conventions transverses, de modelisation, d'integration Foundry, de strategie de test, d'UI systeme ou de styles, consulter `documentation/architecture/adr/INDEX.md` puis l'ADR cible.
+
+Toute creation, suppression ou evolution significative d'un ADR doit mettre a jour `documentation/architecture/adr/INDEX.md` dans le meme changement.
+
 ## Commands
 
 ```bash
