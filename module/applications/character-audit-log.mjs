@@ -203,6 +203,129 @@ function formatAuditLogTimestamp(timestamp) {
 }
 
 /**
+ * Format a Unix timestamp as a localized time-only string (hours and minutes).
+ * Used on individual entry lines within a daily section.
+ * @param {number} timestamp
+ * @returns {string}
+ */
+function formatAuditLogTimeOnly(timestamp) {
+  const date = new Date(timestamp)
+  const locale = getAuditLogDateLocale()
+
+  try {
+    return new Intl.DateTimeFormat(locale, {
+      timeStyle: 'short',
+    }).format(date)
+  } catch {
+    return date.toLocaleTimeString(locale)
+  }
+}
+
+/**
+ * Return the canonical YYYY-MM-DD day key for a Unix timestamp in local time.
+ * @param {number} timestamp
+ * @returns {string}
+ */
+function getLocalDayKey(timestamp) {
+  const d = new Date(timestamp)
+  const year = d.getFullYear()
+  const month = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
+
+/**
+ * Return a localized header label for a day key (YYYY-MM-DD).
+ * Uses "Today" / "Yesterday" for the two most recent days, full locale date otherwise.
+ * @param {string} dayKey  Canonical YYYY-MM-DD key
+ * @param {string} todayKey   The current day key (YYYY-MM-DD)
+ * @param {string} yesterdayKey  The previous day key (YYYY-MM-DD)
+ * @param {string} locale
+ * @returns {string}
+ */
+function getDayHeaderLabel(dayKey, todayKey, yesterdayKey, locale) {
+  if (dayKey === todayKey) return game.i18n.localize('SWERPG.AUDIT_LOG.DATE.TODAY')
+  if (dayKey === yesterdayKey) return game.i18n.localize('SWERPG.AUDIT_LOG.DATE.YESTERDAY')
+
+  try {
+    const [year, month, day] = dayKey.split('-').map(Number)
+    const date = new Date(year, month - 1, day)
+    return new Intl.DateTimeFormat(locale, { dateStyle: 'long' }).format(date)
+  } catch {
+    return dayKey
+  }
+}
+
+/**
+ * Return the ISO 8601 datetime attribute value for a `<time>` element at day precision.
+ * @param {string} dayKey  YYYY-MM-DD
+ * @returns {string}
+ */
+function getDayDatetimeAttr(dayKey) {
+  return dayKey
+}
+
+/**
+ * Return the ISO 8601 datetime attribute value for a `<time>` element at minute precision.
+ * @param {number} timestamp
+ * @returns {string}
+ */
+function getEntryDatetimeAttr(timestamp) {
+  return new Date(timestamp).toISOString()
+}
+
+/**
+ * Group display-ready entries into daily sections for the view layer.
+ * Each section has:
+ *   - dayKey: canonical YYYY-MM-DD identifier
+ *   - headerLabel: localized day label (Today / Yesterday / full date)
+ *   - datetimeAttr: value for the `<time datetime>` attribute on the section header
+ *   - entries: array of entries for that day, preserving the existing anti-chronological order
+ *
+ * Sections are ordered anti-chronologically (most recent day first).
+ *
+ * @param {Array<object>} entries  Display-ready entries already sorted anti-chronologically
+ * @returns {Array<{ dayKey: string, headerLabel: string, datetimeAttr: string, entries: Array<object> }>}
+ */
+export function buildAuditLogDateSections(entries) {
+  const locale = getAuditLogDateLocale()
+  const now = new Date()
+  const todayKey = getLocalDayKey(now.getTime())
+
+  const yesterday = new Date(now)
+  yesterday.setDate(yesterday.getDate() - 1)
+  const yesterdayKey = getLocalDayKey(yesterday.getTime())
+
+  /** @type {Map<string, Array<object>>} */
+  const sectionMap = new Map()
+
+  for (const entry of entries) {
+    const dayKey = getLocalDayKey(entry.timestamp ?? 0)
+    if (!sectionMap.has(dayKey)) {
+      sectionMap.set(dayKey, [])
+    }
+    sectionMap.get(dayKey).push({
+      ...entry,
+      timeOnly: formatAuditLogTimeOnly(entry.timestamp ?? 0),
+      entryDatetimeAttr: getEntryDatetimeAttr(entry.timestamp ?? 0),
+    })
+  }
+
+  // sectionMap keys are in insertion order which follows the anti-chronological sort of entries
+  const sections = []
+  for (const [dayKey, dayEntries] of sectionMap) {
+    sections.push({
+      dayKey,
+      headerLabel: getDayHeaderLabel(dayKey, todayKey, yesterdayKey, locale),
+      datetimeAttr: getDayDatetimeAttr(dayKey),
+      entries: dayEntries,
+    })
+  }
+
+  return sections
+}
+
+/**
  * Format an XP delta value as a signed string with the "XP" suffix.
  * @param {number} xpDelta
  */
@@ -700,6 +823,8 @@ export default class CharacterAuditLogApp extends api.HandlebarsApplicationMixin
     const hasActiveSearch = this.searchQuery !== '' || this.dateFrom !== null || this.dateTo !== null
     const isFiltered = this.filter !== AUDIT_LOG_FAMILIES.all || hasActiveSearch
 
+    const sections = buildAuditLogDateSections(entries)
+
     return {
       actor: this.actor,
       document: this.document,
@@ -720,6 +845,7 @@ export default class CharacterAuditLogApp extends api.HandlebarsApplicationMixin
       dateFrom: this.dateFrom ?? '',
       dateTo: this.dateTo ?? '',
       entries,
+      sections,
       hasEntries: totalCount > 0,
       hasFilteredEntries: filteredCount > 0,
       totalCount,
