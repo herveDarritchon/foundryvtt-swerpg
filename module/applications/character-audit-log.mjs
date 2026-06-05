@@ -707,7 +707,7 @@ function entryMatchesDateRange(entry, fromTs, toTs) {
  * @param {string} [searchOptions.query='']          Text search query (raw, will be normalized)
  * @param {string|null} [searchOptions.dateFrom=null] ISO date string (YYYY-MM-DD) for range start
  * @param {string|null} [searchOptions.dateTo=null]   ISO date string (YYYY-MM-DD) for range end
- * @returns {{ entries: Array<object>, totalCount: number, filteredCount: number }}
+ * @returns {{ entries: Array<object>, totalCount: number, filteredCount: number, familyCounts: Record<string, number> }}
  */
 export function buildAuditLogEntries(actor, family = AUDIT_LOG_FAMILIES.all, { query = '', dateFrom = null, dateTo = null } = {}) {
   const logs = foundry.utils.getProperty(actor, AUDIT_LOG_PATH) ?? []
@@ -750,14 +750,26 @@ export function buildAuditLogEntries(actor, family = AUDIT_LOG_FAMILIES.all, { q
   // For toTs, advance to end-of-day (23:59:59.999) so the date is inclusive
   const toTs = dateTo ? parseDateBound(dateTo) + 86399999 : null
 
-  const filteredEntries = allEntries.filter((entry) => {
-    if (family !== AUDIT_LOG_FAMILIES.all && entry.family !== family) return false
+  // Corpus filtered by text/date only — used to compute per-family counts independently of the active family filter.
+  const searchFilteredEntries = allEntries.filter((entry) => {
     if (!entryMatchesTextQuery(entry, normalizedQuery)) return false
     if (!entryMatchesDateRange(entry, fromTs, toTs)) return false
     return true
   })
 
-  return { entries: filteredEntries, totalCount, filteredCount: filteredEntries.length }
+  // Per-family counts within the search-filtered corpus (before applying family filter).
+  // The 'all' family count equals the total number of search-filtered entries.
+  const familyCounts = { [AUDIT_LOG_FAMILIES.all]: searchFilteredEntries.length }
+  for (const entry of searchFilteredEntries) {
+    familyCounts[entry.family] = (familyCounts[entry.family] ?? 0) + 1
+  }
+
+  const filteredEntries = searchFilteredEntries.filter((entry) => {
+    if (family !== AUDIT_LOG_FAMILIES.all && entry.family !== family) return false
+    return true
+  })
+
+  return { entries: filteredEntries, totalCount, filteredCount: filteredEntries.length, familyCounts }
 }
 
 export default class CharacterAuditLogApp extends api.HandlebarsApplicationMixin(api.DocumentSheetV2) {
@@ -814,7 +826,7 @@ export default class CharacterAuditLogApp extends api.HandlebarsApplicationMixin
   }
 
   async _prepareContext(_options) {
-    const { entries, totalCount, filteredCount } = buildAuditLogEntries(this.actor, this.filter, {
+    const { entries, totalCount, filteredCount, familyCounts } = buildAuditLogEntries(this.actor, this.filter, {
       query: this.searchQuery,
       dateFrom: this.dateFrom,
       dateTo: this.dateTo,
@@ -825,6 +837,10 @@ export default class CharacterAuditLogApp extends api.HandlebarsApplicationMixin
 
     const sections = buildAuditLogDateSections(entries)
 
+    // isActiveFamilyEmpty: true when the active family filter has no entries in the
+    // current search-filtered corpus, distinct from "no results from search" and "log is empty".
+    const isActiveFamilyEmpty = this.filter !== AUDIT_LOG_FAMILIES.all && (familyCounts[this.filter] ?? 0) === 0
+
     return {
       actor: this.actor,
       document: this.document,
@@ -834,13 +850,19 @@ export default class CharacterAuditLogApp extends api.HandlebarsApplicationMixin
       canViewAuditLog: canViewAuditLog(this.actor),
       canExport: canViewAuditLog(this.actor),
       activeFilter: this.filter,
-      filters: AUDIT_LOG_FILTER_ORDER.map((filterId) => ({
-        id: filterId,
-        label: game.i18n.localize(AUDIT_LOG_FILTER_LABELS[filterId]),
-        icon: getAuditLogFamilyIcon(filterId),
-        cssClass: filterId === this.filter ? 'is-active' : '',
-        isPressed: filterId === this.filter,
-      })),
+      filters: AUDIT_LOG_FILTER_ORDER.map((filterId) => {
+        const count = familyCounts[filterId] ?? 0
+        const isEmpty = count === 0
+        return {
+          id: filterId,
+          label: game.i18n.localize(AUDIT_LOG_FILTER_LABELS[filterId]),
+          icon: getAuditLogFamilyIcon(filterId),
+          count,
+          isEmpty,
+          cssClass: [filterId === this.filter ? 'is-active' : '', isEmpty ? 'is-empty' : ''].filter(Boolean).join(' '),
+          isPressed: filterId === this.filter,
+        }
+      }),
       searchQuery: this.searchQuery,
       dateFrom: this.dateFrom ?? '',
       dateTo: this.dateTo ?? '',
@@ -851,8 +873,10 @@ export default class CharacterAuditLogApp extends api.HandlebarsApplicationMixin
       totalCount,
       filteredCount,
       isFiltered,
+      isActiveFamilyEmpty,
       emptyLabel: game.i18n.localize('SWERPG.AUDIT_LOG.EMPTY'),
       emptyFilteredLabel: game.i18n.localize('SWERPG.AUDIT_LOG.EMPTY_FILTERED'),
+      emptyFamilyLabel: game.i18n.localize('SWERPG.AUDIT_LOG.EMPTY_FAMILY'),
     }
   }
 

@@ -282,6 +282,7 @@
   "SWERPG.AUDIT_LOG.NO_PERMISSION": "You may only view the history of characters you own.",
   "SWERPG.AUDIT_LOG.EMPTY": "No entries in the history yet.",
   "SWERPG.AUDIT_LOG.EMPTY_FILTERED": "No entries match the current filters.",
+  "SWERPG.AUDIT_LOG.EMPTY_FAMILY": "No entries for this category in the current context.",
   "SWERPG.AUDIT_LOG.SEARCH.LABEL": "Search",
   "SWERPG.AUDIT_LOG.SEARCH.PLACEHOLDER": "Search entries…",
   "SWERPG.AUDIT_LOG.SEARCH.CLEAR": "Clear filters",
