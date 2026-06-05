@@ -1,6 +1,6 @@
 import { logger } from './logger.mjs'
 import { composeEntries, makeEntry, captureSnapshot } from './audit-diff.mjs'
-import { buildAuditLogDescription } from '../applications/character-audit-log.mjs'
+import { buildAuditLogDescription, getAuditLogVariantGlyph } from '../applications/character-audit-log.mjs'
 
 /* -------------------------------------------- */
 /*  Constantes                                  */
@@ -789,6 +789,7 @@ function _buildChatContext(actor, entry) {
   }
 
   context.hasMeta = context.metaLeft !== null || context.metaRight !== null
+  context.variantGlyph = getAuditLogVariantGlyph(context.variant)
 
   return context
 }

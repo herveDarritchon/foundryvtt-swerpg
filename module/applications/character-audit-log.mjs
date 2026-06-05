@@ -43,6 +43,62 @@ const AUDIT_LOG_FILTER_LABELS = Object.freeze({
   [AUDIT_LOG_FAMILIES.sales]: 'SWERPG.AUDIT_LOG.FILTER.SALES',
 })
 
+/**
+ * Canonical icon class (FontAwesome) for each audit log family.
+ * Used on both filter buttons and entry headers for consistent visual language.
+ */
+const AUDIT_LOG_FAMILY_ICONS = Object.freeze({
+  [AUDIT_LOG_FAMILIES.all]: 'fa-solid fa-list',
+  [AUDIT_LOG_FAMILIES.skills]: 'fa-solid fa-graduation-cap',
+  [AUDIT_LOG_FAMILIES.talents]: 'fa-solid fa-star',
+  [AUDIT_LOG_FAMILIES.xp]: 'fa-solid fa-bolt',
+  [AUDIT_LOG_FAMILIES.characteristics]: 'fa-solid fa-dumbbell',
+  [AUDIT_LOG_FAMILIES.details]: 'fa-solid fa-id-card',
+  [AUDIT_LOG_FAMILIES.advancement]: 'fa-solid fa-arrow-up',
+  [AUDIT_LOG_FAMILIES.purchases]: 'fa-solid fa-cart-shopping',
+  [AUDIT_LOG_FAMILIES.sales]: 'fa-solid fa-coins',
+  [AUDIT_LOG_FAMILIES.other]: 'fa-solid fa-circle-question',
+})
+
+/**
+ * Canonical glyph (FontAwesome) for each audit log variant.
+ * Complements color-based variant signalling with a non-color cue.
+ */
+const AUDIT_LOG_VARIANT_GLYPHS = Object.freeze({
+  add: 'fa-solid fa-plus',
+  remove: 'fa-solid fa-minus',
+  gain: 'fa-solid fa-arrow-down',
+  change: 'fa-solid fa-arrows-rotate',
+  fail: 'fa-solid fa-xmark',
+})
+
+/**
+ * Return the accessible i18n key for a variant glyph's aria-label.
+ * @param {string} variant
+ * @returns {string}
+ */
+function getVariantGlyphLabel(variant) {
+  return `SWERPG.AUDIT_LOG.VARIANT.${variant.toUpperCase()}`
+}
+
+/**
+ * Return the icon CSS class for a given audit log family.
+ * @param {string} family
+ * @returns {string}
+ */
+export function getAuditLogFamilyIcon(family) {
+  return AUDIT_LOG_FAMILY_ICONS[family] ?? AUDIT_LOG_FAMILY_ICONS[AUDIT_LOG_FAMILIES.other]
+}
+
+/**
+ * Return the glyph CSS class for a given audit log variant.
+ * @param {string} variant
+ * @returns {string}
+ */
+export function getAuditLogVariantGlyph(variant) {
+  return AUDIT_LOG_VARIANT_GLYPHS[variant] ?? AUDIT_LOG_VARIANT_GLYPHS.change
+}
+
 const AUDIT_LOG_TYPE_LABELS = Object.freeze({
   'skill.train': 'SWERPG.AUDIT_LOG.TYPE.SKILL_TRAIN',
   'skill.forget': 'SWERPG.AUDIT_LOG.TYPE.SKILL_FORGET',
@@ -491,6 +547,7 @@ export function buildAuditLogEntries(actor, filter = AUDIT_LOG_FAMILIES.all) {
         ...entry,
         family,
         familyLabel: game.i18n.localize(AUDIT_LOG_FILTER_LABELS[family] ?? 'SWERPG.AUDIT_LOG.FILTER.ALL'),
+        familyIcon: getAuditLogFamilyIcon(family),
         typeLabel: getAuditLogTypeLabel(entry.type),
         description: buildAuditLogDescription(entry),
         formattedTimestamp: formatAuditLogTimestamp(entry.timestamp),
@@ -501,6 +558,8 @@ export function buildAuditLogEntries(actor, filter = AUDIT_LOG_FAMILIES.all) {
         xpDeltaClass: xpDelta > 0 ? 'is-gain' : xpDelta < 0 ? 'is-spend' : 'is-neutral',
         hasXpDelta: xpDelta !== 0,
         ...visual,
+        variantGlyph: getAuditLogVariantGlyph(visual.variant),
+        variantGlyphLabel: game.i18n.localize(getVariantGlyphLabel(visual.variant)),
       }
     })
     .filter((entry) => filter === AUDIT_LOG_FAMILIES.all || entry.family === filter)
@@ -567,7 +626,9 @@ export default class CharacterAuditLogApp extends api.HandlebarsApplicationMixin
       filters: AUDIT_LOG_FILTER_ORDER.map((filterId) => ({
         id: filterId,
         label: game.i18n.localize(AUDIT_LOG_FILTER_LABELS[filterId]),
+        icon: getAuditLogFamilyIcon(filterId),
         cssClass: filterId === this.filter ? 'is-active' : '',
+        isPressed: filterId === this.filter,
       })),
       entries,
       hasEntries: entries.length > 0,

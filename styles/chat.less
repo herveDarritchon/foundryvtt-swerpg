@@ -278,6 +278,14 @@
     font-size: var(--font-size-11);
   }
 
+  .audit-entry__variant-glyph {
+    flex: none;
+    font-size: var(--font-size-12);
+    width: 1.1em;
+    text-align: center;
+    color: var(--color-secondary);
+  }
+
   .audit-entry__badge {
     font-family: 'Orbitron', sans-serif;
     font-size: 1rem;
@@ -349,6 +357,23 @@
   &.audit-entry--change .audit-entry__badge {
     color: var(--color-secondary);
     border: 1px solid var(--color-frame);
+  }
+
+  // Variant glyph colors mirror the badge colors
+  &.audit-entry--add .audit-entry__variant-glyph {
+    color: var(--color-success);
+  }
+
+  &.audit-entry--remove .audit-entry__variant-glyph {
+    color: var(--color-box-warm-1);
+  }
+
+  &.audit-entry--gain .audit-entry__variant-glyph {
+    color: var(--color-accent-blue);
+  }
+
+  &.audit-entry--fail .audit-entry__variant-glyph {
+    color: var(--color-danger);
   }
 }
 

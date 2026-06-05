@@ -1095,3 +1095,312 @@ describe('buildAuditLogEntryVisual', () => {
     expect(visual.nextValue).toBe('grit')
   })
 })
+
+/* ============================================ */
+/*  Filter aria-pressed and icon view-model    */
+/* ============================================ */
+
+describe('audit log filter isPressed and icon in _prepareContext', () => {
+  let CharacterAuditLogApp
+
+  beforeEach(async () => {
+    setupFoundryMock({
+      translations: {
+        'SWERPG.AUDIT_LOG.FILTER.ALL': 'All',
+        'SWERPG.AUDIT_LOG.FILTER.SKILLS': 'Skills',
+        'SWERPG.AUDIT_LOG.FILTER.TALENTS': 'Talents',
+        'SWERPG.AUDIT_LOG.FILTER.XP': 'XP',
+        'SWERPG.AUDIT_LOG.FILTER.CHARACTERISTICS': 'Characteristics',
+        'SWERPG.AUDIT_LOG.FILTER.DETAILS': 'Core choices',
+        'SWERPG.AUDIT_LOG.FILTER.ADVANCEMENT': 'Advancement',
+        'SWERPG.AUDIT_LOG.FILTER.PURCHASES': 'Purchases',
+        'SWERPG.AUDIT_LOG.FILTER.SALES': 'Sales',
+        'SWERPG.AUDIT_LOG.EMPTY': 'No entries',
+        'SWERPG.AUDIT_LOG.VARIANT.ADD': 'Added',
+        'SWERPG.AUDIT_LOG.VARIANT.REMOVE': 'Removed',
+        'SWERPG.AUDIT_LOG.VARIANT.GAIN': 'Gained',
+        'SWERPG.AUDIT_LOG.VARIANT.CHANGE': 'Changed',
+        'SWERPG.AUDIT_LOG.VARIANT.FAIL': 'Failed',
+      },
+    })
+    ;({ default: CharacterAuditLogApp } = await import('../../module/applications/character-audit-log.mjs'))
+  })
+
+  afterEach(() => {
+    vi.resetModules()
+    vi.clearAllMocks()
+    teardownFoundryMock()
+  })
+
+  function makeActor(logs = []) {
+    return {
+      id: 'actor-filter',
+      name: 'Test',
+      type: 'character',
+      isOwner: true,
+      system: {},
+      flags: { swerpg: { logs } },
+      testUserPermission: vi.fn(() => true),
+    }
+  }
+
+  it('active filter has isPressed true, others have isPressed false', async () => {
+    const actor = makeActor()
+    const app = new CharacterAuditLogApp({ document: actor, filter: 'skills' })
+    const ctx = await app._prepareContext({})
+
+    const skillsFilter = ctx.filters.find((f) => f.id === 'skills')
+    const allFilter = ctx.filters.find((f) => f.id === 'all')
+
+    expect(skillsFilter.isPressed).toBe(true)
+    expect(allFilter.isPressed).toBe(false)
+  })
+
+  it('all filter has isPressed true by default', async () => {
+    const actor = makeActor()
+    const app = new CharacterAuditLogApp({ document: actor })
+    const ctx = await app._prepareContext({})
+
+    const allFilter = ctx.filters.find((f) => f.id === 'all')
+    expect(allFilter.isPressed).toBe(true)
+  })
+
+  it('each filter carries a non-empty icon string', async () => {
+    const actor = makeActor()
+    const app = new CharacterAuditLogApp({ document: actor })
+    const ctx = await app._prepareContext({})
+
+    for (const filter of ctx.filters) {
+      expect(typeof filter.icon).toBe('string')
+      expect(filter.icon.length).toBeGreaterThan(0)
+    }
+  })
+
+  it('active filter has is-active cssClass and isPressed true consistently', async () => {
+    const actor = makeActor()
+    const app = new CharacterAuditLogApp({ document: actor, filter: 'talents' })
+    const ctx = await app._prepareContext({})
+
+    const talentsFilter = ctx.filters.find((f) => f.id === 'talents')
+    expect(talentsFilter.cssClass).toBe('is-active')
+    expect(talentsFilter.isPressed).toBe(true)
+  })
+})
+
+/* ============================================ */
+/*  Icon / glyph / aria-pressed view-model     */
+/* ============================================ */
+
+describe('audit log family icons and variant glyphs', () => {
+  let buildAuditLogEntries
+  let getAuditLogFamilyIcon
+  let getAuditLogVariantGlyph
+
+  const actor = {
+    id: 'actor-icons',
+    name: 'Kira Sol',
+    img: 'systems/swerpg/assets/kira.webp',
+    type: 'character',
+    isOwner: true,
+    system: {},
+    flags: { swerpg: { logs: [] } },
+    testUserPermission: vi.fn(() => true),
+  }
+
+  beforeEach(async () => {
+    setupFoundryMock({
+      translations: {
+        'SWERPG.AUDIT_LOG.TYPE.SKILL_TRAIN': 'Skill trained',
+        'SWERPG.AUDIT_LOG.TYPE.ITEM_SALE': 'Item sold',
+        'SWERPG.AUDIT_LOG.TYPE.ITEM_PURCHASE': 'Item purchased',
+        'SWERPG.AUDIT_LOG.TYPE.TALENT_NODE_PURCHASE_FAILED': 'Talent node purchase failed',
+        'SWERPG.AUDIT_LOG.TYPE.XP_GRANT': 'XP granted',
+        'SWERPG.AUDIT_LOG.TYPE.ADVANCEMENT_LEVEL': 'Level advanced',
+        'SWERPG.AUDIT_LOG.TYPE.UNKNOWN': 'Unknown event',
+        'SWERPG.AUDIT_LOG.FILTER.ALL': 'All',
+        'SWERPG.AUDIT_LOG.FILTER.SKILLS': 'Skills',
+        'SWERPG.AUDIT_LOG.FILTER.TALENTS': 'Talents',
+        'SWERPG.AUDIT_LOG.FILTER.XP': 'XP',
+        'SWERPG.AUDIT_LOG.FILTER.CHARACTERISTICS': 'Characteristics',
+        'SWERPG.AUDIT_LOG.FILTER.DETAILS': 'Core choices',
+        'SWERPG.AUDIT_LOG.FILTER.ADVANCEMENT': 'Advancement',
+        'SWERPG.AUDIT_LOG.FILTER.PURCHASES': 'Purchases',
+        'SWERPG.AUDIT_LOG.FILTER.SALES': 'Sales',
+        'SWERPG.AUDIT_LOG.NONE': 'None',
+        'SWERPG.AUDIT_LOG.UNKNOWN_ITEM': 'Unknown item',
+        'SWERPG.AUDIT_LOG.UNKNOWN_VALUE': 'Unknown value',
+        'SWERPG.AUDIT_LOG.VARIANT.ADD': 'Added',
+        'SWERPG.AUDIT_LOG.VARIANT.REMOVE': 'Removed',
+        'SWERPG.AUDIT_LOG.VARIANT.GAIN': 'Gained',
+        'SWERPG.AUDIT_LOG.VARIANT.CHANGE': 'Changed',
+        'SWERPG.AUDIT_LOG.VARIANT.FAIL': 'Failed',
+        'SWERPG.AUDIT_LOG.DESCRIPTION.SKILL_TRAIN': 'Skill {skill}: rank {oldRank} -> {newRank}',
+        'SWERPG.AUDIT_LOG.DESCRIPTION.ITEM_SALE': 'Sold {itemName} ({itemType}) for {resalePrice} credits ({fraction}% of base price)',
+        'SWERPG.AUDIT_LOG.DESCRIPTION.ITEM_PURCHASE': 'Purchased {itemName} ({itemType}) for {price} credits',
+        'SWERPG.AUDIT_LOG.DESCRIPTION.UNKNOWN': 'Unknown event ({type})',
+      },
+    })
+    ;({ buildAuditLogEntries, getAuditLogFamilyIcon, getAuditLogVariantGlyph } = await import('../../module/applications/character-audit-log.mjs'))
+  })
+
+  afterEach(() => {
+    vi.resetModules()
+    vi.clearAllMocks()
+    teardownFoundryMock()
+  })
+
+  it('getAuditLogFamilyIcon returns a non-empty string for all known families', () => {
+    const families = ['all', 'skills', 'talents', 'xp', 'characteristics', 'details', 'advancement', 'purchases', 'sales', 'other']
+    for (const family of families) {
+      const icon = getAuditLogFamilyIcon(family)
+      expect(typeof icon).toBe('string')
+      expect(icon.length).toBeGreaterThan(0)
+    }
+  })
+
+  it('getAuditLogFamilyIcon falls back to the other icon for unknown families', () => {
+    const fallback = getAuditLogFamilyIcon('other')
+    expect(getAuditLogFamilyIcon('unknown-family')).toBe(fallback)
+  })
+
+  it('getAuditLogVariantGlyph returns a non-empty string for all canonical variants', () => {
+    const variants = ['add', 'remove', 'gain', 'change', 'fail']
+    for (const variant of variants) {
+      const glyph = getAuditLogVariantGlyph(variant)
+      expect(typeof glyph).toBe('string')
+      expect(glyph.length).toBeGreaterThan(0)
+    }
+  })
+
+  it('getAuditLogVariantGlyph falls back to the change glyph for unknown variants', () => {
+    const fallback = getAuditLogVariantGlyph('change')
+    expect(getAuditLogVariantGlyph('unknown-variant')).toBe(fallback)
+  })
+
+  it('skill.train entry carries familyIcon for skills family', () => {
+    const actorWithLogs = {
+      ...actor,
+      flags: {
+        swerpg: {
+          logs: [{ id: 'e1', timestamp: 100, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2, cost: 10 } }],
+        },
+      },
+    }
+
+    const entries = buildAuditLogEntries(actorWithLogs, 'all')
+    expect(entries).toHaveLength(1)
+    const entry = entries[0]
+    expect(entry.family).toBe('skills')
+    expect(entry.familyIcon).toBe(getAuditLogFamilyIcon('skills'))
+    expect(typeof entry.familyIcon).toBe('string')
+    expect(entry.familyIcon.length).toBeGreaterThan(0)
+  })
+
+  it('item.sale entry carries familyIcon for sales family', () => {
+    const actorWithLogs = {
+      ...actor,
+      flags: {
+        swerpg: {
+          logs: [
+            {
+              id: 'e2',
+              timestamp: 200,
+              type: 'item.sale',
+              xpDelta: 0,
+              creditDelta: 75,
+              data: { itemName: 'Blaster', itemType: 'weapon', basePrice: 100, resalePrice: 75, fraction: 0.75, quantity: 1 },
+            },
+          ],
+        },
+      },
+    }
+
+    const entries = buildAuditLogEntries(actorWithLogs, 'all')
+    expect(entries).toHaveLength(1)
+    const entry = entries[0]
+    expect(entry.family).toBe('sales')
+    expect(entry.familyIcon).toBe(getAuditLogFamilyIcon('sales'))
+  })
+
+  it('skill.train entry carries variantGlyph for add variant', () => {
+    const actorWithLogs = {
+      ...actor,
+      flags: {
+        swerpg: {
+          logs: [{ id: 'e1', timestamp: 100, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2, cost: 10 } }],
+        },
+      },
+    }
+
+    const entries = buildAuditLogEntries(actorWithLogs, 'all')
+    const entry = entries[0]
+    expect(entry.variant).toBe('add')
+    expect(entry.variantGlyph).toBe(getAuditLogVariantGlyph('add'))
+    expect(typeof entry.variantGlyph).toBe('string')
+    expect(entry.variantGlyph.length).toBeGreaterThan(0)
+  })
+
+  it('xp.grant entry carries variantGlyph for gain variant', () => {
+    const actorWithLogs = {
+      ...actor,
+      flags: {
+        swerpg: {
+          logs: [{ id: 'e3', timestamp: 300, type: 'xp.grant', xpDelta: 20, data: { amount: 20 } }],
+        },
+      },
+    }
+
+    const entries = buildAuditLogEntries(actorWithLogs, 'all')
+    const entry = entries[0]
+    expect(entry.variant).toBe('gain')
+    expect(entry.variantGlyph).toBe(getAuditLogVariantGlyph('gain'))
+  })
+
+  it('advancement.level entry carries variantGlyph for change variant', () => {
+    const actorWithLogs = {
+      ...actor,
+      flags: {
+        swerpg: {
+          logs: [{ id: 'e4', timestamp: 400, type: 'advancement.level', xpDelta: 0, data: { oldLevel: 2, newLevel: 3 } }],
+        },
+      },
+    }
+
+    const entries = buildAuditLogEntries(actorWithLogs, 'all')
+    const entry = entries[0]
+    expect(entry.variant).toBe('change')
+    expect(entry.variantGlyph).toBe(getAuditLogVariantGlyph('change'))
+  })
+
+  it('talent-node-purchase-failed entry carries variantGlyph for fail variant', () => {
+    const actorWithLogs = {
+      ...actor,
+      flags: {
+        swerpg: {
+          logs: [{ id: 'e5', timestamp: 500, type: 'talent-node-purchase-failed', xpDelta: -5, data: { nodeId: 'r1c1', reasonCode: 'not-enough-xp' } }],
+        },
+      },
+    }
+
+    const entries = buildAuditLogEntries(actorWithLogs, 'all')
+    const entry = entries[0]
+    expect(entry.variant).toBe('fail')
+    expect(entry.variantGlyph).toBe(getAuditLogVariantGlyph('fail'))
+  })
+
+  it('entries carry a variantGlyphLabel localized string', () => {
+    const actorWithLogs = {
+      ...actor,
+      flags: {
+        swerpg: {
+          logs: [{ id: 'e1', timestamp: 100, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2, cost: 10 } }],
+        },
+      },
+    }
+
+    const entries = buildAuditLogEntries(actorWithLogs, 'all')
+    const entry = entries[0]
+    expect(typeof entry.variantGlyphLabel).toBe('string')
+    expect(entry.variantGlyphLabel).toBe('Added')
+  })
+})
