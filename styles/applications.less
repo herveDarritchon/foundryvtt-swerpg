@@ -409,6 +409,13 @@
     }
   }
 
+  .audit-log__filter-icon {
+    flex: none;
+    font-size: var(--font-size-11);
+    margin-right: 0.2em;
+    opacity: 0.8;
+  }
+
   .audit-log__entries {
     display: flex;
     flex: 1;
@@ -470,6 +477,14 @@
     white-space: nowrap;
   }
 
+  .audit-log-entry__family-icon {
+    flex: none;
+    font-size: var(--font-size-11);
+    margin-right: 0.2em;
+    color: var(--color-secondary);
+    opacity: 0.8;
+  }
+
   .audit-log-entry__body {
     display: flex;
     flex-direction: column;
@@ -499,6 +514,34 @@
     flex: none;
     color: var(--color-secondary);
     font-size: var(--font-size-11);
+  }
+
+  .audit-log-entry__variant-glyph {
+    flex: none;
+    font-size: var(--font-size-12);
+    width: 1.1em;
+    text-align: center;
+  }
+
+  // Variant glyph colors mirror the badge colors
+  .audit-log-entry--add .audit-log-entry__variant-glyph {
+    color: var(--color-success);
+  }
+
+  .audit-log-entry--remove .audit-log-entry__variant-glyph {
+    color: var(--color-box-warm-1);
+  }
+
+  .audit-log-entry--gain .audit-log-entry__variant-glyph {
+    color: var(--color-accent-blue);
+  }
+
+  .audit-log-entry--fail .audit-log-entry__variant-glyph {
+    color: var(--color-danger);
+  }
+
+  .audit-log-entry--change .audit-log-entry__variant-glyph {
+    color: var(--color-secondary);
   }
 
   .audit-log-entry__badge {

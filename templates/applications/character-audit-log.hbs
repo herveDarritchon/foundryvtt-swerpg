@@ -5,14 +5,16 @@
       <p class='audit-log__subtitle'>{{localize 'SWERPG.AUDIT_LOG.SUBTITLE'}}</p>
     </div>
 
-    <div class='audit-log__filters' aria-label='{{localize "SWERPG.AUDIT_LOG.FILTER_ARIA"}}'>
+    <div class='audit-log__filters' role='group' aria-label='{{localize "SWERPG.AUDIT_LOG.FILTER_ARIA"}}'>
       {{#each filters as |filter|}}
         <button
           type='button'
           class='audit-log__filter button framed {{filter.cssClass}}'
           data-action='setFilter'
           data-filter='{{filter.id}}'
+          aria-pressed='{{filter.isPressed}}'
         >
+          <i class='{{filter.icon}} audit-log__filter-icon' aria-hidden='true'></i>
           {{filter.label}}
         </button>
       {{/each}}
@@ -45,12 +47,16 @@
             {{/if}}
             <div class='audit-log-entry__meta'>
               <span class='audit-log-entry__date'>{{entry.formattedTimestamp}}</span>
-              <span class='audit-log-entry__type'>{{entry.eventLabel}}</span>
+              <span class='audit-log-entry__type'>
+                <i class='{{entry.familyIcon}} audit-log-entry__family-icon' aria-hidden='true'></i>
+                {{entry.eventLabel}}
+              </span>
             </div>
           </header>
 
           <div class='audit-log-entry__body'>
             <div class='audit-log-entry__change'>
+              <i class='{{entry.variantGlyph}} audit-log-entry__variant-glyph' aria-label='{{entry.variantGlyphLabel}}'></i>
               {{#if entry.hasPreviousValue}}
                 <span class='audit-log-entry__previous' title='{{entry.previousValue}}'>{{entry.previousValue}}</span>
                 <span class='audit-log-entry__arrow' aria-hidden='true'>→</span>
