@@ -131,7 +131,15 @@
 
               {{#if entry.hasDelta}}
                 <footer class='audit-log-entry__footer'>
-                  <span class='audit-log-entry__delta {{entry.deltaClass}}'>{{entry.formattedDelta}}</span>
+                  <span class='audit-log-entry__delta {{entry.deltaClass}} {{entry.deltaUnitClass}}'>
+                    {{#if entry.deltaUnitIcon}}
+                      <i class='{{entry.deltaUnitIcon}} audit-log-entry__delta-unit-icon' aria-hidden='true'></i>
+                    {{/if}}
+                    <span class='audit-log-entry__delta-value'>{{entry.formattedDelta}}</span>
+                    {{#if entry.deltaUnitLabel}}
+                      <span class='visually-hidden'>{{entry.deltaUnitLabel}}</span>
+                    {{/if}}
+                  </span>
                 </footer>
               {{/if}}
 

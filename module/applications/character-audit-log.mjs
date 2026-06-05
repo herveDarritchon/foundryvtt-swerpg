@@ -73,6 +73,52 @@ const AUDIT_LOG_VARIANT_GLYPHS = Object.freeze({
 })
 
 /**
+ * Canonical delta unit types for audit log entries.
+ */
+const AUDIT_LOG_DELTA_UNITS = Object.freeze({
+  xp: 'xp',
+  credits: 'credits',
+  neutral: 'neutral',
+})
+
+/**
+ * FontAwesome icon class for each delta unit.
+ */
+const AUDIT_LOG_DELTA_UNIT_ICONS = Object.freeze({
+  [AUDIT_LOG_DELTA_UNITS.xp]: 'fa-solid fa-bolt',
+  [AUDIT_LOG_DELTA_UNITS.credits]: 'fa-solid fa-coins',
+  [AUDIT_LOG_DELTA_UNITS.neutral]: '',
+})
+
+/**
+ * Return the canonical delta unit for a given audit entry type.
+ * @param {string} type
+ * @returns {'xp'|'credits'|'neutral'}
+ */
+function getAuditLogDeltaUnit(type) {
+  if (type === 'item.purchase' || type === 'item.sale') return AUDIT_LOG_DELTA_UNITS.credits
+  switch (type) {
+    case 'skill.train':
+    case 'skill.forget':
+    case 'characteristic.increase':
+    case 'xp.spend':
+    case 'xp.refund':
+    case 'xp.grant':
+    case 'xp.remove':
+    case 'talent.purchase':
+    case 'talent-node-purchase':
+    case 'talent-node-purchase-succeeded':
+    case 'talent-node-purchase-failed':
+    case 'talent-node-forget-succeeded':
+    case 'talent-node-forget-failed':
+    case 'advancement.level':
+      return AUDIT_LOG_DELTA_UNITS.xp
+    default:
+      return AUDIT_LOG_DELTA_UNITS.neutral
+  }
+}
+
+/**
  * Return the accessible i18n key for a variant glyph's aria-label.
  * @param {string} variant
  * @returns {string}
@@ -723,6 +769,16 @@ export function buildAuditLogEntries(actor, family = AUDIT_LOG_FAMILIES.all, { q
       const formattedDelta = isCreditEntry ? formatAuditLogCreditDelta(creditDelta) : formatAuditLogDelta(xpDelta)
       const visual = buildAuditLogEntryVisual(actor, entry)
 
+      const deltaUnit = getAuditLogDeltaUnit(entry.type)
+      const deltaUnitIcon = AUDIT_LOG_DELTA_UNIT_ICONS[deltaUnit] ?? ''
+      const deltaUnitLabelKey =
+        deltaUnit === AUDIT_LOG_DELTA_UNITS.xp
+          ? 'SWERPG.AUDIT_LOG.DELTA.UNIT.XP'
+          : deltaUnit === AUDIT_LOG_DELTA_UNITS.credits
+            ? 'SWERPG.AUDIT_LOG.DELTA.UNIT.CREDITS'
+            : ''
+      const deltaUnitLabel = deltaUnitLabelKey ? game.i18n.localize(deltaUnitLabelKey) : ''
+
       return {
         ...entry,
         family: entryFamily,
@@ -737,6 +793,10 @@ export function buildAuditLogEntries(actor, family = AUDIT_LOG_FAMILIES.all, { q
         formattedXpDelta: formatAuditLogDelta(xpDelta),
         xpDeltaClass: xpDelta > 0 ? 'is-gain' : xpDelta < 0 ? 'is-spend' : 'is-neutral',
         hasXpDelta: xpDelta !== 0,
+        deltaUnit,
+        deltaUnitIcon,
+        deltaUnitLabel,
+        deltaUnitClass: `audit-log-entry__delta--unit-${deltaUnit}`,
         ...visual,
         variantGlyph: getAuditLogVariantGlyph(visual.variant),
         variantGlyphLabel: game.i18n.localize(getVariantGlyphLabel(visual.variant)),
