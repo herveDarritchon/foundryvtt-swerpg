@@ -10,7 +10,7 @@ import { dismissOverlayIfPresent } from '../helper/overlay'
  * Vérifie que la session Foundry est toujours active.
  * Lance une erreur explicite si la page a été redirigée vers /join ou /auth.
  *
- * @param page - Page Playwright
+ * @param page Page Playwright
  * @throws {Error} Si la session est perdue ou inactive
  */
 export async function ensureSessionActive(page: Page): Promise<void> {
@@ -36,7 +36,7 @@ export async function ensureSessionActive(page: Page): Promise<void> {
  * visible (collapsed par défaut) et utilisent l'attribut data-tab plutôt que des
  * rôles ARIA explicites. On essaie plusieurs sélecteurs pour la compatibilité v13/v14.
  *
- * @param page - Page Playwright
+ * @param page Page Playwright
  */
 export async function openGameSettings(page: Page): Promise<void> {
   await ensureSessionActive(page)
@@ -68,8 +68,8 @@ export async function openGameSettings(page: Page): Promise<void> {
  * Navigue vers les settings d'un système spécifique depuis Game Settings.
  * Présuppose que Game Settings est déjà ouvert.
  *
- * @param page - Page Playwright
- * @param systemName - Nom du système (ex: "Star Wars Edge RPG")
+ * @param page Page Playwright
+ * @param systemName Nom du système (ex: "Star Wars Edge RPG")
  */
 export async function openSystemSettings(page: Page, systemName: string): Promise<void> {
   await ensureSessionActive(page)
@@ -100,8 +100,8 @@ export async function openSystemSettings(page: Page, systemName: string): Promis
 /**
  * Workflow complet : ouvre Game Settings puis navigue vers les settings système.
  *
- * @param page - Page Playwright
- * @param systemName - Nom du système (ex: "Star Wars Edge RPG")
+ * @param page Page Playwright
+ * @param systemName Nom du système (ex: "Star Wars Edge RPG")
  */
 export async function navigateToSystemSettings(page: Page, systemName: string): Promise<void> {
   await openGameSettings(page)
@@ -114,7 +114,7 @@ export async function navigateToSystemSettings(page: Page, systemName: string): 
  * Foundry v14 utilise des onglets avec data-tab="actors" sans libellé visible.
  * On essaie plusieurs sélecteurs pour la compatibilité v13/v14.
  *
- * @param page - Page Playwright
+ * @param page Page Playwright
  */
 export async function openActorsTab(page: Page): Promise<void> {
   await ensureSessionActive(page)
@@ -146,9 +146,9 @@ export async function openActorsTab(page: Page): Promise<void> {
  *
  * Pré-requis : l'onglet Actors doit être actif (`openActorsTab` appelé avant).
  *
- * @param page - Page Playwright
- * @param name - Nom de l'acteur à créer
- * @param type - Type d'acteur Foundry (ex: "character")
+ * @param page Page Playwright
+ * @param name Nom de l'acteur à créer
+ * @param type Type d'acteur Foundry (ex: "character")
  * @returns Le nom de l'acteur tel que saisi (utilisable pour vérifier la fiche)
  */
 export async function createActor(page: Page, name: string, type: string): Promise<string> {
@@ -212,8 +212,8 @@ export async function createActor(page: Page, name: string, type: string): Promi
  * L'onglet est cherché dans la fiche filtrée par le nom de l'acteur pour éviter
  * les conflits si plusieurs fiches sont ouvertes.
  *
- * @param page - Page Playwright
- * @param actorName - Nom de l'acteur dont la fiche est ouverte
+ * @param page Page Playwright
+ * @param actorName Nom de l'acteur dont la fiche est ouverte
  */
 export async function openActorSkillsTab(page: Page, actorName: string): Promise<void> {
   await ensureSessionActive(page)
@@ -242,8 +242,8 @@ export async function openActorSkillsTab(page: Page, actorName: string): Promise
  *
  * Pré-requis : la fiche du personnage doit être ouverte et visible.
  *
- * @param page - Page Playwright
- * @param actorName - Nom de l'acteur dont la fiche est ouverte
+ * @param page Page Playwright
+ * @param actorName Nom de l'acteur dont la fiche est ouverte
  */
 export async function openSpecializationTree(page: Page, actorName: string): Promise<void> {
   await ensureSessionActive(page)
@@ -263,4 +263,46 @@ export async function openSpecializationTree(page: Page, actorName: string): Pro
   // Template : <section class="swerpg application specialization-tree-app">
   const treeApp = page.locator('.specialization-tree-app').first()
   await treeApp.waitFor({ state: 'visible', timeout: 15000 })
+}
+
+/**
+ * Ouvre le compendium lié à un bouton data-action sur la fiche d'acteur,
+ * recherche l'item par nom, le drag-and-drop sur la fiche, puis ferme le compendium.
+ *
+ * @param page Page Playwright
+ * @param sheet Locator de la fiche de l'acteur (déjà ouverte et visible)
+ * @param triggerAction Valeur de data-action sur le bouton ouvrant le compendium (ex: "editSpecies")
+ * @param searchTerm Terme de recherche dans la searchbox du compendium
+ * @param itemName Nom exact de l'item à drag-dropper sur la fiche
+ */
+export async function dragCompendiumItemToSheet(
+  page: Page,
+  sheet: import('@playwright/test').Locator,
+  triggerAction: string,
+  searchTerm: string,
+  itemName: string,
+): Promise<void> {
+  await sheet.locator(`[data-action="${triggerAction}"]`).click()
+
+  // Fenêtre compendium Foundry v14 : .application avec searchbox, ou .app.window-app v13
+  const compendiumWindow = page
+    .locator('.app.window-app, .application')
+    .filter({ has: page.getByRole('searchbox').first() })
+    .last()
+  await compendiumWindow.waitFor({ state: 'visible', timeout: 15000 })
+
+  const searchBox = compendiumWindow.getByRole('searchbox').first()
+  await searchBox.fill(searchTerm)
+  // Attendre que le filtre soit appliqué
+  await page.waitForTimeout(500)
+
+  const itemRow = compendiumWindow.locator('li, .item, [data-document-id]').filter({ hasText: itemName }).first()
+  await itemRow.waitFor({ state: 'visible', timeout: 10000 })
+
+  await itemRow.dragTo(sheet)
+
+  const closeButton = compendiumWindow.getByRole('button', { name: /Close/i }).first()
+  if ((await closeButton.count()) > 0) {
+    await closeButton.click()
+  }
 }

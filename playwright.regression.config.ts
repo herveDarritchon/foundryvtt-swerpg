@@ -30,6 +30,7 @@ export default defineConfig({
         viewport: { width: 1920, height: 1080 },
         actionTimeout: 20000,
         launchOptions: {
+          slowMo: process.env.PLAYWRIGHT_SLOW_MO ? parseInt(process.env.PLAYWRIGHT_SLOW_MO) : 0,
           args: ['--disable-blink-features=AutomationControlled', '--disable-features=IsolateOrigins,site-per-process'],
         },
         contextOptions: {
