@@ -138,8 +138,10 @@ describe('character-audit-log application', () => {
       },
     })
 
-    const entries = buildAuditLogEntries(actor, 'all')
+    const { entries, totalCount, filteredCount } = buildAuditLogEntries(actor, 'all')
     expect(entries).toHaveLength(2)
+    expect(totalCount).toBe(2)
+    expect(filteredCount).toBe(2)
     expect(entries[0].id).toBe('entry-2')
     expect(entries[0].description).toBe('Removed specialization Bodyguard')
     expect(entries[1].formattedXpDelta).toBe('-10 XP')
@@ -148,7 +150,7 @@ describe('character-audit-log application', () => {
     expect(entries[1].deltaClass).toBe('is-spend')
     expect(entries[1].hasDelta).toBe(true)
 
-    const filtered = buildAuditLogEntries(actor, 'skills')
+    const { entries: filtered } = buildAuditLogEntries(actor, 'skills')
     expect(filtered).toHaveLength(1)
     expect(filtered[0].id).toBe('entry-1')
   })
@@ -193,7 +195,7 @@ describe('character-audit-log application', () => {
       },
     })
 
-    const entries = buildAuditLogEntries(actor, 'talents')
+    const { entries } = buildAuditLogEntries(actor, 'talents')
     expect(entries).toHaveLength(1)
     expect(entries[0].type).toBe('talent-node-purchase')
     expect(entries[0].typeLabel).toBe('Talent node purchase')
@@ -264,7 +266,7 @@ describe('character-audit-log application', () => {
       },
     })
 
-    const entries = buildAuditLogEntries(actor, 'talents')
+    const { entries } = buildAuditLogEntries(actor, 'talents')
     expect(entries).toHaveLength(4)
     entries.forEach((e) => {
       expect(e.family).toBe('talents')
@@ -285,7 +287,7 @@ describe('character-audit-log application', () => {
       },
     })
 
-    const entries = buildAuditLogEntries(actor, 'all')
+    const { entries } = buildAuditLogEntries(actor, 'all')
     expect(entries).toHaveLength(4)
     for (const entry of entries) {
       expect(entry.typeLabel).not.toBe('Unknown event')
@@ -671,7 +673,7 @@ describe('audit log item.purchase', () => {
       { id: 'p1', timestamp: 100, type: 'item.purchase', xpDelta: 0, data: { itemName: 'Blaster', itemType: 'weapon', price: 100, quantity: 1 } },
     ])
 
-    const entries = buildAuditLogEntries(actor, 'purchases')
+    const { entries } = buildAuditLogEntries(actor, 'purchases')
     expect(entries).toHaveLength(1)
     expect(entries[0].family).toBe('purchases')
   })
@@ -681,7 +683,7 @@ describe('audit log item.purchase', () => {
       { id: 'p1', timestamp: 100, type: 'item.purchase', xpDelta: 0, data: { itemName: 'Blaster', itemType: 'weapon', price: 100, quantity: 1 } },
     ])
 
-    const entries = buildAuditLogEntries(actor, 'talents')
+    const { entries } = buildAuditLogEntries(actor, 'talents')
     expect(entries).toHaveLength(0)
   })
 
@@ -690,7 +692,7 @@ describe('audit log item.purchase', () => {
       { id: 'p1', timestamp: 100, type: 'item.purchase', xpDelta: 0, data: { itemName: 'Blaster', itemType: 'weapon', price: 100, quantity: 1 } },
     ])
 
-    const entries = buildAuditLogEntries(actor, 'all')
+    const { entries } = buildAuditLogEntries(actor, 'all')
     expect(entries).toHaveLength(1)
     expect(entries[0].type).toBe('item.purchase')
   })
@@ -727,7 +729,7 @@ describe('audit log item.purchase', () => {
       { id: 'p1', timestamp: 100, type: 'item.purchase', xpDelta: 0, data: { itemName: 'Blaster', itemType: 'weapon', price: 100, quantity: 1 } },
     ])
 
-    const entries = buildAuditLogEntries(actor, 'all')
+    const { entries } = buildAuditLogEntries(actor, 'all')
     expect(entries[0].typeLabel).toBe('Item purchased')
     expect(entries[0].typeLabel).not.toBe('Unknown event')
   })
@@ -744,7 +746,7 @@ describe('audit log item.purchase', () => {
       },
     ])
 
-    const entries = buildAuditLogEntries(actor, 'all')
+    const { entries } = buildAuditLogEntries(actor, 'all')
     expect(entries[0].formattedDelta).toBe('-150 cr')
     expect(entries[0].deltaClass).toBe('is-spend')
     expect(entries[0].hasDelta).toBe(true)
@@ -756,7 +758,7 @@ describe('audit log item.purchase', () => {
       { id: 'p1', timestamp: 100, type: 'item.purchase', xpDelta: 0, creditDelta: 0, data: { itemName: 'Free Item', itemType: 'gear', price: 0, quantity: 1 } },
     ])
 
-    const entries = buildAuditLogEntries(actor, 'all')
+    const { entries } = buildAuditLogEntries(actor, 'all')
     expect(entries[0].deltaClass).toBe('is-neutral')
     expect(entries[0].hasDelta).toBe(false)
   })
@@ -773,7 +775,7 @@ describe('audit log item.purchase', () => {
       },
     ])
 
-    const entries = buildAuditLogEntries(actor, 'all')
+    const { entries } = buildAuditLogEntries(actor, 'all')
     expect(entries[0].formattedXpDelta).toBe('0 XP')
   })
 })
@@ -836,7 +838,7 @@ describe('audit log integration: item.purchase audit → filter → CSV', () => 
     }
 
     // Verify filter "Purchases" returns the entry with correct family
-    const entries = buildAuditLogEntries(actor, 'purchases')
+    const { entries } = buildAuditLogEntries(actor, 'purchases')
     expect(entries).toHaveLength(1)
     expect(entries[0].family).toBe('purchases')
 
@@ -883,7 +885,7 @@ describe('audit log integration: item.purchase audit → filter → CSV', () => 
     }
 
     // Verify filter "purchases" returns the entry with itemId
-    const entries = buildAuditLogEntries(actor, 'purchases')
+    const { entries } = buildAuditLogEntries(actor, 'purchases')
     expect(entries).toHaveLength(1)
     expect(entries[0].data.itemId).toBe('item-uuid-abc123')
 
@@ -922,7 +924,7 @@ describe('audit log integration: item.purchase audit → filter → CSV', () => 
       testUserPermission: vi.fn(() => true),
     }
 
-    const entries = buildAuditLogEntries(actor, 'purchases')
+    const { entries } = buildAuditLogEntries(actor, 'purchases')
     expect(entries).toHaveLength(1)
     expect(entries[0].data.itemId).toBeUndefined()
   })
@@ -1064,7 +1066,7 @@ describe('buildAuditLogEntryVisual', () => {
       },
     }
 
-    const entries = buildAuditLogEntries(actorWithLogs, 'all')
+    const { entries } = buildAuditLogEntries(actorWithLogs, 'all')
     expect(entries).toHaveLength(1)
 
     const entry = entries[0]
@@ -1185,6 +1187,51 @@ describe('audit log filter isPressed and icon in _prepareContext', () => {
     expect(talentsFilter.cssClass).toBe('is-active')
     expect(talentsFilter.isPressed).toBe(true)
   })
+
+  it('context exposes totalCount, filteredCount, searchQuery, dateFrom, dateTo', async () => {
+    const actor = makeActor()
+    const app = new CharacterAuditLogApp({ document: actor })
+    const ctx = await app._prepareContext({})
+
+    expect(typeof ctx.totalCount).toBe('number')
+    expect(typeof ctx.filteredCount).toBe('number')
+    expect(typeof ctx.searchQuery).toBe('string')
+    expect(typeof ctx.dateFrom).toBe('string')
+    expect(typeof ctx.dateTo).toBe('string')
+  })
+
+  it('isFiltered is false when family is all and no search active', async () => {
+    const actor = makeActor()
+    const app = new CharacterAuditLogApp({ document: actor })
+    const ctx = await app._prepareContext({})
+
+    expect(ctx.isFiltered).toBe(false)
+  })
+
+  it('isFiltered is true when family filter is active', async () => {
+    const actor = makeActor()
+    const app = new CharacterAuditLogApp({ document: actor, filter: 'skills' })
+    const ctx = await app._prepareContext({})
+
+    expect(ctx.isFiltered).toBe(true)
+  })
+
+  it('isFiltered is true when searchQuery is set', async () => {
+    const actor = makeActor()
+    const app = new CharacterAuditLogApp({ document: actor })
+    app.searchQuery = 'piloting'
+    const ctx = await app._prepareContext({})
+
+    expect(ctx.isFiltered).toBe(true)
+  })
+
+  it('context exposes emptyFilteredLabel as a string', async () => {
+    const actor = makeActor()
+    const app = new CharacterAuditLogApp({ document: actor })
+    const ctx = await app._prepareContext({})
+
+    expect(typeof ctx.emptyFilteredLabel).toBe('string')
+  })
 })
 
 /* ============================================ */
@@ -1287,9 +1334,9 @@ describe('audit log family icons and variant glyphs', () => {
       },
     }
 
-    const entries = buildAuditLogEntries(actorWithLogs, 'all')
-    expect(entries).toHaveLength(1)
-    const entry = entries[0]
+    const { entries: e1 } = buildAuditLogEntries(actorWithLogs, 'all')
+    expect(e1).toHaveLength(1)
+    const entry = e1[0]
     expect(entry.family).toBe('skills')
     expect(entry.familyIcon).toBe(getAuditLogFamilyIcon('skills'))
     expect(typeof entry.familyIcon).toBe('string')
@@ -1315,9 +1362,9 @@ describe('audit log family icons and variant glyphs', () => {
       },
     }
 
-    const entries = buildAuditLogEntries(actorWithLogs, 'all')
-    expect(entries).toHaveLength(1)
-    const entry = entries[0]
+    const { entries: e2 } = buildAuditLogEntries(actorWithLogs, 'all')
+    expect(e2).toHaveLength(1)
+    const entry = e2[0]
     expect(entry.family).toBe('sales')
     expect(entry.familyIcon).toBe(getAuditLogFamilyIcon('sales'))
   })
@@ -1332,8 +1379,8 @@ describe('audit log family icons and variant glyphs', () => {
       },
     }
 
-    const entries = buildAuditLogEntries(actorWithLogs, 'all')
-    const entry = entries[0]
+    const { entries: e3 } = buildAuditLogEntries(actorWithLogs, 'all')
+    const entry = e3[0]
     expect(entry.variant).toBe('add')
     expect(entry.variantGlyph).toBe(getAuditLogVariantGlyph('add'))
     expect(typeof entry.variantGlyph).toBe('string')
@@ -1350,8 +1397,8 @@ describe('audit log family icons and variant glyphs', () => {
       },
     }
 
-    const entries = buildAuditLogEntries(actorWithLogs, 'all')
-    const entry = entries[0]
+    const { entries: e4 } = buildAuditLogEntries(actorWithLogs, 'all')
+    const entry = e4[0]
     expect(entry.variant).toBe('gain')
     expect(entry.variantGlyph).toBe(getAuditLogVariantGlyph('gain'))
   })
@@ -1366,8 +1413,8 @@ describe('audit log family icons and variant glyphs', () => {
       },
     }
 
-    const entries = buildAuditLogEntries(actorWithLogs, 'all')
-    const entry = entries[0]
+    const { entries: e5 } = buildAuditLogEntries(actorWithLogs, 'all')
+    const entry = e5[0]
     expect(entry.variant).toBe('change')
     expect(entry.variantGlyph).toBe(getAuditLogVariantGlyph('change'))
   })
@@ -1382,8 +1429,8 @@ describe('audit log family icons and variant glyphs', () => {
       },
     }
 
-    const entries = buildAuditLogEntries(actorWithLogs, 'all')
-    const entry = entries[0]
+    const { entries: e6 } = buildAuditLogEntries(actorWithLogs, 'all')
+    const entry = e6[0]
     expect(entry.variant).toBe('fail')
     expect(entry.variantGlyph).toBe(getAuditLogVariantGlyph('fail'))
   })
@@ -1398,9 +1445,279 @@ describe('audit log family icons and variant glyphs', () => {
       },
     }
 
-    const entries = buildAuditLogEntries(actorWithLogs, 'all')
-    const entry = entries[0]
+    const { entries: e7 } = buildAuditLogEntries(actorWithLogs, 'all')
+    const entry = e7[0]
     expect(typeof entry.variantGlyphLabel).toBe('string')
     expect(entry.variantGlyphLabel).toBe('Added')
+  })
+})
+
+/* ============================================ */
+/*  Text search, date range, counters          */
+/* ============================================ */
+
+describe('buildAuditLogEntries — text search, date range, counters', () => {
+  let buildAuditLogEntries
+
+  const baseTranslations = {
+    'SWERPG.AUDIT_LOG.FILTER.ALL': 'All',
+    'SWERPG.AUDIT_LOG.FILTER.SKILLS': 'Skills',
+    'SWERPG.AUDIT_LOG.FILTER.TALENTS': 'Talents',
+    'SWERPG.AUDIT_LOG.FILTER.XP': 'XP',
+    'SWERPG.AUDIT_LOG.FILTER.CHARACTERISTICS': 'Characteristics',
+    'SWERPG.AUDIT_LOG.FILTER.DETAILS': 'Core choices',
+    'SWERPG.AUDIT_LOG.FILTER.ADVANCEMENT': 'Advancement',
+    'SWERPG.AUDIT_LOG.FILTER.PURCHASES': 'Purchases',
+    'SWERPG.AUDIT_LOG.FILTER.SALES': 'Sales',
+    'SWERPG.AUDIT_LOG.TYPE.SKILL_TRAIN': 'Skill purchase',
+    'SWERPG.AUDIT_LOG.TYPE.ITEM_PURCHASE': 'Item purchased',
+    'SWERPG.AUDIT_LOG.TYPE.XP_GRANT': 'XP granted',
+    'SWERPG.AUDIT_LOG.TYPE.UNKNOWN': 'Unknown event',
+    'SWERPG.AUDIT_LOG.NONE': 'None',
+    'SWERPG.AUDIT_LOG.UNKNOWN_VALUE': 'Unknown value',
+    'SWERPG.AUDIT_LOG.UNKNOWN_SKILL': 'Unknown skill',
+    'SWERPG.AUDIT_LOG.UNKNOWN_ITEM': 'Unknown item',
+    'SWERPG.AUDIT_LOG.DESCRIPTION.SKILL_TRAIN': 'Skill {skill}: rank {oldRank} -> {newRank}',
+    'SWERPG.AUDIT_LOG.DESCRIPTION.ITEM_PURCHASE': 'Purchased {itemName} ({itemType}) for {price} credits',
+    'SWERPG.AUDIT_LOG.DESCRIPTION.XP_GRANT': 'Granted {amount} XP',
+    'SWERPG.AUDIT_LOG.DESCRIPTION.UNKNOWN': 'Unknown event ({type})',
+    'SWERPG.AUDIT_LOG.VARIANT.ADD': 'Added',
+    'SWERPG.AUDIT_LOG.VARIANT.GAIN': 'Gained',
+    'SWERPG.AUDIT_LOG.VARIANT.REMOVE': 'Removed',
+    'SWERPG.AUDIT_LOG.VARIANT.CHANGE': 'Changed',
+    'SWERPG.AUDIT_LOG.VARIANT.FAIL': 'Failed',
+  }
+
+  beforeEach(async () => {
+    setupFoundryMock({ translations: baseTranslations })
+    ;({ buildAuditLogEntries } = await import('../../module/applications/character-audit-log.mjs'))
+  })
+
+  afterEach(() => {
+    vi.resetModules()
+    vi.clearAllMocks()
+    teardownFoundryMock()
+  })
+
+  function makeActorWithLogs(logs) {
+    return {
+      id: 'actor-search',
+      name: 'Vara Kesh',
+      type: 'character',
+      isOwner: true,
+      system: {},
+      flags: { swerpg: { logs } },
+      testUserPermission: vi.fn(() => true),
+    }
+  }
+
+  // ---- counters ----
+
+  it('returns totalCount equal to all entries and filteredCount equal to shown entries', () => {
+    const actor = makeActorWithLogs([
+      { id: 'e1', timestamp: 100, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } },
+      { id: 'e2', timestamp: 200, type: 'xp.grant', xpDelta: 20, data: { amount: 20 } },
+    ])
+
+    const { totalCount, filteredCount, entries } = buildAuditLogEntries(actor, 'skills')
+    expect(totalCount).toBe(2)
+    expect(filteredCount).toBe(1)
+    expect(entries).toHaveLength(1)
+  })
+
+  it('returns totalCount = filteredCount when filter is all and no search', () => {
+    const actor = makeActorWithLogs([
+      { id: 'e1', timestamp: 100, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } },
+      { id: 'e2', timestamp: 200, type: 'xp.grant', xpDelta: 20, data: { amount: 20 } },
+    ])
+
+    const { totalCount, filteredCount } = buildAuditLogEntries(actor, 'all')
+    expect(totalCount).toBe(2)
+    expect(filteredCount).toBe(2)
+  })
+
+  it('returns zero filteredCount when no entry matches the search', () => {
+    const actor = makeActorWithLogs([{ id: 'e1', timestamp: 100, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } }])
+
+    const { totalCount, filteredCount } = buildAuditLogEntries(actor, 'all', { query: 'xyzzy-no-match' })
+    expect(totalCount).toBe(1)
+    expect(filteredCount).toBe(0)
+  })
+
+  // ---- text search ----
+
+  it('text search is case-insensitive', () => {
+    const actor = makeActorWithLogs([{ id: 'e1', timestamp: 100, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } }])
+
+    const { entries: lower } = buildAuditLogEntries(actor, 'all', { query: 'piloting' })
+    const { entries: upper } = buildAuditLogEntries(actor, 'all', { query: 'PILOTING' })
+    expect(lower).toHaveLength(1)
+    expect(upper).toHaveLength(1)
+  })
+
+  it('text search matches on description field', () => {
+    const actor = makeActorWithLogs([
+      { id: 'e1', timestamp: 100, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } },
+      { id: 'e2', timestamp: 200, type: 'xp.grant', xpDelta: 20, data: { amount: 20 } },
+    ])
+
+    // 'Piloting' appears in the description built from DESCRIPTION.SKILL_TRAIN
+    const { entries } = buildAuditLogEntries(actor, 'all', { query: 'Piloting' })
+    expect(entries).toHaveLength(1)
+    expect(entries[0].id).toBe('e1')
+  })
+
+  it('text search matches on typeLabel field', () => {
+    const actor = makeActorWithLogs([
+      { id: 'e1', timestamp: 100, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } },
+      { id: 'e2', timestamp: 200, type: 'xp.grant', xpDelta: 20, data: { amount: 20 } },
+    ])
+
+    // 'XP granted' is the typeLabel for xp.grant
+    const { entries } = buildAuditLogEntries(actor, 'all', { query: 'XP granted' })
+    expect(entries).toHaveLength(1)
+    expect(entries[0].id).toBe('e2')
+  })
+
+  it('empty query returns all entries regardless of content', () => {
+    const actor = makeActorWithLogs([
+      { id: 'e1', timestamp: 100, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } },
+      { id: 'e2', timestamp: 200, type: 'xp.grant', xpDelta: 20, data: { amount: 20 } },
+    ])
+
+    const { entries } = buildAuditLogEntries(actor, 'all', { query: '' })
+    expect(entries).toHaveLength(2)
+  })
+
+  it('text search combined with family filter is conjunctive', () => {
+    const actor = makeActorWithLogs([
+      { id: 'e1', timestamp: 100, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } },
+      { id: 'e2', timestamp: 200, type: 'item.purchase', xpDelta: 0, data: { itemName: 'Blaster Pistol', itemType: 'weapon', price: 100, quantity: 1 } },
+    ])
+
+    // query 'Piloting' matches e1 (skills family), but family='purchases' excludes it
+    const { entries } = buildAuditLogEntries(actor, 'purchases', { query: 'Piloting' })
+    expect(entries).toHaveLength(0)
+
+    // query 'Blaster' matches e2 (purchases family)
+    const { entries: entries2 } = buildAuditLogEntries(actor, 'purchases', { query: 'Blaster' })
+    expect(entries2).toHaveLength(1)
+    expect(entries2[0].id).toBe('e2')
+  })
+
+  // ---- date range ----
+
+  it('dateFrom filters out entries before the given date', () => {
+    // Timestamps: Jan 1 2024 (UTC midnight = 1704067200000), Jan 15 2024
+    const ts1 = new Date('2024-01-01T00:00:00Z').getTime()
+    const ts2 = new Date('2024-01-15T00:00:00Z').getTime()
+    const actor = makeActorWithLogs([
+      { id: 'e1', timestamp: ts1, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } },
+      { id: 'e2', timestamp: ts2, type: 'xp.grant', xpDelta: 20, data: { amount: 20 } },
+    ])
+
+    const { entries } = buildAuditLogEntries(actor, 'all', { dateFrom: '2024-01-10' })
+    expect(entries).toHaveLength(1)
+    expect(entries[0].id).toBe('e2')
+  })
+
+  it('dateTo filters out entries after the given date (inclusive)', () => {
+    const ts1 = new Date('2024-01-01T00:00:00Z').getTime()
+    const ts2 = new Date('2024-01-15T00:00:00Z').getTime()
+    const actor = makeActorWithLogs([
+      { id: 'e1', timestamp: ts1, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } },
+      { id: 'e2', timestamp: ts2, type: 'xp.grant', xpDelta: 20, data: { amount: 20 } },
+    ])
+
+    // dateTo = Jan 1 — e1 should pass (same day), e2 should be excluded
+    const { entries } = buildAuditLogEntries(actor, 'all', { dateTo: '2024-01-01' })
+    expect(entries).toHaveLength(1)
+    expect(entries[0].id).toBe('e1')
+  })
+
+  it('bounded date range [from, to] is inclusive on both ends', () => {
+    const ts1 = new Date('2024-01-01T00:00:00Z').getTime()
+    const ts2 = new Date('2024-01-10T12:00:00Z').getTime()
+    const ts3 = new Date('2024-01-20T00:00:00Z').getTime()
+    const actor = makeActorWithLogs([
+      { id: 'e1', timestamp: ts1, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } },
+      { id: 'e2', timestamp: ts2, type: 'xp.grant', xpDelta: 20, data: { amount: 20 } },
+      { id: 'e3', timestamp: ts3, type: 'xp.grant', xpDelta: 10, data: { amount: 10 } },
+    ])
+
+    const { entries } = buildAuditLogEntries(actor, 'all', { dateFrom: '2024-01-05', dateTo: '2024-01-15' })
+    expect(entries).toHaveLength(1)
+    expect(entries[0].id).toBe('e2')
+  })
+
+  it('from > to treats the date range as open (no date filter applied)', () => {
+    const ts1 = new Date('2024-01-01T00:00:00Z').getTime()
+    const ts2 = new Date('2024-01-15T00:00:00Z').getTime()
+    const actor = makeActorWithLogs([
+      { id: 'e1', timestamp: ts1, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } },
+      { id: 'e2', timestamp: ts2, type: 'xp.grant', xpDelta: 20, data: { amount: 20 } },
+    ])
+
+    // dateFrom after dateTo → invalid range → open filter → all returned
+    const { entries } = buildAuditLogEntries(actor, 'all', { dateFrom: '2024-01-20', dateTo: '2024-01-01' })
+    expect(entries).toHaveLength(2)
+  })
+
+  it('only dateFrom (no dateTo) returns entries on or after', () => {
+    const ts1 = new Date('2024-01-01T00:00:00Z').getTime()
+    const ts2 = new Date('2024-06-01T00:00:00Z').getTime()
+    const actor = makeActorWithLogs([
+      { id: 'e1', timestamp: ts1, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } },
+      { id: 'e2', timestamp: ts2, type: 'xp.grant', xpDelta: 20, data: { amount: 20 } },
+    ])
+
+    const { entries } = buildAuditLogEntries(actor, 'all', { dateFrom: '2024-03-01' })
+    expect(entries).toHaveLength(1)
+    expect(entries[0].id).toBe('e2')
+  })
+
+  it('only dateTo (no dateFrom) returns entries on or before', () => {
+    const ts1 = new Date('2024-01-01T00:00:00Z').getTime()
+    const ts2 = new Date('2024-06-01T00:00:00Z').getTime()
+    const actor = makeActorWithLogs([
+      { id: 'e1', timestamp: ts1, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } },
+      { id: 'e2', timestamp: ts2, type: 'xp.grant', xpDelta: 20, data: { amount: 20 } },
+    ])
+
+    const { entries } = buildAuditLogEntries(actor, 'all', { dateTo: '2024-03-01' })
+    expect(entries).toHaveLength(1)
+    expect(entries[0].id).toBe('e1')
+  })
+
+  it('invalid date string for dateFrom is ignored (treated as null)', () => {
+    const ts1 = new Date('2024-01-01T00:00:00Z').getTime()
+    const actor = makeActorWithLogs([{ id: 'e1', timestamp: ts1, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } }])
+
+    // Invalid date string → parseDateBound returns null → open bound
+    const { entries } = buildAuditLogEntries(actor, 'all', { dateFrom: 'not-a-date' })
+    expect(entries).toHaveLength(1)
+  })
+
+  // ---- combination: family + text + dates ----
+
+  it('combination of family, text, and date range all apply conjunctively', () => {
+    const ts1 = new Date('2024-01-01T00:00:00Z').getTime()
+    const ts2 = new Date('2024-01-15T00:00:00Z').getTime()
+    const ts3 = new Date('2024-01-15T00:00:00Z').getTime()
+    const actor = makeActorWithLogs([
+      { id: 'e1', timestamp: ts1, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } },
+      { id: 'e2', timestamp: ts2, type: 'skill.train', xpDelta: -5, data: { skillName: 'Gunnery', oldRank: 0, newRank: 1 } },
+      { id: 'e3', timestamp: ts3, type: 'xp.grant', xpDelta: 20, data: { amount: 20 } },
+    ])
+
+    // family=skills, query='Gunnery', dateFrom='2024-01-10' → only e2 matches
+    const { entries, totalCount, filteredCount } = buildAuditLogEntries(actor, 'skills', {
+      query: 'Gunnery',
+      dateFrom: '2024-01-10',
+    })
+    expect(totalCount).toBe(3)
+    expect(filteredCount).toBe(1)
+    expect(entries).toHaveLength(1)
+    expect(entries[0].id).toBe('e2')
   })
 })
