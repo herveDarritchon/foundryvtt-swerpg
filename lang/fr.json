@@ -256,6 +256,8 @@
   "SWERPG.AUDIT_LOG.OPEN": "Consulter l'historique d'évolution",
   "SWERPG.AUDIT_LOG.NO_PERMISSION": "Vous ne pouvez consulter l'historique que de vos propres personnages.",
   "SWERPG.AUDIT_LOG.EMPTY": "Aucune entrée dans l'historique pour l'instant.",
+  "SWERPG.AUDIT_LOG.EMPTY_TITLE": "Aucune activité enregistrée",
+  "SWERPG.AUDIT_LOG.EMPTY_HINT": "Les évolutions du personnage apparaîtront ici au fil de sa progression.",
   "SWERPG.AUDIT_LOG.EMPTY_FILTERED": "Aucune entrée ne correspond aux filtres actifs.",
   "SWERPG.AUDIT_LOG.EMPTY_FAMILY": "Aucune entrée pour cette catégorie dans le contexte actuel.",
   "SWERPG.AUDIT_LOG.SEARCH.LABEL": "Rechercher",

@@ -808,6 +808,33 @@
     text-align: center;
   }
 
+  .audit-log__empty--log {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 3rem 2rem;
+    color: var(--color-secondary);
+    text-align: center;
+  }
+
+  .audit-log__empty-title {
+    font-family: var(--font-h2);
+    font-size: var(--font-size-14);
+    color: var(--color-primary);
+    margin: 0;
+  }
+
+  .audit-log__empty-hint {
+    font-family: var(--font-body);
+    font-size: var(--font-size-13);
+    color: var(--color-secondary);
+    margin: 0;
+    max-width: 28rem;
+  }
+
   @media (max-width: 640px) {
     .audit-log-entry__change {
       flex-direction: column;

@@ -2464,3 +2464,136 @@ describe('buildAuditLogEntries — delta unit metadata', () => {
     expect(entry.deltaUnitClass).toBe('audit-log-entry__delta--unit-neutral')
   })
 })
+
+/* ============================================ */
+/*  Illustrated empty state — emptyState contract */
+/* ============================================ */
+
+describe('_prepareContext — illustrated emptyState contract', () => {
+  let CharacterAuditLogApp
+
+  const baseTranslations = {
+    'SWERPG.AUDIT_LOG.FILTER.ALL': 'All',
+    'SWERPG.AUDIT_LOG.FILTER.SKILLS': 'Skills',
+    'SWERPG.AUDIT_LOG.FILTER.TALENTS': 'Talents',
+    'SWERPG.AUDIT_LOG.FILTER.XP': 'XP',
+    'SWERPG.AUDIT_LOG.FILTER.CHARACTERISTICS': 'Characteristics',
+    'SWERPG.AUDIT_LOG.FILTER.DETAILS': 'Core choices',
+    'SWERPG.AUDIT_LOG.FILTER.ADVANCEMENT': 'Advancement',
+    'SWERPG.AUDIT_LOG.FILTER.PURCHASES': 'Purchases',
+    'SWERPG.AUDIT_LOG.FILTER.SALES': 'Sales',
+    'SWERPG.AUDIT_LOG.EMPTY': 'No entries in the history yet.',
+    'SWERPG.AUDIT_LOG.EMPTY_TITLE': 'No activity recorded yet',
+    'SWERPG.AUDIT_LOG.EMPTY_HINT': 'Character evolutions will appear here as the character grows.',
+    'SWERPG.AUDIT_LOG.EMPTY_FILTERED': 'No entries match the current filters.',
+    'SWERPG.AUDIT_LOG.EMPTY_FAMILY': 'No entries for this category in the current context.',
+    'SWERPG.AUDIT_LOG.TYPE.SKILL_TRAIN': 'Skill purchase',
+    'SWERPG.AUDIT_LOG.TYPE.UNKNOWN': 'Unknown event',
+    'SWERPG.AUDIT_LOG.NONE': 'None',
+    'SWERPG.AUDIT_LOG.UNKNOWN_VALUE': 'Unknown value',
+    'SWERPG.AUDIT_LOG.UNKNOWN_SKILL': 'Unknown skill',
+    'SWERPG.AUDIT_LOG.DESCRIPTION.SKILL_TRAIN': 'Skill {skill}: rank {oldRank} -> {newRank}',
+    'SWERPG.AUDIT_LOG.DESCRIPTION.UNKNOWN': 'Unknown event ({type})',
+    'SWERPG.AUDIT_LOG.VARIANT.ADD': 'Added',
+    'SWERPG.AUDIT_LOG.VARIANT.GAIN': 'Gained',
+    'SWERPG.AUDIT_LOG.VARIANT.REMOVE': 'Removed',
+    'SWERPG.AUDIT_LOG.VARIANT.CHANGE': 'Changed',
+    'SWERPG.AUDIT_LOG.VARIANT.FAIL': 'Failed',
+  }
+
+  beforeEach(async () => {
+    setupFoundryMock({ translations: baseTranslations })
+    ;({ default: CharacterAuditLogApp } = await import('../../module/applications/character-audit-log.mjs'))
+  })
+
+  afterEach(() => {
+    vi.resetModules()
+    vi.clearAllMocks()
+    teardownFoundryMock()
+  })
+
+  function makeActor(logs = []) {
+    return {
+      id: 'actor-empty-state',
+      name: 'Test',
+      type: 'character',
+      isOwner: true,
+      system: {},
+      flags: { swerpg: { logs } },
+      testUserPermission: vi.fn(() => true),
+    }
+  }
+
+  it('context always exposes emptyState with kind, icon, title and hint fields', async () => {
+    const actor = makeActor()
+    const app = new CharacterAuditLogApp({ document: actor })
+    const ctx = await app._prepareContext({})
+
+    expect(ctx.emptyState).toBeDefined()
+    expect(typeof ctx.emptyState.kind).toBe('string')
+    expect(typeof ctx.emptyState.icon).toBe('string')
+    expect(typeof ctx.emptyState.title).toBe('string')
+    expect(typeof ctx.emptyState.hint).toBe('string')
+  })
+
+  it('emptyState.kind is empty-log for the primary empty state', async () => {
+    const actor = makeActor()
+    const app = new CharacterAuditLogApp({ document: actor })
+    const ctx = await app._prepareContext({})
+
+    expect(ctx.emptyState.kind).toBe('empty-log')
+  })
+
+  it('emptyState.title is the localized EMPTY_TITLE key', async () => {
+    const actor = makeActor()
+    const app = new CharacterAuditLogApp({ document: actor })
+    const ctx = await app._prepareContext({})
+
+    expect(ctx.emptyState.title).toBe('No activity recorded yet')
+  })
+
+  it('emptyState.hint is the localized EMPTY_HINT key', async () => {
+    const actor = makeActor()
+    const app = new CharacterAuditLogApp({ document: actor })
+    const ctx = await app._prepareContext({})
+
+    expect(ctx.emptyState.hint).toBe('Character evolutions will appear here as the character grows.')
+  })
+
+  it('emptyState.icon is a non-empty FontAwesome class string', async () => {
+    const actor = makeActor()
+    const app = new CharacterAuditLogApp({ document: actor })
+    const ctx = await app._prepareContext({})
+
+    expect(ctx.emptyState.icon.length).toBeGreaterThan(0)
+    expect(ctx.emptyState.icon).toContain('fa-')
+  })
+
+  it('emptyState is present even when the journal has entries (not shown but contract is always available)', async () => {
+    const actor = makeActor([{ id: 'e1', timestamp: 100, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } }])
+    const app = new CharacterAuditLogApp({ document: actor })
+    const ctx = await app._prepareContext({})
+
+    // The contract is always populated; the template decides whether to show it
+    expect(ctx.emptyState).toBeDefined()
+    expect(ctx.emptyState.kind).toBe('empty-log')
+  })
+
+  it('hasEntries is false for a truly empty log, distinguishing it from a filtered empty result', async () => {
+    const emptyActor = makeActor()
+    const appEmpty = new CharacterAuditLogApp({ document: emptyActor })
+    const ctxEmpty = await appEmpty._prepareContext({})
+
+    expect(ctxEmpty.hasEntries).toBe(false)
+    expect(ctxEmpty.totalCount).toBe(0)
+
+    const actorWithLog = makeActor([{ id: 'e1', timestamp: 100, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } }])
+    const appWithLog = new CharacterAuditLogApp({ document: actorWithLog, filter: 'talents' })
+    const ctxFiltered = await appWithLog._prepareContext({})
+
+    // With entries but filtered to empty family — totalCount is non-zero
+    expect(ctxFiltered.hasEntries).toBe(true)
+    expect(ctxFiltered.totalCount).toBe(1)
+    expect(ctxFiltered.hasFilteredEntries).toBe(false)
+  })
+})

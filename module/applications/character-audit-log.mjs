@@ -937,6 +937,12 @@ export default class CharacterAuditLogApp extends api.HandlebarsApplicationMixin
       emptyLabel: game.i18n.localize('SWERPG.AUDIT_LOG.EMPTY'),
       emptyFilteredLabel: game.i18n.localize('SWERPG.AUDIT_LOG.EMPTY_FILTERED'),
       emptyFamilyLabel: game.i18n.localize('SWERPG.AUDIT_LOG.EMPTY_FAMILY'),
+      emptyState: {
+        kind: 'empty-log',
+        icon: 'fa-solid fa-scroll',
+        title: game.i18n.localize('SWERPG.AUDIT_LOG.EMPTY_TITLE'),
+        hint: game.i18n.localize('SWERPG.AUDIT_LOG.EMPTY_HINT'),
+      },
     }
   }
 
