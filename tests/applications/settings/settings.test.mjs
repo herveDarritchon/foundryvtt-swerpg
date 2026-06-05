@@ -38,8 +38,8 @@ describe('System Settings Registration', () => {
     test('should register all system settings', () => {
       registerSystemSettings()
 
-      // Verify all settings were registered (8 core + 3 original market + 4 phase-9 market + 2 broken-sale market = 17 total)
-      expect(mockGameSettings.register).toHaveBeenCalledTimes(17) // 17 settings total
+      // Verify all settings were registered (8 core + 1 audit-chat-summary + 3 original market + 4 phase-9 market + 2 broken-sale market = 18 total)
+      expect(mockGameSettings.register).toHaveBeenCalledTimes(18) // 18 settings total
       expect(mockKeybindings.register).toHaveBeenCalledTimes(1) // 1 keybinding
     })
 
@@ -155,9 +155,9 @@ describe('System Settings Registration', () => {
 
         const calls = mockGameSettings.register.mock.calls
 
-        // World-scoped settings (7 core + 3 original market + 4 phase-9 market + 2 broken-sale market = 16)
+        // World-scoped settings (7 core + 1 audit-chat-summary + 3 original market + 4 phase-9 market + 2 broken-sale market = 17)
         const worldSettings = calls.filter((call) => call[2].scope === 'world')
-        expect(worldSettings).toHaveLength(16)
+        expect(worldSettings).toHaveLength(17)
 
         // Client-scoped settings
         const clientSettings = calls.filter((call) => call[2].scope === 'client')
@@ -176,13 +176,14 @@ describe('System Settings Registration', () => {
 
         // Visible settings (config: true)
         const visibleSettings = calls.filter((call) => call[2].config === true)
-        expect(visibleSettings).toHaveLength(3)
+        expect(visibleSettings).toHaveLength(4)
 
-        // Check that actionAnimations, autoConfirm and auditLogMaxEntries are visible
+        // Check that actionAnimations, autoConfirm, auditLogMaxEntries and auditLogChatSummary are visible
         const visibleSettingNames = visibleSettings.map((call) => call[1])
         expect(visibleSettingNames).toContain('actionAnimations')
         expect(visibleSettingNames).toContain('autoConfirm')
         expect(visibleSettingNames).toContain('auditLogMaxEntries')
+        expect(visibleSettingNames).toContain('auditLogChatSummary')
       })
 
       test('should have correct data types', () => {
@@ -208,8 +209,10 @@ describe('System Settings Registration', () => {
 
         // Boolean settings
         const booleanSettings = calls.filter((call) => call[2].type === Boolean)
-        expect(booleanSettings).toHaveLength(4)
-        expect(booleanSettings.map((call) => call[1])).toEqual(expect.arrayContaining(['devMode', 'actionAnimations', 'welcome', 'marketAllowBrokenItemSale']))
+        expect(booleanSettings).toHaveLength(5)
+        expect(booleanSettings.map((call) => call[1])).toEqual(
+          expect.arrayContaining(['devMode', 'actionAnimations', 'welcome', 'marketAllowBrokenItemSale', 'auditLogChatSummary']),
+        )
 
         // Number settings (autoConfirm, heroism, auditLogMaxEntries, marketGlobalPriceModifier, marketBrokenItemSaleMultiplier)
         const numberSettings = calls.filter((call) => call[2].type === Number)
@@ -238,6 +241,7 @@ describe('System Settings Registration', () => {
         expect(settingsWithDefaults.heroism).toBe(0)
         expect(settingsWithDefaults.autoConfirm).toBeUndefined() // This setting doesn't have a default
         expect(settingsWithDefaults.auditLogMaxEntries).toBe(500)
+        expect(settingsWithDefaults.auditLogChatSummary).toBe(false)
       })
     })
 
@@ -256,6 +260,20 @@ describe('System Settings Registration', () => {
           max: 5000,
           step: 100,
         },
+        onChange: expect.any(Function),
+      })
+    })
+
+    test('should register auditLogChatSummary setting', () => {
+      registerSystemSettings()
+
+      expect(mockGameSettings.register).toHaveBeenCalledWith('swerpg', 'auditLogChatSummary', {
+        name: 'SWERPG.SETTINGS.AUDIT_LOG_CHAT_SUMMARY_NAME',
+        hint: 'SWERPG.SETTINGS.AUDIT_LOG_CHAT_SUMMARY_HINT',
+        scope: 'world',
+        config: true,
+        type: Boolean,
+        default: false,
         onChange: expect.any(Function),
       })
     })
@@ -300,8 +318,8 @@ describe('System Settings Registration', () => {
         registerSystemSettings()
         registerSystemSettings()
 
-        // Should have been called twice for each setting (17 settings x 2 calls)
-        expect(mockGameSettings.register).toHaveBeenCalledTimes(34) // 17 settings x 2 calls
+        // Should have been called twice for each setting (18 settings x 2 calls)
+        expect(mockGameSettings.register).toHaveBeenCalledTimes(36) // 18 settings x 2 calls
         expect(mockKeybindings.register).toHaveBeenCalledTimes(2) // 1 keybinding x 2 calls
       })
     })
@@ -329,6 +347,7 @@ describe('System Settings Registration', () => {
           'marketLocationConfigs',
           'marketAllowBrokenItemSale',
           'marketBrokenItemSaleMultiplier',
+          'auditLogChatSummary',
         ]
 
         for (const key of expectedKeys) {

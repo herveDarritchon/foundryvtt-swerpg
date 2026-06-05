@@ -292,6 +292,18 @@ function readMaxLogEntries() {
   }
 }
 
+/**
+ * Return true when the GM has enabled the audit chat summary mode.
+ * Defaults to false (historical one-card-per-entry behaviour) on any error.
+ */
+function readAuditChatSummaryEnabled() {
+  try {
+    return game.settings.get('swerpg', 'auditLogChatSummary') ?? false
+  } catch {
+    return false
+  }
+}
+
 /* -------------------------------------------- */
 /*  Helpers exportés pour tests                 */
 /* -------------------------------------------- */
@@ -311,6 +323,7 @@ export {
   handleWriteError,
   pruneExpiredPending,
   readMaxLogEntries,
+  readAuditChatSummaryEnabled,
   sendChatForAuditEntries,
   onCreateItem,
   recordTalentNodePurchase,
@@ -795,12 +808,55 @@ function _buildChatContext(actor, entry) {
 }
 
 /**
- * Send a chat message for each audit entry.
+ * Send a single summary chat card for a batch of audit entries.
  * Non-blocking: failures are caught internally.
  * @param {object} actor
  * @param {object[]} entries
  */
+async function _sendSummaryChatCard(actor, entries) {
+  try {
+    const items = entries.map((entry) => _buildChatContext(actor, entry))
+    const summaryContext = {
+      actorImg: actor.img,
+      actorName: actor.name,
+      count: entries.length,
+      title: game.i18n.format('SWERPG.AUDIT_LOG.CHAT_SUMMARY.TITLE', { count: entries.length }),
+      items,
+    }
+
+    const content = await foundry.applications.handlebars.renderTemplate('systems/swerpg/templates/chat/audit-entry-summary.hbs', summaryContext)
+
+    await ChatMessage.create({
+      content,
+      speaker: ChatMessage.getSpeaker({ actor }),
+      flags: {
+        swerpg: {
+          auditChat: true,
+          auditSummary: true,
+          action: 'audit',
+          auditEntryIds: entries.map((e) => e.id),
+        },
+      },
+    })
+  } catch (err) {
+    logger.warn('[AuditLog] Failed to send summary chat card', err)
+  }
+}
+
+/**
+ * Send a chat message for each audit entry.
+ * Non-blocking: failures are caught internally.
+ * When the auditLogChatSummary setting is enabled and the batch contains more than one entry,
+ * a single summary card is sent instead of one card per entry.
+ * @param {object} actor
+ * @param {object[]} entries
+ */
 async function sendChatForAuditEntries(actor, entries) {
+  if (entries.length > 1 && readAuditChatSummaryEnabled()) {
+    await _sendSummaryChatCard(actor, entries)
+    return
+  }
+
   for (const entry of entries) {
     try {
       const context = _buildChatContext(actor, entry)
