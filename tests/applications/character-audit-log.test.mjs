@@ -2307,3 +2307,160 @@ describe('_prepareContext — isActiveFamilyEmpty and filter isEmpty/count', () 
     expect(lines).toHaveLength(3)
   })
 })
+
+/* ============================================ */
+/*  Delta unit metadata (XP vs credits)        */
+/* ============================================ */
+
+describe('buildAuditLogEntries — delta unit metadata', () => {
+  let buildAuditLogEntries
+
+  const baseTranslations = {
+    'SWERPG.AUDIT_LOG.FILTER.ALL': 'All',
+    'SWERPG.AUDIT_LOG.FILTER.SKILLS': 'Skills',
+    'SWERPG.AUDIT_LOG.FILTER.TALENTS': 'Talents',
+    'SWERPG.AUDIT_LOG.FILTER.XP': 'XP',
+    'SWERPG.AUDIT_LOG.FILTER.CHARACTERISTICS': 'Characteristics',
+    'SWERPG.AUDIT_LOG.FILTER.DETAILS': 'Core choices',
+    'SWERPG.AUDIT_LOG.FILTER.ADVANCEMENT': 'Advancement',
+    'SWERPG.AUDIT_LOG.FILTER.PURCHASES': 'Purchases',
+    'SWERPG.AUDIT_LOG.FILTER.SALES': 'Sales',
+    'SWERPG.AUDIT_LOG.TYPE.SKILL_TRAIN': 'Skill purchase',
+    'SWERPG.AUDIT_LOG.TYPE.XP_GRANT': 'XP granted',
+    'SWERPG.AUDIT_LOG.TYPE.ITEM_PURCHASE': 'Item purchased',
+    'SWERPG.AUDIT_LOG.TYPE.ITEM_SALE': 'Item sold',
+    'SWERPG.AUDIT_LOG.TYPE.UNKNOWN': 'Unknown event',
+    'SWERPG.AUDIT_LOG.NONE': 'None',
+    'SWERPG.AUDIT_LOG.UNKNOWN_VALUE': 'Unknown value',
+    'SWERPG.AUDIT_LOG.UNKNOWN_SKILL': 'Unknown skill',
+    'SWERPG.AUDIT_LOG.UNKNOWN_ITEM': 'Unknown item',
+    'SWERPG.AUDIT_LOG.DESCRIPTION.SKILL_TRAIN': 'Skill {skill}: rank {oldRank} -> {newRank}',
+    'SWERPG.AUDIT_LOG.DESCRIPTION.XP_GRANT': 'Granted {amount} XP',
+    'SWERPG.AUDIT_LOG.DESCRIPTION.ITEM_PURCHASE': 'Purchased {itemName} ({itemType}) for {price} credits',
+    'SWERPG.AUDIT_LOG.DESCRIPTION.ITEM_SALE': 'Sold {itemName} ({itemType}) for {resalePrice} credits ({fraction}% of base price)',
+    'SWERPG.AUDIT_LOG.DESCRIPTION.UNKNOWN': 'Unknown event ({type})',
+    'SWERPG.AUDIT_LOG.VARIANT.ADD': 'Added',
+    'SWERPG.AUDIT_LOG.VARIANT.GAIN': 'Gained',
+    'SWERPG.AUDIT_LOG.VARIANT.REMOVE': 'Removed',
+    'SWERPG.AUDIT_LOG.VARIANT.CHANGE': 'Changed',
+    'SWERPG.AUDIT_LOG.VARIANT.FAIL': 'Failed',
+    'SWERPG.AUDIT_LOG.DELTA.UNIT.XP': 'experience points',
+    'SWERPG.AUDIT_LOG.DELTA.UNIT.CREDITS': 'credits',
+  }
+
+  beforeEach(async () => {
+    setupFoundryMock({ translations: baseTranslations })
+    ;({ buildAuditLogEntries } = await import('../../module/applications/character-audit-log.mjs'))
+  })
+
+  afterEach(() => {
+    vi.resetModules()
+    vi.clearAllMocks()
+    teardownFoundryMock()
+  })
+
+  function makeActorWithLog(logs) {
+    return {
+      id: 'actor-delta-unit',
+      name: 'Test',
+      type: 'character',
+      isOwner: true,
+      system: {},
+      flags: { swerpg: { logs } },
+      testUserPermission: vi.fn(() => true),
+    }
+  }
+
+  it('XP entry (skill.train) carries deltaUnit=xp, deltaUnitIcon with fa-bolt, deltaUnitLabel, deltaUnitClass', () => {
+    const actor = makeActorWithLog([{ id: 'e1', timestamp: 100, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } }])
+
+    const { entries } = buildAuditLogEntries(actor, 'all')
+    const entry = entries[0]
+
+    expect(entry.deltaUnit).toBe('xp')
+    expect(entry.deltaUnitIcon).toContain('fa-bolt')
+    expect(entry.deltaUnitLabel).toBe('experience points')
+    expect(entry.deltaUnitClass).toBe('audit-log-entry__delta--unit-xp')
+  })
+
+  it('XP entry (xp.grant) carries deltaUnit=xp', () => {
+    const actor = makeActorWithLog([{ id: 'e1', timestamp: 100, type: 'xp.grant', xpDelta: 20, data: { amount: 20 } }])
+
+    const { entries } = buildAuditLogEntries(actor, 'all')
+    expect(entries[0].deltaUnit).toBe('xp')
+    expect(entries[0].deltaUnitIcon).toContain('fa-bolt')
+  })
+
+  it('credits entry (item.purchase) carries deltaUnit=credits, deltaUnitIcon with fa-coins, deltaUnitLabel, deltaUnitClass', () => {
+    const actor = makeActorWithLog([
+      {
+        id: 'p1',
+        timestamp: 100,
+        type: 'item.purchase',
+        xpDelta: 0,
+        creditDelta: -150,
+        data: { itemName: 'Blaster', itemType: 'weapon', price: 150, quantity: 1 },
+      },
+    ])
+
+    const { entries } = buildAuditLogEntries(actor, 'all')
+    const entry = entries[0]
+
+    expect(entry.deltaUnit).toBe('credits')
+    expect(entry.deltaUnitIcon).toContain('fa-coins')
+    expect(entry.deltaUnitLabel).toBe('credits')
+    expect(entry.deltaUnitClass).toBe('audit-log-entry__delta--unit-credits')
+  })
+
+  it('credits entry (item.sale) carries deltaUnit=credits', () => {
+    const actor = makeActorWithLog([
+      {
+        id: 's1',
+        timestamp: 200,
+        type: 'item.sale',
+        xpDelta: 0,
+        creditDelta: 75,
+        data: { itemName: 'Blaster', itemType: 'weapon', basePrice: 100, resalePrice: 75, fraction: 0.75, quantity: 1 },
+      },
+    ])
+
+    const { entries } = buildAuditLogEntries(actor, 'all')
+    expect(entries[0].deltaUnit).toBe('credits')
+    expect(entries[0].deltaUnitIcon).toContain('fa-coins')
+  })
+
+  it('formattedDelta is preserved for XP entries (backward compat)', () => {
+    const actor = makeActorWithLog([{ id: 'e1', timestamp: 100, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } }])
+
+    const { entries } = buildAuditLogEntries(actor, 'all')
+    expect(entries[0].formattedDelta).toBe('-10 XP')
+  })
+
+  it('formattedDelta is preserved for credits entries (backward compat)', () => {
+    const actor = makeActorWithLog([
+      {
+        id: 'p1',
+        timestamp: 100,
+        type: 'item.purchase',
+        xpDelta: 0,
+        creditDelta: -150,
+        data: { itemName: 'Blaster', itemType: 'weapon', price: 150, quantity: 1 },
+      },
+    ])
+
+    const { entries } = buildAuditLogEntries(actor, 'all')
+    expect(entries[0].formattedDelta).toBe('-150 cr')
+  })
+
+  it('neutral entry (unknown type with zero delta) carries deltaUnit=neutral and empty deltaUnitIcon', () => {
+    const actor = makeActorWithLog([{ id: 'e1', timestamp: 100, type: 'some.unknown.type', xpDelta: 0, data: {} }])
+
+    const { entries } = buildAuditLogEntries(actor, 'all')
+    const entry = entries[0]
+
+    expect(entry.deltaUnit).toBe('neutral')
+    expect(entry.deltaUnitIcon).toBe('')
+    expect(entry.deltaUnitLabel).toBe('')
+    expect(entry.deltaUnitClass).toBe('audit-log-entry__delta--unit-neutral')
+  })
+})

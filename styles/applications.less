@@ -739,6 +739,9 @@
 
   .audit-log-entry__delta {
     flex: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
     text-align: right;
     font-family: var(--font-h1);
     font-size: var(--font-size-12);
@@ -753,6 +756,16 @@
 
     &.is-neutral {
       color: var(--color-secondary);
+    }
+
+    // XP delta: bolt icon already shares entry color via currentColor inheritance
+    &.audit-log-entry__delta--unit-xp .audit-log-entry__delta-unit-icon {
+      opacity: 0.8;
+    }
+
+    // Credits delta: coin icon shares entry color via currentColor inheritance
+    &.audit-log-entry__delta--unit-credits .audit-log-entry__delta-unit-icon {
+      opacity: 0.8;
     }
   }
 
@@ -803,6 +816,7 @@
 
     .audit-log-entry__delta {
       text-align: left;
+      justify-content: flex-start;
     }
   }
 }

@@ -358,6 +358,8 @@
   "SWERPG.AUDIT_LOG.VARIANT.GAIN": "Gained",
   "SWERPG.AUDIT_LOG.VARIANT.CHANGE": "Changed",
   "SWERPG.AUDIT_LOG.VARIANT.FAIL": "Failed",
+  "SWERPG.AUDIT_LOG.DELTA.UNIT.XP": "experience points",
+  "SWERPG.AUDIT_LOG.DELTA.UNIT.CREDITS": "credits",
   "SWERPG.SETTINGS.AUDIT_LOG_MAX_ENTRIES_NAME": "Audit Log max entries",
   "SWERPG.SETTINGS.AUDIT_LOG_MAX_ENTRIES_HINT": "Maximum number of entries stored in the character audit log (100-5000). Oldest entries are removed first when the limit is exceeded.",
   "SWERPG.SETTINGS.AUDIT_LOG_CHAT_SUMMARY_NAME": "Audit Log: group chat cards",
