@@ -927,3 +927,171 @@ describe('audit log integration: item.purchase audit → filter → CSV', () => 
     expect(entries[0].data.itemId).toBeUndefined()
   })
 })
+
+/* ============================================ */
+/*  buildAuditLogEntryVisual view-model fields  */
+/* ============================================ */
+
+describe('buildAuditLogEntryVisual', () => {
+  let buildAuditLogEntryVisual
+  let buildAuditLogEntries
+
+  const actor = {
+    id: 'actor-visual',
+    name: 'Lira Odan',
+    img: 'systems/swerpg/assets/lira.webp',
+    type: 'character',
+    isOwner: true,
+    system: {},
+    flags: { swerpg: { logs: [] } },
+    testUserPermission: vi.fn(() => true),
+  }
+
+  beforeEach(async () => {
+    setupFoundryMock({
+      translations: {
+        'SWERPG.AUDIT_LOG.TYPE.SKILL_TRAIN': 'Skill trained',
+        'SWERPG.AUDIT_LOG.TYPE.SKILL_FORGET': 'Skill forgotten',
+        'SWERPG.AUDIT_LOG.TYPE.CHARACTERISTIC_INCREASE': 'Characteristic increased',
+        'SWERPG.AUDIT_LOG.TYPE.XP_SPEND': 'XP spent',
+        'SWERPG.AUDIT_LOG.TYPE.XP_REFUND': 'XP refunded',
+        'SWERPG.AUDIT_LOG.TYPE.XP_GRANT': 'XP granted',
+        'SWERPG.AUDIT_LOG.TYPE.XP_REMOVE': 'XP removed',
+        'SWERPG.AUDIT_LOG.TYPE.SPECIES_SET': 'Species set',
+        'SWERPG.AUDIT_LOG.TYPE.CAREER_SET': 'Career set',
+        'SWERPG.AUDIT_LOG.TYPE.SPECIALIZATION_ADD': 'Specialization added',
+        'SWERPG.AUDIT_LOG.TYPE.SPECIALIZATION_REMOVE': 'Specialization removed',
+        'SWERPG.AUDIT_LOG.TYPE.TALENT_PURCHASE': 'Talent purchased',
+        'SWERPG.AUDIT_LOG.TYPE.TALENT_NODE_PURCHASE': 'Talent node purchase',
+        'SWERPG.AUDIT_LOG.TYPE.TALENT_NODE_PURCHASE_SUCCEEDED': 'Talent node purchased',
+        'SWERPG.AUDIT_LOG.TYPE.TALENT_NODE_PURCHASE_FAILED': 'Talent node purchase failed',
+        'SWERPG.AUDIT_LOG.TYPE.TALENT_NODE_FORGET_SUCCEEDED': 'Talent node forgotten',
+        'SWERPG.AUDIT_LOG.TYPE.TALENT_NODE_FORGET_FAILED': 'Talent node forget failed',
+        'SWERPG.AUDIT_LOG.TYPE.ADVANCEMENT_LEVEL': 'Level advanced',
+        'SWERPG.AUDIT_LOG.TYPE.ITEM_PURCHASE': 'Item purchased',
+        'SWERPG.AUDIT_LOG.TYPE.ITEM_SALE': 'Item sold',
+        'SWERPG.AUDIT_LOG.TYPE.UNKNOWN': 'Unknown event',
+        'SWERPG.AUDIT_LOG.NONE': 'None',
+        'SWERPG.AUDIT_LOG.FILTER.ALL': 'All',
+        'SWERPG.AUDIT_LOG.FILTER.PURCHASES': 'Purchases',
+        'SWERPG.AUDIT_LOG.FILTER.SKILLS': 'Skills',
+        'SWERPG.AUDIT_LOG.FILTER.TALENTS': 'Talents',
+        'SWERPG.AUDIT_LOG.UNKNOWN_ITEM': 'Unknown item',
+        'SWERPG.AUDIT_LOG.UNKNOWN_VALUE': 'Unknown value',
+        'SWERPG.AUDIT_LOG.UNKNOWN_SKILL': 'Unknown skill',
+        'SWERPG.AUDIT_LOG.UNKNOWN_SPECIALIZATION': 'Unknown specialization',
+        'SWERPG.AUDIT_LOG.DESCRIPTION.SKILL_TRAIN': 'Skill {skill}: rank {oldRank} -> {newRank}',
+        'SWERPG.AUDIT_LOG.DESCRIPTION.ITEM_PURCHASE': 'Purchased {itemName} ({itemType}) for {price} credits',
+        'SWERPG.AUDIT_LOG.DESCRIPTION.TALENT_NODE_PURCHASE_FAILED': 'Talent node purchase failed: {reasonCode} (node {nodeId})',
+        'SWERPG.AUDIT_LOG.DESCRIPTION.UNKNOWN': 'Unknown event ({type})',
+      },
+    })
+    ;({ buildAuditLogEntryVisual, buildAuditLogEntries } = await import('../../module/applications/character-audit-log.mjs'))
+  })
+
+  afterEach(() => {
+    vi.resetModules()
+    vi.clearAllMocks()
+    teardownFoundryMock()
+  })
+
+  it('skill.train — variant add, previousValue/nextValue as rank strings, hasPreviousValue true', () => {
+    const entry = { type: 'skill.train', data: { skillName: 'Piloting', oldRank: 1, newRank: 2, cost: 10 } }
+    const visual = buildAuditLogEntryVisual(actor, entry)
+
+    expect(visual.variant).toBe('add')
+    expect(visual.eventLabel).toBe('Skill trained')
+    expect(visual.previousValue).toBe('1')
+    expect(visual.nextValue).toBe('2')
+    expect(visual.hasPreviousValue).toBe(true)
+    expect(visual.actorImg).toBe('systems/swerpg/assets/lira.webp')
+    expect(visual.actorName).toBe('Lira Odan')
+  })
+
+  it('skill.train with isFree — variant gain', () => {
+    const entry = { type: 'skill.train', data: { skillName: 'Piloting', oldRank: 0, newRank: 1, isFree: true } }
+    const visual = buildAuditLogEntryVisual(actor, entry)
+
+    expect(visual.variant).toBe('gain')
+  })
+
+  it('species.set — variant change, previousValue and nextValue from data', () => {
+    const entry = { type: 'species.set', data: { oldSpecies: 'Human', newSpecies: 'Bothan' } }
+    const visual = buildAuditLogEntryVisual(actor, entry)
+
+    expect(visual.variant).toBe('change')
+    expect(visual.eventLabel).toBe('Species set')
+    expect(visual.previousValue).toBe('Human')
+    expect(visual.nextValue).toBe('Bothan')
+    expect(visual.hasPreviousValue).toBe(true)
+  })
+
+  it('species.set — previousValue falls back to None label when oldSpecies is absent', () => {
+    const entry = { type: 'species.set', data: { newSpecies: "Twi'lek" } }
+    const visual = buildAuditLogEntryVisual(actor, entry)
+
+    expect(visual.previousValue).toBe('None')
+    expect(visual.hasPreviousValue).toBe(true)
+  })
+
+  it('item.purchase — variant add, nextValue contains item name', () => {
+    const entry = { type: 'item.purchase', data: { itemName: 'Blaster Pistol', itemType: 'weapon', price: 100, quantity: 1 } }
+    const visual = buildAuditLogEntryVisual(actor, entry)
+
+    expect(visual.variant).toBe('add')
+    expect(visual.eventLabel).toBe('Item purchased')
+    expect(visual.nextValue).toBe('Blaster Pistol (weapon)')
+    expect(visual.hasPreviousValue).toBe(false)
+  })
+
+  it('talent-node-purchase-failed — variant fail, nextValue is nodeId', () => {
+    const entry = { type: 'talent-node-purchase-failed', data: { nodeId: 'r1c1', reasonCode: 'not-enough-xp' } }
+    const visual = buildAuditLogEntryVisual(actor, entry)
+
+    expect(visual.variant).toBe('fail')
+    expect(visual.eventLabel).toBe('Talent node purchase failed')
+    expect(visual.nextValue).toBe('r1c1')
+    expect(visual.hasPreviousValue).toBe(false)
+  })
+
+  it('buildAuditLogEntries spreads visual fields into each entry', () => {
+    const actorWithLogs = {
+      ...actor,
+      flags: {
+        swerpg: {
+          logs: [{ id: 'e1', timestamp: 100, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2, cost: 10 } }],
+        },
+      },
+    }
+
+    const entries = buildAuditLogEntries(actorWithLogs, 'all')
+    expect(entries).toHaveLength(1)
+
+    const entry = entries[0]
+    expect(entry.variant).toBe('add')
+    expect(entry.eventLabel).toBe('Skill trained')
+    expect(entry.previousValue).toBe('1')
+    expect(entry.nextValue).toBe('2')
+    expect(entry.hasPreviousValue).toBe(true)
+    expect(entry.actorImg).toBe('systems/swerpg/assets/lira.webp')
+    expect(entry.actorName).toBe('Lira Odan')
+  })
+
+  it('advancement.level — variant change, previousValue/nextValue as level strings', () => {
+    const entry = { type: 'advancement.level', data: { oldLevel: 3, newLevel: 4 } }
+    const visual = buildAuditLogEntryVisual(actor, entry)
+
+    expect(visual.variant).toBe('change')
+    expect(visual.previousValue).toBe('3')
+    expect(visual.nextValue).toBe('4')
+    expect(visual.hasPreviousValue).toBe(true)
+  })
+
+  it('talent-node-purchase-succeeded — variant add, nextValue is talentId', () => {
+    const entry = { type: 'talent-node-purchase-succeeded', data: { talentId: 'grit', specializationId: 'spec-bodyguard', cost: 10 } }
+    const visual = buildAuditLogEntryVisual(actor, entry)
+
+    expect(visual.variant).toBe('add')
+    expect(visual.nextValue).toBe('grit')
+  })
+})
