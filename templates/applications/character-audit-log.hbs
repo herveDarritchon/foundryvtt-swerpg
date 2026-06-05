@@ -143,6 +143,23 @@
                 </footer>
               {{/if}}
 
+              {{#if entry.hasDetails}}
+                <details class='audit-log-entry__details'>
+                  <summary class='audit-log-entry__details-toggle' aria-label='{{localize "SWERPG.AUDIT_LOG.SNAPSHOT.TOGGLE_ARIA"}}'>
+                    <i class='fa-solid fa-circle-info audit-log-entry__details-icon' aria-hidden='true'></i>
+                    {{localize 'SWERPG.AUDIT_LOG.SNAPSHOT.TOGGLE_LABEL'}}
+                  </summary>
+                  <dl class='audit-log-entry__details-list'>
+                    {{#each entry.details as |line|}}
+                      <div class='audit-log-entry__details-row'>
+                        <dt class='audit-log-entry__details-label'>{{line.label}}</dt>
+                        <dd class='audit-log-entry__details-value'>{{line.value}}</dd>
+                      </div>
+                    {{/each}}
+                  </dl>
+                </details>
+              {{/if}}
+
             </article>
           {{/each}}
         </div>
