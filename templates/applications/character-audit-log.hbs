@@ -92,42 +92,50 @@
 
   {{#if hasFilteredEntries}}
     <section class='audit-log__entries'>
-      {{#each entries as |entry|}}
-        <article class='audit-log-entry audit-log-entry--{{entry.variant}}'>
-
-          <header class='audit-log-entry__header'>
-            {{#if entry.actorImg}}
-              <img class='audit-log-entry__avatar' src='{{entry.actorImg}}' alt='{{entry.actorName}}'>
-            {{/if}}
-            <div class='audit-log-entry__meta'>
-              <span class='audit-log-entry__date'>{{entry.formattedTimestamp}}</span>
-              <span class='audit-log-entry__type'>
-                <i class='{{entry.familyIcon}} audit-log-entry__family-icon' aria-hidden='true'></i>
-                {{entry.eventLabel}}
-              </span>
-            </div>
+      {{#each sections as |section|}}
+        <div class='audit-log__day-section'>
+          <header class='audit-log__day-header'>
+            <time class='audit-log__day-label' datetime='{{section.datetimeAttr}}'>{{section.headerLabel}}</time>
           </header>
 
-          <div class='audit-log-entry__body'>
-            <div class='audit-log-entry__change'>
-              <i class='{{entry.variantGlyph}} audit-log-entry__variant-glyph' aria-label='{{entry.variantGlyphLabel}}'></i>
-              {{#if entry.hasPreviousValue}}
-                <span class='audit-log-entry__previous' title='{{entry.previousValue}}'>{{entry.previousValue}}</span>
-                <span class='audit-log-entry__arrow' aria-hidden='true'>→</span>
+          {{#each section.entries as |entry|}}
+            <article class='audit-log-entry audit-log-entry--{{entry.variant}}'>
+
+              <header class='audit-log-entry__header'>
+                {{#if entry.actorImg}}
+                  <img class='audit-log-entry__avatar' src='{{entry.actorImg}}' alt='{{entry.actorName}}'>
+                {{/if}}
+                <div class='audit-log-entry__meta'>
+                  <time class='audit-log-entry__time' datetime='{{entry.entryDatetimeAttr}}'>{{entry.timeOnly}}</time>
+                  <span class='audit-log-entry__type'>
+                    <i class='{{entry.familyIcon}} audit-log-entry__family-icon' aria-hidden='true'></i>
+                    {{entry.eventLabel}}
+                  </span>
+                </div>
+              </header>
+
+              <div class='audit-log-entry__body'>
+                <div class='audit-log-entry__change'>
+                  <i class='{{entry.variantGlyph}} audit-log-entry__variant-glyph' aria-label='{{entry.variantGlyphLabel}}'></i>
+                  {{#if entry.hasPreviousValue}}
+                    <span class='audit-log-entry__previous' title='{{entry.previousValue}}'>{{entry.previousValue}}</span>
+                    <span class='audit-log-entry__arrow' aria-hidden='true'>→</span>
+                  {{/if}}
+                  <span class='audit-log-entry__badge' title='{{entry.nextValue}}'>{{entry.nextValue}}</span>
+                </div>
+
+                <p class='audit-log-entry__description'>{{entry.description}}</p>
+              </div>
+
+              {{#if entry.hasDelta}}
+                <footer class='audit-log-entry__footer'>
+                  <span class='audit-log-entry__delta {{entry.deltaClass}}'>{{entry.formattedDelta}}</span>
+                </footer>
               {{/if}}
-              <span class='audit-log-entry__badge' title='{{entry.nextValue}}'>{{entry.nextValue}}</span>
-            </div>
 
-            <p class='audit-log-entry__description'>{{entry.description}}</p>
-          </div>
-
-          {{#if entry.hasDelta}}
-            <footer class='audit-log-entry__footer'>
-              <span class='audit-log-entry__delta {{entry.deltaClass}}'>{{entry.formattedDelta}}</span>
-            </footer>
-          {{/if}}
-
-        </article>
+            </article>
+          {{/each}}
+        </div>
       {{/each}}
     </section>
   {{else if hasEntries}}

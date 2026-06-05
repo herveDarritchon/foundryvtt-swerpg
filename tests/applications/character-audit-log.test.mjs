@@ -1721,3 +1721,256 @@ describe('buildAuditLogEntries — text search, date range, counters', () => {
     expect(entries[0].id).toBe('e2')
   })
 })
+
+/* ============================================ */
+/*  buildAuditLogDateSections                  */
+/* ============================================ */
+
+describe('buildAuditLogDateSections', () => {
+  let buildAuditLogDateSections
+  let buildAuditLogEntries
+
+  const baseTranslations = {
+    'SWERPG.AUDIT_LOG.FILTER.ALL': 'All',
+    'SWERPG.AUDIT_LOG.FILTER.SKILLS': 'Skills',
+    'SWERPG.AUDIT_LOG.FILTER.TALENTS': 'Talents',
+    'SWERPG.AUDIT_LOG.FILTER.XP': 'XP',
+    'SWERPG.AUDIT_LOG.FILTER.CHARACTERISTICS': 'Characteristics',
+    'SWERPG.AUDIT_LOG.FILTER.DETAILS': 'Core choices',
+    'SWERPG.AUDIT_LOG.FILTER.ADVANCEMENT': 'Advancement',
+    'SWERPG.AUDIT_LOG.FILTER.PURCHASES': 'Purchases',
+    'SWERPG.AUDIT_LOG.FILTER.SALES': 'Sales',
+    'SWERPG.AUDIT_LOG.TYPE.SKILL_TRAIN': 'Skill purchase',
+    'SWERPG.AUDIT_LOG.TYPE.XP_GRANT': 'XP granted',
+    'SWERPG.AUDIT_LOG.TYPE.UNKNOWN': 'Unknown event',
+    'SWERPG.AUDIT_LOG.NONE': 'None',
+    'SWERPG.AUDIT_LOG.UNKNOWN_VALUE': 'Unknown value',
+    'SWERPG.AUDIT_LOG.UNKNOWN_SKILL': 'Unknown skill',
+    'SWERPG.AUDIT_LOG.DESCRIPTION.SKILL_TRAIN': 'Skill {skill}: rank {oldRank} -> {newRank}',
+    'SWERPG.AUDIT_LOG.DESCRIPTION.XP_GRANT': 'Granted {amount} XP',
+    'SWERPG.AUDIT_LOG.DESCRIPTION.UNKNOWN': 'Unknown event ({type})',
+    'SWERPG.AUDIT_LOG.VARIANT.ADD': 'Added',
+    'SWERPG.AUDIT_LOG.VARIANT.GAIN': 'Gained',
+    'SWERPG.AUDIT_LOG.VARIANT.REMOVE': 'Removed',
+    'SWERPG.AUDIT_LOG.VARIANT.CHANGE': 'Changed',
+    'SWERPG.AUDIT_LOG.VARIANT.FAIL': 'Failed',
+    'SWERPG.AUDIT_LOG.DATE.TODAY': 'Today',
+    'SWERPG.AUDIT_LOG.DATE.YESTERDAY': 'Yesterday',
+  }
+
+  beforeEach(async () => {
+    setupFoundryMock({ translations: baseTranslations })
+    ;({ buildAuditLogDateSections, buildAuditLogEntries } = await import('../../module/applications/character-audit-log.mjs'))
+  })
+
+  afterEach(() => {
+    vi.resetModules()
+    vi.clearAllMocks()
+    teardownFoundryMock()
+  })
+
+  function makeActorWithLogs(logs) {
+    return {
+      id: 'actor-sections',
+      name: 'Vara Kesh',
+      type: 'character',
+      isOwner: true,
+      system: {},
+      flags: { swerpg: { logs } },
+      testUserPermission: vi.fn(() => true),
+    }
+  }
+
+  it('returns an empty array when entries is empty', () => {
+    const sections = buildAuditLogDateSections([])
+    expect(sections).toEqual([])
+  })
+
+  it('groups entries from the same day into a single section', () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2025-03-10T14:00:00Z'))
+
+    // Two entries on the same local day (UTC dates that map to same local day)
+    const ts1 = new Date('2025-03-10T08:00:00Z').getTime()
+    const ts2 = new Date('2025-03-10T12:00:00Z').getTime()
+
+    const actor = makeActorWithLogs([
+      { id: 'e1', timestamp: ts1, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } },
+      { id: 'e2', timestamp: ts2, type: 'xp.grant', xpDelta: 20, data: { amount: 20 } },
+    ])
+
+    const { entries } = buildAuditLogEntries(actor, 'all')
+    const sections = buildAuditLogDateSections(entries)
+
+    expect(sections).toHaveLength(1)
+    expect(sections[0].entries).toHaveLength(2)
+
+    vi.useRealTimers()
+  })
+
+  it('creates separate sections for distinct days, ordered anti-chronologically', () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2025-03-15T14:00:00Z'))
+
+    const tsDay1 = new Date('2025-03-10T10:00:00Z').getTime()
+    const tsDay2 = new Date('2025-03-12T10:00:00Z').getTime()
+
+    const actor = makeActorWithLogs([
+      { id: 'e1', timestamp: tsDay1, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } },
+      { id: 'e2', timestamp: tsDay2, type: 'xp.grant', xpDelta: 20, data: { amount: 20 } },
+    ])
+
+    const { entries } = buildAuditLogEntries(actor, 'all')
+    const sections = buildAuditLogDateSections(entries)
+
+    // Anti-chronological: most recent day (March 12) first
+    expect(sections).toHaveLength(2)
+    expect(sections[0].dayKey).toBe('2025-03-12')
+    expect(sections[1].dayKey).toBe('2025-03-10')
+
+    vi.useRealTimers()
+  })
+
+  it('preserves anti-chronological order of entries within each section', () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2025-03-10T20:00:00Z'))
+
+    const tsEarly = new Date('2025-03-10T08:00:00Z').getTime()
+    const tsLate = new Date('2025-03-10T16:00:00Z').getTime()
+
+    const actor = makeActorWithLogs([
+      { id: 'e-early', timestamp: tsEarly, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } },
+      { id: 'e-late', timestamp: tsLate, type: 'xp.grant', xpDelta: 20, data: { amount: 20 } },
+    ])
+
+    const { entries } = buildAuditLogEntries(actor, 'all')
+    const sections = buildAuditLogDateSections(entries)
+
+    expect(sections).toHaveLength(1)
+    // buildAuditLogEntries sorts anti-chronologically, so the later entry comes first
+    expect(sections[0].entries[0].id).toBe('e-late')
+    expect(sections[0].entries[1].id).toBe('e-early')
+
+    vi.useRealTimers()
+  })
+
+  it("labels today's section with the TODAY i18n key", () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2025-03-10T14:00:00Z'))
+
+    const tsToday = new Date('2025-03-10T10:00:00Z').getTime()
+
+    const actor = makeActorWithLogs([
+      { id: 'e1', timestamp: tsToday, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } },
+    ])
+
+    const { entries } = buildAuditLogEntries(actor, 'all')
+    const sections = buildAuditLogDateSections(entries)
+
+    expect(sections[0].headerLabel).toBe('Today')
+
+    vi.useRealTimers()
+  })
+
+  it("labels yesterday's section with the YESTERDAY i18n key", () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2025-03-10T14:00:00Z'))
+
+    const tsYesterday = new Date('2025-03-09T10:00:00Z').getTime()
+
+    const actor = makeActorWithLogs([
+      { id: 'e1', timestamp: tsYesterday, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } },
+    ])
+
+    const { entries } = buildAuditLogEntries(actor, 'all')
+    const sections = buildAuditLogDateSections(entries)
+
+    expect(sections[0].headerLabel).toBe('Yesterday')
+
+    vi.useRealTimers()
+  })
+
+  it('uses a full locale date label for older days', () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2025-03-10T14:00:00Z'))
+
+    // A day more than 1 day ago
+    const tsOld = new Date('2025-03-05T10:00:00Z').getTime()
+
+    const actor = makeActorWithLogs([
+      { id: 'e1', timestamp: tsOld, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } },
+    ])
+
+    const { entries } = buildAuditLogEntries(actor, 'all')
+    const sections = buildAuditLogDateSections(entries)
+
+    // Not 'Today' or 'Yesterday' — should be a locale date string
+    expect(sections[0].headerLabel).not.toBe('Today')
+    expect(sections[0].headerLabel).not.toBe('Yesterday')
+    expect(typeof sections[0].headerLabel).toBe('string')
+    expect(sections[0].headerLabel.length).toBeGreaterThan(0)
+
+    vi.useRealTimers()
+  })
+
+  it('each section exposes a datetimeAttr equal to the dayKey', () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2025-03-10T14:00:00Z'))
+
+    const tsToday = new Date('2025-03-10T10:00:00Z').getTime()
+
+    const actor = makeActorWithLogs([
+      { id: 'e1', timestamp: tsToday, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } },
+    ])
+
+    const { entries } = buildAuditLogEntries(actor, 'all')
+    const sections = buildAuditLogDateSections(entries)
+
+    expect(sections[0].datetimeAttr).toBe(sections[0].dayKey)
+
+    vi.useRealTimers()
+  })
+
+  it('each entry in a section carries timeOnly and entryDatetimeAttr', () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2025-03-10T14:00:00Z'))
+
+    const ts = new Date('2025-03-10T10:30:00Z').getTime()
+
+    const actor = makeActorWithLogs([{ id: 'e1', timestamp: ts, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } }])
+
+    const { entries } = buildAuditLogEntries(actor, 'all')
+    const sections = buildAuditLogDateSections(entries)
+
+    const entry = sections[0].entries[0]
+    expect(typeof entry.timeOnly).toBe('string')
+    expect(entry.timeOnly.length).toBeGreaterThan(0)
+    expect(typeof entry.entryDatetimeAttr).toBe('string')
+    // ISO 8601 format
+    expect(entry.entryDatetimeAttr).toMatch(/^\d{4}-\d{2}-\d{2}T/)
+
+    vi.useRealTimers()
+  })
+
+  it('context from _prepareContext exposes sections with the right shape', async () => {
+    setupFoundryMock({ translations: baseTranslations })
+    const { default: CharacterAuditLogApp } = await import('../../module/applications/character-audit-log.mjs')
+
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2025-03-10T14:00:00Z'))
+
+    const ts = new Date('2025-03-10T10:00:00Z').getTime()
+
+    const actor = makeActorWithLogs([{ id: 'e1', timestamp: ts, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } }])
+
+    const app = new CharacterAuditLogApp({ document: actor })
+    const ctx = await app._prepareContext({})
+
+    expect(Array.isArray(ctx.sections)).toBe(true)
+    expect(ctx.sections).toHaveLength(1)
+    expect(ctx.sections[0].headerLabel).toBe('Today')
+    expect(ctx.sections[0].entries).toHaveLength(1)
+
+    vi.useRealTimers()
+  })
+})
