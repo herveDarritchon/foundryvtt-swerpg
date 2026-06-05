@@ -746,6 +746,54 @@ function entryMatchesDateRange(entry, fromTs, toTs) {
 }
 
 /**
+ * Normalize the snapshot stored on an audit log entry into a canonical details block.
+ *
+ * Supported snapshot shapes:
+ *  - Modern flat (TECH-161+): `{ xpAvailable, totalXpSpent, totalXpGained }`
+ *  - Legacy nested: `{ xpAfter: { xpAvailable, totalXpSpent, totalXpGained } }`
+ *  - Credits: `{ creditsBefore, creditsAfter }` (combined with either XP shape above)
+ *
+ * @param {object|null|undefined} snapshot  Raw snapshot from the stored log entry
+ * @returns {{ hasDetails: boolean, lines: Array<{ labelKey: string, value: string|number }> }}
+ */
+export function buildSnapshotDetails(snapshot) {
+  if (!snapshot || typeof snapshot !== 'object') {
+    return { hasDetails: false, lines: [] }
+  }
+
+  // Resolve the XP sub-object: modern flat lives directly on snapshot,
+  // legacy format nests it under snapshot.xpAfter.
+  const xpSource = snapshot.xpAfter && typeof snapshot.xpAfter === 'object' ? snapshot.xpAfter : snapshot
+
+  const xpAvailable = xpSource.xpAvailable !== undefined && xpSource.xpAvailable !== null ? Number(xpSource.xpAvailable) : null
+  const totalXpSpent = xpSource.totalXpSpent !== undefined && xpSource.totalXpSpent !== null ? Number(xpSource.totalXpSpent) : null
+  const totalXpGained = xpSource.totalXpGained !== undefined && xpSource.totalXpGained !== null ? Number(xpSource.totalXpGained) : null
+
+  const creditsBefore = snapshot.creditsBefore !== undefined && snapshot.creditsBefore !== null ? Number(snapshot.creditsBefore) : null
+  const creditsAfter = snapshot.creditsAfter !== undefined && snapshot.creditsAfter !== null ? Number(snapshot.creditsAfter) : null
+
+  const lines = []
+
+  if (xpAvailable !== null) {
+    lines.push({ labelKey: 'SWERPG.AUDIT_LOG.SNAPSHOT.XP_AVAILABLE', value: xpAvailable })
+  }
+  if (totalXpSpent !== null) {
+    lines.push({ labelKey: 'SWERPG.AUDIT_LOG.SNAPSHOT.TOTAL_XP_SPENT', value: totalXpSpent })
+  }
+  if (totalXpGained !== null) {
+    lines.push({ labelKey: 'SWERPG.AUDIT_LOG.SNAPSHOT.TOTAL_XP_GAINED', value: totalXpGained })
+  }
+  if (creditsBefore !== null) {
+    lines.push({ labelKey: 'SWERPG.AUDIT_LOG.SNAPSHOT.CREDITS_BEFORE', value: creditsBefore })
+  }
+  if (creditsAfter !== null) {
+    lines.push({ labelKey: 'SWERPG.AUDIT_LOG.SNAPSHOT.CREDITS_AFTER', value: creditsAfter })
+  }
+
+  return { hasDetails: lines.length > 0, lines }
+}
+
+/**
  * Build the display-ready audit log entries for a character.
  * @param {Actor|object} actor
  * @param {string} [family=AUDIT_LOG_FAMILIES.all]  Family filter
@@ -779,6 +827,12 @@ export function buildAuditLogEntries(actor, family = AUDIT_LOG_FAMILIES.all, { q
             : ''
       const deltaUnitLabel = deltaUnitLabelKey ? game.i18n.localize(deltaUnitLabelKey) : ''
 
+      const snapshotDetails = buildSnapshotDetails(entry.snapshot)
+      const detailLines = snapshotDetails.lines.map((line) => ({
+        ...line,
+        label: game.i18n.localize(line.labelKey),
+      }))
+
       return {
         ...entry,
         family: entryFamily,
@@ -800,6 +854,8 @@ export function buildAuditLogEntries(actor, family = AUDIT_LOG_FAMILIES.all, { q
         ...visual,
         variantGlyph: getAuditLogVariantGlyph(visual.variant),
         variantGlyphLabel: game.i18n.localize(getVariantGlyphLabel(visual.variant)),
+        hasDetails: snapshotDetails.hasDetails,
+        details: detailLines,
       }
     })
 

@@ -2597,3 +2597,315 @@ describe('_prepareContext — illustrated emptyState contract', () => {
     expect(ctxFiltered.hasFilteredEntries).toBe(false)
   })
 })
+
+/* ============================================ */
+/*  buildSnapshotDetails — snapshot normalization */
+/* ============================================ */
+
+describe('buildSnapshotDetails', () => {
+  let buildSnapshotDetails
+
+  beforeEach(async () => {
+    setupFoundryMock()
+    ;({ buildSnapshotDetails } = await import('../../module/applications/character-audit-log.mjs'))
+  })
+
+  afterEach(() => {
+    vi.resetModules()
+    vi.clearAllMocks()
+    teardownFoundryMock()
+  })
+
+  it('returns hasDetails=false and empty lines for null snapshot', () => {
+    const result = buildSnapshotDetails(null)
+    expect(result.hasDetails).toBe(false)
+    expect(result.lines).toEqual([])
+  })
+
+  it('returns hasDetails=false and empty lines for undefined snapshot', () => {
+    const result = buildSnapshotDetails(undefined)
+    expect(result.hasDetails).toBe(false)
+    expect(result.lines).toEqual([])
+  })
+
+  it('returns hasDetails=false and empty lines for an empty snapshot object', () => {
+    const result = buildSnapshotDetails({})
+    expect(result.hasDetails).toBe(false)
+    expect(result.lines).toEqual([])
+  })
+
+  it('normalizes modern flat XP snapshot — xpAvailable', () => {
+    const result = buildSnapshotDetails({ xpAvailable: 75 })
+    expect(result.hasDetails).toBe(true)
+    const keys = result.lines.map((l) => l.labelKey)
+    expect(keys).toContain('SWERPG.AUDIT_LOG.SNAPSHOT.XP_AVAILABLE')
+    const line = result.lines.find((l) => l.labelKey === 'SWERPG.AUDIT_LOG.SNAPSHOT.XP_AVAILABLE')
+    expect(line.value).toBe(75)
+  })
+
+  it('normalizes modern flat XP snapshot — totalXpSpent and totalXpGained', () => {
+    const result = buildSnapshotDetails({ xpAvailable: 50, totalXpSpent: 120, totalXpGained: 170 })
+    expect(result.hasDetails).toBe(true)
+    const keys = result.lines.map((l) => l.labelKey)
+    expect(keys).toContain('SWERPG.AUDIT_LOG.SNAPSHOT.XP_AVAILABLE')
+    expect(keys).toContain('SWERPG.AUDIT_LOG.SNAPSHOT.TOTAL_XP_SPENT')
+    expect(keys).toContain('SWERPG.AUDIT_LOG.SNAPSHOT.TOTAL_XP_GAINED')
+  })
+
+  it('normalizes legacy nested XP snapshot — snapshot.xpAfter.*', () => {
+    const result = buildSnapshotDetails({
+      xpAfter: { xpAvailable: 30, totalXpSpent: 90, totalXpGained: 120 },
+    })
+    expect(result.hasDetails).toBe(true)
+    const keys = result.lines.map((l) => l.labelKey)
+    expect(keys).toContain('SWERPG.AUDIT_LOG.SNAPSHOT.XP_AVAILABLE')
+    expect(keys).toContain('SWERPG.AUDIT_LOG.SNAPSHOT.TOTAL_XP_SPENT')
+    expect(keys).toContain('SWERPG.AUDIT_LOG.SNAPSHOT.TOTAL_XP_GAINED')
+    const available = result.lines.find((l) => l.labelKey === 'SWERPG.AUDIT_LOG.SNAPSHOT.XP_AVAILABLE')
+    expect(available.value).toBe(30)
+  })
+
+  it('normalizes credits snapshot — creditsBefore and creditsAfter', () => {
+    const result = buildSnapshotDetails({ creditsBefore: 250, creditsAfter: 150 })
+    expect(result.hasDetails).toBe(true)
+    const keys = result.lines.map((l) => l.labelKey)
+    expect(keys).toContain('SWERPG.AUDIT_LOG.SNAPSHOT.CREDITS_BEFORE')
+    expect(keys).toContain('SWERPG.AUDIT_LOG.SNAPSHOT.CREDITS_AFTER')
+    const before = result.lines.find((l) => l.labelKey === 'SWERPG.AUDIT_LOG.SNAPSHOT.CREDITS_BEFORE')
+    expect(before.value).toBe(250)
+    const after = result.lines.find((l) => l.labelKey === 'SWERPG.AUDIT_LOG.SNAPSHOT.CREDITS_AFTER')
+    expect(after.value).toBe(150)
+  })
+
+  it('combines XP and credits fields in the same snapshot', () => {
+    const result = buildSnapshotDetails({ xpAvailable: 60, creditsBefore: 300, creditsAfter: 200 })
+    expect(result.hasDetails).toBe(true)
+    const keys = result.lines.map((l) => l.labelKey)
+    expect(keys).toContain('SWERPG.AUDIT_LOG.SNAPSHOT.XP_AVAILABLE')
+    expect(keys).toContain('SWERPG.AUDIT_LOG.SNAPSHOT.CREDITS_BEFORE')
+    expect(keys).toContain('SWERPG.AUDIT_LOG.SNAPSHOT.CREDITS_AFTER')
+  })
+
+  it('treats xpAvailable=0 as a valid value (zero is not absent)', () => {
+    const result = buildSnapshotDetails({ xpAvailable: 0 })
+    expect(result.hasDetails).toBe(true)
+    const line = result.lines.find((l) => l.labelKey === 'SWERPG.AUDIT_LOG.SNAPSHOT.XP_AVAILABLE')
+    expect(line.value).toBe(0)
+  })
+
+  it('skips a field when its value is null in the snapshot', () => {
+    const result = buildSnapshotDetails({ xpAvailable: null, creditsBefore: 100, creditsAfter: 80 })
+    const keys = result.lines.map((l) => l.labelKey)
+    expect(keys).not.toContain('SWERPG.AUDIT_LOG.SNAPSHOT.XP_AVAILABLE')
+    expect(keys).toContain('SWERPG.AUDIT_LOG.SNAPSHOT.CREDITS_BEFORE')
+  })
+})
+
+/* ============================================ */
+/*  buildAuditLogEntries — hasDetails/details  */
+/*  integration in entry view-model            */
+/* ============================================ */
+
+describe('buildAuditLogEntries — hasDetails and details on entries', () => {
+  let buildAuditLogEntries
+
+  const baseTranslations = {
+    'SWERPG.AUDIT_LOG.FILTER.ALL': 'All',
+    'SWERPG.AUDIT_LOG.FILTER.SKILLS': 'Skills',
+    'SWERPG.AUDIT_LOG.FILTER.TALENTS': 'Talents',
+    'SWERPG.AUDIT_LOG.FILTER.XP': 'XP',
+    'SWERPG.AUDIT_LOG.FILTER.CHARACTERISTICS': 'Characteristics',
+    'SWERPG.AUDIT_LOG.FILTER.DETAILS': 'Core choices',
+    'SWERPG.AUDIT_LOG.FILTER.ADVANCEMENT': 'Advancement',
+    'SWERPG.AUDIT_LOG.FILTER.PURCHASES': 'Purchases',
+    'SWERPG.AUDIT_LOG.FILTER.SALES': 'Sales',
+    'SWERPG.AUDIT_LOG.TYPE.SKILL_TRAIN': 'Skill purchase',
+    'SWERPG.AUDIT_LOG.TYPE.XP_GRANT': 'XP granted',
+    'SWERPG.AUDIT_LOG.TYPE.ITEM_PURCHASE': 'Item purchased',
+    'SWERPG.AUDIT_LOG.TYPE.UNKNOWN': 'Unknown event',
+    'SWERPG.AUDIT_LOG.NONE': 'None',
+    'SWERPG.AUDIT_LOG.UNKNOWN_VALUE': 'Unknown value',
+    'SWERPG.AUDIT_LOG.UNKNOWN_SKILL': 'Unknown skill',
+    'SWERPG.AUDIT_LOG.UNKNOWN_ITEM': 'Unknown item',
+    'SWERPG.AUDIT_LOG.DESCRIPTION.SKILL_TRAIN': 'Skill {skill}: rank {oldRank} -> {newRank}',
+    'SWERPG.AUDIT_LOG.DESCRIPTION.XP_GRANT': 'Granted {amount} XP',
+    'SWERPG.AUDIT_LOG.DESCRIPTION.ITEM_PURCHASE': 'Purchased {itemName} ({itemType}) for {price} credits',
+    'SWERPG.AUDIT_LOG.DESCRIPTION.UNKNOWN': 'Unknown event ({type})',
+    'SWERPG.AUDIT_LOG.VARIANT.ADD': 'Added',
+    'SWERPG.AUDIT_LOG.VARIANT.GAIN': 'Gained',
+    'SWERPG.AUDIT_LOG.VARIANT.REMOVE': 'Removed',
+    'SWERPG.AUDIT_LOG.VARIANT.CHANGE': 'Changed',
+    'SWERPG.AUDIT_LOG.VARIANT.FAIL': 'Failed',
+    'SWERPG.AUDIT_LOG.SNAPSHOT.XP_AVAILABLE': 'XP available',
+    'SWERPG.AUDIT_LOG.SNAPSHOT.TOTAL_XP_SPENT': 'Total XP spent',
+    'SWERPG.AUDIT_LOG.SNAPSHOT.TOTAL_XP_GAINED': 'Total XP gained',
+    'SWERPG.AUDIT_LOG.SNAPSHOT.CREDITS_BEFORE': 'Credits before',
+    'SWERPG.AUDIT_LOG.SNAPSHOT.CREDITS_AFTER': 'Credits after',
+  }
+
+  beforeEach(async () => {
+    setupFoundryMock({ translations: baseTranslations })
+    ;({ buildAuditLogEntries } = await import('../../module/applications/character-audit-log.mjs'))
+  })
+
+  afterEach(() => {
+    vi.resetModules()
+    vi.clearAllMocks()
+    teardownFoundryMock()
+  })
+
+  function makeActorWithLog(logs) {
+    return {
+      id: 'actor-details',
+      name: 'Vara Kesh',
+      type: 'character',
+      isOwner: true,
+      system: {},
+      flags: { swerpg: { logs } },
+      testUserPermission: vi.fn(() => true),
+    }
+  }
+
+  it('entry without snapshot has hasDetails=false and empty details array', () => {
+    const actor = makeActorWithLog([{ id: 'e1', timestamp: 100, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } }])
+
+    const { entries } = buildAuditLogEntries(actor, 'all')
+    expect(entries[0].hasDetails).toBe(false)
+    expect(entries[0].details).toEqual([])
+  })
+
+  it('XP entry with modern flat snapshot carries hasDetails=true and resolved lines with labels', () => {
+    const actor = makeActorWithLog([
+      {
+        id: 'e1',
+        timestamp: 100,
+        type: 'xp.grant',
+        xpDelta: 20,
+        data: { amount: 20 },
+        snapshot: { xpAvailable: 95, totalXpSpent: 45, totalXpGained: 140 },
+      },
+    ])
+
+    const { entries } = buildAuditLogEntries(actor, 'all')
+    const entry = entries[0]
+
+    expect(entry.hasDetails).toBe(true)
+    expect(Array.isArray(entry.details)).toBe(true)
+    expect(entry.details.length).toBeGreaterThan(0)
+
+    const available = entry.details.find((l) => l.labelKey === 'SWERPG.AUDIT_LOG.SNAPSHOT.XP_AVAILABLE')
+    expect(available).toBeDefined()
+    expect(available.value).toBe(95)
+    expect(available.label).toBe('XP available')
+  })
+
+  it('XP entry with legacy nested snapshot (xpAfter) carries hasDetails=true with correct values', () => {
+    const actor = makeActorWithLog([
+      {
+        id: 'e2',
+        timestamp: 200,
+        type: 'skill.train',
+        xpDelta: -10,
+        data: { skillName: 'Piloting', oldRank: 1, newRank: 2 },
+        snapshot: { xpAfter: { xpAvailable: 30, totalXpSpent: 90, totalXpGained: 120 } },
+      },
+    ])
+
+    const { entries } = buildAuditLogEntries(actor, 'all')
+    const entry = entries[0]
+
+    expect(entry.hasDetails).toBe(true)
+    const available = entry.details.find((l) => l.labelKey === 'SWERPG.AUDIT_LOG.SNAPSHOT.XP_AVAILABLE')
+    expect(available.value).toBe(30)
+  })
+
+  it('item.purchase with creditsBefore/creditsAfter carries hasDetails=true with credits lines', () => {
+    const actor = makeActorWithLog([
+      {
+        id: 'p1',
+        timestamp: 100,
+        type: 'item.purchase',
+        xpDelta: 0,
+        creditDelta: -100,
+        data: { itemName: 'Blaster', itemType: 'weapon', price: 100, quantity: 1 },
+        snapshot: { creditsBefore: 250, creditsAfter: 150 },
+      },
+    ])
+
+    const { entries } = buildAuditLogEntries(actor, 'all')
+    const entry = entries[0]
+
+    expect(entry.hasDetails).toBe(true)
+    const before = entry.details.find((l) => l.labelKey === 'SWERPG.AUDIT_LOG.SNAPSHOT.CREDITS_BEFORE')
+    const after = entry.details.find((l) => l.labelKey === 'SWERPG.AUDIT_LOG.SNAPSHOT.CREDITS_AFTER')
+    expect(before.value).toBe(250)
+    expect(before.label).toBe('Credits before')
+    expect(after.value).toBe(150)
+    expect(after.label).toBe('Credits after')
+  })
+
+  it('details lines carry a localized label string', () => {
+    const actor = makeActorWithLog([
+      {
+        id: 'e3',
+        timestamp: 300,
+        type: 'xp.grant',
+        xpDelta: 15,
+        data: { amount: 15 },
+        snapshot: { xpAvailable: 60 },
+      },
+    ])
+
+    const { entries } = buildAuditLogEntries(actor, 'all')
+    for (const line of entries[0].details) {
+      expect(typeof line.label).toBe('string')
+      expect(line.label.length).toBeGreaterThan(0)
+    }
+  })
+
+  it('entry with snapshot={} has hasDetails=false (no exploitable fields)', () => {
+    const actor = makeActorWithLog([
+      {
+        id: 'e4',
+        timestamp: 400,
+        type: 'skill.train',
+        xpDelta: -5,
+        data: { skillName: 'Gunnery', oldRank: 0, newRank: 1 },
+        snapshot: {},
+      },
+    ])
+
+    const { entries } = buildAuditLogEntries(actor, 'all')
+    expect(entries[0].hasDetails).toBe(false)
+    expect(entries[0].details).toEqual([])
+  })
+
+  it('CSV export is not affected by the snapshot details enrichment — all log entries remain exportable', async () => {
+    const { buildCsvContent } = await import('../../module/applications/character-audit-log.mjs')
+
+    const actor = makeActorWithLog([
+      {
+        id: 'e1',
+        timestamp: 100,
+        type: 'skill.train',
+        xpDelta: -10,
+        data: { skillName: 'Piloting', oldRank: 1, newRank: 2 },
+        snapshot: { xpAvailable: 50, totalXpSpent: 100, totalXpGained: 150 },
+      },
+      {
+        id: 'e2',
+        timestamp: 200,
+        type: 'xp.grant',
+        xpDelta: 20,
+        data: { amount: 20 },
+      },
+    ])
+
+    const csv = buildCsvContent(actor)
+    const lines = csv.split('\n')
+    // Header + 2 rows — snapshot fields must not leak into CSV
+    expect(lines).toHaveLength(3)
+    expect(lines[0]).not.toContain('xpAvailable')
+    expect(lines[0]).not.toContain('creditsBefore')
+  })
+})
