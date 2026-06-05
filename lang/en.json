@@ -281,6 +281,8 @@
   "SWERPG.AUDIT_LOG.OPEN": "Open character evolution history",
   "SWERPG.AUDIT_LOG.NO_PERMISSION": "You may only view the history of characters you own.",
   "SWERPG.AUDIT_LOG.EMPTY": "No entries in the history yet.",
+  "SWERPG.AUDIT_LOG.EMPTY_TITLE": "No activity recorded yet",
+  "SWERPG.AUDIT_LOG.EMPTY_HINT": "Character evolutions will appear here as the character grows.",
   "SWERPG.AUDIT_LOG.EMPTY_FILTERED": "No entries match the current filters.",
   "SWERPG.AUDIT_LOG.EMPTY_FAMILY": "No entries for this category in the current context.",
   "SWERPG.AUDIT_LOG.SEARCH.LABEL": "Search",

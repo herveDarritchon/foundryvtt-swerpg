@@ -159,8 +159,10 @@
       <p>{{emptyFilteredLabel}}</p>
     </section>
   {{else}}
-    <section class='audit-log__empty'>
-      <p>{{emptyLabel}}</p>
+    <section class='audit-log__empty audit-log__empty--log' aria-label='{{emptyState.title}}'>
+      <i class='{{emptyState.icon}} audit-log__empty-icon' aria-hidden='true'></i>
+      <h3 class='audit-log__empty-title'>{{emptyState.title}}</h3>
+      <p class='audit-log__empty-hint'>{{emptyState.hint}}</p>
     </section>
   {{/if}}
 </section>
