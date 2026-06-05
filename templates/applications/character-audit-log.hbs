@@ -13,9 +13,11 @@
           data-action='setFilter'
           data-filter='{{filter.id}}'
           aria-pressed='{{filter.isPressed}}'
+          aria-label='{{filter.label}} ({{filter.count}})'
         >
           <i class='{{filter.icon}} audit-log__filter-icon' aria-hidden='true'></i>
           {{filter.label}}
+          <span class='audit-log__filter-count' aria-hidden='true'>{{filter.count}}</span>
         </button>
       {{/each}}
     </div>
@@ -137,6 +139,11 @@
           {{/each}}
         </div>
       {{/each}}
+    </section>
+  {{else if isActiveFamilyEmpty}}
+    <section class='audit-log__empty audit-log__empty--family'>
+      <i class='fa-solid fa-filter audit-log__empty-icon' aria-hidden='true'></i>
+      <p>{{emptyFamilyLabel}}</p>
     </section>
   {{else if hasEntries}}
     <section class='audit-log__empty audit-log__empty--filtered'>

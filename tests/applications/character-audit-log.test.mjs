@@ -1184,7 +1184,7 @@ describe('audit log filter isPressed and icon in _prepareContext', () => {
     const ctx = await app._prepareContext({})
 
     const talentsFilter = ctx.filters.find((f) => f.id === 'talents')
-    expect(talentsFilter.cssClass).toBe('is-active')
+    expect(talentsFilter.cssClass).toContain('is-active')
     expect(talentsFilter.isPressed).toBe(true)
   })
 
@@ -1972,5 +1972,338 @@ describe('buildAuditLogDateSections', () => {
     expect(ctx.sections[0].entries).toHaveLength(1)
 
     vi.useRealTimers()
+  })
+})
+
+/* ============================================ */
+/*  Per-family counts and empty family state   */
+/* ============================================ */
+
+describe('buildAuditLogEntries — familyCounts and filter isEmpty', () => {
+  let buildAuditLogEntries
+
+  const baseTranslations = {
+    'SWERPG.AUDIT_LOG.FILTER.ALL': 'All',
+    'SWERPG.AUDIT_LOG.FILTER.SKILLS': 'Skills',
+    'SWERPG.AUDIT_LOG.FILTER.TALENTS': 'Talents',
+    'SWERPG.AUDIT_LOG.FILTER.XP': 'XP',
+    'SWERPG.AUDIT_LOG.FILTER.CHARACTERISTICS': 'Characteristics',
+    'SWERPG.AUDIT_LOG.FILTER.DETAILS': 'Core choices',
+    'SWERPG.AUDIT_LOG.FILTER.ADVANCEMENT': 'Advancement',
+    'SWERPG.AUDIT_LOG.FILTER.PURCHASES': 'Purchases',
+    'SWERPG.AUDIT_LOG.FILTER.SALES': 'Sales',
+    'SWERPG.AUDIT_LOG.TYPE.SKILL_TRAIN': 'Skill purchase',
+    'SWERPG.AUDIT_LOG.TYPE.XP_GRANT': 'XP granted',
+    'SWERPG.AUDIT_LOG.TYPE.ITEM_PURCHASE': 'Item purchased',
+    'SWERPG.AUDIT_LOG.TYPE.UNKNOWN': 'Unknown event',
+    'SWERPG.AUDIT_LOG.NONE': 'None',
+    'SWERPG.AUDIT_LOG.UNKNOWN_VALUE': 'Unknown value',
+    'SWERPG.AUDIT_LOG.UNKNOWN_SKILL': 'Unknown skill',
+    'SWERPG.AUDIT_LOG.UNKNOWN_ITEM': 'Unknown item',
+    'SWERPG.AUDIT_LOG.DESCRIPTION.SKILL_TRAIN': 'Skill {skill}: rank {oldRank} -> {newRank}',
+    'SWERPG.AUDIT_LOG.DESCRIPTION.XP_GRANT': 'Granted {amount} XP',
+    'SWERPG.AUDIT_LOG.DESCRIPTION.ITEM_PURCHASE': 'Purchased {itemName} ({itemType}) for {price} credits',
+    'SWERPG.AUDIT_LOG.DESCRIPTION.UNKNOWN': 'Unknown event ({type})',
+    'SWERPG.AUDIT_LOG.VARIANT.ADD': 'Added',
+    'SWERPG.AUDIT_LOG.VARIANT.GAIN': 'Gained',
+    'SWERPG.AUDIT_LOG.VARIANT.REMOVE': 'Removed',
+    'SWERPG.AUDIT_LOG.VARIANT.CHANGE': 'Changed',
+    'SWERPG.AUDIT_LOG.VARIANT.FAIL': 'Failed',
+  }
+
+  beforeEach(async () => {
+    setupFoundryMock({ translations: baseTranslations })
+    ;({ buildAuditLogEntries } = await import('../../module/applications/character-audit-log.mjs'))
+  })
+
+  afterEach(() => {
+    vi.resetModules()
+    vi.clearAllMocks()
+    teardownFoundryMock()
+  })
+
+  function makeActorWithLogs(logs) {
+    return {
+      id: 'actor-family-counts',
+      name: 'Vara Kesh',
+      type: 'character',
+      isOwner: true,
+      system: {},
+      flags: { swerpg: { logs } },
+      testUserPermission: vi.fn(() => true),
+    }
+  }
+
+  it('familyCounts contains count per family on a mixed journal', () => {
+    const actor = makeActorWithLogs([
+      { id: 'e1', timestamp: 100, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } },
+      { id: 'e2', timestamp: 200, type: 'skill.train', xpDelta: -5, data: { skillName: 'Gunnery', oldRank: 0, newRank: 1 } },
+      { id: 'e3', timestamp: 300, type: 'xp.grant', xpDelta: 20, data: { amount: 20 } },
+    ])
+
+    const { familyCounts } = buildAuditLogEntries(actor, 'all')
+
+    expect(familyCounts.all).toBe(3)
+    expect(familyCounts.skills).toBe(2)
+    expect(familyCounts.xp).toBe(1)
+    // Families with no entries are absent from the counts map
+    expect(familyCounts.talents).toBeUndefined()
+  })
+
+  it('familyCounts[all] equals total entries when no text/date filter', () => {
+    const actor = makeActorWithLogs([
+      { id: 'e1', timestamp: 100, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } },
+      { id: 'e2', timestamp: 200, type: 'xp.grant', xpDelta: 20, data: { amount: 20 } },
+    ])
+
+    const { familyCounts, totalCount } = buildAuditLogEntries(actor, 'all')
+    expect(familyCounts.all).toBe(totalCount)
+  })
+
+  it('familyCounts is recalculated when text search reduces the corpus', () => {
+    const actor = makeActorWithLogs([
+      { id: 'e1', timestamp: 100, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } },
+      { id: 'e2', timestamp: 200, type: 'skill.train', xpDelta: -5, data: { skillName: 'Gunnery', oldRank: 0, newRank: 1 } },
+      { id: 'e3', timestamp: 300, type: 'xp.grant', xpDelta: 20, data: { amount: 20 } },
+    ])
+
+    // Only e1 matches "piloting"
+    const { familyCounts } = buildAuditLogEntries(actor, 'all', { query: 'piloting' })
+    expect(familyCounts.all).toBe(1)
+    expect(familyCounts.skills).toBe(1)
+    expect(familyCounts.xp).toBeUndefined()
+  })
+
+  it('familyCounts is independent of the active family filter', () => {
+    const actor = makeActorWithLogs([
+      { id: 'e1', timestamp: 100, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } },
+      { id: 'e2', timestamp: 200, type: 'xp.grant', xpDelta: 20, data: { amount: 20 } },
+    ])
+
+    // When viewing skills only, familyCounts still reflects ALL families
+    const { familyCounts, entries } = buildAuditLogEntries(actor, 'skills')
+    expect(entries).toHaveLength(1)
+    expect(familyCounts.skills).toBe(1)
+    expect(familyCounts.xp).toBe(1)
+    expect(familyCounts.all).toBe(2)
+  })
+
+  it('selecting a family with no entries returns an empty entries array but familyCounts still has other families', () => {
+    const actor = makeActorWithLogs([{ id: 'e1', timestamp: 100, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } }])
+
+    const { entries, filteredCount, familyCounts } = buildAuditLogEntries(actor, 'talents')
+    expect(entries).toHaveLength(0)
+    expect(filteredCount).toBe(0)
+    expect(familyCounts.skills).toBe(1)
+    expect(familyCounts.talents).toBeUndefined()
+  })
+})
+
+/* ============================================ */
+/*  isActiveFamilyEmpty and filter isEmpty     */
+/*  in _prepareContext view-model              */
+/* ============================================ */
+
+describe('_prepareContext — isActiveFamilyEmpty and filter isEmpty/count', () => {
+  let CharacterAuditLogApp
+
+  const baseTranslations = {
+    'SWERPG.AUDIT_LOG.FILTER.ALL': 'All',
+    'SWERPG.AUDIT_LOG.FILTER.SKILLS': 'Skills',
+    'SWERPG.AUDIT_LOG.FILTER.TALENTS': 'Talents',
+    'SWERPG.AUDIT_LOG.FILTER.XP': 'XP',
+    'SWERPG.AUDIT_LOG.FILTER.CHARACTERISTICS': 'Characteristics',
+    'SWERPG.AUDIT_LOG.FILTER.DETAILS': 'Core choices',
+    'SWERPG.AUDIT_LOG.FILTER.ADVANCEMENT': 'Advancement',
+    'SWERPG.AUDIT_LOG.FILTER.PURCHASES': 'Purchases',
+    'SWERPG.AUDIT_LOG.FILTER.SALES': 'Sales',
+    'SWERPG.AUDIT_LOG.EMPTY': 'No entries',
+    'SWERPG.AUDIT_LOG.EMPTY_FILTERED': 'No match',
+    'SWERPG.AUDIT_LOG.EMPTY_FAMILY': 'No entries for this category.',
+    'SWERPG.AUDIT_LOG.TYPE.SKILL_TRAIN': 'Skill purchase',
+    'SWERPG.AUDIT_LOG.TYPE.XP_GRANT': 'XP granted',
+    'SWERPG.AUDIT_LOG.TYPE.UNKNOWN': 'Unknown event',
+    'SWERPG.AUDIT_LOG.NONE': 'None',
+    'SWERPG.AUDIT_LOG.UNKNOWN_VALUE': 'Unknown value',
+    'SWERPG.AUDIT_LOG.UNKNOWN_SKILL': 'Unknown skill',
+    'SWERPG.AUDIT_LOG.DESCRIPTION.SKILL_TRAIN': 'Skill {skill}: rank {oldRank} -> {newRank}',
+    'SWERPG.AUDIT_LOG.DESCRIPTION.XP_GRANT': 'Granted {amount} XP',
+    'SWERPG.AUDIT_LOG.DESCRIPTION.UNKNOWN': 'Unknown event ({type})',
+    'SWERPG.AUDIT_LOG.VARIANT.ADD': 'Added',
+    'SWERPG.AUDIT_LOG.VARIANT.GAIN': 'Gained',
+    'SWERPG.AUDIT_LOG.VARIANT.REMOVE': 'Removed',
+    'SWERPG.AUDIT_LOG.VARIANT.CHANGE': 'Changed',
+    'SWERPG.AUDIT_LOG.VARIANT.FAIL': 'Failed',
+  }
+
+  beforeEach(async () => {
+    setupFoundryMock({ translations: baseTranslations })
+    ;({ default: CharacterAuditLogApp } = await import('../../module/applications/character-audit-log.mjs'))
+  })
+
+  afterEach(() => {
+    vi.resetModules()
+    vi.clearAllMocks()
+    teardownFoundryMock()
+  })
+
+  function makeActor(logs = []) {
+    return {
+      id: 'actor-empty-family',
+      name: 'Test',
+      type: 'character',
+      isOwner: true,
+      system: {},
+      flags: { swerpg: { logs } },
+      testUserPermission: vi.fn(() => true),
+    }
+  }
+
+  it('isActiveFamilyEmpty is false when active filter is all', async () => {
+    const actor = makeActor([{ id: 'e1', timestamp: 100, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } }])
+    const app = new CharacterAuditLogApp({ document: actor })
+    const ctx = await app._prepareContext({})
+    expect(ctx.isActiveFamilyEmpty).toBe(false)
+  })
+
+  it('isActiveFamilyEmpty is false when the active family has entries', async () => {
+    const actor = makeActor([{ id: 'e1', timestamp: 100, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } }])
+    const app = new CharacterAuditLogApp({ document: actor, filter: 'skills' })
+    const ctx = await app._prepareContext({})
+    expect(ctx.isActiveFamilyEmpty).toBe(false)
+  })
+
+  it('isActiveFamilyEmpty is true when the active family has no entries in the corpus', async () => {
+    const actor = makeActor([{ id: 'e1', timestamp: 100, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } }])
+    const app = new CharacterAuditLogApp({ document: actor, filter: 'talents' })
+    const ctx = await app._prepareContext({})
+    expect(ctx.isActiveFamilyEmpty).toBe(true)
+    expect(ctx.hasFilteredEntries).toBe(false)
+  })
+
+  it('isActiveFamilyEmpty is true even when other families have entries', async () => {
+    const actor = makeActor([
+      { id: 'e1', timestamp: 100, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } },
+      { id: 'e2', timestamp: 200, type: 'xp.grant', xpDelta: 20, data: { amount: 20 } },
+    ])
+    const app = new CharacterAuditLogApp({ document: actor, filter: 'talents' })
+    const ctx = await app._prepareContext({})
+    expect(ctx.isActiveFamilyEmpty).toBe(true)
+  })
+
+  it('context exposes emptyFamilyLabel as a string', async () => {
+    const actor = makeActor()
+    const app = new CharacterAuditLogApp({ document: actor })
+    const ctx = await app._prepareContext({})
+    expect(typeof ctx.emptyFamilyLabel).toBe('string')
+    expect(ctx.emptyFamilyLabel.length).toBeGreaterThan(0)
+  })
+
+  it('each filter exposes count and isEmpty fields', async () => {
+    const actor = makeActor([{ id: 'e1', timestamp: 100, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } }])
+    const app = new CharacterAuditLogApp({ document: actor })
+    const ctx = await app._prepareContext({})
+
+    for (const filter of ctx.filters) {
+      expect(typeof filter.count).toBe('number')
+      expect(typeof filter.isEmpty).toBe('boolean')
+    }
+  })
+
+  it('skills filter has count=1 and isEmpty=false when one skill entry exists', async () => {
+    const actor = makeActor([{ id: 'e1', timestamp: 100, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } }])
+    const app = new CharacterAuditLogApp({ document: actor })
+    const ctx = await app._prepareContext({})
+
+    const skillsFilter = ctx.filters.find((f) => f.id === 'skills')
+    expect(skillsFilter.count).toBe(1)
+    expect(skillsFilter.isEmpty).toBe(false)
+  })
+
+  it('talents filter has count=0 and isEmpty=true when no talent entries exist', async () => {
+    const actor = makeActor([{ id: 'e1', timestamp: 100, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } }])
+    const app = new CharacterAuditLogApp({ document: actor })
+    const ctx = await app._prepareContext({})
+
+    const talentsFilter = ctx.filters.find((f) => f.id === 'talents')
+    expect(talentsFilter.count).toBe(0)
+    expect(talentsFilter.isEmpty).toBe(true)
+  })
+
+  it('all filter count reflects all entries regardless of active family', async () => {
+    const actor = makeActor([
+      { id: 'e1', timestamp: 100, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } },
+      { id: 'e2', timestamp: 200, type: 'xp.grant', xpDelta: 20, data: { amount: 20 } },
+    ])
+    const app = new CharacterAuditLogApp({ document: actor, filter: 'skills' })
+    const ctx = await app._prepareContext({})
+
+    const allFilter = ctx.filters.find((f) => f.id === 'all')
+    expect(allFilter.count).toBe(2)
+    expect(allFilter.isEmpty).toBe(false)
+  })
+
+  it('empty filter has is-empty in cssClass', async () => {
+    const actor = makeActor([{ id: 'e1', timestamp: 100, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } }])
+    const app = new CharacterAuditLogApp({ document: actor })
+    const ctx = await app._prepareContext({})
+
+    const talentsFilter = ctx.filters.find((f) => f.id === 'talents')
+    expect(talentsFilter.cssClass).toContain('is-empty')
+  })
+
+  it('non-empty filter does not have is-empty in cssClass', async () => {
+    const actor = makeActor([{ id: 'e1', timestamp: 100, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } }])
+    const app = new CharacterAuditLogApp({ document: actor })
+    const ctx = await app._prepareContext({})
+
+    const skillsFilter = ctx.filters.find((f) => f.id === 'skills')
+    expect(skillsFilter.cssClass).not.toContain('is-empty')
+  })
+
+  it('active empty filter has both is-active and is-empty in cssClass', async () => {
+    const actor = makeActor([{ id: 'e1', timestamp: 100, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } }])
+    const app = new CharacterAuditLogApp({ document: actor, filter: 'talents' })
+    const ctx = await app._prepareContext({})
+
+    const talentsFilter = ctx.filters.find((f) => f.id === 'talents')
+    expect(talentsFilter.cssClass).toContain('is-active')
+    expect(talentsFilter.cssClass).toContain('is-empty')
+    expect(talentsFilter.isPressed).toBe(true)
+  })
+
+  it('family filter counts respect text search — empty family after search has isEmpty=true', async () => {
+    const actor = makeActor([
+      { id: 'e1', timestamp: 100, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } },
+      { id: 'e2', timestamp: 200, type: 'xp.grant', xpDelta: 20, data: { amount: 20 } },
+    ])
+    const app = new CharacterAuditLogApp({ document: actor })
+    // Text search for 'piloting' matches only the skills entry → xp family becomes empty
+    app.searchQuery = 'piloting'
+    const ctx = await app._prepareContext({})
+
+    const xpFilter = ctx.filters.find((f) => f.id === 'xp')
+    expect(xpFilter.count).toBe(0)
+    expect(xpFilter.isEmpty).toBe(true)
+
+    const skillsFilter = ctx.filters.find((f) => f.id === 'skills')
+    expect(skillsFilter.count).toBe(1)
+    expect(skillsFilter.isEmpty).toBe(false)
+  })
+
+  it('CSV export contract is not affected by familyCounts — all log entries remain exportable', async () => {
+    // This verifies that the familyCounts change in buildAuditLogEntries does not
+    // affect the CSV export path, which reads from raw logs independently.
+    const { buildCsvContent } = await import('../../module/applications/character-audit-log.mjs')
+
+    const actor = makeActor([
+      { id: 'e1', timestamp: 100, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } },
+      { id: 'e2', timestamp: 200, type: 'xp.grant', xpDelta: 20, data: { amount: 20 } },
+    ])
+
+    const csv = buildCsvContent(actor)
+    const lines = csv.split('\n')
+    // Header + 2 rows — all entries regardless of family
+    expect(lines).toHaveLength(3)
   })
 })
