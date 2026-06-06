@@ -430,6 +430,32 @@ describe('audit log CSV export', () => {
     it('wraps in quotes when the value contains a newline', () => {
       expect(escapeCsvCell('line1\nline2')).toBe('"line1\nline2"')
     })
+
+    it('prefixes with a single-quote when the value starts with =', () => {
+      expect(escapeCsvCell('=SUM(A1:A10)')).toBe("'=SUM(A1:A10)")
+    })
+
+    it('prefixes with a single-quote when the value starts with +', () => {
+      expect(escapeCsvCell('+1234')).toBe("'+1234")
+    })
+
+    it('prefixes with a single-quote when the value starts with -', () => {
+      expect(escapeCsvCell('-1234')).toBe("'-1234")
+    })
+
+    it('prefixes with a single-quote when the value starts with @', () => {
+      expect(escapeCsvCell('@SUM(1+1)')).toBe("'@SUM(1+1)")
+    })
+
+    it('does not alter values that do not start with a dangerous prefix', () => {
+      expect(escapeCsvCell('normal text')).toBe('normal text')
+      expect(escapeCsvCell('100')).toBe('100')
+      expect(escapeCsvCell('')).toBe('')
+    })
+
+    it('wraps in quotes and prefixes when the cell starts with = and contains a comma', () => {
+      expect(escapeCsvCell('=A1,B1')).toBe('"\'=A1,B1"')
+    })
   })
 
   describe('getPrimaryOwnerName', () => {
@@ -3008,5 +3034,72 @@ describe('#onExportCsv — foundry.utils.saveDataToFile applicative contract', (
     await expect(CharacterAuditLogApp.DEFAULT_OPTIONS.actions.exportCsv.call(app, fakeEvent, null)).resolves.toBeUndefined()
 
     expect(globalThis.ui.notifications.error).toHaveBeenCalledWith('Export failed')
+  })
+
+  it('BOM: the content passed to saveDataToFile starts with a UTF-8 BOM (﻿)', async () => {
+    const actor = makeActor([{ id: 'e1', timestamp: 100, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } }])
+
+    const app = new CharacterAuditLogApp({ document: actor })
+    const fakeEvent = { preventDefault: vi.fn() }
+
+    await CharacterAuditLogApp.DEFAULT_OPTIONS.actions.exportCsv.call(app, fakeEvent, null)
+
+    const [csvContent] = globalThis.foundry.utils.saveDataToFile.mock.calls[0]
+    expect(csvContent.charCodeAt(0)).toBe(0xfeff)
+  })
+
+  it('BOM: the content after the BOM starts with the CSV header', async () => {
+    const actor = makeActor([])
+
+    const app = new CharacterAuditLogApp({ document: actor })
+    const fakeEvent = { preventDefault: vi.fn() }
+
+    await CharacterAuditLogApp.DEFAULT_OPTIONS.actions.exportCsv.call(app, fakeEvent, null)
+
+    const [csvContent] = globalThis.foundry.utils.saveDataToFile.mock.calls[0]
+    // First character is BOM; the rest starts with the header
+    expect(csvContent.slice(1)).toContain('timestamp,date,userName,type,typeLabel,description,xpDelta,creditDelta,actorName,playerName')
+  })
+
+  it('formula injection: a cell starting with = is neutralized with a leading single-quote in the export', async () => {
+    const actor = makeActor([
+      {
+        id: 'e1',
+        timestamp: 100,
+        type: 'skill.train',
+        userName: '=MALICIOUS()',
+        xpDelta: -10,
+        data: { skillName: 'Piloting', oldRank: 1, newRank: 2 },
+      },
+    ])
+
+    const app = new CharacterAuditLogApp({ document: actor })
+    const fakeEvent = { preventDefault: vi.fn() }
+
+    await CharacterAuditLogApp.DEFAULT_OPTIONS.actions.exportCsv.call(app, fakeEvent, null)
+
+    const [csvContent] = globalThis.foundry.utils.saveDataToFile.mock.calls[0]
+    // The neutralized form must be present (leading single-quote before =)
+    expect(csvContent).toContain("'=MALICIOUS()")
+    // The raw unescaped form (comma immediately before =) must NOT appear anywhere
+    expect(csvContent).not.toMatch(/,=MALICIOUS/)
+  })
+
+  it('formula injection: cells starting with +, -, @ are also neutralized', async () => {
+    const actor = makeActor([
+      { id: 'e1', timestamp: 100, type: 'skill.train', userName: '+cmd', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } },
+      { id: 'e2', timestamp: 200, type: 'skill.train', userName: '-cmd', xpDelta: -5, data: { skillName: 'Gunnery', oldRank: 0, newRank: 1 } },
+      { id: 'e3', timestamp: 300, type: 'skill.train', userName: '@SUM', xpDelta: -5, data: { skillName: 'Gunnery', oldRank: 1, newRank: 2 } },
+    ])
+
+    const app = new CharacterAuditLogApp({ document: actor })
+    const fakeEvent = { preventDefault: vi.fn() }
+
+    await CharacterAuditLogApp.DEFAULT_OPTIONS.actions.exportCsv.call(app, fakeEvent, null)
+
+    const [csvContent] = globalThis.foundry.utils.saveDataToFile.mock.calls[0]
+    expect(csvContent).toContain("'+cmd")
+    expect(csvContent).toContain("'-cmd")
+    expect(csvContent).toContain("'@SUM")
   })
 })
