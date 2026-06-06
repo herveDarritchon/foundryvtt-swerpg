@@ -92,6 +92,16 @@
   /* Bleu profond pour les bons résultats */
   --color-result-warn: #a98d0b;
   /* Doré vieilli pour les avertissements */
+  /* Result state background colors (dice check card backgrounds) */
+  --color-result-good-bg: #000800;
+  /* Quasi-noir teinté vert — fond succès */
+  --color-result-bad-bg: #080000;
+  /* Quasi-noir teinté rouge — fond échec */
+  --color-result-warn-bg: #080800;
+  /* Quasi-noir teinté jaune — fond déflexion */
+  /* Pure black shadow token (drop-shadow filter on dice pool) */
+  --color-shadow-black: #000;
+  /* tokens-allow-raw */
   --color-active: #1ab82a;
   /* Vert pour les éléments actifs */
   --color-border-active: #0e5915;
@@ -4956,26 +4966,26 @@ input[type='range'] {
   opacity: 0.2;
 }
 .swerpg.dice-roll.success .check-result {
-  --check-bg-color: #000800;
+  --check-bg-color: var(--color-result-good-bg);
   --check-border-color: var(--color-result-good);
 }
 .swerpg.dice-roll.failure .check-result {
-  --check-bg-color: #080000;
+  --check-bg-color: var(--color-result-bad-bg);
   --check-border-color: var(--color-result-bad);
 }
 .swerpg.dice-roll.glance .check-result {
-  --check-bg-color: #080800;
+  --check-bg-color: var(--color-result-warn-bg);
   --check-border-color: var(--color-result-warn);
 }
 .swerpg.dice-roll.failure.critical .check-result {
-  --check-bg-color: #080000;
+  --check-bg-color: var(--color-result-bad-bg);
   --check-border-color: var(--color-result-bad);
-  color: #ff3724;
+  color: var(--color-danger);
 }
 .swerpg.dice-roll.success.critical .check-result {
-  --check-bg-color: #000800;
+  --check-bg-color: var(--color-result-good-bg);
   --check-border-color: var(--color-result-good);
-  color: #12cb3f;
+  color: var(--color-success);
 }
 .swerpg.dice-roll .hex .label {
   position: absolute;
@@ -5038,7 +5048,7 @@ input[type='range'] {
   color: var(--color-primary);
   text-align: center;
   font-size: 24px;
-  filter: drop-shadow(0px 0px 6px #000);
+  filter: drop-shadow(0px 0px 6px var(--color-shadow-black));
 }
 .swerpg.dice-roll .pool .die::before {
   display: block;
