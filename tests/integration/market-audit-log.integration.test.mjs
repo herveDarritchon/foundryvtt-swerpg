@@ -1,6 +1,21 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { setupFoundryMock, teardownFoundryMock } from '../helpers/mock-foundry.mjs'
 
+/**
+ * Extract the flat list of written audit log entries from an actor.update() call argument.
+ * Supports the segmented format (auditLogSegs) produced by writeLogEntries.
+ * @param {object} updateArg  The first argument passed to actor.update()
+ * @returns {Array<object>}
+ */
+function getWrittenLogs(updateArg) {
+  const segs = updateArg['flags.swerpg.auditLogSegs']
+  if (Array.isArray(segs)) {
+    return segs.flat()
+  }
+  // Fallback for legacy format
+  return updateArg['flags.swerpg.logs'] ?? []
+}
+
 vi.mock('../../module/utils/logger.mjs', () => {
   const logger = {
     debug: vi.fn(),
@@ -138,7 +153,7 @@ describe('Scénario 1 — happy path complet', () => {
     expect(actor.update).toHaveBeenCalledTimes(1)
 
     const updateArg = actor.update.mock.calls[0][0]
-    const logs = updateArg['flags.swerpg.logs']
+    const logs = getWrittenLogs(updateArg)
     expect(logs).toHaveLength(1)
 
     const entry = logs[0]
@@ -482,7 +497,7 @@ describe('Scénario 3 — résilience chat', () => {
     expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining('[AuditLog] Failed to send chat'), expect.any(Error))
   })
 
-  it("l'entrée audit reste dans flags.swerpg.logs indépendamment du chat", async () => {
+  it("l'entrée audit reste dans le stockage indépendamment du chat", async () => {
     const { recordItemPurchase, sendChatForAuditEntries } = await import('../../module/utils/audit-log.mjs')
 
     // Step 1: write the audit entry successfully
@@ -496,21 +511,27 @@ describe('Scénario 3 — résilience chat', () => {
       itemId: 'item-uuid-abc',
     })
 
-    // Capture the entry created by recordItemPurchase
+    // Capture the entry created by recordItemPurchase using the segmented format helper
     const updateArg = actor.update.mock.calls[0][0]
-    const writtenEntry = updateArg['flags.swerpg.logs'][0]
+    const writtenEntry = getWrittenLogs(updateArg)[0]
+    expect(writtenEntry).toBeDefined()
 
-    // Simulate the entry persisted into actor state
-    actor.flags.swerpg.logs = [writtenEntry]
+    // Simulate the entry persisted into actor state (segmented format)
+    const segs = updateArg['flags.swerpg.auditLogSegs']
+    actor.flags = actor.flags ?? {}
+    actor.flags.swerpg = actor.flags.swerpg ?? {}
+    actor.flags.swerpg.auditLogSegs = segs
+    actor.flags.swerpg.auditLogIndex = updateArg['flags.swerpg.auditLogIndex']
 
     // Step 2: now chat fails for this entry
     globalThis.ChatMessage.create = vi.fn().mockRejectedValue(new Error('Chat fail'))
     await sendChatForAuditEntries(actor, [writtenEntry])
 
     // The audit entry must still be in flags (chat failure does not roll back the write)
-    expect(actor.flags.swerpg.logs).toHaveLength(1)
-    expect(actor.flags.swerpg.logs[0].type).toBe('item.purchase')
-    expect(actor.flags.swerpg.logs[0].data.itemId).toBe('item-uuid-abc')
+    const persistedEntries = actor.flags.swerpg.auditLogSegs.flat()
+    expect(persistedEntries).toHaveLength(1)
+    expect(persistedEntries[0].type).toBe('item.purchase')
+    expect(persistedEntries[0].data.itemId).toBe('item-uuid-abc')
   })
 
   it('sendChatForAuditEntries traite les entrées en batch même si une échoue', async () => {

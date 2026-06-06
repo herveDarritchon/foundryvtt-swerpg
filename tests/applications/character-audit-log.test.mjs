@@ -3103,3 +3103,200 @@ describe('#onExportCsv — foundry.utils.saveDataToFile applicative contract', (
     expect(csvContent).toContain("'@SUM")
   })
 })
+
+/* ============================================ */
+/*  Segmented storage transparency              */
+/* ============================================ */
+
+describe('buildAuditLogEntries — segmented storage transparency', () => {
+  beforeEach(async () => {
+    setupFoundryMock({
+      translations: {
+        'SWERPG.AUDIT_LOG.FILTER.ALL': 'All',
+        'SWERPG.AUDIT_LOG.FILTER.SKILLS': 'Skills',
+        'SWERPG.AUDIT_LOG.FILTER.TALENTS': 'Talents',
+        'SWERPG.AUDIT_LOG.FILTER.XP': 'XP',
+        'SWERPG.AUDIT_LOG.FILTER.CHARACTERISTICS': 'Characteristics',
+        'SWERPG.AUDIT_LOG.FILTER.DETAILS': 'Core choices',
+        'SWERPG.AUDIT_LOG.FILTER.ADVANCEMENT': 'Advancement',
+        'SWERPG.AUDIT_LOG.FILTER.PURCHASES': 'Purchases',
+        'SWERPG.AUDIT_LOG.FILTER.SALES': 'Sales',
+        'SWERPG.AUDIT_LOG.TYPE.SKILL_TRAIN': 'Skill purchase',
+        'SWERPG.AUDIT_LOG.TYPE.XP_GRANT': 'XP granted',
+        'SWERPG.AUDIT_LOG.TYPE.UNKNOWN': 'Unknown event',
+        'SWERPG.AUDIT_LOG.NONE': 'None',
+        'SWERPG.AUDIT_LOG.DESCRIPTION.SKILL_TRAIN': 'Skill {skill}: rank {oldRank} -> {newRank}',
+        'SWERPG.AUDIT_LOG.DESCRIPTION.UNKNOWN': 'Unknown event ({type})',
+        'SWERPG.AUDIT_LOG.UNKNOWN_SKILL': 'Unknown skill',
+      },
+    })
+
+    globalThis.game.system.config = {
+      CHARACTERISTICS: {},
+    }
+  })
+
+  afterEach(() => {
+    vi.resetModules()
+    vi.clearAllMocks()
+    teardownFoundryMock()
+  })
+
+  it('reads from segmented format and returns the same view as legacy flat', async () => {
+    const { buildAuditLogEntries } = await import('../../module/applications/character-audit-log.mjs')
+
+    const entry1 = { id: 'e-1', timestamp: 100, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } }
+    const entry2 = { id: 'e-2', timestamp: 200, type: 'xp.grant', xpDelta: 50, data: { amount: 50 } }
+
+    // Legacy flat actor
+    const legacyActor = {
+      id: 'actor-legacy',
+      name: 'Legacy',
+      type: 'character',
+      flags: { swerpg: { logs: [entry1, entry2] } },
+      testUserPermission: vi.fn(() => true),
+    }
+
+    // Segmented actor — same entries split across two segments
+    const segmentedActor = {
+      id: 'actor-segmented',
+      name: 'Segmented',
+      type: 'character',
+      flags: {
+        swerpg: {
+          auditLogIndex: { totalCount: 2, segmentCount: 2, segmentSize: 1 },
+          auditLogSegs: [[entry1], [entry2]],
+        },
+      },
+      testUserPermission: vi.fn(() => true),
+    }
+
+    const legacyResult = buildAuditLogEntries(legacyActor, 'all')
+    const segmentedResult = buildAuditLogEntries(segmentedActor, 'all')
+
+    expect(segmentedResult.totalCount).toBe(legacyResult.totalCount)
+    expect(segmentedResult.filteredCount).toBe(legacyResult.filteredCount)
+    // Entries should have the same IDs in the same order (anti-chronological after sort)
+    expect(segmentedResult.entries.map((e) => e.id)).toEqual(legacyResult.entries.map((e) => e.id))
+  })
+
+  it('buildAuditLogEntries with segmented format applies family filter correctly', async () => {
+    const { buildAuditLogEntries } = await import('../../module/applications/character-audit-log.mjs')
+
+    const skillEntry = { id: 'skill-1', timestamp: 100, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } }
+    const xpEntry = { id: 'xp-1', timestamp: 200, type: 'xp.grant', xpDelta: 50, data: { amount: 50 } }
+
+    const actor = {
+      id: 'actor-1',
+      name: 'Test',
+      type: 'character',
+      flags: {
+        swerpg: {
+          auditLogIndex: { totalCount: 2, segmentCount: 1, segmentSize: 100 },
+          auditLogSegs: [[skillEntry, xpEntry]],
+        },
+      },
+      testUserPermission: vi.fn(() => true),
+    }
+
+    const { entries: skillEntries } = buildAuditLogEntries(actor, 'skills')
+    expect(skillEntries).toHaveLength(1)
+    expect(skillEntries[0].id).toBe('skill-1')
+
+    const { entries: xpEntries } = buildAuditLogEntries(actor, 'xp')
+    expect(xpEntries).toHaveLength(1)
+    expect(xpEntries[0].id).toBe('xp-1')
+  })
+})
+
+describe('buildCsvContent — segmented storage transparency', () => {
+  beforeEach(async () => {
+    setupFoundryMock({
+      translations: {
+        'SWERPG.AUDIT_LOG.TYPE.SKILL_TRAIN': 'Skill purchase',
+        'SWERPG.AUDIT_LOG.DESCRIPTION.SKILL_TRAIN': 'Skill {skill}: rank {oldRank} -> {newRank}',
+        'SWERPG.AUDIT_LOG.UNKNOWN_SKILL': 'Unknown skill',
+        'SWERPG.AUDIT_LOG.TYPE.UNKNOWN': 'Unknown event',
+        'SWERPG.AUDIT_LOG.DESCRIPTION.UNKNOWN': 'Unknown event ({type})',
+      },
+    })
+
+    globalThis.game.system.config = {
+      CHARACTERISTICS: {},
+    }
+
+    globalThis.game.users = { get: vi.fn(() => null) }
+  })
+
+  afterEach(() => {
+    vi.resetModules()
+    vi.clearAllMocks()
+    teardownFoundryMock()
+  })
+
+  it('produces the same CSV row count from segmented format as from legacy flat', async () => {
+    const { buildCsvContent } = await import('../../module/applications/character-audit-log.mjs')
+
+    const entry = { id: 'e-1', timestamp: 1000, type: 'skill.train', xpDelta: -10, userName: 'Player', data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } }
+
+    const legacyActor = {
+      name: 'Tester',
+      flags: { swerpg: { logs: [entry] } },
+      ownership: {},
+    }
+
+    const segmentedActor = {
+      name: 'Tester',
+      flags: {
+        swerpg: {
+          auditLogIndex: { totalCount: 1, segmentCount: 1, segmentSize: 100 },
+          auditLogSegs: [[entry]],
+        },
+      },
+      ownership: {},
+    }
+
+    const legacyCsv = buildCsvContent(legacyActor)
+    const segmentedCsv = buildCsvContent(segmentedActor)
+
+    // Both should have header + 1 data row
+    expect(legacyCsv.split('\n')).toHaveLength(2)
+    expect(segmentedCsv.split('\n')).toHaveLength(2)
+
+    // Data rows should be identical
+    const legacyRows = legacyCsv.split('\n')
+    const segmentedRows = segmentedCsv.split('\n')
+    expect(legacyRows[0]).toBe(segmentedRows[0]) // header
+    expect(legacyRows[1]).toBe(segmentedRows[1]) // data row
+  })
+
+  it('CSV export over multiple segments produces all entries', async () => {
+    const { buildCsvContent } = await import('../../module/applications/character-audit-log.mjs')
+
+    const entries = Array.from({ length: 5 }, (_, i) => ({
+      id: `e-${i}`,
+      timestamp: 1000 + i,
+      type: 'skill.train',
+      xpDelta: -10,
+      userName: 'Player',
+      data: { skillName: 'Piloting', oldRank: i, newRank: i + 1 },
+    }))
+
+    // Split into 3 segments: [2, 2, 1]
+    const actor = {
+      name: 'Tester',
+      flags: {
+        swerpg: {
+          auditLogIndex: { totalCount: 5, segmentCount: 3, segmentSize: 2 },
+          auditLogSegs: [entries.slice(0, 2), entries.slice(2, 4), entries.slice(4)],
+        },
+      },
+      ownership: {},
+    }
+
+    const csv = buildCsvContent(actor)
+    const rows = csv.split('\n')
+    // header + 5 data rows
+    expect(rows).toHaveLength(6)
+  })
+})

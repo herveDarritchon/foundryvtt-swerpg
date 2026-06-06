@@ -1,5 +1,6 @@
 import { logger } from '../utils/logger.mjs'
 import { AUDIT_LOG_FAMILIES, getAuditLogFamilyFromType, getAuditLogTypeLabelKey, buildAuditLogDescriptionFromRegistry } from '../lib/audit/taxonomy.mjs'
+import { readAuditLogEntries } from '../lib/audit/storage.mjs'
 
 const { api } = foundry.applications
 
@@ -615,7 +616,8 @@ export function buildSnapshotDetails(snapshot) {
  * @returns {{ entries: Array<object>, totalCount: number, filteredCount: number, familyCounts: Record<string, number> }}
  */
 export function buildAuditLogEntries(actor, family = AUDIT_LOG_FAMILIES.all, { query = '', dateFrom = null, dateTo = null } = {}) {
-  const logs = foundry.utils.getProperty(actor, AUDIT_LOG_PATH) ?? []
+  const actorFlags = foundry.utils.getProperty(actor, 'flags.swerpg') ?? null
+  const logs = readAuditLogEntries(actorFlags)
 
   const allEntries = [...logs]
     .sort((left, right) => (right.timestamp ?? 0) - (left.timestamp ?? 0))
@@ -972,10 +974,12 @@ export function buildExportFilename(actor) {
 
 /**
  * Build the full CSV content for the actor's audit log, including the header row.
+ * Reads from segmented storage when available, falling back to legacy flat format.
  * @param {Actor|object} actor
  */
 export function buildCsvContent(actor) {
-  const rawLogs = foundry.utils.getProperty(actor, AUDIT_LOG_PATH) ?? []
+  const actorFlags = foundry.utils.getProperty(actor, 'flags.swerpg') ?? null
+  const rawLogs = readAuditLogEntries(actorFlags)
   const ownerName = getPrimaryOwnerName(actor)
   const actorName = actor?.name ?? ''
 
