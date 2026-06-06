@@ -154,17 +154,26 @@
   --color-glow-20: color-mix(in srgb, var(--color-glow) 20%, transparent);
   --color-glow-22: color-mix(in srgb, var(--color-glow) 22%, transparent);
   --color-glow-25: color-mix(in srgb, var(--color-glow) 25%, transparent);
+  --color-glow-12: color-mix(in srgb, var(--color-glow) 12%, transparent);
+  --color-glow-14: color-mix(in srgb, var(--color-glow) 14%, transparent);
+  --color-glow-18: color-mix(in srgb, var(--color-glow) 18%, transparent);
+  --color-glow-30: color-mix(in srgb, var(--color-glow) 30%, transparent);
+  --color-glow-40: color-mix(in srgb, var(--color-glow) 40%, transparent);
   --color-glow-50: color-mix(in srgb, var(--color-glow) 50%, transparent);
   --color-glow-60: color-mix(in srgb, var(--color-glow) 60%, transparent);
+  --color-glow-70: color-mix(in srgb, var(--color-glow) 70%, transparent);
 
   /* Success alpha */
   --color-success-10: color-mix(in srgb, var(--color-success) 10%, transparent);
   --color-success-12: color-mix(in srgb, var(--color-success) 12%, transparent);
   --color-success-15: color-mix(in srgb, var(--color-success) 15%, transparent);
   --color-success-20: color-mix(in srgb, var(--color-success) 20%, transparent);
+  --color-success-25: color-mix(in srgb, var(--color-success) 25%, transparent);
   --color-success-30: color-mix(in srgb, var(--color-success) 30%, transparent);
   --color-success-35: color-mix(in srgb, var(--color-success) 35%, transparent);
+  --color-success-38: color-mix(in srgb, var(--color-success) 38%, transparent);
   --color-success-40: color-mix(in srgb, var(--color-success) 40%, transparent);
+  --color-success-70: color-mix(in srgb, var(--color-success) 70%, transparent);
   --color-success-text: color-mix(in srgb, var(--color-success) 80%, var(--color-text));
   --color-success-text-light: color-mix(in srgb, var(--color-success) 60%, var(--color-text));
 
@@ -224,11 +233,71 @@
   /* Holo / dark overlay backgrounds (actor sheet circles, steppers, console) */
   --color-holo-bg: rgb(16 23 34); /* base frame dark blue */
   --color-holo-bg-dark: rgb(8 12 18); /* deeper dark blue */
+  --color-holo-bg-20: rgb(16 23 34 / 20%);
+  --color-holo-bg-34: rgb(16 23 34 / 34%);
   --color-holo-bg-40: rgb(16 23 34 / 40%);
   --color-holo-bg-60: rgb(16 23 34 / 60%);
-  --color-holo-bg-34: rgb(16 23 34 / 34%);
-  --color-holo-bg-20: rgb(16 23 34 / 20%);
+  --color-holo-bg-72: rgb(10 17 26 / 72%);
+  --color-holo-bg-82: rgb(10 17 26 / 82%);
+  --color-holo-bg-85: rgb(10 17 26 / 85%);
+  --color-holo-bg-95: rgb(10 17 26 / 95%);
   --color-holo-bg-inactive: rgb(12 15 23 / 50%);
+
+  /* Holo deep layer (specialization tree panels / summary cards) */
+  --color-holo-deep-60: rgb(18 28 42 / 60%);
+  --color-holo-deep-72: rgb(18 28 42 / 72%);
+  --color-holo-deep-92: rgb(28 43 62 / 92%); /* active selected state */
+
+  /* Holo layer (specialization tree header / radial top) */
+  --color-holo-layer-72: rgb(24 39 58 / 72%);
+  --color-holo-layer-90: rgb(24 39 58 / 90%);
+
+  /* Holo dark sub-layer (specialization tree dark stat cells / radial bottom) */
+  --color-holo-dark-50: rgb(8 13 21 / 50%);
+  --color-holo-dark-94: rgb(8 13 21 / 94%);
+
+  /* Specialization tree text shades */
+  --color-holo-text-bright: #eef8ff; /* near-white text on dark holo backgrounds */
+  --color-holo-text-mid: #c8dcee; /* medium-blue grey text (state labels, legend items) */
+  --color-holo-text-soft: #d5e4f1; /* soft blue text (panel body, empty states) */
+  --color-holo-text-muted: #b8ccdf; /* muted blue text (description) */
+  --color-holo-text-label: #9fc0d6; /* label / secondary text on holo surfaces */
+  --color-holo-cost-text: #b9d9ff; /* XP cost label in detail panel */
+
+  /* Legend swatch colors (matched to PIXI node-state visual palette) */
+  --color-legend-swatch-purchased: #5f85ad;
+  --color-legend-swatch-purchased-ring: color-mix(in srgb, #5f85ad 45%, transparent);
+  --color-legend-swatch-available: #355a84;
+  --color-legend-swatch-available-ring: color-mix(in srgb, #355a84 45%, transparent);
+  --color-legend-swatch-locked: #4a4a4a;
+  --color-legend-swatch-locked-ring: color-mix(in srgb, #4a4a4a 30%, transparent);
+  --color-legend-swatch-invalid: #7c4e5a;
+  --color-legend-swatch-invalid-ring: color-mix(in srgb, #7c4e5a 35%, transparent);
+
+  /* OggDude import progress bar (success green gradient) */
+  --color-import-progress-bg: rgb(255 255 255 / 10%);
+  --color-import-progress-border: #444; /* tokens-allow-raw */
+  --color-import-progress-bar-start: #0b5e0b;
+  --color-import-progress-bar-end: #19a319;
+
+  /* Specialization tree sidebar "selected" accent bar gradient */
+  --color-spec-selected-bar-start: #7dc8e7; /* cyan-teal top */
+  --color-spec-selected-bar-end: #63c8a6; /* teal-green bottom */
+
+  /* Success hover text (CTA button hover on holo surface) */
+  --color-success-text-hover: #e8fff5;
+
+  /* Audit log header gradient stops */
+  --color-audit-header-bg-top: rgb(17 25 36 / 92%);
+  --color-audit-header-bg-bottom: rgb(10 15 24 / 85%);
+
+  /* Specialization tree app root gradient stops */
+  --color-spec-tree-bg-top: rgb(12 18 27 / 96%);
+  --color-spec-tree-bg-bottom: rgb(7 11 18 / 94%);
+
+  /* Specialization tree header gradient stops */
+  --color-spec-header-bg-top: rgb(16 25 37 / 92%);
+  --color-spec-header-bg-bottom: rgb(10 16 26 / 88%);
 
   /* Specialization badge (gold badge on identity summary) */
   --color-badge-gold: #c9a84c;

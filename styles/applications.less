@@ -113,8 +113,8 @@
         display: block;
         width: 100%;
         height: 12px;
-        background: var(--color-cool-5-50, rgba(255, 255, 255, 0.1));
-        border: 2px solid var(--color-cool-2, #444);
+        background: var(--color-import-progress-bg);
+        border: 2px solid var(--color-import-progress-border);
         border-radius: 4px;
         margin: 0.5rem 0 0.75rem;
         overflow: hidden;
@@ -123,7 +123,7 @@
       .import-progress-global .bar {
         height: 100%;
         width: 0;
-        background: linear-gradient(90deg, #0b5e0b, #19a319);
+        background: linear-gradient(90deg, var(--color-import-progress-bar-start), var(--color-import-progress-bar-end));
         transition: width 0.25s ease;
       }
 
@@ -377,7 +377,7 @@
     gap: 0.75rem;
     padding: 1rem;
     border-bottom: 1px solid var(--color-frame);
-    background: linear-gradient(180deg, rgba(17, 25, 36, 0.92), rgba(10, 15, 24, 0.85));
+    background: linear-gradient(180deg, var(--color-audit-header-bg-top), var(--color-audit-header-bg-bottom));
   }
 
   .audit-log__title {
@@ -918,7 +918,7 @@
   display: flex;
   flex-direction: column;
   min-height: 100%;
-  background: linear-gradient(180deg, rgba(12, 18, 27, 0.96), rgba(7, 11, 18, 0.94));
+  background: linear-gradient(180deg, var(--color-spec-tree-bg-top), var(--color-spec-tree-bg-bottom));
 
   .specialization-tree-app__header {
     display: flex;
@@ -926,8 +926,8 @@
     justify-content: space-between;
     gap: 1rem;
     padding: 0.75rem 1rem;
-    border-bottom: 1px solid rgba(120, 169, 194, 0.22);
-    background: linear-gradient(180deg, rgba(16, 25, 37, 0.92), rgba(10, 16, 26, 0.88));
+    border-bottom: 1px solid var(--color-glow-22);
+    background: linear-gradient(180deg, var(--color-spec-header-bg-top), var(--color-spec-header-bg-bottom));
   }
 
   .specialization-tree-app__title-block {
@@ -936,14 +936,14 @@
 
   .specialization-tree-app__title {
     margin: 0;
-    color: #e8f3fb;
+    color: var(--color-text-bright);
     font-family: var(--font-h1);
     font-size: var(--font-size-20);
   }
 
   .specialization-tree-app__subtitle {
     margin: 0.15rem 0 0;
-    color: #9fc0d6;
+    color: var(--color-holo-text-label);
     font-size: var(--font-size-11);
   }
 
@@ -959,16 +959,16 @@
     gap: 0.1rem;
     min-width: 120px;
     padding: 0.45rem 0.65rem;
-    border: 1px solid rgba(120, 169, 194, 0.18);
+    border: 1px solid var(--color-glow-18);
     border-radius: 8px;
-    background: rgba(18, 28, 42, 0.6);
-    color: #eef8ff;
+    background: var(--color-holo-deep-60);
+    color: var(--color-holo-text-bright);
     text-align: right;
   }
 
   .specialization-tree-app__meta-label,
   .specialization-tree-app__section-label {
-    color: #9fc0d6;
+    color: var(--color-holo-text-label);
     font-size: var(--font-size-10);
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -992,8 +992,8 @@
     gap: 1rem;
     min-height: 0;
     padding: 1rem;
-    border-right: 1px solid rgba(120, 169, 194, 0.18);
-    background: rgba(10, 17, 26, 0.72);
+    border-right: 1px solid var(--color-glow-18);
+    background: var(--color-holo-bg-72);
     overflow-y: auto;
   }
 
@@ -1010,9 +1010,9 @@
     display: grid;
     gap: 0.75rem;
     padding: 0.9rem;
-    border: 1px solid rgba(120, 169, 194, 0.18);
+    border: 1px solid var(--color-glow-18);
     border-radius: 10px;
-    background: rgba(18, 28, 42, 0.72);
+    background: var(--color-holo-deep-72);
   }
 
   .specialization-tree-app__summary-head {
@@ -1024,15 +1024,15 @@
 
   .specialization-tree-app__summary-title {
     margin: 0;
-    color: #eef8ff;
+    color: var(--color-holo-text-bright);
     font-size: var(--font-size-16);
   }
 
   .specialization-tree-app__summary-progress {
     padding: 0.2rem 0.45rem;
     border-radius: 999px;
-    background: rgba(99, 200, 166, 0.14);
-    color: #c9f3e2;
+    background: var(--color-success-15);
+    color: var(--color-success-text-light);
     font-size: var(--font-size-11);
     font-weight: 700;
   }
@@ -1050,11 +1050,11 @@
     margin: 0;
     padding: 0.5rem 0.6rem;
     border-radius: 8px;
-    background: rgba(8, 13, 21, 0.5);
+    background: var(--color-holo-dark-50);
 
     dt {
       margin: 0;
-      color: #9fc0d6;
+      color: var(--color-holo-text-label);
       font-size: var(--font-size-10);
       letter-spacing: 0.04em;
       text-transform: uppercase;
@@ -1062,7 +1062,7 @@
 
     dd {
       margin: 0;
-      color: #eef8ff;
+      color: var(--color-holo-text-bright);
       font-size: var(--font-size-14);
       font-weight: 600;
     }
@@ -1073,9 +1073,9 @@
     flex-direction: column;
     gap: 0.35rem;
     padding: 0.65rem 0.75rem;
-    border: 1px solid rgba(120, 169, 194, 0.18);
+    border: 1px solid var(--color-glow-18);
     border-radius: 8px;
-    background: rgba(18, 28, 42, 0.72);
+    background: var(--color-holo-deep-72);
     transition:
       border-color 0.15s ease,
       background 0.15s ease,
@@ -1083,17 +1083,17 @@
       transform 0.15s ease;
 
     &.is-available {
-      border-color: rgba(99, 200, 166, 0.38);
-      box-shadow: inset 0 0 0 1px rgba(99, 200, 166, 0.08);
+      border-color: var(--color-success-38);
+      box-shadow: inset 0 0 0 1px var(--color-success-10);
       cursor: pointer;
     }
 
     &.is-active {
-      border-color: rgba(120, 169, 194, 0.7);
-      background: rgba(28, 43, 62, 0.92);
+      border-color: var(--color-glow-70);
+      background: var(--color-holo-deep-92);
       box-shadow:
-        inset 0 0 0 1px rgba(120, 169, 194, 0.25),
-        0 0 0 1px rgba(120, 169, 194, 0.18);
+        inset 0 0 0 1px var(--color-glow-25),
+        0 0 0 1px var(--color-glow-18);
       transform: translateX(2px);
     }
 
@@ -1108,7 +1108,7 @@
         left: 0;
         width: 3px;
         border-radius: 999px;
-        background: linear-gradient(180deg, #7dc8e7, #63c8a6);
+        background: linear-gradient(180deg, var(--color-spec-selected-bar-start), var(--color-spec-selected-bar-end));
       }
     }
   }
@@ -1121,12 +1121,12 @@
   }
 
   .specialization-tree-app__specialization-name {
-    color: #eff8ff;
+    color: var(--color-holo-text-bright);
     font-weight: 600;
   }
 
   .specialization-tree-app__specialization-state {
-    color: #9fc0d6;
+    color: var(--color-holo-text-label);
     font-size: var(--font-size-11);
     text-transform: uppercase;
     letter-spacing: 0.04em;
@@ -1146,16 +1146,16 @@
     display: grid;
     width: 100%;
     min-height: 100%;
-    border: 1px solid rgba(120, 169, 194, 0.18);
+    border: 1px solid var(--color-glow-18);
     border-radius: 10px;
-    background: radial-gradient(circle at top, rgba(24, 39, 58, 0.72), rgba(8, 13, 21, 0.94));
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+    background: radial-gradient(circle at top, var(--color-holo-layer-72), var(--color-holo-dark-94));
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03); // tokens-allow-raw
   }
 
   .specialization-tree-app__viewport {
     min-height: 420px;
     overflow: hidden;
-    background-image: radial-gradient(circle at 1px 1px, rgba(120, 169, 194, 0.06) 1px, transparent 0);
+    background-image: radial-gradient(circle at 1px 1px, var(--color-glow-07) 1px, transparent 0);
     background-size: 24px 24px;
   }
 
@@ -1173,15 +1173,15 @@
     max-width: 280px;
     padding: 0.6rem 0.7rem;
     padding-top: 1.2rem;
-    background: rgba(10, 17, 26, 0.95);
-    border: 1px solid rgba(120, 169, 194, 0.4);
+    background: var(--color-holo-bg-95);
+    border: 1px solid var(--color-glow-40);
     border-radius: 8px;
-    color: #d5e4f1;
+    color: var(--color-holo-text-soft);
     font-size: var(--font-size-12, 12px);
     line-height: 1.5;
     z-index: 10;
     pointer-events: auto;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5); // tokens-allow-raw
 
     &[hidden] {
       display: none;
@@ -1200,7 +1200,7 @@
     justify-content: center;
     border: none;
     background: transparent;
-    color: #9fc0d6;
+    color: var(--color-holo-text-label);
     cursor: pointer;
     opacity: 0.55;
     font-size: 14px;
@@ -1210,8 +1210,8 @@
 
     &:hover {
       opacity: 1;
-      color: #eef8ff;
-      background: rgba(120, 169, 194, 0.12);
+      color: var(--color-holo-text-bright);
+      background: var(--color-glow-12);
     }
   }
 
@@ -1223,12 +1223,12 @@
     margin-bottom: 0.25rem;
     padding-bottom: 0.25rem;
     padding-right: 1.2rem;
-    border-bottom: 1px solid rgba(120, 169, 194, 0.18);
+    border-bottom: 1px solid var(--color-glow-18);
     min-width: 0;
   }
 
   .specialization-tree-app__detail-panel-talent-name {
-    color: #eef8ff;
+    color: var(--color-holo-text-bright);
     font-weight: 600;
     font-size: var(--font-size-13, 13px);
     flex: 0 1 auto;
@@ -1239,7 +1239,7 @@
   }
 
   .specialization-tree-app__detail-panel-cost {
-    color: #b9d9ff;
+    color: var(--color-holo-cost-text);
     font-size: var(--font-size-11, 11px);
     font-weight: 600;
     flex: none;
@@ -1247,26 +1247,26 @@
   }
 
   .specialization-tree-app__detail-panel-type {
-    color: #9fc0d6;
+    color: var(--color-holo-text-label);
     font-size: var(--font-size-10, 10px);
     flex: none;
     white-space: nowrap;
   }
 
   .specialization-tree-app__detail-panel-state {
-    color: #c8dcee;
+    color: var(--color-holo-text-mid);
     font-size: var(--font-size-11, 11px);
     margin-bottom: 0.2rem;
   }
 
   .specialization-tree-app__detail-panel-reason {
-    color: #f07a7a;
+    color: var(--color-danger-text);
     font-size: var(--font-size-11, 11px);
     margin-bottom: 0.2rem;
   }
 
   .specialization-tree-app__detail-panel-description {
-    color: #b8ccdf;
+    color: var(--color-holo-text-muted);
     font-size: var(--font-size-11, 11px);
     margin-bottom: 0.35rem;
     max-height: 80px;
@@ -1286,10 +1286,10 @@
     align-items: center;
     gap: 0.35rem;
     padding: 0.3rem 0.65rem;
-    background: rgba(99, 200, 166, 0.14);
-    border: 1px solid rgba(99, 200, 166, 0.4);
+    background: var(--color-success-15);
+    border: 1px solid var(--color-success-40);
     border-radius: 6px;
-    color: #c9f3e2;
+    color: var(--color-success-text-light);
     font-size: var(--font-size-11, 11px);
     font-weight: 600;
     cursor: pointer;
@@ -1298,9 +1298,9 @@
       border-color 0.15s;
 
     &:hover {
-      background: rgba(99, 200, 166, 0.25);
-      border-color: rgba(99, 200, 166, 0.7);
-      color: #e8fff5;
+      background: var(--color-success-25);
+      border-color: var(--color-success-70);
+      color: var(--color-success-text-hover);
     }
 
     &[hidden] {
@@ -1319,8 +1319,8 @@
     align-items: center;
     gap: 0.6rem;
     padding: 0.35rem 0.65rem;
-    background: rgba(10, 17, 26, 0.82);
-    border: 1px solid rgba(120, 169, 194, 0.14);
+    background: var(--color-holo-bg-82);
+    border: 1px solid var(--color-glow-14);
     border-radius: 6px;
     pointer-events: none;
     backdrop-filter: blur(2px);
@@ -1328,7 +1328,7 @@
   }
 
   .specialization-tree-app__legend-title {
-    color: #9fc0d6;
+    color: var(--color-holo-text-label);
     font-size: var(--font-size-10, 10px);
     font-weight: 600;
     letter-spacing: 0.06em;
@@ -1347,7 +1347,7 @@
     display: inline-flex;
     align-items: center;
     gap: 0.25rem;
-    color: #c8dcee;
+    color: var(--color-holo-text-mid);
     font-size: var(--font-size-10, 10px);
     line-height: 1;
     pointer-events: auto;
@@ -1368,23 +1368,23 @@
 
   /* Swatch colours matched to the PIXI node-state visual palette */
   .specialization-tree-app__legend-swatch[data-state='purchased'] {
-    background: #5f85ad;
-    box-shadow: 0 0 0 1px rgba(149, 201, 255, 0.45);
+    background: var(--color-legend-swatch-purchased);
+    box-shadow: 0 0 0 1px var(--color-legend-swatch-purchased-ring);
   }
 
   .specialization-tree-app__legend-swatch[data-state='available'] {
-    background: #355a84;
-    box-shadow: 0 0 0 1px rgba(140, 184, 232, 0.45);
+    background: var(--color-legend-swatch-available);
+    box-shadow: 0 0 0 1px var(--color-legend-swatch-available-ring);
   }
 
   .specialization-tree-app__legend-swatch[data-state='locked'] {
-    background: #4a4a4a;
-    box-shadow: 0 0 0 1px rgba(122, 122, 122, 0.3);
+    background: var(--color-legend-swatch-locked);
+    box-shadow: 0 0 0 1px var(--color-legend-swatch-locked-ring);
   }
 
   .specialization-tree-app__legend-swatch[data-state='invalid'] {
-    background: #7c4e5a;
-    box-shadow: 0 0 0 1px rgba(180, 111, 130, 0.35);
+    background: var(--color-legend-swatch-invalid);
+    box-shadow: 0 0 0 1px var(--color-legend-swatch-invalid-ring);
   }
 
   .specialization-tree-app__viewport-toolbar {
@@ -1406,10 +1406,10 @@
     align-items: center;
     gap: 0.35rem;
     padding: 0.35rem 0.65rem;
-    background: rgba(10, 17, 26, 0.85);
-    border: 1px solid rgba(120, 169, 194, 0.3);
+    background: var(--color-holo-bg-85);
+    border: 1px solid var(--color-glow-30);
     border-radius: 6px;
-    color: #c8dcee;
+    color: var(--color-holo-text-mid);
     font-size: var(--font-size-11, 11px);
     cursor: pointer;
     transition:
@@ -1417,9 +1417,9 @@
       border-color 0.15s;
 
     &:hover {
-      background: rgba(24, 39, 58, 0.9);
-      border-color: rgba(120, 169, 194, 0.6);
-      color: #eef8ff;
+      background: var(--color-holo-layer-90);
+      border-color: var(--color-glow-60);
+      color: var(--color-holo-text-bright);
     }
   }
 
@@ -1428,11 +1428,11 @@
     place-items: center;
     padding: 1.5rem;
     text-align: center;
-    color: #d5e4f1;
+    color: var(--color-holo-text-soft);
 
     h3 {
       margin: 0 0 0.4rem;
-      color: #eef8ff;
+      color: var(--color-holo-text-bright);
       font-family: var(--font-h1);
       font-size: var(--font-size-18);
     }
@@ -1440,7 +1440,7 @@
     p {
       max-width: 40rem;
       margin: 0;
-      color: #9fc0d6;
+      color: var(--color-holo-text-label);
     }
   }
 
@@ -1460,7 +1460,7 @@
 
     .specialization-tree-app__sidebar {
       border-right: 0;
-      border-bottom: 1px solid rgba(120, 169, 194, 0.18);
+      border-bottom: 1px solid var(--color-glow-18);
     }
 
     .specialization-tree-app__summary-stats {
