@@ -1,23 +1,11 @@
 import { logger } from '../utils/logger.mjs'
+import { AUDIT_LOG_FAMILIES, getAuditLogFamilyFromType, getAuditLogTypeLabelKey, buildAuditLogDescriptionFromRegistry } from '../lib/audit/taxonomy.mjs'
 
 const { api } = foundry.applications
 
 const AUDIT_LOG_PATH = 'flags.swerpg.logs'
 
 const CSV_COLUMNS = Object.freeze(['timestamp', 'date', 'userName', 'type', 'typeLabel', 'description', 'xpDelta', 'creditDelta', 'actorName', 'playerName'])
-
-const AUDIT_LOG_FAMILIES = Object.freeze({
-  all: 'all',
-  skills: 'skills',
-  talents: 'talents',
-  xp: 'xp',
-  characteristics: 'characteristics',
-  details: 'details',
-  advancement: 'advancement',
-  purchases: 'purchases',
-  sales: 'sales',
-  other: 'other',
-})
 
 const AUDIT_LOG_FILTER_ORDER = Object.freeze([
   AUDIT_LOG_FAMILIES.all,
@@ -145,29 +133,6 @@ export function getAuditLogVariantGlyph(variant) {
   return AUDIT_LOG_VARIANT_GLYPHS[variant] ?? AUDIT_LOG_VARIANT_GLYPHS.change
 }
 
-const AUDIT_LOG_TYPE_LABELS = Object.freeze({
-  'skill.train': 'SWERPG.AUDIT_LOG.TYPE.SKILL_TRAIN',
-  'skill.forget': 'SWERPG.AUDIT_LOG.TYPE.SKILL_FORGET',
-  'characteristic.increase': 'SWERPG.AUDIT_LOG.TYPE.CHARACTERISTIC_INCREASE',
-  'xp.spend': 'SWERPG.AUDIT_LOG.TYPE.XP_SPEND',
-  'xp.refund': 'SWERPG.AUDIT_LOG.TYPE.XP_REFUND',
-  'xp.grant': 'SWERPG.AUDIT_LOG.TYPE.XP_GRANT',
-  'xp.remove': 'SWERPG.AUDIT_LOG.TYPE.XP_REMOVE',
-  'species.set': 'SWERPG.AUDIT_LOG.TYPE.SPECIES_SET',
-  'career.set': 'SWERPG.AUDIT_LOG.TYPE.CAREER_SET',
-  'specialization.add': 'SWERPG.AUDIT_LOG.TYPE.SPECIALIZATION_ADD',
-  'specialization.remove': 'SWERPG.AUDIT_LOG.TYPE.SPECIALIZATION_REMOVE',
-  'talent.purchase': 'SWERPG.AUDIT_LOG.TYPE.TALENT_PURCHASE',
-  'talent-node-purchase': 'SWERPG.AUDIT_LOG.TYPE.TALENT_NODE_PURCHASE',
-  'talent-node-purchase-succeeded': 'SWERPG.AUDIT_LOG.TYPE.TALENT_NODE_PURCHASE_SUCCEEDED',
-  'talent-node-purchase-failed': 'SWERPG.AUDIT_LOG.TYPE.TALENT_NODE_PURCHASE_FAILED',
-  'talent-node-forget-succeeded': 'SWERPG.AUDIT_LOG.TYPE.TALENT_NODE_FORGET_SUCCEEDED',
-  'talent-node-forget-failed': 'SWERPG.AUDIT_LOG.TYPE.TALENT_NODE_FORGET_FAILED',
-  'advancement.level': 'SWERPG.AUDIT_LOG.TYPE.ADVANCEMENT_LEVEL',
-  'item.purchase': 'SWERPG.AUDIT_LOG.TYPE.ITEM_PURCHASE',
-  'item.sale': 'SWERPG.AUDIT_LOG.TYPE.ITEM_SALE',
-})
-
 /**
  * Determine whether the current user may view a character audit log.
  * @param {Actor|object|null} actor
@@ -182,42 +147,12 @@ export function canViewAuditLog(actor, user = game.user) {
 
 /**
  * Map a technical audit entry type to a business filter family.
+ * Delegates to the shared taxonomy registry.
  * @param {string} type
  * @returns {string}
  */
 export function getAuditLogFamily(type) {
-  switch (type) {
-    case 'skill.train':
-    case 'skill.forget':
-      return AUDIT_LOG_FAMILIES.skills
-    case 'talent.purchase':
-    case 'talent-node-purchase':
-    case 'talent-node-purchase-succeeded':
-    case 'talent-node-purchase-failed':
-    case 'talent-node-forget-succeeded':
-    case 'talent-node-forget-failed':
-      return AUDIT_LOG_FAMILIES.talents
-    case 'xp.spend':
-    case 'xp.refund':
-    case 'xp.grant':
-    case 'xp.remove':
-      return AUDIT_LOG_FAMILIES.xp
-    case 'characteristic.increase':
-      return AUDIT_LOG_FAMILIES.characteristics
-    case 'species.set':
-    case 'career.set':
-    case 'specialization.add':
-    case 'specialization.remove':
-      return AUDIT_LOG_FAMILIES.details
-    case 'advancement.level':
-      return AUDIT_LOG_FAMILIES.advancement
-    case 'item.purchase':
-      return AUDIT_LOG_FAMILIES.purchases
-    case 'item.sale':
-      return AUDIT_LOG_FAMILIES.sales
-    default:
-      return AUDIT_LOG_FAMILIES.other
-  }
+  return getAuditLogFamilyFromType(type)
 }
 
 /**
@@ -393,149 +328,25 @@ function formatAuditLogCreditDelta(creditDelta) {
 
 /**
  * Return the localized label for the given audit entry type, falling back to the UNKNOWN key.
+ * Delegates to the shared taxonomy registry.
  * @param {string} type
  */
 function getAuditLogTypeLabel(type) {
-  const key = AUDIT_LOG_TYPE_LABELS[type] ?? 'SWERPG.AUDIT_LOG.TYPE.UNKNOWN'
-  return game.i18n.localize(key)
-}
-
-/**
- * Return the display name for a value, localizing the fallback key when the value is absent or empty.
- * @param {*} value
- * @param {string} fallbackKey
- */
-function getAuditLogName(value, fallbackKey = 'SWERPG.AUDIT_LOG.UNKNOWN_VALUE') {
-  if (value === null || value === undefined || value === '') return game.i18n.localize(fallbackKey)
-  return value
-}
-
-/**
- * Resolve a localized characteristic label from its technical identifier.
- * Falls back to the localized UNKNOWN_VALUE key when the id is absent or unrecognized.
- * @param {string|null|undefined} characteristicId
- * @returns {string}
- */
-function getCharacteristicLabel(characteristicId) {
-  if (!characteristicId) return game.i18n.localize('SWERPG.AUDIT_LOG.UNKNOWN_VALUE')
-  const characteristic = game.system.config?.CHARACTERISTICS?.[characteristicId]
-  if (!characteristic?.label) return game.i18n.localize('SWERPG.AUDIT_LOG.UNKNOWN_VALUE')
-  return game.i18n.localize(characteristic.label)
+  return game.i18n.localize(getAuditLogTypeLabelKey(type))
 }
 
 /**
  * Build a localized description for a single audit log entry.
+ * Delegates to the shared taxonomy registry for all known types.
  * @param {object} entry
  * @returns {string}
  */
 export function buildAuditLogDescription(entry) {
-  const data = entry?.data ?? {}
-
-  switch (entry?.type) {
-    case 'skill.train':
-      return game.i18n.format('SWERPG.AUDIT_LOG.DESCRIPTION.SKILL_TRAIN', {
-        skill: getAuditLogName(data.skillName, 'SWERPG.AUDIT_LOG.UNKNOWN_SKILL'),
-        oldRank: data.oldRank ?? 0,
-        newRank: data.newRank ?? 0,
-      })
-    case 'skill.forget':
-      return game.i18n.format('SWERPG.AUDIT_LOG.DESCRIPTION.SKILL_FORGET', {
-        skill: getAuditLogName(data.skillName, 'SWERPG.AUDIT_LOG.UNKNOWN_SKILL'),
-        oldRank: data.oldRank ?? 0,
-        newRank: data.newRank ?? 0,
-      })
-    case 'characteristic.increase':
-      return game.i18n.format('SWERPG.AUDIT_LOG.DESCRIPTION.CHARACTERISTIC_INCREASE', {
-        characteristic: getCharacteristicLabel(data.characteristicId),
-        oldValue: data.oldValue ?? 0,
-        newValue: data.newValue ?? 0,
-      })
-    case 'xp.spend':
-      return game.i18n.format('SWERPG.AUDIT_LOG.DESCRIPTION.XP_SPEND', {
-        amount: data.amount ?? Math.abs(entry.xpDelta ?? 0),
-      })
-    case 'xp.refund':
-      return game.i18n.format('SWERPG.AUDIT_LOG.DESCRIPTION.XP_REFUND', {
-        amount: data.amount ?? Math.abs(entry.xpDelta ?? 0),
-      })
-    case 'xp.grant':
-      return game.i18n.format('SWERPG.AUDIT_LOG.DESCRIPTION.XP_GRANT', {
-        amount: data.amount ?? entry.xpDelta ?? 0,
-      })
-    case 'xp.remove':
-      return game.i18n.format('SWERPG.AUDIT_LOG.DESCRIPTION.XP_REMOVE', {
-        amount: data.amount ?? Math.abs(entry.xpDelta ?? 0),
-      })
-    case 'species.set':
-      return game.i18n.format('SWERPG.AUDIT_LOG.DESCRIPTION.SPECIES_SET', {
-        oldSpecies: getAuditLogName(data.oldSpecies, 'SWERPG.AUDIT_LOG.NONE'),
-        newSpecies: getAuditLogName(data.newSpecies, 'SWERPG.AUDIT_LOG.NONE'),
-      })
-    case 'career.set':
-      return game.i18n.format('SWERPG.AUDIT_LOG.DESCRIPTION.CAREER_SET', {
-        oldCareer: getAuditLogName(data.oldCareer, 'SWERPG.AUDIT_LOG.NONE'),
-        newCareer: getAuditLogName(data.newCareer, 'SWERPG.AUDIT_LOG.NONE'),
-      })
-    case 'specialization.add':
-      return game.i18n.format('SWERPG.AUDIT_LOG.DESCRIPTION.SPECIALIZATION_ADD', {
-        specialization: getAuditLogName(data.specializationName ?? data.specializationId, 'SWERPG.AUDIT_LOG.UNKNOWN_SPECIALIZATION'),
-      })
-    case 'specialization.remove':
-      return game.i18n.format('SWERPG.AUDIT_LOG.DESCRIPTION.SPECIALIZATION_REMOVE', {
-        specialization: getAuditLogName(data.specializationName ?? data.specializationId, 'SWERPG.AUDIT_LOG.UNKNOWN_SPECIALIZATION'),
-      })
-    case 'talent.purchase':
-      return game.i18n.format('SWERPG.AUDIT_LOG.DESCRIPTION.TALENT_PURCHASE', {
-        talent: getAuditLogName(data.talentName, 'SWERPG.AUDIT_LOG.UNKNOWN_TALENT'),
-        ranks: data.ranks ?? 1,
-      })
-    case 'talent-node-purchase':
-    case 'talent-node-purchase-succeeded':
-      return game.i18n.format('SWERPG.AUDIT_LOG.DESCRIPTION.TALENT_NODE_PURCHASE', {
-        talentId: getAuditLogName(data.talentId, 'SWERPG.AUDIT_LOG.UNKNOWN_VALUE'),
-        specializationId: getAuditLogName(data.specializationId, 'SWERPG.AUDIT_LOG.UNKNOWN_VALUE'),
-        cost: data.cost ?? 0,
-      })
-    case 'talent-node-purchase-failed':
-      return game.i18n.format('SWERPG.AUDIT_LOG.DESCRIPTION.TALENT_NODE_PURCHASE_FAILED', {
-        nodeId: getAuditLogName(data.nodeId, 'SWERPG.AUDIT_LOG.UNKNOWN_VALUE'),
-        reasonCode: getAuditLogName(data.reasonCode, 'SWERPG.AUDIT_LOG.UNKNOWN_VALUE'),
-      })
-    case 'talent-node-forget-succeeded':
-      return game.i18n.format('SWERPG.AUDIT_LOG.DESCRIPTION.TALENT_NODE_FORGET', {
-        talentId: getAuditLogName(data.talentId, 'SWERPG.AUDIT_LOG.UNKNOWN_VALUE'),
-        specializationId: getAuditLogName(data.specializationId, 'SWERPG.AUDIT_LOG.UNKNOWN_VALUE'),
-        cost: data.cost ?? 0,
-      })
-    case 'talent-node-forget-failed':
-      return game.i18n.format('SWERPG.AUDIT_LOG.DESCRIPTION.TALENT_NODE_FORGET_FAILED', {
-        nodeId: getAuditLogName(data.nodeId, 'SWERPG.AUDIT_LOG.UNKNOWN_VALUE'),
-        reasonCode: getAuditLogName(data.reasonCode, 'SWERPG.AUDIT_LOG.UNKNOWN_VALUE'),
-      })
-    case 'advancement.level':
-      return game.i18n.format('SWERPG.AUDIT_LOG.DESCRIPTION.ADVANCEMENT_LEVEL', {
-        oldLevel: data.oldLevel ?? 0,
-        newLevel: data.newLevel ?? 0,
-      })
-    case 'item.purchase':
-      return game.i18n.format('SWERPG.AUDIT_LOG.DESCRIPTION.ITEM_PURCHASE', {
-        itemName: getAuditLogName(data.itemName, 'SWERPG.AUDIT_LOG.UNKNOWN_ITEM'),
-        itemType: data.itemType ?? '',
-        price: data.price ?? 0,
-        quantity: data.quantity ?? 1,
-      })
-    case 'item.sale':
-      return game.i18n.format('SWERPG.AUDIT_LOG.DESCRIPTION.ITEM_SALE', {
-        itemName: getAuditLogName(data.itemName, 'SWERPG.AUDIT_LOG.UNKNOWN_ITEM'),
-        itemType: data.itemType ?? '',
-        resalePrice: data.resalePrice ?? 0,
-        fraction: Math.round((data.fraction ?? 0) * 100),
-      })
-    default:
-      return game.i18n.format('SWERPG.AUDIT_LOG.DESCRIPTION.UNKNOWN', {
-        type: getAuditLogName(entry?.type, 'SWERPG.AUDIT_LOG.UNKNOWN_VALUE'),
-      })
-  }
+  return buildAuditLogDescriptionFromRegistry(entry, {
+    localize: (key) => game.i18n.localize(key),
+    format: (key, data) => game.i18n.format(key, data),
+    characteristics: game.system?.config?.CHARACTERISTICS ?? null,
+  })
 }
 
 /**
