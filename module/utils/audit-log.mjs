@@ -834,17 +834,22 @@ const CHAT_HANDLERS = {
     context.variant = 'add'
     context.metaLeft = game.i18n.format('SWERPG.AUDIT_LOG.META.PRICE', { price: data.price ?? 0 })
 
-    // Enrich with commerce outcome narrative when present (from availability check narrative dice)
+    // Enrich with commerce outcome narrative when present (from availability check narrative dice).
+    // AppliedModifier is routed to description to avoid overwriting the credits-remaining slot (metaRight).
     const outcome = entry.outcome ?? null
     if (outcome) {
+      const descriptionParts = []
       if (outcome.priceModifier !== 0) {
         const modifierPct = Math.round(outcome.priceModifier * 100)
         const modifierStr = modifierPct > 0 ? `+${modifierPct}%` : `${modifierPct}%`
-        context.metaRight = game.i18n.format('MARKET.CommerceOutcome.AppliedModifier', { modifier: modifierStr })
+        descriptionParts.push(game.i18n.format('MARKET.CommerceOutcome.AppliedModifier', { modifier: modifierStr }))
       }
       if (outcome.narrativeKeys?.length > 0) {
         const narratives = outcome.narrativeKeys.map((k) => game.i18n.localize(k)).join('; ')
-        context.description = narratives
+        descriptionParts.push(narratives)
+      }
+      if (descriptionParts.length > 0) {
+        context.description = descriptionParts.join(' — ')
       }
     }
 

@@ -1608,6 +1608,83 @@ describe('sendChatForAuditEntries', () => {
     expect(ctx.metaRight).toBeNull()
     expect(ctx.hasMeta).toBe(true)
   })
+
+  test('item.purchase with priceModifier: description carries the modifier and metaRight still shows CREDITS_REMAINING', async () => {
+    // Regression test for AL6 — AppliedModifier must not overwrite creditsRemaining slot (metaRight)
+    const { sendChatForAuditEntries } = await import('../../module/utils/audit-log.mjs')
+    const actor = makeActor()
+    const entry = makeEntry({
+      type: 'item.purchase',
+      data: { itemName: 'Blaster Pistol', itemType: 'weapon', price: 120, quantity: 1 },
+      xpDelta: 0,
+      snapshot: { creditsBefore: 500, creditsAfter: 380 },
+      outcome: { priceModifier: 0.2, narrativeKeys: [] },
+    })
+
+    await sendChatForAuditEntries(actor, [entry])
+
+    const ctx = globalThis.foundry.applications.handlebars.renderTemplate.mock.calls[0][1]
+    expect(ctx.metaRight).toBe('SWERPG.AUDIT_LOG.META.CREDITS_REMAINING')
+    expect(ctx.description).toBe('MARKET.CommerceOutcome.AppliedModifier')
+    expect(ctx.metaLeft).toBe('SWERPG.AUDIT_LOG.META.PRICE')
+    expect(ctx.hasMeta).toBe(true)
+  })
+
+  test('item.purchase with priceModifier and narrativeKeys: both appear in description', async () => {
+    const { sendChatForAuditEntries } = await import('../../module/utils/audit-log.mjs')
+    const actor = makeActor()
+    const entry = makeEntry({
+      type: 'item.purchase',
+      data: { itemName: 'Thermal Detonator', itemType: 'gear', price: 200, quantity: 1 },
+      xpDelta: 0,
+      snapshot: { creditsBefore: 600, creditsAfter: 400 },
+      outcome: { priceModifier: -0.1, narrativeKeys: ['MARKET.Narrative.StreetContacts'] },
+    })
+
+    await sendChatForAuditEntries(actor, [entry])
+
+    const ctx = globalThis.foundry.applications.handlebars.renderTemplate.mock.calls[0][1]
+    expect(ctx.metaRight).toBe('SWERPG.AUDIT_LOG.META.CREDITS_REMAINING')
+    expect(ctx.description).toContain('MARKET.CommerceOutcome.AppliedModifier')
+    expect(ctx.description).toContain('MARKET.Narrative.StreetContacts')
+    expect(ctx.metaLeft).toBe('SWERPG.AUDIT_LOG.META.PRICE')
+  })
+
+  test('item.purchase with zero priceModifier: description stays null when no narrativeKeys', async () => {
+    const { sendChatForAuditEntries } = await import('../../module/utils/audit-log.mjs')
+    const actor = makeActor()
+    const entry = makeEntry({
+      type: 'item.purchase',
+      data: { itemName: 'Blaster Pistol', itemType: 'weapon', price: 100, quantity: 1 },
+      xpDelta: 0,
+      snapshot: { creditsBefore: 400, creditsAfter: 300 },
+      outcome: { priceModifier: 0, narrativeKeys: [] },
+    })
+
+    await sendChatForAuditEntries(actor, [entry])
+
+    const ctx = globalThis.foundry.applications.handlebars.renderTemplate.mock.calls[0][1]
+    expect(ctx.description).toBeNull()
+    expect(ctx.metaRight).toBe('SWERPG.AUDIT_LOG.META.CREDITS_REMAINING')
+  })
+
+  test('item.purchase with null outcome: description stays null, metaRight shows CREDITS_REMAINING', async () => {
+    const { sendChatForAuditEntries } = await import('../../module/utils/audit-log.mjs')
+    const actor = makeActor()
+    const entry = makeEntry({
+      type: 'item.purchase',
+      data: { itemName: 'Blaster Pistol', itemType: 'weapon', price: 100, quantity: 1 },
+      xpDelta: 0,
+      snapshot: { creditsBefore: 400, creditsAfter: 300 },
+      outcome: null,
+    })
+
+    await sendChatForAuditEntries(actor, [entry])
+
+    const ctx = globalThis.foundry.applications.handlebars.renderTemplate.mock.calls[0][1]
+    expect(ctx.description).toBeNull()
+    expect(ctx.metaRight).toBe('SWERPG.AUDIT_LOG.META.CREDITS_REMAINING')
+  })
 })
 
 /* ============================================ */

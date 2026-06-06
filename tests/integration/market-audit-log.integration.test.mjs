@@ -275,6 +275,128 @@ describe('Scénario 1 — happy path complet', () => {
 })
 
 /* ============================================================= */
+/*  Scénario 1b : AL6 — priceModifier ne doit pas écraser        */
+/*  creditsRemaining dans le view-model chat                     */
+/* ============================================================= */
+
+describe("Scénario 1b — AL6 : AppliedModifier n'écrase pas creditsRemaining", () => {
+  it('item.purchase avec priceModifier et creditsAfter : description porte le modificateur et metaRight porte CREDITS_REMAINING', async () => {
+    const { sendChatForAuditEntries } = await import('../../module/utils/audit-log.mjs')
+
+    const actor = makeActor()
+    const entry = {
+      id: 'purchase-xyz',
+      schemaVersion: 1,
+      type: 'item.purchase',
+      timestamp: 1234567890,
+      userId: 'user-123',
+      userName: 'GameMaster',
+      data: {
+        itemName: 'Blaster Pistol',
+        itemType: 'weapon',
+        price: 120,
+        quantity: 1,
+        itemId: 'item-uuid-abc',
+      },
+      xpDelta: 0,
+      creditDelta: -120,
+      snapshot: {
+        creditsBefore: 400,
+        creditsAfter: 280,
+        creditsDelta: 120,
+      },
+      outcome: {
+        priceModifier: 0.2,
+        narrativeKeys: [],
+      },
+    }
+
+    await sendChatForAuditEntries(actor, [entry])
+
+    const ctx = globalThis.foundry.applications.handlebars.renderTemplate.mock.calls[0][1]
+    // metaRight must remain CREDITS_REMAINING — not overwritten by AppliedModifier
+    expect(ctx.metaRight).toBe('SWERPG.AUDIT_LOG.META.CREDITS_REMAINING')
+    // AppliedModifier appears in description, not in metaRight
+    expect(ctx.description).toBe('MARKET.CommerceOutcome.AppliedModifier')
+    expect(ctx.metaLeft).toBe('SWERPG.AUDIT_LOG.META.PRICE')
+    expect(ctx.hasMeta).toBe(true)
+  })
+
+  it('item.purchase avec priceModifier et narrativeKeys : les deux apparaissent dans description', async () => {
+    const { sendChatForAuditEntries } = await import('../../module/utils/audit-log.mjs')
+
+    const actor = makeActor()
+    const entry = {
+      id: 'purchase-yyy',
+      schemaVersion: 1,
+      type: 'item.purchase',
+      timestamp: 1234567890,
+      userId: 'user-123',
+      userName: 'GameMaster',
+      data: {
+        itemName: 'Thermal Detonator',
+        itemType: 'gear',
+        price: 200,
+        quantity: 1,
+        itemId: 'item-thermo-001',
+      },
+      xpDelta: 0,
+      creditDelta: -180,
+      snapshot: {
+        creditsBefore: 500,
+        creditsAfter: 320,
+        creditsDelta: 180,
+      },
+      outcome: {
+        priceModifier: -0.1,
+        narrativeKeys: ['MARKET.Narrative.StreetContacts'],
+      },
+    }
+
+    await sendChatForAuditEntries(actor, [entry])
+
+    const ctx = globalThis.foundry.applications.handlebars.renderTemplate.mock.calls[0][1]
+    expect(ctx.metaRight).toBe('SWERPG.AUDIT_LOG.META.CREDITS_REMAINING')
+    expect(ctx.description).toContain('MARKET.CommerceOutcome.AppliedModifier')
+    expect(ctx.description).toContain('MARKET.Narrative.StreetContacts')
+    expect(ctx.metaLeft).toBe('SWERPG.AUDIT_LOG.META.PRICE')
+  })
+
+  it('item.purchase sans outcome : description reste null et metaRight porte CREDITS_REMAINING', async () => {
+    const { sendChatForAuditEntries } = await import('../../module/utils/audit-log.mjs')
+
+    const actor = makeActor()
+    const entry = {
+      id: 'purchase-no-outcome',
+      schemaVersion: 1,
+      type: 'item.purchase',
+      timestamp: 1234567890,
+      userId: 'user-123',
+      userName: 'GameMaster',
+      data: {
+        itemName: 'Blaster Pistol',
+        itemType: 'weapon',
+        price: 100,
+        quantity: 1,
+      },
+      xpDelta: 0,
+      creditDelta: -100,
+      snapshot: {
+        creditsBefore: 400,
+        creditsAfter: 300,
+        creditsDelta: 100,
+      },
+    }
+
+    await sendChatForAuditEntries(actor, [entry])
+
+    const ctx = globalThis.foundry.applications.handlebars.renderTemplate.mock.calls[0][1]
+    expect(ctx.metaRight).toBe('SWERPG.AUDIT_LOG.META.CREDITS_REMAINING')
+    expect(ctx.description).toBeNull()
+  })
+})
+
+/* ============================================================= */
 /*  Scénario 2 : Résilience audit                                */
 /*  recordItemPurchase non-blocking si actor.update rejette      */
 /* ============================================================= */
