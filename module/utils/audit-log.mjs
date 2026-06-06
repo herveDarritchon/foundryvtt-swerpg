@@ -1,6 +1,6 @@
 import { logger } from './logger.mjs'
 import { composeEntries, makeEntry, captureSnapshot } from './audit-diff.mjs'
-import { buildAuditLogDescription, getAuditLogVariantGlyph } from '../applications/character-audit-log.mjs'
+import { buildAuditLogDescriptionFromRegistry, getAuditLogTypeLabelKey } from '../lib/audit/taxonomy.mjs'
 
 /* -------------------------------------------- */
 /*  Constantes                                  */
@@ -616,6 +616,256 @@ async function recordItemSale(
 /*  Émission de messages chat depuis l'audit    */
 /* -------------------------------------------- */
 
+/* -------------------------------------------- */
+/*  Chat context helpers                        */
+/* -------------------------------------------- */
+
+/**
+ * Canonical glyph (FontAwesome) for each audit log variant.
+ * Local copy so `utils/audit-log.mjs` has no dependency on `applications/`.
+ */
+const CHAT_VARIANT_GLYPHS = Object.freeze({
+  add: 'fa-solid fa-plus',
+  remove: 'fa-solid fa-minus',
+  gain: 'fa-solid fa-arrow-down',
+  change: 'fa-solid fa-arrows-rotate',
+  fail: 'fa-solid fa-xmark',
+})
+
+/**
+ * Return the glyph CSS class for a given audit log variant.
+ * @param {string} variant
+ * @returns {string}
+ */
+function getChatVariantGlyph(variant) {
+  return CHAT_VARIANT_GLYPHS[variant] ?? CHAT_VARIANT_GLYPHS.change
+}
+
+/**
+ * Build the i18n helpers object for the taxonomy registry using game globals.
+ * @returns {import('../lib/audit/taxonomy.mjs').I18nHelpers}
+ */
+function buildI18nHelpers() {
+  return {
+    localize: (key) => game.i18n.localize(key),
+    format: (key, data) => game.i18n.format(key, data),
+    characteristics: game.system?.config?.CHARACTERISTICS ?? null,
+  }
+}
+
+/* -------------------------------------------- */
+/*  Chat context handlers per type              */
+/* -------------------------------------------- */
+
+/**
+ * @typedef {object} ChatContext
+ * @property {string}      actorImg
+ * @property {string}      actorName
+ * @property {string}      eventLabel
+ * @property {string|null} previousValue
+ * @property {string}      nextValue
+ * @property {string|null} description
+ * @property {string|null} metaLeft
+ * @property {string|null} metaRight
+ * @property {boolean}     hasMeta
+ * @property {string}      variant
+ * @property {string}      variantGlyph
+ */
+
+/**
+ * Map of per-type chat context handlers.
+ * Each handler receives (context, entry, data, snapshot) and mutates context in place.
+ * All type-specific logic lives here — no fallback switch required.
+ *
+ * @type {Record<string, (context: ChatContext, entry: object, data: object, snapshot: object) => void>}
+ */
+const CHAT_HANDLERS = {
+  'skill.train'(context, entry, data) {
+    const isFree = data.isFree === true
+    context.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.SKILL_TRAIN')
+    context.previousValue = String(data.oldRank)
+    context.nextValue = String(data.newRank)
+    context.variant = isFree ? 'gain' : 'add'
+    context.metaLeft = isFree ? game.i18n.localize('SKILL.CHAT.FREE_COST') : game.i18n.format('SKILL.CHAT.COST', { cost: data.cost })
+  },
+
+  'skill.forget'(context, entry, data) {
+    context.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.SKILL_FORGET')
+    context.previousValue = String(data.oldRank)
+    context.nextValue = String(data.newRank)
+    context.variant = 'remove'
+    context.metaLeft = game.i18n.format('SKILL.CHAT.REFUND', { cost: data.cost })
+  },
+
+  'characteristic.increase'(context, entry, data) {
+    context.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.CHARACTERISTIC_INCREASE')
+    context.previousValue = String(data.oldValue)
+    context.nextValue = String(data.newValue)
+    context.variant = 'add'
+    context.metaLeft = game.i18n.format('SKILL.CHAT.COST', { cost: data.cost })
+  },
+
+  'xp.spend'(context, entry, data) {
+    context.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.XP_SPEND')
+    context.nextValue = `-${data.amount} XP`
+    context.variant = 'remove'
+    context.metaLeft = game.i18n.format('SKILL.CHAT.COST', { cost: data.amount })
+  },
+
+  'xp.refund'(context, entry, data) {
+    context.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.XP_REFUND')
+    context.nextValue = `+${data.amount} XP`
+    context.variant = 'gain'
+    context.metaLeft = game.i18n.format('SKILL.CHAT.REFUND', { cost: data.amount })
+  },
+
+  'xp.grant'(context, entry, data) {
+    context.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.XP_GRANT')
+    context.nextValue = `+${data.amount} XP`
+    context.variant = 'gain'
+    context.metaLeft = game.i18n.format('SKILL.CHAT.REFUND', { cost: data.amount })
+  },
+
+  'xp.remove'(context, entry, data) {
+    context.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.XP_REMOVE')
+    context.nextValue = `-${data.amount} XP`
+    context.variant = 'remove'
+    context.metaLeft = game.i18n.format('SKILL.CHAT.COST', { cost: data.amount })
+  },
+
+  'species.set'(context, entry, data) {
+    context.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.SPECIES_SET')
+    const noneLabel = game.i18n.localize('SWERPG.AUDIT_LOG.NONE')
+    context.previousValue = data.oldSpecies ?? noneLabel
+    context.nextValue = data.newSpecies ?? noneLabel
+    context.variant = 'change'
+  },
+
+  'career.set'(context, entry, data) {
+    context.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.CAREER_SET')
+    const noneLabel = game.i18n.localize('SWERPG.AUDIT_LOG.NONE')
+    context.previousValue = data.oldCareer ?? noneLabel
+    context.nextValue = data.newCareer ?? noneLabel
+    context.variant = 'change'
+  },
+
+  'specialization.add'(context, entry, data) {
+    context.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.SPECIALIZATION_ADD')
+    context.nextValue = data.specializationName ?? data.specializationId ?? ''
+    context.variant = 'add'
+    if (data.cost) {
+      context.metaLeft = game.i18n.format('SKILL.CHAT.COST', { cost: data.cost })
+    }
+  },
+
+  'specialization.remove'(context, entry, data) {
+    context.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.SPECIALIZATION_REMOVE')
+    context.nextValue = data.specializationName ?? data.specializationId ?? ''
+    context.variant = 'remove'
+    if (data.cost) {
+      context.metaLeft = game.i18n.format('SKILL.CHAT.COST', { cost: data.cost })
+    }
+  },
+
+  'talent.purchase'(context, entry, data) {
+    context.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.TALENT_PURCHASE')
+    context.nextValue = data.talentName ?? data.talentId ?? ''
+    context.variant = 'add'
+    context.metaLeft = game.i18n.format('SKILL.CHAT.COST', { cost: data.cost })
+  },
+
+  'talent-node-purchase'(context, entry, data) {
+    context.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.TALENT_NODE_PURCHASE')
+    context.nextValue = data.talentId ?? data.nodeId ?? ''
+    context.variant = 'add'
+    if (data.cost) {
+      context.metaLeft = game.i18n.format('SKILL.CHAT.COST', { cost: data.cost })
+    }
+  },
+
+  'talent-node-purchase-succeeded'(context, entry, data) {
+    context.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.TALENT_NODE_PURCHASE_SUCCEEDED')
+    context.nextValue = data.talentId ?? data.nodeId ?? ''
+    context.variant = 'add'
+    if (data.cost) {
+      context.metaLeft = game.i18n.format('SKILL.CHAT.COST', { cost: data.cost })
+    }
+  },
+
+  'talent-node-purchase-failed'(context, entry, data) {
+    context.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.TALENT_NODE_PURCHASE_FAILED')
+    context.nextValue = data.nodeId ?? ''
+    context.description = game.i18n.format('SWERPG.AUDIT_LOG.DESCRIPTION.TALENT_NODE_PURCHASE_FAILED', {
+      reasonCode: data.reasonCode ?? '',
+      nodeId: data.nodeId ?? '',
+    })
+    context.variant = 'fail'
+  },
+
+  'talent-node-forget-succeeded'(context, entry, data) {
+    context.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.TALENT_NODE_FORGET_SUCCEEDED')
+    context.nextValue = data.talentId ?? data.nodeId ?? ''
+    context.variant = 'remove'
+    if (data.cost) {
+      context.metaLeft = game.i18n.format('SKILL.CHAT.REFUND', { cost: data.cost })
+    }
+  },
+
+  'talent-node-forget-failed'(context, entry, data) {
+    context.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.TALENT_NODE_FORGET_FAILED')
+    context.nextValue = data.nodeId ?? ''
+    context.description = game.i18n.format('SWERPG.AUDIT_LOG.DESCRIPTION.TALENT_NODE_FORGET_FAILED', {
+      reasonCode: data.reasonCode ?? '',
+      nodeId: data.nodeId ?? '',
+    })
+    context.variant = 'fail'
+  },
+
+  'advancement.level'(context, entry, data) {
+    context.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.ADVANCEMENT_LEVEL')
+    context.previousValue = String(data.oldLevel)
+    context.nextValue = String(data.newLevel)
+    context.variant = 'change'
+  },
+
+  'item.purchase'(context, entry, data, snapshot) {
+    context.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.ITEM_PURCHASE')
+    context.nextValue = `${data.itemName ?? ''} (${data.itemType ?? ''})`
+    context.variant = 'add'
+    context.metaLeft = game.i18n.format('SWERPG.AUDIT_LOG.META.PRICE', { price: data.price ?? 0 })
+
+    // Enrich with commerce outcome narrative when present (from availability check narrative dice)
+    const outcome = entry.outcome ?? null
+    if (outcome) {
+      if (outcome.priceModifier !== 0) {
+        const modifierPct = Math.round(outcome.priceModifier * 100)
+        const modifierStr = modifierPct > 0 ? `+${modifierPct}%` : `${modifierPct}%`
+        context.metaRight = game.i18n.format('MARKET.CommerceOutcome.AppliedModifier', { modifier: modifierStr })
+      }
+      if (outcome.narrativeKeys?.length > 0) {
+        const narratives = outcome.narrativeKeys.map((k) => game.i18n.localize(k)).join('; ')
+        context.description = narratives
+      }
+    }
+
+    if (snapshot.creditsAfter !== undefined && snapshot.creditsAfter !== null) {
+      context.metaRight = game.i18n.format('SWERPG.AUDIT_LOG.META.CREDITS_REMAINING', { credits: snapshot.creditsAfter })
+    }
+    context.hasMeta = true
+  },
+
+  'item.sale'(context, entry, data, snapshot) {
+    context.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.ITEM_SALE')
+    context.nextValue = `${data.itemName ?? ''} (${data.itemType ?? ''})`
+    context.variant = 'gain'
+    context.metaLeft = game.i18n.format('SWERPG.AUDIT_LOG.META.SOLD_FOR', { price: data.resalePrice ?? 0 })
+    if (snapshot.creditsAfter !== undefined && snapshot.creditsAfter !== null) {
+      context.metaRight = game.i18n.format('SWERPG.AUDIT_LOG.META.CREDITS_REMAINING', { credits: snapshot.creditsAfter })
+    }
+    context.hasMeta = true
+  },
+}
+
 /**
  * Build the template context for a chat message from a single audit entry.
  *
@@ -631,7 +881,7 @@ async function recordItemSale(
  *
  * @param {object} actor The actor document
  * @param {object} entry A single audit log entry
- * @returns {object} Context for audit-entry.hbs
+ * @returns {ChatContext} Context for audit-entry.hbs
  */
 function _buildChatContext(actor, entry) {
   const type = entry.type
@@ -652,162 +902,19 @@ function _buildChatContext(actor, entry) {
     variant: 'change',
   }
 
-  switch (type) {
-    case 'skill.train': {
-      const isFree = data.isFree === true
-      context.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.SKILL_TRAIN')
-      context.previousValue = String(data.oldRank)
-      context.nextValue = String(data.newRank)
-      context.variant = isFree ? 'gain' : 'add'
-      context.metaLeft = isFree ? game.i18n.localize('SKILL.CHAT.FREE_COST') : game.i18n.format('SKILL.CHAT.COST', { cost: data.cost })
-      break
-    }
-
-    case 'skill.forget': {
-      context.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.SKILL_FORGET')
-      context.previousValue = String(data.oldRank)
-      context.nextValue = String(data.newRank)
-      context.variant = 'remove'
-      context.metaLeft = game.i18n.format('SKILL.CHAT.REFUND', { cost: data.cost })
-      break
-    }
-
-    case 'characteristic.increase': {
-      context.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.CHARACTERISTIC_INCREASE')
-      context.previousValue = String(data.oldValue)
-      context.nextValue = String(data.newValue)
-      context.variant = 'add'
-      context.metaLeft = game.i18n.format('SKILL.CHAT.COST', { cost: data.cost })
-      break
-    }
-
-    case 'xp.spend':
-    case 'xp.refund':
-    case 'xp.grant':
-    case 'xp.remove': {
-      const isGain = type === 'xp.grant' || type === 'xp.refund'
-      context.eventLabel = game.i18n.localize(
-        `SWERPG.AUDIT_LOG.TYPE.${type === 'xp.spend' ? 'XP_SPEND' : type === 'xp.refund' ? 'XP_REFUND' : type === 'xp.grant' ? 'XP_GRANT' : 'XP_REMOVE'}`,
-      )
-      context.nextValue = isGain ? `+${data.amount} XP` : `-${data.amount} XP`
-      context.variant = isGain ? 'gain' : 'remove'
-      context.metaLeft = isGain ? game.i18n.format('SKILL.CHAT.REFUND', { cost: data.amount }) : game.i18n.format('SKILL.CHAT.COST', { cost: data.amount })
-      break
-    }
-
-    case 'species.set':
-    case 'career.set': {
-      const isSpecies = type === 'species.set'
-      context.eventLabel = game.i18n.localize(isSpecies ? 'SWERPG.AUDIT_LOG.TYPE.SPECIES_SET' : 'SWERPG.AUDIT_LOG.TYPE.CAREER_SET')
-      const noneLabel = game.i18n.localize('SWERPG.AUDIT_LOG.NONE')
-      const oldV = data.oldSpecies ?? data.oldCareer ?? null
-      const newV = data.newSpecies ?? data.newCareer ?? null
-      context.previousValue = oldV ?? noneLabel
-      context.nextValue = newV ?? noneLabel
-      context.variant = 'change'
-      break
-    }
-
-    case 'specialization.add':
-    case 'specialization.remove': {
-      const isAdd = type === 'specialization.add'
-      context.eventLabel = game.i18n.localize(isAdd ? 'SWERPG.AUDIT_LOG.TYPE.SPECIALIZATION_ADD' : 'SWERPG.AUDIT_LOG.TYPE.SPECIALIZATION_REMOVE')
-      context.nextValue = data.specializationName ?? data.specializationId ?? ''
-      context.variant = isAdd ? 'add' : 'remove'
-      if (data.cost) {
-        context.metaLeft = game.i18n.format('SKILL.CHAT.COST', { cost: data.cost })
-      }
-      break
-    }
-
-    case 'talent.purchase': {
-      context.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.TALENT_PURCHASE')
-      context.nextValue = data.talentName ?? data.talentId ?? ''
-      context.variant = 'add'
-      context.metaLeft = game.i18n.format('SKILL.CHAT.COST', { cost: data.cost })
-      break
-    }
-
-    case 'talent-node-purchase-succeeded':
-    case 'talent-node-purchase-failed':
-    case 'talent-node-forget-succeeded':
-    case 'talent-node-forget-failed': {
-      const isSuccess = type.endsWith('succeeded')
-      const isPurchase = type.includes('purchase')
-      context.eventLabel = game.i18n.localize(`SWERPG.AUDIT_LOG.TYPE.${type.replace(/[-.]/g, '_').toUpperCase()}`)
-      if (isSuccess) {
-        context.nextValue = data.talentId ?? data.nodeId ?? ''
-        context.variant = isPurchase ? 'add' : 'remove'
-        if (data.cost) {
-          context.metaLeft = isPurchase ? game.i18n.format('SKILL.CHAT.COST', { cost: data.cost }) : game.i18n.format('SKILL.CHAT.REFUND', { cost: data.cost })
-        }
-      } else {
-        context.nextValue = data.nodeId ?? ''
-        context.description = game.i18n.format('SWERPG.AUDIT_LOG.DESCRIPTION.TALENT_NODE_PURCHASE_FAILED', {
-          reasonCode: data.reasonCode ?? '',
-          nodeId: data.nodeId ?? '',
-        })
-        context.variant = 'fail'
-      }
-      break
-    }
-
-    case 'advancement.level': {
-      context.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.ADVANCEMENT_LEVEL')
-      context.previousValue = String(data.oldLevel)
-      context.nextValue = String(data.newLevel)
-      context.variant = 'change'
-      break
-    }
-
-    case 'item.purchase': {
-      context.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.ITEM_PURCHASE')
-      context.nextValue = `${data.itemName ?? ''} (${data.itemType ?? ''})`
-      context.variant = 'add'
-      context.metaLeft = game.i18n.format('SWERPG.AUDIT_LOG.META.PRICE', { price: data.price ?? 0 })
-
-      // Enrich with commerce outcome narrative when present (from availability check narrative dice)
-      const outcome = entry.outcome ?? null
-      if (outcome) {
-        if (outcome.priceModifier !== 0) {
-          const modifierPct = Math.round(outcome.priceModifier * 100)
-          const modifierStr = modifierPct > 0 ? `+${modifierPct}%` : `${modifierPct}%`
-          context.metaRight = game.i18n.format('MARKET.CommerceOutcome.AppliedModifier', { modifier: modifierStr })
-        }
-        if (outcome.narrativeKeys?.length > 0) {
-          const narratives = outcome.narrativeKeys.map((k) => game.i18n.localize(k)).join('; ')
-          context.description = narratives
-        }
-      }
-
-      if (snapshot.creditsAfter !== undefined && snapshot.creditsAfter !== null) {
-        context.metaRight = game.i18n.format('SWERPG.AUDIT_LOG.META.CREDITS_REMAINING', { credits: snapshot.creditsAfter })
-      }
-      context.hasMeta = true
-      break
-    }
-
-    case 'item.sale': {
-      context.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.ITEM_SALE')
-      context.nextValue = `${data.itemName ?? ''} (${data.itemType ?? ''})`
-      context.variant = 'gain'
-      context.metaLeft = game.i18n.format('SWERPG.AUDIT_LOG.META.SOLD_FOR', { price: data.resalePrice ?? 0 })
-      if (snapshot.creditsAfter !== undefined && snapshot.creditsAfter !== null) {
-        context.metaRight = game.i18n.format('SWERPG.AUDIT_LOG.META.CREDITS_REMAINING', { credits: snapshot.creditsAfter })
-      }
-      context.hasMeta = true
-      break
-    }
-
-    default: {
-      const desc = buildAuditLogDescription(entry)
-      context.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.UNKNOWN')
-      context.nextValue = desc
-      context.variant = xpDelta > 0 ? 'gain' : xpDelta < 0 ? 'remove' : 'change'
-      if (xpDelta !== 0) {
-        context.metaLeft =
-          xpDelta > 0 ? game.i18n.format('SKILL.CHAT.REFUND', { cost: xpDelta }) : game.i18n.format('SKILL.CHAT.COST', { cost: Math.abs(xpDelta) })
-      }
+  const handler = CHAT_HANDLERS[type]
+  if (handler) {
+    handler(context, entry, data, snapshot)
+  } else {
+    // Unknown type: fall back to registry description
+    const i18nHelpers = buildI18nHelpers()
+    const desc = buildAuditLogDescriptionFromRegistry(entry, i18nHelpers)
+    context.eventLabel = game.i18n.localize(getAuditLogTypeLabelKey(type))
+    context.nextValue = desc
+    context.variant = xpDelta > 0 ? 'gain' : xpDelta < 0 ? 'remove' : 'change'
+    if (xpDelta !== 0) {
+      context.metaLeft =
+        xpDelta > 0 ? game.i18n.format('SKILL.CHAT.REFUND', { cost: xpDelta }) : game.i18n.format('SKILL.CHAT.COST', { cost: Math.abs(xpDelta) })
     }
   }
 
@@ -816,7 +923,7 @@ function _buildChatContext(actor, entry) {
   }
 
   context.hasMeta = context.metaLeft !== null || context.metaRight !== null
-  context.variantGlyph = getAuditLogVariantGlyph(context.variant)
+  context.variantGlyph = getChatVariantGlyph(context.variant)
 
   return context
 }
