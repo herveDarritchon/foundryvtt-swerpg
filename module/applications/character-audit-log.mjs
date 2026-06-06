@@ -1070,7 +1070,7 @@ export default class CharacterAuditLogApp extends api.HandlebarsApplicationMixin
       const csvContent = buildCsvContent(this.actor)
       const filename = buildExportFilename(this.actor)
 
-      saveDataToFile(csvContent, 'text/csv;charset=utf-8', filename)
+      foundry.utils.saveDataToFile(csvContent, 'text/csv;charset=utf-8', filename)
     } catch (err) {
       logger.error('[AuditLog] CSV export failed', err)
       ui.notifications.error(game.i18n.localize('SWERPG.AUDIT_LOG.EXPORT_FAILED'))
