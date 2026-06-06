@@ -412,6 +412,115 @@ describe("Scénario 1b — AL6 : AppliedModifier n'écrase pas creditsRemaining"
 })
 
 /* ============================================================= */
+/*  Scénario 1c : AL11 — source unique du delta crédits          */
+/*  creditDelta et snapshot.creditsDelta doivent être alignés    */
+/*  même quand un modificateur commercial altère le coût réel    */
+/* ============================================================= */
+
+describe('Scénario 1c — AL11 : creditDelta aligné sur snapshot.creditsDelta', () => {
+  it('achat sans modificateur : creditDelta et snapshot.creditsDelta sont cohérents', async () => {
+    const { recordItemPurchase } = await import('../../module/utils/audit-log.mjs')
+
+    const actor = makeActor({ system: { credits: 400 } })
+
+    await recordItemPurchase(actor, {
+      itemName: 'Blaster Pistol',
+      itemType: 'weapon',
+      price: 100,
+      quantity: 1,
+      creditsAfter: 300,
+    })
+
+    const updateArg = actor.update.mock.calls[0][0]
+    const entry = getWrittenLogs(updateArg)[0]
+
+    // Both must represent the same 100-credit debit
+    expect(entry.creditDelta).toBe(-100)
+    expect(entry.snapshot.creditsDelta).toBe(100)
+    expect(entry.creditDelta).toBe(-entry.snapshot.creditsDelta)
+  })
+
+  it('achat avec modificateur de prix (+20%) : creditDelta reflète le coût réellement payé', async () => {
+    // AL11 regression: before the fix, creditDelta = -(price * quantity) = -100
+    // while snapshot.creditsDelta = creditsBefore - creditsAfter = 500 - 380 = 120
+    // After the fix, creditDelta must equal -snapshot.creditsDelta = -120.
+    const { recordItemPurchase } = await import('../../module/utils/audit-log.mjs')
+
+    const actor = makeActor({ system: { credits: 500 } })
+
+    // Base price = 100, but +20% modifier means the actor actually pays 120 credits.
+    // The caller passes creditsAfter reflecting the real debit after the modifier.
+    await recordItemPurchase(actor, {
+      itemName: 'Blaster Pistol',
+      itemType: 'weapon',
+      price: 100,
+      quantity: 1,
+      creditsAfter: 380, // 500 - 120 (effective cost with +20% modifier)
+      outcome: { priceModifier: 0.2, narrativeKeys: [] },
+    })
+
+    const updateArg = actor.update.mock.calls[0][0]
+    const entry = getWrittenLogs(updateArg)[0]
+
+    // snapshot.creditsDelta reflects the real transaction
+    expect(entry.snapshot.creditsBefore).toBe(500)
+    expect(entry.snapshot.creditsAfter).toBe(380)
+    expect(entry.snapshot.creditsDelta).toBe(120)
+
+    // creditDelta must be derived from the same source — not from -(price * quantity)
+    expect(entry.creditDelta).toBe(-120)
+    expect(entry.creditDelta).toBe(-entry.snapshot.creditsDelta)
+  })
+
+  it('achat avec réduction (-10%) : creditDelta reflète le coût réduit réellement payé', async () => {
+    const { recordItemPurchase } = await import('../../module/utils/audit-log.mjs')
+
+    const actor = makeActor({ system: { credits: 300 } })
+
+    // Base price = 200, but -10% discount means the actor pays 180.
+    await recordItemPurchase(actor, {
+      itemName: 'Thermal Detonator',
+      itemType: 'gear',
+      price: 200,
+      quantity: 1,
+      creditsAfter: 120, // 300 - 180 (effective cost with -10% discount)
+      outcome: { priceModifier: -0.1, narrativeKeys: ['MARKET.Narrative.StreetContacts'] },
+    })
+
+    const updateArg = actor.update.mock.calls[0][0]
+    const entry = getWrittenLogs(updateArg)[0]
+
+    expect(entry.snapshot.creditsDelta).toBe(180)
+    expect(entry.creditDelta).toBe(-180)
+    expect(entry.creditDelta).toBe(-entry.snapshot.creditsDelta)
+  })
+
+  it('achat sans creditsAfter connu : creditDelta revient à -(price * quantity)', async () => {
+    // When creditsBefore or creditsAfter is null, the canonical delta is unavailable.
+    // The fallback -(price * quantity) is acceptable in that edge case.
+    const { recordItemPurchase } = await import('../../module/utils/audit-log.mjs')
+
+    // Actor with no credits field — creditsBefore resolves to null
+    const actor = makeActor({ system: {} })
+
+    await recordItemPurchase(actor, {
+      itemName: 'Blaster Pistol',
+      itemType: 'weapon',
+      price: 100,
+      quantity: 2,
+      creditsAfter: null,
+    })
+
+    const updateArg = actor.update.mock.calls[0][0]
+    const entry = getWrittenLogs(updateArg)[0]
+
+    expect(entry.snapshot.creditsDelta).toBeNull()
+    // Fallback: -(price * quantity) = -200
+    expect(entry.creditDelta).toBe(-200)
+  })
+})
+
+/* ============================================================= */
 /*  Scénario 2 : Résilience audit                                */
 /*  recordItemPurchase non-blocking si actor.update rejette      */
 /* ============================================================= */
