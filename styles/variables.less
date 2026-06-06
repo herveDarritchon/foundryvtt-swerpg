@@ -213,6 +213,81 @@
   --color-market-illegal-border: color-mix(in srgb, var(--color-danger) 30%, transparent);
   --color-market-illegal-text: var(--color-danger);
 
+  /* Holo / dark overlay backgrounds (actor sheet circles, steppers, console) */
+  --color-holo-bg: rgb(16 23 34); /* base frame dark blue */
+  --color-holo-bg-dark: rgb(8 12 18); /* deeper dark blue */
+  --color-holo-bg-40: rgb(16 23 34 / 40%);
+  --color-holo-bg-60: rgb(16 23 34 / 60%);
+  --color-holo-bg-34: rgb(16 23 34 / 34%);
+  --color-holo-bg-20: rgb(16 23 34 / 20%);
+  --color-holo-bg-inactive: rgb(12 15 23 / 50%);
+
+  /* Specialization badge (gold badge on identity summary) */
+  --color-badge-gold: #c9a84c;
+  --color-badge-gold-40: color-mix(in srgb, #c9a84c 40%, transparent);
+  --color-badge-text-dark: #1a1a1a;
+
+  /* XP console gradient backgrounds */
+  --color-console-bg-a: rgb(26 26 46 / 82%);
+  --color-console-bg-b: rgb(15 15 26 / 62%);
+
+  /* Skill state colors */
+  --color-skill-career: #46c7ff; /* career skill marker */
+  --color-skill-specialization: #00d49a; /* specialization skill marker */
+
+  /* Pip colors (skill rank pips) */
+  --color-pip-untrained: #0e5915; /* dark green — untrained rank */
+  --color-pip-trained: #ffd700; /* gold — trained rank */
+
+  /* Talent tag colors */
+  --color-tag-neutral-bg: color-mix(in srgb, #7a8a9c 25%, transparent);
+  --color-tag-neutral-border: color-mix(in srgb, #9bb0c2 40%, transparent);
+  --color-tag-neutral-text: color-mix(in srgb, var(--color-accent-blue) 80%, var(--color-text));
+  --color-tag-ranked-bg: color-mix(in srgb, var(--color-accent-yellow) 18%, transparent);
+  --color-tag-ranked-border: color-mix(in srgb, var(--color-accent-yellow) 35%, transparent);
+  --color-tag-ranked-text: color-mix(in srgb, var(--color-accent-yellow) 70%, var(--color-text));
+
+  /* Talent detail / source colors */
+  --color-talent-detail: var(--color-text);
+  --color-talent-source-resolved: var(--color-text);
+  --color-talent-source-degraded: color-mix(in srgb, var(--color-warning) 70%, var(--color-text));
+  --color-talent-rank-value: color-mix(in srgb, var(--color-accent-yellow) 60%, var(--color-text));
+
+  /* Resource economy pip colors */
+  --color-resource-action: #ff9900;
+  --color-resource-focus: #0066ff;
+  --color-resource-heroism: #ff0059;
+
+  /* Skill icon mask base color (white for CSS mask technique) */
+  --color-skill-icon-base: #fff; /* tokens-allow-raw */
+
+  /* Neutral black overlays (tooltips, overlays) */
+  --color-overlay-dark-65: rgb(0 0 0 / 65%);
+
+  /* Allegiance toggle inactive/active */
+  --color-toggle-border: #666; /* tokens-allow-raw */
+  --color-toggle-active-bg: rgb(255 255 255 / 75%);
+  --color-toggle-inactive-bg: rgb(255 255 255 / 15%);
+
+  /* Legacy skill container — old visual style, kept for backward compat */
+  --color-legacy-skill-border-1: #8a644f; /* tokens-allow-raw */
+  --color-legacy-skill-border-2: #e4c9a8; /* tokens-allow-raw */
+  --color-legacy-skill-bg-a: #3d2a1e; /* tokens-allow-raw */
+  --color-legacy-skill-bg-b: #5a3e2b; /* tokens-allow-raw */
+  --color-legacy-skill-text: #e4c9a8; /* tokens-allow-raw */
+  --color-legacy-skill-box-bg: #2b221b; /* tokens-allow-raw */
+  --color-legacy-skill-box-border: #44362d; /* tokens-allow-raw */
+  --color-legacy-skill-box-border-b: #2b221b; /* tokens-allow-raw */
+
+  /* Hover bright white for talent nav */
+  --color-text-bright: #f0fbff;
+
+  /* Sheet tab border-dark (tabs rail uses black border) */
+  --color-tab-border-dark: #000; /* tokens-allow-raw */
+
+  /* Beveled-frame white background (clip-path shape accent) */
+  --color-frame-white: white; /* tokens-allow-raw */
+
   --font-h1: 'Orbitron', sans-serif;
   --font-h2: 'Orbitron', sans-serif;
   --font-h3: 'Rajdhani', sans-serif;
