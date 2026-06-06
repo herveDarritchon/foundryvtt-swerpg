@@ -133,34 +133,34 @@
 
   // Success
   &.success .check-result {
-    --check-bg-color: rgb(0 8 0);
+    --check-bg-color: var(--color-result-good-bg);
     --check-border-color: var(--color-result-good);
   }
 
   // Failure
   &.failure .check-result {
-    --check-bg-color: rgb(8 0 0);
+    --check-bg-color: var(--color-result-bad-bg);
     --check-border-color: var(--color-result-bad);
   }
 
   // Deflection
   &.glance .check-result {
-    --check-bg-color: rgb(8 8 0);
+    --check-bg-color: var(--color-result-warn-bg);
     --check-border-color: var(--color-result-warn);
   }
 
   // Critical Failure
   &.failure.critical .check-result {
-    --check-bg-color: rgb(8 0 0);
+    --check-bg-color: var(--color-result-bad-bg);
     --check-border-color: var(--color-result-bad);
-    color: #ff3724;
+    color: var(--color-danger);
   }
 
   // Critical Success
   &.success.critical .check-result {
-    --check-bg-color: rgb(0 8 0);
+    --check-bg-color: var(--color-result-good-bg);
     --check-border-color: var(--color-result-good);
-    color: #12cb3f;
+    color: var(--color-success);
   }
 
   // Hex labels
@@ -233,7 +233,7 @@
       color: var(--color-primary);
       text-align: center;
       font-size: 24px;
-      filter: drop-shadow(0px 0px 6px #000);
+      filter: drop-shadow(0px 0px 6px var(--color-shadow-black));
 
       &::before {
         display: block;
