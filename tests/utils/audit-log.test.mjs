@@ -75,6 +75,21 @@ afterEach(() => {
 })
 
 /**
+ * Extract the flat list of written audit log entries from an actor.update() call argument.
+ * Supports the segmented format (auditLogSegs) produced by the new writeLogEntries implementation.
+ * @param {object} updateArg  The first argument passed to actor.update()
+ * @returns {Array<object>}
+ */
+function getWrittenLogs(updateArg) {
+  const segs = updateArg['flags.swerpg.auditLogSegs']
+  if (Array.isArray(segs)) {
+    return segs.flat()
+  }
+  // Fallback for any test that still expects legacy format
+  return updateArg['flags.swerpg.logs'] ?? []
+}
+
+/**
  *
  * @param overrides
  */
@@ -338,7 +353,7 @@ describe('writeLogEntries max size', () => {
 
     expect(actor.update).toHaveBeenCalledTimes(1)
     const updateArg = actor.update.mock.calls[0][0]
-    const logs = updateArg['flags.swerpg.logs']
+    const logs = getWrittenLogs(updateArg)
     expect(logs).toHaveLength(3)
     expect(logs[0].type).toBe('recent')
     expect(logs[1].type).toBe('new1')
@@ -366,7 +381,7 @@ describe('writeLogEntries max size', () => {
 
     expect(actor.update).toHaveBeenCalledTimes(1)
     const updateArg = actor.update.mock.calls[0][0]
-    const logs = updateArg['flags.swerpg.logs']
+    const logs = getWrittenLogs(updateArg)
     expect(logs).toHaveLength(3)
   })
 
@@ -390,7 +405,7 @@ describe('writeLogEntries max size', () => {
 
     expect(actor.update).toHaveBeenCalledTimes(1)
     const updateArg = actor.update.mock.calls[0][0]
-    const logs = updateArg['flags.swerpg.logs']
+    const logs = getWrittenLogs(updateArg)
     expect(logs).toHaveLength(100)
   })
 
@@ -421,7 +436,7 @@ describe('writeLogEntries max size', () => {
 
     expect(actor.update).toHaveBeenCalledTimes(1)
     const updateArg = actor.update.mock.calls[0][0]
-    const logs = updateArg['flags.swerpg.logs']
+    const logs = getWrittenLogs(updateArg)
     expect(logs).toHaveLength(500)
   })
 
@@ -439,7 +454,7 @@ describe('writeLogEntries max size', () => {
     expect(actor.update).toHaveBeenCalledTimes(1)
 
     const updateArg = actor.update.mock.calls[0][0]
-    expect(updateArg['flags.swerpg.logs']).toHaveLength(2)
+    expect(getWrittenLogs(updateArg)).toHaveLength(2)
   })
 })
 
@@ -587,7 +602,7 @@ describe('writeLogEntries', () => {
     expect(actor.update).toHaveBeenCalledTimes(1)
 
     const updateArg = actor.update.mock.calls[0][0]
-    expect(updateArg['flags.swerpg.logs']).toHaveLength(2)
+    expect(getWrittenLogs(updateArg)).toHaveLength(2)
   })
 
   test('does nothing when entries array is empty', async () => {
@@ -674,7 +689,7 @@ describe('onCreateItem', () => {
 
     expect(actor.update).toHaveBeenCalledTimes(1)
     const updateArg = actor.update.mock.calls[0][0]
-    const logs = updateArg['flags.swerpg.logs']
+    const logs = getWrittenLogs(updateArg)
     expect(logs).toHaveLength(1)
     expect(logs[0]).toMatchObject({
       type: 'talent.purchase',
@@ -700,7 +715,7 @@ describe('onCreateItem', () => {
 
     expect(actor.update).toHaveBeenCalledTimes(1)
     const updateArg = actor.update.mock.calls[0][0]
-    const logs = updateArg['flags.swerpg.logs']
+    const logs = getWrittenLogs(updateArg)
     expect(logs[0].data.cost).toBe(5)
     expect(logs[0].data.ranks).toBe(1)
     expect(logs[0].xpDelta).toBe(-5)
@@ -753,7 +768,7 @@ describe('onCreateItem', () => {
     await onCreateItem(item, {}, {}, 'gm-1')
 
     const updateArg = actor.update.mock.calls[0][0]
-    const snapshot = updateArg['flags.swerpg.logs'][0].snapshot
+    const snapshot = getWrittenLogs(updateArg)[0].snapshot
     expect(snapshot).toMatchObject({
       xpAvailable: 150,
       totalXpSpent: 50,
@@ -977,7 +992,7 @@ describe('recordTalentNodePurchase', () => {
 
     expect(actor.update).toHaveBeenCalledTimes(1)
     const updateArg = actor.update.mock.calls[0][0]
-    const log = updateArg['flags.swerpg.logs'][0]
+    const log = getWrittenLogs(updateArg)[0]
     expect(log.type).toBe('talent-node-purchase-succeeded')
     expect(log.data).toMatchObject({
       actorId: 'actor-001',
@@ -1011,7 +1026,7 @@ describe('recordTalentNodePurchase', () => {
     await recordTalentNodePurchase(actor, purchaseData)
 
     const updateArg = actor.update.mock.calls[0][0]
-    const log = updateArg['flags.swerpg.logs'][0]
+    const log = getWrittenLogs(updateArg)[0]
     expect(log.data.previousXp).toBeUndefined()
     expect(log.data.nextXp).toBeUndefined()
     expect(log.xpDelta).toBe(-5)
@@ -1043,7 +1058,7 @@ describe('recordTalentNodePurchase', () => {
     await recordTalentNodePurchase(actor, purchaseData)
 
     const updateArg = actor.update.mock.calls[0][0]
-    const snapshot = updateArg['flags.swerpg.logs'][0].snapshot
+    const snapshot = getWrittenLogs(updateArg)[0].snapshot
     expect(snapshot).toMatchObject({
       xpAvailable: 150,
       totalXpSpent: 50,
@@ -1130,7 +1145,7 @@ describe('recordTalentNodeOperation', () => {
 
     expect(actor.update).toHaveBeenCalledTimes(1)
     const updateArg = actor.update.mock.calls[0][0]
-    const log = updateArg['flags.swerpg.logs'][0]
+    const log = getWrittenLogs(updateArg)[0]
     expect(log.type).toBe('talent-node-purchase-succeeded')
     expect(log.data).toMatchObject({
       actorId: 'actor-001',
@@ -1167,7 +1182,7 @@ describe('recordTalentNodeOperation', () => {
     await recordTalentNodeOperation(actor, 'forget', 'succeeded', data)
 
     const updateArg = actor.update.mock.calls[0][0]
-    const log = updateArg['flags.swerpg.logs'][0]
+    const log = getWrittenLogs(updateArg)[0]
     expect(log.type).toBe('talent-node-forget-succeeded')
     expect(log.xpDelta).toBe(5)
     expect(log.data.actorId).toBe('actor-001')
@@ -1190,7 +1205,7 @@ describe('recordTalentNodeOperation', () => {
     await recordTalentNodeOperation(actor, 'purchase', 'failed', data)
 
     const updateArg = actor.update.mock.calls[0][0]
-    const log = updateArg['flags.swerpg.logs'][0]
+    const log = getWrittenLogs(updateArg)[0]
     expect(log.type).toBe('talent-node-purchase-failed')
     expect(log.xpDelta).toBe(-5)
     expect(log.data.reasonCode).toBe('not-enough-xp')
@@ -1213,7 +1228,7 @@ describe('recordTalentNodeOperation', () => {
     await recordTalentNodeOperation(actor, 'forget', 'failed', data)
 
     const updateArg = actor.update.mock.calls[0][0]
-    const log = updateArg['flags.swerpg.logs'][0]
+    const log = getWrittenLogs(updateArg)[0]
     expect(log.type).toBe('talent-node-forget-failed')
     expect(log.xpDelta).toBe(5)
     expect(log.data.reasonCode).toBe('node-has-dependents')
@@ -1245,7 +1260,7 @@ describe('recordTalentNodeOperation', () => {
     await recordTalentNodeOperation(actor, 'purchase', 'succeeded', data)
 
     const updateArg = actor.update.mock.calls[0][0]
-    const snapshot = updateArg['flags.swerpg.logs'][0].snapshot
+    const snapshot = getWrittenLogs(updateArg)[0].snapshot
     expect(snapshot).toMatchObject({
       xpAvailable: 150,
       totalXpSpent: 50,
@@ -1968,7 +1983,7 @@ describe('recordItemPurchase', () => {
 
     expect(actor.update).toHaveBeenCalledTimes(1)
     const updateArg = actor.update.mock.calls[0][0]
-    const logs = updateArg['flags.swerpg.logs']
+    const logs = getWrittenLogs(updateArg)
     expect(logs).toHaveLength(1)
     const entry = logs[0]
     expect(entry.type).toBe('item.purchase')
@@ -1996,7 +2011,7 @@ describe('recordItemPurchase', () => {
     })
 
     const updateArg = actor.update.mock.calls[0][0]
-    const entry = updateArg['flags.swerpg.logs'][0]
+    const entry = getWrittenLogs(updateArg)[0]
     expect(entry.creditDelta).toBe(-75)
     expect(entry.data.quantity).toBe(3)
   })
@@ -2014,7 +2029,7 @@ describe('recordItemPurchase', () => {
     })
 
     const updateArg = actor.update.mock.calls[0][0]
-    const entry = updateArg['flags.swerpg.logs'][0]
+    const entry = getWrittenLogs(updateArg)[0]
     expect(entry.data.quantity).toBe(1)
     expect(entry.creditDelta).toBe(-100)
   })
@@ -2033,7 +2048,7 @@ describe('recordItemPurchase', () => {
     })
 
     const updateArg = actor.update.mock.calls[0][0]
-    const entry = updateArg['flags.swerpg.logs'][0]
+    const entry = getWrittenLogs(updateArg)[0]
     expect(entry.snapshot.creditsBefore).toBe(200)
     expect(entry.snapshot.creditsAfter).toBe(50)
   })
@@ -2057,7 +2072,7 @@ describe('recordItemPurchase', () => {
     })
 
     const updateArg = actor.update.mock.calls[0][0]
-    const entry = updateArg['flags.swerpg.logs'][0]
+    const entry = getWrittenLogs(updateArg)[0]
     expect(entry.snapshot.creditsBefore).toBe(300)
   })
 
@@ -2075,7 +2090,7 @@ describe('recordItemPurchase', () => {
     })
 
     const updateArg = actor.update.mock.calls[0][0]
-    const entry = updateArg['flags.swerpg.logs'][0]
+    const entry = getWrittenLogs(updateArg)[0]
     expect(entry.userId).toBe('gm-1')
     expect(entry.userName).toBe('Game Master')
   })
@@ -2117,7 +2132,7 @@ describe('recordItemPurchase', () => {
     })
 
     const updateArg = actor.update.mock.calls[0][0]
-    const entry = updateArg['flags.swerpg.logs'][0]
+    const entry = getWrittenLogs(updateArg)[0]
     expect(entry.data.itemId).toBe('item-uuid-12345')
   })
 
@@ -2135,7 +2150,7 @@ describe('recordItemPurchase', () => {
     })
 
     const updateArg = actor.update.mock.calls[0][0]
-    const entry = updateArg['flags.swerpg.logs'][0]
+    const entry = getWrittenLogs(updateArg)[0]
     expect(entry.data.itemId).toBeUndefined()
   })
 
@@ -2154,7 +2169,7 @@ describe('recordItemPurchase', () => {
     })
 
     const updateArg = actor.update.mock.calls[0][0]
-    const entry = updateArg['flags.swerpg.logs'][0]
+    const entry = getWrittenLogs(updateArg)[0]
     expect(entry.snapshot.creditsBefore).toBe(250)
     expect(entry.snapshot.creditsAfter).toBe(150)
     expect(entry.snapshot.creditsDelta).toBe(100) // 250 - 150
@@ -2175,7 +2190,7 @@ describe('recordItemPurchase', () => {
     })
 
     const updateArg = actor.update.mock.calls[0][0]
-    const entry = updateArg['flags.swerpg.logs'][0]
+    const entry = getWrittenLogs(updateArg)[0]
     expect(entry.snapshot.creditsBefore).toBeNull()
     expect(entry.snapshot.creditsDelta).toBeNull()
   })
@@ -2238,7 +2253,7 @@ describe('recordItemSale', () => {
 
     expect(actor.update).toHaveBeenCalledTimes(1)
     const updateArg = actor.update.mock.calls[0][0]
-    const logs = updateArg['flags.swerpg.logs']
+    const logs = getWrittenLogs(updateArg)
     expect(logs).toHaveLength(1)
     const entry = logs[0]
     expect(entry.type).toBe('item.sale')
@@ -2269,7 +2284,7 @@ describe('recordItemSale', () => {
     })
 
     const updateArg = actor.update.mock.calls[0][0]
-    const entry = updateArg['flags.swerpg.logs'][0]
+    const entry = getWrittenLogs(updateArg)[0]
     expect(entry.data.quantity).toBe(1)
   })
 
@@ -2289,7 +2304,7 @@ describe('recordItemSale', () => {
     })
 
     const updateArg = actor.update.mock.calls[0][0]
-    const entry = updateArg['flags.swerpg.logs'][0]
+    const entry = getWrittenLogs(updateArg)[0]
     expect(entry.data.quantity).toBe(3)
     expect(entry.creditDelta).toBe(75) // total resale
   })
@@ -2310,7 +2325,7 @@ describe('recordItemSale', () => {
     })
 
     const updateArg = actor.update.mock.calls[0][0]
-    const entry = updateArg['flags.swerpg.logs'][0]
+    const entry = getWrittenLogs(updateArg)[0]
     expect(entry.creditDelta).toBe(150)
   })
 
@@ -2329,7 +2344,7 @@ describe('recordItemSale', () => {
     })
 
     const updateArg = actor.update.mock.calls[0][0]
-    const entry = updateArg['flags.swerpg.logs'][0]
+    const entry = getWrittenLogs(updateArg)[0]
     expect(entry.data.negotiationOutcome).toBe('failure')
   })
 
@@ -2613,7 +2628,7 @@ describe('onCreateItem — mono-writer guard', () => {
     await onCreateItem(item, {}, {}, 'user-1')
 
     expect(actor.update).toHaveBeenCalledTimes(1)
-    const logs = actor.update.mock.calls[0][0]['flags.swerpg.logs']
+    const logs = getWrittenLogs(actor.update.mock.calls[0][0])
     expect(logs).toHaveLength(1)
     expect(logs[0].type).toBe('talent.purchase')
     expect(logs[0].userId).toBe('user-1')

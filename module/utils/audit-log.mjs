@@ -1,12 +1,15 @@
 import { logger } from './logger.mjs'
 import { composeEntries, makeEntry, captureSnapshot } from './audit-diff.mjs'
 import { buildAuditLogDescriptionFromRegistry, getAuditLogTypeLabelKey } from '../lib/audit/taxonomy.mjs'
+import { buildNextSegmentedState, computeAuditLogMetrics } from '../lib/audit/storage.mjs'
 
 /* -------------------------------------------- */
 /*  Constantes                                  */
 /* -------------------------------------------- */
 
 const AUDIT_LOG_KEY = 'flags.swerpg.logs'
+const AUDIT_LOG_SEGS_KEY = 'flags.swerpg.auditLogSegs'
+const AUDIT_LOG_INDEX_KEY = 'flags.swerpg.auditLogIndex'
 const PENDING_TTL_MS = 30000
 const MAX_PENDING = 50
 const MAX_RETRIES = 1
@@ -280,7 +283,9 @@ async function handleWriteError(actor, err) {
 /* -------------------------------------------- */
 
 /**
- * Append audit entries to the actor's log flag, trimming to the configured max, with retry on failure.
+ * Append audit entries to the actor's log using segmented storage, trimming to the configured max, with retry on failure.
+ * Migrates legacy flat-format actors transparently on first write.
+ * Emits a volume warning when the journal approaches the configured ceiling.
  * @param {object} actor
  * @param {object[]} entries
  */
@@ -291,14 +296,31 @@ async function writeLogEntries(actor, entries) {
 
   for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
     try {
-      const currentLogs = cloneValue(_getProperty(actor, AUDIT_LOG_KEY) ?? [])
-      const nextLogs = [...currentLogs, ...entries]
+      const actorFlags = cloneValue(_getProperty(actor, 'flags.swerpg') ?? {})
 
-      if (nextLogs.length > maxEntries) {
-        nextLogs.splice(0, nextLogs.length - maxEntries)
+      const { auditLogSegs, auditLogIndex, clearLegacy } = buildNextSegmentedState(actorFlags, entries, maxEntries)
+
+      const updatePayload = {
+        [AUDIT_LOG_SEGS_KEY]: auditLogSegs,
+        [AUDIT_LOG_INDEX_KEY]: auditLogIndex,
       }
 
-      await actor.update({ [AUDIT_LOG_KEY]: nextLogs }, { swerpgAuditLog: false })
+      // When migrating from legacy flat format, clear the old key to avoid duplicates on future reads.
+      if (clearLegacy) {
+        updatePayload[AUDIT_LOG_KEY] = null
+      }
+
+      await actor.update(updatePayload, { swerpgAuditLog: false })
+
+      // Volume observability: warn when nearing the configured ceiling.
+      const metrics = computeAuditLogMetrics({ ...actorFlags, auditLogSegs, auditLogIndex }, maxEntries)
+      if (metrics.isNearLimit) {
+        logger.warn(
+          `[AuditLog] Journal for actor "${actor.name}" (${actor.id}) is at ${Math.round(metrics.usageRatio * 100)}% capacity` +
+            ` (${metrics.totalCount}/${maxEntries} entries, ~${metrics.approximatePayloadSize} bytes, ${metrics.segmentCount} segments).`,
+        )
+      }
+
       sendChatForAuditEntries(actor, entries)
       return
     } catch (err) {
@@ -362,6 +384,8 @@ export {
   recordTalentNodeOperation,
   recordItemPurchase,
   recordItemSale,
+  AUDIT_LOG_SEGS_KEY,
+  AUDIT_LOG_INDEX_KEY,
 }
 
 /* -------------------------------------------- */
