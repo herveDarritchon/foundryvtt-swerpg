@@ -77,9 +77,16 @@ Idem pour `onCreateItem` (`game.userId !== userId`). Variante MJ-autoritaire : `
 
 #### AL3. Intégrité du journal compromise : il est éditable par l'audité
 
+> **Décision actée — issue #562, AUDIT-03 (2026-06-06) — Option A retenue**
+>
+> Le journal est **indicatif, consultable et exportable, mais non inviolable**.  
+> Un propriétaire OWNER peut techniquement modifier ou purger ses propres entrées. Aucun stockage protégé côté MJ/serveur n'est mis en place dans ce cycle.  
+> Le contrat de confiance complet est documenté dans [ADR-0011](../../architecture/adr/adr-0011-stockage-journal-evolution-personnage-flags.md) — section « Contrat de confiance ».  
+> Un durcissement futur (stockage journal de monde, hash de chaînage) reste possible en backlog.
+
 Le journal vit dans `flags.swerpg.logs` **sur l'acteur** que le joueur possède (`OWNER`). Un joueur peut donc **éditer ou purger son propre historique** (`actor.setFlag`, console, voire désactivation du module). Pour une feature d'**audit/responsabilité** (tracer les dépenses XP/crédits), l'audité ne devrait pas pouvoir altérer la preuve.
 
-**Décision à acter** : selon l'objectif (confort joueur vs contrôle MJ). Options : journal en _flag_ protégé écrit uniquement par le MJ/serveur, hash de chaînage anti-falsification, ou stockage côté MJ (journal de monde) répliqué. À défaut, documenter explicitement que le journal est **indicatif, non inviolable**.
+**Décision actée** : le journal est un outil de suivi indicatif, pas une preuve infalsifiable. Toute surface UI ou documentation doit éviter un vocabulaire de preuve ou d'inviolabilité.
 
 #### AL4. Taxonomie des types dupliquée en 4 endroits (risque de dérive)
 
@@ -160,20 +167,20 @@ Le contenu est annoncé `charset=utf-8` mais sans BOM ; Excel (FR) peut mal affi
 
 > **P0** = correctness/intégrité multijoueur ; **P1** = robustesse/architecture ; **P2** = polish/hardening.
 
-| ID       | Titre                                                                                   | Prio   | Type             | Effort | Réf.     |
-| -------- | --------------------------------------------------------------------------------------- | ------ | ---------------- | ------ | -------- |
-| AUDIT-01 | Garde mono-écrivain sur les hooks (`game.userId === userId`) + test multijoueur         | **P0** | bug              | S      | AL1      |
-| AUDIT-02 | Migrer l'export CSV vers `foundry.utils.saveDataToFile` (+ test)                        | **P1** | dette/API        | XS     | AL2      |
-| AUDIT-03 | Arbitrer l'inviolabilité du journal (écriture MJ/serveur ou doc de monde)               | **P1** | conception/sécu  | M      | AL3      |
-| AUDIT-04 | Registre unique de taxonomie type→{label,family,describe,chatVariant}                   | **P1** | refactor         | M      | AL4/AL10 |
-| AUDIT-05 | Sortir la taxonomie/descriptions de `applications/` vers le domaine (lever l'inversion) | **P1** | archi            | S      | AL5      |
-| AUDIT-06 | Corriger l'écrasement de `metaRight` (modificateur commerce visible) + test             | **P1** | bug              | XS     | AL6      |
-| AUDIT-07 | Corréler old/new par id d'opération (ou purge sur update échouée)                       | **P2** | robustesse       | M      | AL7      |
-| AUDIT-08 | Durcir `escapeCsvCell` contre l'injection de formules                                   | **P2** | sécu             | XS     | AL8      |
-| AUDIT-09 | Surveiller/segmenter la volumétrie du journal sur l'acteur                              | **P2** | perf             | M      | AL9      |
-| AUDIT-10 | Nommer les constantes métier (coût caractéristique, défauts cost/ranks)                 | **P2** | dette (ADR-0018) | S      | AL12     |
-| AUDIT-11 | Unifier la source du delta crédits (purchase)                                           | **P2** | qualité          | XS     | AL11     |
-| AUDIT-12 | BOM UTF-8 dans l'export CSV                                                             | **P2** | i18n             | XS     | AL13     |
+| ID       | Titre                                                                                   | Prio        | Type             | Effort | Réf.     |
+| -------- | --------------------------------------------------------------------------------------- | ----------- | ---------------- | ------ | -------- |
+| AUDIT-01 | Garde mono-écrivain sur les hooks (`game.userId === userId`) + test multijoueur         | **P0**      | bug              | S      | AL1      |
+| AUDIT-02 | Migrer l'export CSV vers `foundry.utils.saveDataToFile` (+ test)                        | **P1**      | dette/API        | XS     | AL2      |
+| AUDIT-03 | Arbitrer l'inviolabilité du journal (écriture MJ/serveur ou doc de monde)               | ✅ **done** | conception/sécu  | M      | AL3      |
+| AUDIT-04 | Registre unique de taxonomie type→{label,family,describe,chatVariant}                   | **P1**      | refactor         | M      | AL4/AL10 |
+| AUDIT-05 | Sortir la taxonomie/descriptions de `applications/` vers le domaine (lever l'inversion) | **P1**      | archi            | S      | AL5      |
+| AUDIT-06 | Corriger l'écrasement de `metaRight` (modificateur commerce visible) + test             | **P1**      | bug              | XS     | AL6      |
+| AUDIT-07 | Corréler old/new par id d'opération (ou purge sur update échouée)                       | **P2**      | robustesse       | M      | AL7      |
+| AUDIT-08 | Durcir `escapeCsvCell` contre l'injection de formules                                   | **P2**      | sécu             | XS     | AL8      |
+| AUDIT-09 | Surveiller/segmenter la volumétrie du journal sur l'acteur                              | **P2**      | perf             | M      | AL9      |
+| AUDIT-10 | Nommer les constantes métier (coût caractéristique, défauts cost/ranks)                 | **P2**      | dette (ADR-0018) | S      | AL12     |
+| AUDIT-11 | Unifier la source du delta crédits (purchase)                                           | **P2**      | qualité          | XS     | AL11     |
+| AUDIT-12 | BOM UTF-8 dans l'export CSV                                                             | **P2**      | i18n             | XS     | AL13     |
 
 ---
 

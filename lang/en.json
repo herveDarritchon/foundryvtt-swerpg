@@ -277,7 +277,7 @@
   "SWERPG.AUDIT.ERROR": "Error",
   "SWERPG.AUDIT.CHECK_CONSOLE": "See the console (F12) for more details.",
   "SWERPG.AUDIT_LOG.TITLE": "Character evolution history: {actor}",
-  "SWERPG.AUDIT_LOG.SUBTITLE": "Read-only timeline of the character's evolution.",
+  "SWERPG.AUDIT_LOG.SUBTITLE": "Indicative timeline of the character's evolution (consultable, not tamper-proof).",
   "SWERPG.AUDIT_LOG.OPEN": "Open character evolution history",
   "SWERPG.AUDIT_LOG.NO_PERMISSION": "You may only view the history of characters you own.",
   "SWERPG.AUDIT_LOG.EMPTY": "No entries in the history yet.",
