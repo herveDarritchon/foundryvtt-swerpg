@@ -2,7 +2,7 @@
 
 ## Statut
 
-Accepté
+Accepté — Contrat de confiance explicité (issue #562, 2026-06-06)
 
 ## Contexte
 
@@ -121,3 +121,34 @@ actor.flags.swerpg.logs
 ```
 
 Il s’agit d’une donnée secondaire, destinée au suivi, à l’audit et au debug, et non d’une donnée cœur du modèle personnage.
+
+---
+
+## Contrat de confiance — Niveau indicatif (décision issue #562, AUDIT-03)
+
+### Décision
+
+Le journal est **indicatif** : il est consultable et exportable, mais **non inviolable**.
+
+Un propriétaire d’acteur (rôle OWNER) peut techniquement modifier ou purger ses propres entrées via l’API Foundry (`actor.setFlag`, console développeur, voire désactivation du module). Le système ne met pas en place de stockage protégé côté serveur ou MJ dans ce cycle.
+
+### Critères retenus
+
+| Critère           | Valeur retenue                                           |
+| ----------------- | -------------------------------------------------------- |
+| Qui écrit         | L’utilisateur déclencheur de la modification (userId)    |
+| Où est stocké     | `flags.swerpg.logs` sur l’acteur (côté client/joueur)    |
+| Qui peut modifier | Le propriétaire OWNER (non bloqué par le système)        |
+| Niveau de preuve  | Indicatif — outil de suivi, pas une preuve infalsifiable |
+
+### Conséquences sur la surface utilisateur
+
+Toute formulation visible dans l’UI ou la documentation doit rester cohérente avec ce contrat :
+
+- Le journal est un **outil de suivi** et de **consultation** de l’évolution du personnage.
+- Il **ne constitue pas une preuve** de la conformité des dépenses d’expérience ou de crédits.
+- Le MJ peut s’appuyer sur ce journal à titre indicatif, mais ne doit pas en faire une source d’arbitrage définitive.
+
+### Voie future possible (hors périmètre de cette décision)
+
+Un durcissement ultérieur pourrait consister à stocker le journal dans un document de monde accessible uniquement au MJ, ou à implémenter un hash de chaînage anti-falsification. Ce travail est à inscrire explicitement en backlog (AUDIT-03 future) et ne doit pas être promis implicitement par l’interface actuelle.

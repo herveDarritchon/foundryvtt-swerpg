@@ -252,7 +252,7 @@
   "SWERPG.AUDIT.ERROR": "Erreur",
   "SWERPG.AUDIT.CHECK_CONSOLE": "Voir la console (F12) pour plus de détails.",
   "SWERPG.AUDIT_LOG.TITLE": "Historique d'évolution : {actor}",
-  "SWERPG.AUDIT_LOG.SUBTITLE": "Journal complet des évolutions du personnage, en lecture seule.",
+  "SWERPG.AUDIT_LOG.SUBTITLE": "Journal indicatif des évolutions du personnage (consultable, non inviolable).",
   "SWERPG.AUDIT_LOG.OPEN": "Consulter l'historique d'évolution",
   "SWERPG.AUDIT_LOG.NO_PERMISSION": "Vous ne pouvez consulter l'historique que de vos propres personnages.",
   "SWERPG.AUDIT_LOG.EMPTY": "Aucune entrée dans l'historique pour l'instant.",
