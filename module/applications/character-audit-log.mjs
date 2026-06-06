@@ -881,7 +881,8 @@ export default class CharacterAuditLogApp extends api.HandlebarsApplicationMixin
       const csvContent = buildCsvContent(this.actor)
       const filename = buildExportFilename(this.actor)
 
-      foundry.utils.saveDataToFile(csvContent, 'text/csv;charset=utf-8', filename)
+      // Prepend a UTF-8 BOM (﻿) so that Excel (FR) opens the file with correct encoding.
+      foundry.utils.saveDataToFile('﻿' + csvContent, 'text/csv;charset=utf-8', filename)
     } catch (err) {
       logger.error('[AuditLog] CSV export failed', err)
       ui.notifications.error(game.i18n.localize('SWERPG.AUDIT_LOG.EXPORT_FAILED'))
@@ -894,12 +895,30 @@ export default class CharacterAuditLogApp extends api.HandlebarsApplicationMixin
 /* -------------------------------------------- */
 
 /**
- * Escape a value for inclusion in a CSV cell, wrapping in double-quotes when the string contains commas, quotes, or line breaks.
+ * Neutralize a string that starts with a formula-injection prefix character
+ * by prepending a single-quote, following the OWASP CSV injection mitigation.
+ *
+ * Dangerous prefixes: =, +, -, @
+ *
+ * @param {string} str  Already-stringified cell value (never null / undefined)
+ * @returns {string}
+ */
+function neutralizeFormulaPrefixes(str) {
+  if (str.length > 0 && (str[0] === '=' || str[0] === '+' || str[0] === '-' || str[0] === '@')) {
+    return `'${str}`
+  }
+  return str
+}
+
+/**
+ * Escape a value for inclusion in a CSV cell.
+ * - Neutralizes formula-injection prefixes (=, +, -, @) by prepending a single-quote.
+ * - Wraps in double-quotes when the resulting string contains commas, double-quotes, or line breaks.
  * @param {*} value
  */
 export function escapeCsvCell(value) {
   if (value === null || value === undefined) return ''
-  const str = String(value)
+  const str = neutralizeFormulaPrefixes(String(value))
   if (str.includes(',') || str.includes('"') || str.includes('\n') || str.includes('\r')) {
     return `"${str.replace(/"/g, '""')}"`
   }
