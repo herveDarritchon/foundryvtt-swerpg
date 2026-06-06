@@ -706,6 +706,7 @@ describe('onCreateItem', () => {
 
   test('uses default cost and ranks when system values are missing', async () => {
     const { onCreateItem } = await import('../../module/utils/audit-log.mjs')
+    const { TALENT_PURCHASE_DEFAULT_COST, TALENT_PURCHASE_DEFAULT_RANKS } = await import('../../module/config/progression.mjs')
     globalThis.foundry.utils.deepClone = vi.fn((o) => structuredClone(o))
 
     const actor = makeCharacterActor()
@@ -716,9 +717,9 @@ describe('onCreateItem', () => {
     expect(actor.update).toHaveBeenCalledTimes(1)
     const updateArg = actor.update.mock.calls[0][0]
     const logs = getWrittenLogs(updateArg)
-    expect(logs[0].data.cost).toBe(5)
-    expect(logs[0].data.ranks).toBe(1)
-    expect(logs[0].xpDelta).toBe(-5)
+    expect(logs[0].data.cost).toBe(TALENT_PURCHASE_DEFAULT_COST)
+    expect(logs[0].data.ranks).toBe(TALENT_PURCHASE_DEFAULT_RANKS)
+    expect(logs[0].xpDelta).toBe(-TALENT_PURCHASE_DEFAULT_COST)
   })
 
   test('ignores non-talent items', async () => {

@@ -2,6 +2,7 @@ import { logger } from './logger.mjs'
 import { composeEntries, makeEntry, captureSnapshot } from './audit-diff.mjs'
 import { buildAuditLogDescriptionFromRegistry, getAuditLogTypeLabelKey } from '../lib/audit/taxonomy.mjs'
 import { buildNextSegmentedState, computeAuditLogMetrics } from '../lib/audit/storage.mjs'
+import { TALENT_PURCHASE_DEFAULT_COST, TALENT_PURCHASE_DEFAULT_RANKS } from '../config/progression.mjs'
 
 /* -------------------------------------------- */
 /*  Constantes                                  */
@@ -472,8 +473,8 @@ function onCreateItem(item, data, options, userId) {
   const ts = Date.now()
   const snapshot = captureSnapshot(item.parent)
   const user = game.users?.get(userId) ?? null
-  const cost = item.system?.cost ?? 5
-  const ranks = item.system?.ranks ?? 1
+  const cost = item.system?.cost ?? TALENT_PURCHASE_DEFAULT_COST
+  const ranks = item.system?.ranks ?? TALENT_PURCHASE_DEFAULT_RANKS
 
   const entry = makeEntry({
     type: 'talent.purchase',

@@ -420,10 +420,19 @@ describe('makeEntry', () => {
 /* ============================================ */
 
 describe('computeCharacteristicCost', () => {
-  test('computeCharacteristicCost', async () => {
+  test('returns CHARACTERISTIC_RANK_COST_MULTIPLIER * newValue (value 3 → 30)', async () => {
     const { computeCharacteristicCost } = await import('../../module/utils/audit-diff.mjs')
+    const { CHARACTERISTIC_RANK_COST_MULTIPLIER } = await import('../../module/config/progression.mjs')
 
+    expect(computeCharacteristicCost(3)).toBe(CHARACTERISTIC_RANK_COST_MULTIPLIER * 3)
     expect(computeCharacteristicCost(3)).toBe(30)
+  })
+
+  test('returns CHARACTERISTIC_RANK_COST_MULTIPLIER * newValue (value 4 → 40)', async () => {
+    const { computeCharacteristicCost } = await import('../../module/utils/audit-diff.mjs')
+    const { CHARACTERISTIC_RANK_COST_MULTIPLIER } = await import('../../module/config/progression.mjs')
+
+    expect(computeCharacteristicCost(4)).toBe(CHARACTERISTIC_RANK_COST_MULTIPLIER * 4)
     expect(computeCharacteristicCost(4)).toBe(40)
   })
 })

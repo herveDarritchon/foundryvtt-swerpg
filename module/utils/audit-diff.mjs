@@ -1,6 +1,7 @@
 import { logger } from './logger.mjs'
 import SkillCostCalculator from '../lib/skills/skill-cost-calculator.mjs'
 import { getCanonicalSpecializationKey } from '../lib/specializations/owned-specializations.mjs'
+import { CHARACTERISTIC_RANK_COST_MULTIPLIER } from '../config/progression.mjs'
 
 /* -------------------------------------------- */
 /*  Capture instantané de l'état XP après update */
@@ -27,7 +28,7 @@ function captureSnapshot(actor) {
  * @param {number} newValue
  */
 function computeCharacteristicCost(newValue) {
-  return newValue * 10
+  return CHARACTERISTIC_RANK_COST_MULTIPLIER * newValue
 }
 
 /**
