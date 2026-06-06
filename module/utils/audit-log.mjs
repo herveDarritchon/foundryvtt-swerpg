@@ -157,6 +157,7 @@ function pushPendingEntry(actor, userId, entry) {
 
 /**
  * Remove and return the oldest pending entry for the given actor and user, or undefined when the queue is empty.
+ * Used as a fallback when no operation ID is available.
  * @param {object} actor
  * @param {string} userId
  */
@@ -165,6 +166,25 @@ function shiftPendingEntry(actor, userId) {
   const queue = pendingOldStates.get(key)
   if (!queue?.length) return undefined
   const entry = queue.shift()
+  if (queue.length === 0) pendingOldStates.delete(key)
+  return entry
+}
+
+/**
+ * Remove and return the pending entry matching the given operation ID for the given actor and user.
+ * Returns undefined when no matching entry is found.
+ * Entries that do not match are left in the queue so they can be claimed by their own update or expired by the TTL.
+ * @param {object} actor
+ * @param {string} userId
+ * @param {string} opId
+ */
+function popPendingEntryByOpId(actor, userId, opId) {
+  const key = getPendingKey(actor, userId)
+  const queue = pendingOldStates.get(key)
+  if (!queue?.length) return undefined
+  const idx = queue.findIndex((e) => e.opId === opId)
+  if (idx === -1) return undefined
+  const [entry] = queue.splice(idx, 1)
   if (queue.length === 0) pendingOldStates.delete(key)
   return entry
 }
@@ -329,6 +349,7 @@ export {
   getPendingKey,
   shiftPendingEntry,
   pushPendingEntry,
+  popPendingEntryByOpId,
   isDeletionPath,
   writeLogEntries,
   handleWriteError,
@@ -349,6 +370,9 @@ export {
 
 /**
  * Capture the old actor state before an update and push it to the pending queue.
+ * Stamps a unique operation ID onto `options._swerpgOpId` so the matching `onUpdateActor`
+ * call can retrieve this specific snapshot, even when a preceding update was rejected and
+ * left an orphaned entry in the queue.
  * @param {object} actor
  * @param {object} changes
  * @param {object} options
@@ -363,9 +387,15 @@ export function onPreUpdateActor(actor, changes, options, userId) {
   pruneExpiredPending()
   evictOldestIfNeeded(1)
 
+  const opId = _generateOpId()
+  // Stamp the operation ID onto the shared options object so Foundry forwards it
+  // to the companion updateActor hook call for this same operation.
+  options._swerpgOpId = opId
+
   const oldState = snapshotOldState(actor._source, changes)
 
   pushPendingEntry(actor, userId, {
+    opId,
     oldState,
     changes: cloneValue(changes),
     userId,
@@ -375,6 +405,8 @@ export function onPreUpdateActor(actor, changes, options, userId) {
 
 /**
  * Compare the applied changes against the previously captured state and write the resulting audit entries.
+ * Uses the operation ID stamped by `onPreUpdateActor` to retrieve the correct pending snapshot,
+ * preventing a successful update from consuming the oldState of a previously rejected update.
  * @param {object} actor
  * @param {object} changes
  * @param {object} options
@@ -386,7 +418,8 @@ export function onUpdateActor(actor, changes, options, userId) {
   if (!isCharacterActor(actor)) return
   if (isOnlyAuditChange(changes)) return
 
-  const pending = shiftPendingEntry(actor, userId)
+  const opId = options?._swerpgOpId
+  const pending = opId ? popPendingEntryByOpId(actor, userId, opId) : shiftPendingEntry(actor, userId)
   if (!pending) return
   if (Date.now() - pending.timestamp > PENDING_TTL_MS) return
 
@@ -1084,4 +1117,21 @@ function _setProperty(object, path, value) {
  */
 function flushPending() {
   pendingOldStates.clear()
+}
+
+/* -------------------------------------------- */
+/*  Génération d'identifiant d'opération        */
+/* -------------------------------------------- */
+
+/**
+ * Generate a unique operation identifier for correlating pre/post update hooks.
+ * Uses crypto.randomUUID when available (modern browsers and Node 19+), otherwise
+ * falls back to a high-resolution timestamp combined with a random suffix.
+ * @returns {string}
+ */
+function _generateOpId() {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID()
+  }
+  return `${Date.now()}-${Math.random().toString(36).slice(2)}`
 }
