@@ -25,13 +25,13 @@
   }
 
   &.whisper {
-    background: #090b13;
-    border: 1px solid #7b8cc7;
+    background: var(--color-chat-whisper-bg);
+    border: 1px solid var(--color-chat-whisper-border);
   }
 
   &.blind {
-    background: #130913;
-    border: 1px solid #977dcc;
+    background: var(--color-chat-blind-bg);
+    border: 1px solid var(--color-chat-blind-border);
   }
 
   // Smaller die icons
@@ -67,8 +67,8 @@
     padding: 4px 0;
     font-size: var(--font-size-12);
     font-style: italic;
-    border-top: 1px solid var(--colorBeige);
-    border-bottom: 1px solid var(--colorBeige);
+    border-top: 1px solid var(--color-frame);
+    border-bottom: 1px solid var(--color-frame);
   }
 }
 
@@ -77,18 +77,18 @@
   align-items: center;
   justify-content: center;
   font-size: var(--font-size-14);
-  color: var(--colorOlive);
+  color: var(--color-secondary);
   line-height: 20px;
   margin-top: 0.25rem;
 }
 
 .message-metadata {
   .confirmed {
-    color: var(--colorSuccess);
+    color: var(--color-success);
   }
 
   .unconfirmed {
-    color: var(--colorError);
+    color: var(--color-danger);
   }
 }
 
@@ -167,8 +167,8 @@
     }
 
     &.is-fail {
-      color: var(--color-error);
-      border: 1px solid var(--color-error);
+      color: var(--color-danger);
+      border: 1px solid var(--color-danger);
     }
   }
 
@@ -542,9 +542,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #b33a2e;
+    background: var(--color-chat-warning-icon-bg);
     border-radius: 50%;
-    color: #fff;
+    color: var(--color-holo-text-bright);
     font-size: 14px;
   }
 
