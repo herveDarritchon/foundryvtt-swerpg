@@ -594,7 +594,9 @@ async function recordItemPurchase(actor, { itemName, itemType, price, quantity =
   const creditsDelta = creditsBefore !== null && creditsAfter !== null ? creditsBefore - creditsAfter : null
   const snapshot = { creditsBefore, creditsAfter, creditsDelta }
   const user = game.users?.get(game.user?.id) ?? null
-  const creditDelta = -(price * quantity)
+  // Use the snapshot delta as the canonical source of truth so that price modifiers,
+  // rounding and any commerce adjustments are reflected consistently in the audit entry.
+  const creditDelta = creditsDelta !== null ? -creditsDelta : -(price * quantity)
 
   const entry = {
     ...makeEntry({

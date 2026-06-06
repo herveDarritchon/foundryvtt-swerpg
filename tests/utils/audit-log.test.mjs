@@ -1998,22 +1998,28 @@ describe('recordItemPurchase', () => {
     expect(entry.xpDelta).toBe(0)
   })
 
-  test('calculates creditDelta as -price * quantity', async () => {
+  test('creditDelta is derived from snapshot.creditsDelta (canonical source), not from -(price * quantity)', async () => {
+    // AL11 regression guard: creditDelta must always equal -snapshot.creditsDelta so that
+    // price modifiers and rounding are reflected consistently in the audit entry.
     const { recordItemPurchase } = await import('../../module/utils/audit-log.mjs')
     globalThis.foundry.utils.deepClone = vi.fn((o) => structuredClone(o))
 
+    // actor.system.credits = 150 (from makeActor); price=25, quantity=3 → list cost = 75.
+    // creditsAfter reflects what the actor actually paid (75), so creditsBefore - creditsAfter = 75.
     const actor = makeActor()
     await recordItemPurchase(actor, {
       itemName: 'Stun Grenade',
       itemType: 'gear',
       price: 25,
       quantity: 3,
-      creditsAfter: 0,
+      creditsAfter: 75, // 150 - 75 (actual cost paid)
     })
 
     const updateArg = actor.update.mock.calls[0][0]
     const entry = getWrittenLogs(updateArg)[0]
+    expect(entry.snapshot.creditsDelta).toBe(75)
     expect(entry.creditDelta).toBe(-75)
+    expect(entry.creditDelta).toBe(-entry.snapshot.creditsDelta)
     expect(entry.data.quantity).toBe(3)
   })
 
