@@ -37,6 +37,7 @@ beforeEach(() => {
 
   globalThis.game = {
     ...globalThis.game,
+    userId: 'gm-1',
     user: { id: 'gm-1', name: 'Game Master', isGM: true },
     i18n: {
       localize: (key) => key,
@@ -440,21 +441,21 @@ describe('onPreUpdateActor', () => {
   test('skips non-character actors', async () => {
     const { onPreUpdateActor } = await import('../../module/utils/audit-log.mjs')
     const npc = { type: 'npc', uuid: 'Actor.npc-001', _source: {} }
-    expect(() => onPreUpdateActor(npc, { system: { skills: { Athletics: 1 } } }, {}, 'user-1')).not.toThrow()
+    expect(() => onPreUpdateActor(npc, { system: { skills: { Athletics: 1 } } }, {}, 'gm-1')).not.toThrow()
   })
 
   test('skips when changes are only audit logs', async () => {
     const { onPreUpdateActor } = await import('../../module/utils/audit-log.mjs')
     const actor = makeCharacterActor()
     const changes = { flags: { swerpg: { logs: [{ timestamp: 1 }] } } }
-    expect(() => onPreUpdateActor(actor, changes, {}, 'user-1')).not.toThrow()
+    expect(() => onPreUpdateActor(actor, changes, {}, 'gm-1')).not.toThrow()
   })
 
   test('skips when swerpgAuditLog option is false', async () => {
     const { onPreUpdateActor } = await import('../../module/utils/audit-log.mjs')
     const actor = makeCharacterActor()
     const changes = { system: { skills: { Athletics: { rank: 3 } } } }
-    expect(() => onPreUpdateActor(actor, changes, { swerpgAuditLog: false }, 'user-1')).not.toThrow()
+    expect(() => onPreUpdateActor(actor, changes, { swerpgAuditLog: false }, 'gm-1')).not.toThrow()
   })
 
   test('captures old state snapshot for character skill changes', async () => {
@@ -466,7 +467,7 @@ describe('onPreUpdateActor', () => {
       },
     })
     const changes = { system: { skills: { Athletics: { rank: 3 } } } }
-    expect(() => onPreUpdateActor(actor, changes, {}, 'user-1')).not.toThrow()
+    expect(() => onPreUpdateActor(actor, changes, {}, 'gm-1')).not.toThrow()
   })
 })
 
@@ -478,20 +479,20 @@ describe('onUpdateActor', () => {
   test('skips non-character actors', async () => {
     const { onUpdateActor } = await import('../../module/utils/audit-log.mjs')
     const npc = { type: 'npc', uuid: 'Actor.npc-001', _source: {} }
-    expect(() => onUpdateActor(npc, { system: { skills: {} } }, {}, 'user-1')).not.toThrow()
+    expect(() => onUpdateActor(npc, { system: { skills: {} } }, {}, 'gm-1')).not.toThrow()
   })
 
   test('skips when swerpgAuditLog option is false', async () => {
     const { onUpdateActor } = await import('../../module/utils/audit-log.mjs')
     const actor = makeCharacterActor()
     const changes = { system: { skills: { Athletics: { rank: 3 } } } }
-    expect(() => onUpdateActor(actor, changes, { swerpgAuditLog: false }, 'user-1')).not.toThrow()
+    expect(() => onUpdateActor(actor, changes, { swerpgAuditLog: false }, 'gm-1')).not.toThrow()
   })
 
   test('does nothing when no pending entry exists', async () => {
     const { onUpdateActor } = await import('../../module/utils/audit-log.mjs')
     const actor = makeCharacterActor()
-    expect(() => onUpdateActor(actor, { system: { skills: { Athletics: { rank: 3 } } } }, {}, 'user-1')).not.toThrow()
+    expect(() => onUpdateActor(actor, { system: { skills: { Athletics: { rank: 3 } } } }, {}, 'gm-1')).not.toThrow()
   })
 
   test('ignores expired pending entries', async () => {
@@ -505,19 +506,19 @@ describe('onUpdateActor', () => {
       },
     })
 
-    onPreUpdateActor(actor, { system: { skills: { Athletics: { rank: 3 } } } }, {}, 'user-1')
+    onPreUpdateActor(actor, { system: { skills: { Athletics: { rank: 3 } } } }, {}, 'gm-1')
 
     const expiredTimestamp = Date.now() - 60000
-    const { pushPendingEntry, shiftPendingEntry } = await import('../../module/utils/audit-log.mjs')
+    const { pushPendingEntry } = await import('../../module/utils/audit-log.mjs')
     flushPending()
-    pushPendingEntry(actor, 'user-1', {
+    pushPendingEntry(actor, 'gm-1', {
       oldState: {},
       changes: {},
-      userId: 'user-1',
+      userId: 'gm-1',
       timestamp: expiredTimestamp,
     })
 
-    expect(() => onUpdateActor(actor, { system: { skills: { Athletics: { rank: 3 } } } }, {}, 'user-1')).not.toThrow()
+    expect(() => onUpdateActor(actor, { system: { skills: { Athletics: { rank: 3 } } } }, {}, 'gm-1')).not.toThrow()
     flushPending()
   })
 })
@@ -624,7 +625,7 @@ describe('onCreateItem', () => {
     const actor = makeCharacterActor()
     const item = makeTalentItem(actor)
 
-    await onCreateItem(item, {}, {}, 'user-1')
+    await onCreateItem(item, {}, {}, 'gm-1')
 
     expect(actor.update).toHaveBeenCalledTimes(1)
     const updateArg = actor.update.mock.calls[0][0]
@@ -639,7 +640,7 @@ describe('onCreateItem', () => {
         ranks: 1,
       },
       xpDelta: -10,
-      userId: 'user-1',
+      userId: 'gm-1',
     })
   })
 
@@ -650,7 +651,7 @@ describe('onCreateItem', () => {
     const actor = makeCharacterActor()
     const item = makeTalentItem(actor, { system: {} })
 
-    await onCreateItem(item, {}, {}, 'user-1')
+    await onCreateItem(item, {}, {}, 'gm-1')
 
     expect(actor.update).toHaveBeenCalledTimes(1)
     const updateArg = actor.update.mock.calls[0][0]
@@ -665,7 +666,7 @@ describe('onCreateItem', () => {
     const actor = makeCharacterActor()
     const item = makeTalentItem(actor, { type: 'weapon' })
 
-    await onCreateItem(item, {}, {}, 'user-1')
+    await onCreateItem(item, {}, {}, 'gm-1')
 
     expect(actor.update).not.toHaveBeenCalled()
   })
@@ -675,7 +676,7 @@ describe('onCreateItem', () => {
     const npc = { type: 'npc', id: 'npc-001', name: 'NPC', update: vi.fn(), system: {} }
     const item = makeTalentItem(npc)
 
-    await onCreateItem(item, {}, {}, 'user-1')
+    await onCreateItem(item, {}, {}, 'gm-1')
 
     expect(npc.update).not.toHaveBeenCalled()
   })
@@ -684,7 +685,7 @@ describe('onCreateItem', () => {
     const { onCreateItem } = await import('../../module/utils/audit-log.mjs')
     const item = makeTalentItem(null)
 
-    expect(() => onCreateItem(item, {}, {}, 'user-1')).not.toThrow()
+    expect(() => onCreateItem(item, {}, {}, 'gm-1')).not.toThrow()
   })
 
   test('includes valid snapshot fields', async () => {
@@ -704,7 +705,7 @@ describe('onCreateItem', () => {
     })
     const item = makeTalentItem(actor)
 
-    await onCreateItem(item, {}, {}, 'user-1')
+    await onCreateItem(item, {}, {}, 'gm-1')
 
     const updateArg = actor.update.mock.calls[0][0]
     const snapshot = updateArg['flags.swerpg.logs'][0].snapshot
@@ -2213,5 +2214,178 @@ describe('recordItemSale', () => {
   test('is exported from the module', async () => {
     const module = await import('../../module/utils/audit-log.mjs')
     expect(typeof module.recordItemSale).toBe('function')
+  })
+})
+
+/* ============================================ */
+/*  isInitiatingClient                          */
+/* ============================================ */
+
+describe('isInitiatingClient', () => {
+  test('returns true when game.userId matches userId', async () => {
+    const { isInitiatingClient } = await import('../../module/utils/audit-log.mjs')
+    globalThis.game.userId = 'user-1'
+    expect(isInitiatingClient('user-1')).toBe(true)
+  })
+
+  test('returns false when game.userId does not match userId', async () => {
+    const { isInitiatingClient } = await import('../../module/utils/audit-log.mjs')
+    globalThis.game.userId = 'user-1'
+    expect(isInitiatingClient('user-2')).toBe(false)
+  })
+})
+
+/* ============================================ */
+/*  Mono-writer guard — onPreUpdateActor        */
+/* ============================================ */
+
+describe('onPreUpdateActor — mono-writer guard', () => {
+  test('non-initiating client does not capture pending state', async () => {
+    const { onPreUpdateActor, flushPending, countPendingEntries } = await import('../../module/utils/audit-log.mjs')
+    flushPending()
+
+    globalThis.game.userId = 'user-1'
+
+    const actor = makeCharacterActor({
+      _source: {
+        system: { skills: { Athletics: { rank: 2 } }, characteristics: {}, progression: {}, details: {}, advancement: {} },
+        flags: {},
+      },
+    })
+
+    onPreUpdateActor(actor, { system: { skills: { Athletics: { rank: 3 } } } }, {}, 'user-2')
+
+    expect(countPendingEntries()).toBe(0)
+    flushPending()
+  })
+
+  test('initiating client captures pending state', async () => {
+    const { onPreUpdateActor, flushPending, countPendingEntries } = await import('../../module/utils/audit-log.mjs')
+    flushPending()
+
+    globalThis.game.userId = 'user-1'
+
+    const actor = makeCharacterActor({
+      _source: {
+        system: { skills: { Athletics: { rank: 2 } }, characteristics: {}, progression: {}, details: {}, advancement: {} },
+        flags: {},
+      },
+    })
+
+    onPreUpdateActor(actor, { system: { skills: { Athletics: { rank: 3 } } } }, {}, 'user-1')
+
+    expect(countPendingEntries()).toBe(1)
+    flushPending()
+  })
+})
+
+/* ============================================ */
+/*  Mono-writer guard — onUpdateActor           */
+/* ============================================ */
+
+describe('onUpdateActor — mono-writer guard', () => {
+  test('non-initiating client does not write audit entries', async () => {
+    const { onPreUpdateActor, onUpdateActor, flushPending } = await import('../../module/utils/audit-log.mjs')
+    flushPending()
+
+    // The initiating client captures the pending state
+    globalThis.game.userId = 'user-1'
+    const actor = makeCharacterActor({
+      _source: {
+        system: { skills: { Athletics: { rank: 2 } }, characteristics: {}, progression: {}, details: {}, advancement: {} },
+        flags: {},
+      },
+    })
+    onPreUpdateActor(actor, { system: { skills: { Athletics: { rank: 3 } } } }, {}, 'user-1')
+
+    // Switch to a different client for the update
+    globalThis.game.userId = 'user-2'
+    onUpdateActor(actor, { system: { skills: { Athletics: { rank: 3 } } } }, {}, 'user-2')
+
+    expect(actor.update).not.toHaveBeenCalled()
+    flushPending()
+  })
+
+  test('initiating client consumes the pending entry (not left in queue after onUpdateActor)', async () => {
+    const { onPreUpdateActor, onUpdateActor, flushPending, countPendingEntries } = await import('../../module/utils/audit-log.mjs')
+    flushPending()
+
+    globalThis.game.userId = 'user-1'
+    globalThis.foundry.utils.deepClone = vi.fn((o) => structuredClone(o))
+
+    const actor = makeCharacterActor({
+      _source: {
+        system: { skills: { Athletics: { rank: 2 } }, characteristics: {}, progression: {}, details: {}, advancement: {} },
+        flags: {},
+      },
+    })
+
+    onPreUpdateActor(actor, { system: { skills: { Athletics: { rank: 3 } } } }, {}, 'user-1')
+    expect(countPendingEntries()).toBe(1)
+
+    onUpdateActor(actor, { system: { skills: { Athletics: { rank: 3 } } } }, {}, 'user-1')
+
+    // The pending entry must be consumed regardless of whether composeEntries produces audit entries
+    expect(countPendingEntries()).toBe(0)
+    flushPending()
+  })
+})
+
+/* ============================================ */
+/*  Mono-writer guard — onCreateItem            */
+/* ============================================ */
+
+describe('onCreateItem — mono-writer guard', () => {
+  function makeCharacterActorWithSystem(overrides = {}) {
+    return {
+      type: 'character',
+      id: 'actor-001',
+      uuid: 'Actor.actor-001',
+      name: 'Test Character',
+      _source: {
+        system: { skills: {}, characteristics: {}, progression: { totalXP: 0, spentXP: 0 }, details: {}, advancement: {} },
+        flags: {},
+      },
+      system: {
+        progression: {
+          experience: { spent: 0, gained: 0, available: 0, total: 0 },
+          freeSkillRanks: {
+            career: { spent: 0, gained: 0, available: 0 },
+            specialization: { spent: 0, gained: 0, available: 0 },
+          },
+        },
+      },
+      update: vi.fn(),
+      ...overrides,
+    }
+  }
+
+  test('non-initiating client does not write audit entry', async () => {
+    const { onCreateItem } = await import('../../module/utils/audit-log.mjs')
+    globalThis.game.userId = 'user-1'
+
+    const actor = makeCharacterActorWithSystem()
+    const item = { type: 'talent', id: 'talent-001', name: 'Parry', parent: actor, system: { cost: 5, ranks: 1 } }
+
+    await onCreateItem(item, {}, {}, 'user-2')
+
+    expect(actor.update).not.toHaveBeenCalled()
+  })
+
+  test('initiating client writes exactly one audit entry', async () => {
+    const { onCreateItem } = await import('../../module/utils/audit-log.mjs')
+    globalThis.game.userId = 'user-1'
+    globalThis.foundry.utils.deepClone = vi.fn((o) => structuredClone(o))
+
+    const actor = makeCharacterActorWithSystem()
+    const item = { type: 'talent', id: 'talent-001', name: 'Parry', parent: actor, system: { cost: 5, ranks: 1 } }
+
+    await onCreateItem(item, {}, {}, 'user-1')
+
+    expect(actor.update).toHaveBeenCalledTimes(1)
+    const logs = actor.update.mock.calls[0][0]['flags.swerpg.logs']
+    expect(logs).toHaveLength(1)
+    expect(logs[0].type).toBe('talent.purchase')
+    expect(logs[0].userId).toBe('user-1')
   })
 })

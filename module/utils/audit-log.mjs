@@ -47,6 +47,16 @@ function isAuditInternalUpdate(options) {
   return options?.swerpgAuditLog === false
 }
 
+/**
+ * Return true when the local client is the one that initiated the action.
+ * Mirrors the pattern used in SwerpgActor._onUpdate to prevent duplicate side-effects
+ * across all connected clients in a multiplayer session.
+ * @param {string} userId The userId argument provided by the Foundry hook.
+ */
+function isInitiatingClient(userId) {
+  return game.userId === userId
+}
+
 /* -------------------------------------------- */
 /*  Clone utilitaire                            */
 /* -------------------------------------------- */
@@ -310,6 +320,7 @@ function readAuditChatSummaryEnabled() {
 
 export {
   isOnlyAuditChange,
+  isInitiatingClient,
   snapshotOldState,
   cloneValue,
   evictOldestIfNeeded,
@@ -344,6 +355,7 @@ export {
  * @param {string} userId
  */
 export function onPreUpdateActor(actor, changes, options, userId) {
+  if (!isInitiatingClient(userId)) return
   if (isAuditInternalUpdate(options)) return
   if (!isCharacterActor(actor)) return
   if (isOnlyAuditChange(changes)) return
@@ -369,6 +381,7 @@ export function onPreUpdateActor(actor, changes, options, userId) {
  * @param {string} userId
  */
 export function onUpdateActor(actor, changes, options, userId) {
+  if (!isInitiatingClient(userId)) return
   if (isAuditInternalUpdate(options)) return
   if (!isCharacterActor(actor)) return
   if (isOnlyAuditChange(changes)) return
@@ -395,6 +408,7 @@ export function onUpdateActor(actor, changes, options, userId) {
  * @param {string} userId
  */
 function onCreateItem(item, data, options, userId) {
+  if (!isInitiatingClient(userId)) return
   if (item.parent?.type !== 'character') return
   if (item.type !== 'talent') return
 
