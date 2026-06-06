@@ -246,7 +246,7 @@ describe('isDeletionPath', () => {
 
 describe('pending queue', () => {
   test('pushPendingEntry and shiftPendingEntry work as FIFO', async () => {
-    const { pushPendingEntry, shiftPendingEntry, getPendingKey, flushPending } = await import('../../module/utils/audit-log.mjs')
+    const { pushPendingEntry, shiftPendingEntry, flushPending } = await import('../../module/utils/audit-log.mjs')
     flushPending()
 
     const actor = makeCharacterActor()
@@ -259,6 +259,51 @@ describe('pending queue', () => {
     const second = shiftPendingEntry(actor, userId)
     expect(second.changes).toEqual({ x: 2 })
     expect(shiftPendingEntry(actor, userId)).toBeUndefined()
+    flushPending()
+  })
+
+  test('popPendingEntryByOpId retrieves entry by opId regardless of insertion order', async () => {
+    const { pushPendingEntry, popPendingEntryByOpId, countPendingEntries, flushPending } = await import('../../module/utils/audit-log.mjs')
+    flushPending()
+
+    const actor = makeCharacterActor()
+    const userId = 'user-1'
+    pushPendingEntry(actor, userId, { opId: 'op-A', changes: { x: 1 }, timestamp: 100 })
+    pushPendingEntry(actor, userId, { opId: 'op-B', changes: { x: 2 }, timestamp: 200 })
+    pushPendingEntry(actor, userId, { opId: 'op-C', changes: { x: 3 }, timestamp: 300 })
+
+    // Retrieve the middle entry by opId — simulates op-A being orphaned (rejected update)
+    const retrieved = popPendingEntryByOpId(actor, userId, 'op-B')
+    expect(retrieved.changes).toEqual({ x: 2 })
+    expect(retrieved.opId).toBe('op-B')
+
+    // op-A and op-C must remain in the queue
+    expect(countPendingEntries()).toBe(2)
+    flushPending()
+  })
+
+  test('popPendingEntryByOpId returns undefined when opId does not match any entry', async () => {
+    const { pushPendingEntry, popPendingEntryByOpId, flushPending } = await import('../../module/utils/audit-log.mjs')
+    flushPending()
+
+    const actor = makeCharacterActor()
+    const userId = 'user-1'
+    pushPendingEntry(actor, userId, { opId: 'op-A', changes: { x: 1 }, timestamp: 100 })
+
+    expect(popPendingEntryByOpId(actor, userId, 'op-MISSING')).toBeUndefined()
+    flushPending()
+  })
+
+  test('popPendingEntryByOpId removes the queue key when the last entry is consumed', async () => {
+    const { pushPendingEntry, popPendingEntryByOpId, countPendingEntries, flushPending } = await import('../../module/utils/audit-log.mjs')
+    flushPending()
+
+    const actor = makeCharacterActor()
+    const userId = 'user-1'
+    pushPendingEntry(actor, userId, { opId: 'op-solo', changes: { x: 1 }, timestamp: 100 })
+
+    popPendingEntryByOpId(actor, userId, 'op-solo')
+    expect(countPendingEntries()).toBe(0)
     flushPending()
   })
 })
@@ -2404,6 +2449,114 @@ describe('onUpdateActor — mono-writer guard', () => {
 
     // The pending entry must be consumed regardless of whether composeEntries produces audit entries
     expect(countPendingEntries()).toBe(0)
+    flushPending()
+  })
+})
+
+/* ============================================ */
+/*  Corrélation old/new par opId               */
+/*  Régression AL7 — update rejetée + retry    */
+/* ============================================ */
+
+describe('opId correlation — rejected update followed by successful retry', () => {
+  test('second update uses its own oldState, not the orphaned snapshot from the first attempt', async () => {
+    const { onPreUpdateActor, onUpdateActor, flushPending, countPendingEntries } = await import('../../module/utils/audit-log.mjs')
+    flushPending()
+
+    globalThis.game.userId = 'gm-1'
+    globalThis.foundry.utils.deepClone = vi.fn((o) => structuredClone(o))
+
+    const actor = makeCharacterActor({
+      _source: {
+        system: {
+          skills: { Athletics: { rank: 2 }, Lore: { rank: 1 } },
+          characteristics: {},
+          progression: {},
+          details: {},
+          advancement: {},
+        },
+        flags: {},
+      },
+    })
+
+    // First attempt: preUpdate captures oldState with Athletics rank 2
+    const options1 = {}
+    onPreUpdateActor(actor, { system: { skills: { Athletics: { rank: 3 } } } }, options1, 'gm-1')
+    expect(countPendingEntries()).toBe(1)
+
+    // The first update is rejected — onUpdateActor is never called for options1.
+    // The orphaned entry stays in the queue with opId from options1.
+
+    // Actor source is not actually modified (update was rejected).
+    // Second attempt: preUpdate captures oldState again (still rank 2)
+    const options2 = {}
+    onPreUpdateActor(actor, { system: { skills: { Athletics: { rank: 3 } } } }, options2, 'gm-1')
+    expect(countPendingEntries()).toBe(2)
+
+    // The second update succeeds — onUpdateActor is called with options2
+    onUpdateActor(actor, { system: { skills: { Athletics: { rank: 3 } } } }, options2, 'gm-1')
+
+    // The orphaned entry from options1 must remain; only the matched entry was consumed.
+    expect(countPendingEntries()).toBe(1)
+
+    // Verify the options1 opId is different from options2 opId (both were stamped)
+    expect(options1._swerpgOpId).toBeDefined()
+    expect(options2._swerpgOpId).toBeDefined()
+    expect(options1._swerpgOpId).not.toBe(options2._swerpgOpId)
+
+    flushPending()
+  })
+
+  test('onPreUpdateActor stamps a unique _swerpgOpId onto options', async () => {
+    const { onPreUpdateActor, flushPending } = await import('../../module/utils/audit-log.mjs')
+    flushPending()
+
+    globalThis.game.userId = 'gm-1'
+
+    const actor = makeCharacterActor({
+      _source: {
+        system: { skills: { Athletics: { rank: 2 } }, characteristics: {}, progression: {}, details: {}, advancement: {} },
+        flags: {},
+      },
+    })
+
+    const optA = {}
+    const optB = {}
+    onPreUpdateActor(actor, { system: { skills: { Athletics: { rank: 3 } } } }, optA, 'gm-1')
+    onPreUpdateActor(actor, { system: { skills: { Athletics: { rank: 4 } } } }, optB, 'gm-1')
+
+    expect(typeof optA._swerpgOpId).toBe('string')
+    expect(typeof optB._swerpgOpId).toBe('string')
+    expect(optA._swerpgOpId).not.toBe(optB._swerpgOpId)
+
+    flushPending()
+  })
+
+  test('onUpdateActor without opId on options falls back to FIFO (backward-compat)', async () => {
+    const { onPreUpdateActor, onUpdateActor, countPendingEntries, flushPending } = await import('../../module/utils/audit-log.mjs')
+    flushPending()
+
+    globalThis.game.userId = 'gm-1'
+    globalThis.foundry.utils.deepClone = vi.fn((o) => structuredClone(o))
+
+    const actor = makeCharacterActor({
+      _source: {
+        system: { skills: { Athletics: { rank: 2 } }, characteristics: {}, progression: {}, details: {}, advancement: {} },
+        flags: {},
+      },
+    })
+
+    const optPre = {}
+    onPreUpdateActor(actor, { system: { skills: { Athletics: { rank: 3 } } } }, optPre, 'gm-1')
+    expect(countPendingEntries()).toBe(1)
+
+    // Pass a fresh options object with no _swerpgOpId to simulate an external caller
+    const optPost = {}
+    onUpdateActor(actor, { system: { skills: { Athletics: { rank: 3 } } } }, optPost, 'gm-1')
+
+    // Entry consumed via FIFO fallback
+    expect(countPendingEntries()).toBe(0)
+
     flushPending()
   })
 })
