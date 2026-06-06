@@ -2909,3 +2909,104 @@ describe('buildAuditLogEntries — hasDetails and details on entries', () => {
     expect(lines[0]).not.toContain('creditsBefore')
   })
 })
+
+/* ============================================ */
+/*  #onExportCsv applicative contract          */
+/* ============================================ */
+
+describe('#onExportCsv — foundry.utils.saveDataToFile applicative contract', () => {
+  let CharacterAuditLogApp
+
+  const baseTranslations = {
+    'SWERPG.AUDIT_LOG.NO_PERMISSION': 'No permission',
+    'SWERPG.AUDIT_LOG.EXPORT_FAILED': 'Export failed',
+    'SWERPG.AUDIT_LOG.FILTER.ALL': 'All',
+    'SWERPG.AUDIT_LOG.FILTER.SKILLS': 'Skills',
+    'SWERPG.AUDIT_LOG.FILTER.TALENTS': 'Talents',
+    'SWERPG.AUDIT_LOG.FILTER.XP': 'XP',
+    'SWERPG.AUDIT_LOG.FILTER.CHARACTERISTICS': 'Characteristics',
+    'SWERPG.AUDIT_LOG.FILTER.DETAILS': 'Core choices',
+    'SWERPG.AUDIT_LOG.FILTER.ADVANCEMENT': 'Advancement',
+    'SWERPG.AUDIT_LOG.FILTER.PURCHASES': 'Purchases',
+    'SWERPG.AUDIT_LOG.FILTER.SALES': 'Sales',
+    'SWERPG.AUDIT_LOG.EMPTY': 'No entries',
+    'SWERPG.AUDIT_LOG.TYPE.SKILL_TRAIN': 'Skill purchase',
+    'SWERPG.AUDIT_LOG.TYPE.UNKNOWN': 'Unknown event',
+    'SWERPG.AUDIT_LOG.NONE': 'None',
+    'SWERPG.AUDIT_LOG.UNKNOWN_VALUE': 'Unknown value',
+    'SWERPG.AUDIT_LOG.UNKNOWN_SKILL': 'Unknown skill',
+    'SWERPG.AUDIT_LOG.DESCRIPTION.SKILL_TRAIN': 'Skill {skill}: rank {oldRank} -> {newRank}',
+    'SWERPG.AUDIT_LOG.DESCRIPTION.UNKNOWN': 'Unknown event ({type})',
+    'SWERPG.AUDIT_LOG.VARIANT.ADD': 'Added',
+    'SWERPG.AUDIT_LOG.VARIANT.GAIN': 'Gained',
+    'SWERPG.AUDIT_LOG.VARIANT.REMOVE': 'Removed',
+    'SWERPG.AUDIT_LOG.VARIANT.CHANGE': 'Changed',
+    'SWERPG.AUDIT_LOG.VARIANT.FAIL': 'Failed',
+  }
+
+  beforeEach(async () => {
+    setupFoundryMock({ translations: baseTranslations })
+    globalThis.game.users = { get: vi.fn(() => undefined) }
+    ;({ default: CharacterAuditLogApp } = await import('../../module/applications/character-audit-log.mjs'))
+  })
+
+  afterEach(() => {
+    vi.resetModules()
+    vi.clearAllMocks()
+    teardownFoundryMock()
+  })
+
+  function makeActor(logs = []) {
+    return {
+      id: 'actor-export',
+      name: 'Vara Kesh',
+      type: 'character',
+      isOwner: true,
+      system: {},
+      flags: { swerpg: { logs } },
+      ownership: { 'owner-1': 3 },
+      testUserPermission: vi.fn(() => true),
+    }
+  }
+
+  it('nominal: calls foundry.utils.saveDataToFile with CSV content, text/csv MIME and the computed filename', async () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2026-05-12T10:00:00Z'))
+
+    const actor = makeActor([{ id: 'e1', timestamp: 100, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 1, newRank: 2 } }])
+
+    const app = new CharacterAuditLogApp({ document: actor })
+    const fakeEvent = { preventDefault: vi.fn() }
+
+    await CharacterAuditLogApp.DEFAULT_OPTIONS.actions.exportCsv.call(app, fakeEvent, null)
+
+    expect(fakeEvent.preventDefault).toHaveBeenCalled()
+    expect(globalThis.foundry.utils.saveDataToFile).toHaveBeenCalledOnce()
+
+    const [csvContent, mime, filename] = globalThis.foundry.utils.saveDataToFile.mock.calls[0]
+
+    expect(typeof csvContent).toBe('string')
+    expect(csvContent).toContain('timestamp,date,userName,type,typeLabel,description,xpDelta,creditDelta,actorName,playerName')
+    expect(mime).toBe('text/csv;charset=utf-8')
+    expect(typeof filename).toBe('string')
+    expect(filename).toMatch(/^vara_kesh_.+_2026-05-12\.csv$/)
+
+    vi.useRealTimers()
+  })
+
+  it('error path: when foundry.utils.saveDataToFile throws, logs the error and shows EXPORT_FAILED notification', async () => {
+    const exportError = new Error('disk full')
+    globalThis.foundry.utils.saveDataToFile.mockImplementation(() => {
+      throw exportError
+    })
+
+    const actor = makeActor()
+    const app = new CharacterAuditLogApp({ document: actor })
+    const fakeEvent = { preventDefault: vi.fn() }
+
+    // Must not throw — the error is caught by #onExportCsv
+    await expect(CharacterAuditLogApp.DEFAULT_OPTIONS.actions.exportCsv.call(app, fakeEvent, null)).resolves.toBeUndefined()
+
+    expect(globalThis.ui.notifications.error).toHaveBeenCalledWith('Export failed')
+  })
+})

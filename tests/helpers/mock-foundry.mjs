@@ -482,6 +482,7 @@ export function setupFoundryMock(options = {}) {
       debounce: vi.fn((fn, _wait) => fn),
       randomID: vi.fn(() => Math.random().toString(36).slice(2, 10)),
       isEmpty: vi.fn((obj) => !obj || Object.keys(obj).length === 0),
+      saveDataToFile: vi.fn(),
     },
     ...foundryPatch,
   }
