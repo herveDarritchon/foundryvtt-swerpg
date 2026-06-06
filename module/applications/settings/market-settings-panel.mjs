@@ -399,7 +399,7 @@ export default class MarketSettingsPanel extends api.HandlebarsApplicationMixin(
         worldItems,
         compendiumItems,
         config: marketConfig,
-        marketContext: { availability: 'available', marketType: 'standard', manualModifier: 0 },
+        marketContext: { marketType: 'standard', manualModifier: 0 },
         excludedIds,
       })
 

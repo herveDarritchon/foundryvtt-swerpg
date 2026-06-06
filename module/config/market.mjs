@@ -263,9 +263,13 @@ export const DEFAULT_MARKET_CONFIG = Object.freeze({
 
 /**
  * @typedef {Object} MarketContext
- * @property {string}  availability    Availability key (one of AVAILABILITY_STATUS keys)
  * @property {string}  marketType      Market type key: one of MARKET_TYPES keys
  * @property {number}  manualModifier  Manual GM percentage modifier (-100 to +100), default 0
+ *
+ * Note: `availability` is NOT a context field. It is always derived from the item's
+ * `rarity` and `restrictionLevel` via `deriveAvailability()` in `market-entry.mjs`,
+ * or provided explicitly as `itemData.availability` to `calculateItemPrice()`.
+ * Injecting `availability` into a `MarketContext` is a contract violation.
  */
 
 /* -------------------------------------------- */
@@ -374,10 +378,16 @@ export const COMMERCE_OUTCOME_PRICE_MODIFIERS = Object.freeze({
 /**
  * Default market context applied when none is provided to the price engine.
  * Uses deterministic fallback values that produce no price modification beyond item data.
+ *
+ * `availability` is intentionally absent: it is not a contextual dimension.
+ * It must be derived from the item's `rarity` and `restrictionLevel` via
+ * `deriveAvailability()`, or supplied explicitly as `itemData.availability`
+ * to `calculateItemPrice()`. Context-level availability was a legacy backward-compat
+ * field and has been removed to enforce a single source of truth.
+ *
  * @type {Readonly<MarketContext>}
  */
 export const DEFAULT_MARKET_CONTEXT = Object.freeze({
-  availability: DEFAULT_AVAILABILITY,
   marketType: DEFAULT_MARKET_TYPE,
   manualModifier: 0,
 })

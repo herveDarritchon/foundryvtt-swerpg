@@ -1,4 +1,4 @@
-import { DEFAULT_MARKET_CONTEXT, MARKET_TYPES } from '../../config/market.mjs'
+import { DEFAULT_MARKET_CONTEXT, DEFAULT_AVAILABILITY, MARKET_TYPES } from '../../config/market.mjs'
 import { computeMarketPrice } from './pricing.mjs'
 
 /**
@@ -41,10 +41,12 @@ import { computeMarketPrice } from './pricing.mjs'
  * `computeMarketPrice` from `pricing.mjs` and re-maps the result to the
  * canonical `PriceResult` shape (`modifiers` instead of `breakdown`).
  *
- * Availability resolution order:
- *   1. `itemData.availability` (item-level override)
- *   2. `marketContext.availability` (context-level)
- *   3. `DEFAULT_MARKET_CONTEXT.availability` (fallback)
+ * Availability resolution:
+ *   `itemData.availability` is the only valid source of the availability key.
+ *   It must be derived canonically by the caller via `deriveAvailability()` from
+ *   `market-entry.mjs` before invoking this function. When `itemData.availability`
+ *   is absent, the engine falls back to `DEFAULT_AVAILABILITY` ('available') internally.
+ *   Injecting `availability` through `marketContext` is not supported and will be ignored.
  *
  * Type modifier resolution:
  *   When `options.typeModifiers` is provided and contains the item's type key,
@@ -67,8 +69,9 @@ import { computeMarketPrice } from './pricing.mjs'
 export function calculateItemPrice(itemData, marketContext = {}, options = {}) {
   const ctx = { ...DEFAULT_MARKET_CONTEXT, ...marketContext }
 
-  // Item-level availability takes precedence over context
-  const availability = itemData.availability ?? ctx.availability
+  // Availability must come from itemData (derived by the caller via deriveAvailability()).
+  // Context-level availability is not supported — DEFAULT_AVAILABILITY is the neutral fallback.
+  const availability = itemData.availability ?? DEFAULT_AVAILABILITY
 
   // Resolve market-type price modifier from the registry
   const marketTypeDef = MARKET_TYPES[ctx.marketType]

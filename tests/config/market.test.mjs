@@ -8,6 +8,7 @@ import {
   DEFAULT_SOURCE_TYPE,
   MIN_PRICE_FOR_ELIGIBILITY,
   DEFAULT_MARKET_CONFIG,
+  DEFAULT_MARKET_CONTEXT,
   MARKET_FLAG_NAMESPACE,
   MARKET_EXCLUDED_FLAG,
   MARKET_TYPES,
@@ -553,5 +554,40 @@ describe('Broken item sale policy constants', () => {
     expect(typeof DEFAULT_BROKEN_ITEM_SALE_MULTIPLIER).toBe('number')
     expect(typeof BROKEN_ITEM_SALE_MULTIPLIER_MIN).toBe('number')
     expect(typeof BROKEN_ITEM_SALE_MULTIPLIER_MAX).toBe('number')
+  })
+})
+
+/* -------------------------------------------- */
+
+describe('DEFAULT_MARKET_CONTEXT — contractual guard (issue #593)', () => {
+  test('is defined and frozen', () => {
+    expect(DEFAULT_MARKET_CONTEXT).toBeDefined()
+    expect(Object.isFrozen(DEFAULT_MARKET_CONTEXT)).toBe(true)
+  })
+
+  test('has marketType and manualModifier fields', () => {
+    expect(DEFAULT_MARKET_CONTEXT).toHaveProperty('marketType')
+    expect(DEFAULT_MARKET_CONTEXT).toHaveProperty('manualModifier')
+  })
+
+  test('marketType is a valid MARKET_TYPES key', () => {
+    expect(DEFAULT_MARKET_CONTEXT.marketType in MARKET_TYPES).toBe(true)
+  })
+
+  test('manualModifier defaults to 0', () => {
+    expect(DEFAULT_MARKET_CONTEXT.manualModifier).toBe(0)
+  })
+
+  test('does NOT contain an availability field — availability is derived from item data, not context', () => {
+    // Guard against reintroduction of the legacy backward-compat field removed in issue #593.
+    // availability must come from deriveAvailability(rarity, restrictionLevel), not from MarketContext.
+    expect(Object.prototype.hasOwnProperty.call(DEFAULT_MARKET_CONTEXT, 'availability')).toBe(false)
+  })
+
+  test('has exactly two own keys: marketType and manualModifier', () => {
+    const keys = Object.keys(DEFAULT_MARKET_CONTEXT)
+    expect(keys).toHaveLength(2)
+    expect(keys).toContain('marketType')
+    expect(keys).toContain('manualModifier')
   })
 })

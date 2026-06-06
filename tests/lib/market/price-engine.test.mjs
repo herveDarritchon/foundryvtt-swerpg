@@ -56,24 +56,33 @@ describe('calculateItemPrice', () => {
   /* -------------------------------------------- */
 
   describe('availability resolution', () => {
-    it('item-level availability overrides context availability', () => {
-      // Item has 'rare' availability (priceModifier=0.25), context has 'available' (0)
-      const result = calculateItemPrice({ basePrice: 100, rarity: 0, availability: 'rare' }, { availability: 'available' })
-      // Item overrides: 100 * (1 + 0.25) = 125
+    it('item-level availability is applied when provided', () => {
+      // Item has 'rare' availability (priceModifier=0.25)
+      const result = calculateItemPrice({ basePrice: 100, rarity: 0, availability: 'rare' })
+      // 100 * (1 + 0.25) = 125
       expect(result.finalPrice).toBe(125)
     })
 
-    it('context availability is used when item has no availability', () => {
-      // No item availability — context provides 'restricted' (priceModifier=1.0)
-      const result = calculateItemPrice({ basePrice: 100, rarity: 0 }, { availability: 'restricted' })
-      // 100 * (1 + 1.0) = 200
-      expect(result.finalPrice).toBe(200)
+    it('defaults to DEFAULT_AVAILABILITY ("available") when itemData has no availability', () => {
+      // No item availability and no context availability → falls back to 'available' (priceModifier=0)
+      const result = calculateItemPrice({ basePrice: 100, rarity: 0 })
+      expect(result.finalPrice).toBe(100)
+      expect(result.modifiers.some((m) => m.label === 'availability')).toBe(false)
     })
 
-    it('defaults to available when neither item nor context sets availability', () => {
-      const result = calculateItemPrice({ basePrice: 100, rarity: 0 })
-      // No availability modifier
+    it('context-level availability field is ignored — itemData.availability is the only valid source', () => {
+      // Passing availability through marketContext must have no effect on the price (issue #593).
+      // 'restricted' has priceModifier=1.0; if context were used, finalPrice would be 200.
+      // Since context availability is ignored and itemData has no availability, price stays at 100.
+      const result = calculateItemPrice({ basePrice: 100, rarity: 0 }, { availability: 'restricted' })
       expect(result.finalPrice).toBe(100)
+    })
+
+    it('item-level availability takes precedence even when context carries availability', () => {
+      // Item has 'rare' (0.25); context has 'restricted' (1.0) — context is ignored.
+      const result = calculateItemPrice({ basePrice: 100, rarity: 0, availability: 'rare' }, { availability: 'restricted' })
+      // Only 'rare' modifier applies: 100 * (1 + 0.25) = 125
+      expect(result.finalPrice).toBe(125)
     })
   })
 
