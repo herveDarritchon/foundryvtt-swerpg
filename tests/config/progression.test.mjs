@@ -18,6 +18,8 @@ import {
   STARTING_CREDITS,
   OBLIGATION_EXTRA_CREDITS_5,
   OBLIGATION_EXTRA_CREDITS_10,
+  TALENT_PURCHASE_DEFAULT_COST,
+  TALENT_PURCHASE_DEFAULT_RANKS,
 } from '../../module/config/progression.mjs'
 import { MAX_RANK_AT_CREATION, MAX_RANK } from '../../module/config/skills.mjs'
 import { SYSTEM } from '../../module/config/system.mjs'
@@ -228,6 +230,30 @@ describe('Progression config — contractual constants (ADR-0018)', () => {
   })
 
   /* -------------------------------------------- */
+  /*  Talent purchase audit defaults              */
+  /* -------------------------------------------- */
+
+  describe('Talent purchase audit default constants', () => {
+    test('TALENT_PURCHASE_DEFAULT_COST is 5 (fallback XP cost when talent has no system.cost)', () => {
+      expect(TALENT_PURCHASE_DEFAULT_COST).toBe(5)
+    })
+
+    test('TALENT_PURCHASE_DEFAULT_RANKS is 1 (fallback rank count when talent has no system.ranks)', () => {
+      expect(TALENT_PURCHASE_DEFAULT_RANKS).toBe(1)
+    })
+
+    test('TALENT_PURCHASE_DEFAULT_COST is a positive integer', () => {
+      expect(Number.isInteger(TALENT_PURCHASE_DEFAULT_COST)).toBe(true)
+      expect(TALENT_PURCHASE_DEFAULT_COST).toBeGreaterThan(0)
+    })
+
+    test('TALENT_PURCHASE_DEFAULT_RANKS is a positive integer', () => {
+      expect(Number.isInteger(TALENT_PURCHASE_DEFAULT_RANKS)).toBe(true)
+      expect(TALENT_PURCHASE_DEFAULT_RANKS).toBeGreaterThan(0)
+    })
+  })
+
+  /* -------------------------------------------- */
   /*  SYSTEM.PROGRESSION exposure (ADR-0018)      */
   /* -------------------------------------------- */
 
@@ -302,6 +328,14 @@ describe('Progression config — contractual constants (ADR-0018)', () => {
 
     test('SYSTEM.PROGRESSION.OBLIGATION_EXTRA_CREDITS_10 equals OBLIGATION_EXTRA_CREDITS_10', () => {
       expect(SYSTEM.PROGRESSION.OBLIGATION_EXTRA_CREDITS_10).toBe(OBLIGATION_EXTRA_CREDITS_10)
+    })
+
+    test('SYSTEM.PROGRESSION.TALENT_PURCHASE_DEFAULT_COST equals TALENT_PURCHASE_DEFAULT_COST', () => {
+      expect(SYSTEM.PROGRESSION.TALENT_PURCHASE_DEFAULT_COST).toBe(TALENT_PURCHASE_DEFAULT_COST)
+    })
+
+    test('SYSTEM.PROGRESSION.TALENT_PURCHASE_DEFAULT_RANKS equals TALENT_PURCHASE_DEFAULT_RANKS', () => {
+      expect(SYSTEM.PROGRESSION.TALENT_PURCHASE_DEFAULT_RANKS).toBe(TALENT_PURCHASE_DEFAULT_RANKS)
     })
   })
 })

@@ -159,6 +159,30 @@ export const CAREER_MIN_FREE_SKILL_RANK = 0
 export const CAREER_MAX_FREE_SKILL_RANK = 8
 
 /* -------------------------------------------- */
+/*  Talent purchase audit defaults              */
+/* -------------------------------------------- */
+
+/**
+ * Default XP cost recorded in a `talent.purchase` audit entry when the talent
+ * item does not expose a `system.cost` value.
+ *
+ * This fallback matches the canonical career-skill rank-1 base cost and is
+ * intentionally a named constant so the audit trail remains readable and
+ * testable (ADR-0018).
+ *
+ * @type {number}
+ */
+export const TALENT_PURCHASE_DEFAULT_COST = 5
+
+/**
+ * Default rank count recorded in a `talent.purchase` audit entry when the
+ * talent item does not expose a `system.ranks` value.
+ *
+ * @type {number}
+ */
+export const TALENT_PURCHASE_DEFAULT_RANKS = 1
+
+/* -------------------------------------------- */
 /*  Starting Resources                          */
 /* -------------------------------------------- */
 
