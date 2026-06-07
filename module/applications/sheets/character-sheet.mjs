@@ -399,10 +399,18 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
    */
   static async #onToggleObligationExtraState(event) {
     const element = event.target.closest('.obligation')
+    if (!element) {
+      logger.warn('[CharacterSheet] toggleObligationExtraState — obligation container not found in DOM')
+      return
+    }
+
     const itemId = element.dataset.itemId
     const item = this.actor.items.get(itemId)
+    if (!item) {
+      logger.warn('[CharacterSheet] toggleObligationExtraState — obligation item not found', { itemId })
+      return
+    }
 
-    // Debug de toggle obligation
     logger.debug(`[CharacterSheet] Toggling obligation extra state for ${item.name}`)
 
     await item.update({ 'system.isExtra': !item.system.isExtra })

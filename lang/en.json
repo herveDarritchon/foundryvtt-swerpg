@@ -589,7 +589,16 @@
       "EDIT_ITEM": "Edit Item",
       "DELETE_ITEM": "Delete Item",
       "CREATE_ITEM": "Create Item",
-      "SIZE": "Size"
+      "SIZE": "Size",
+      "OBLIGATIONS_HEADER": "Obligations",
+      "OBLIGATIONS_COLUMN_NAME": "Name",
+      "OBLIGATIONS_COLUMN_EXTRA": "Extra",
+      "OBLIGATIONS_COLUMN_ACTIONS": "Actions",
+      "OBLIGATIONS_TOGGLE_EXTRA": "Toggle Extra Obligation",
+      "OBLIGATIONS_ICON_XP_ALT": "XP",
+      "OBLIGATIONS_ICON_CREDITS_ALT": "Credits",
+      "OBLIGATIONS_DELETE_TOOLTIP": "Delete Obligation",
+      "OBLIGATIONS_EDIT_TOOLTIP": "Edit Obligation"
     }
   },
   "ACTOR.AppliedDetailItem": "Applied the {name} {type} to {actor}.",
@@ -957,6 +966,9 @@
         "label": "Extra Experience",
         "hint": "The amount of extra experience which the character receives for taking on this obligation."
       }
+    },
+    "UI": {
+      "EXTRA_BONUS_LEGEND": "Extra Bonus"
     }
   },
   "RESOURCES": {

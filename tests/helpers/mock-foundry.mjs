@@ -92,6 +92,18 @@ if (!globalThis.foundry) {
       },
       // Instances registry consumed by ActionUseDialog.debounceChangeTarget
       instances: new Map(),
+      sheets: {
+        ActorSheetV2: class MockActorSheetV2Early {
+          constructor(options = {}) {
+            this.options = options
+          }
+        },
+        ItemSheetV2: class MockItemSheetV2Early {
+          constructor(options = {}) {
+            this.options = options
+          }
+        },
+      },
     },
     abstract: {
       DataModel: class DataModelEarly {
@@ -287,6 +299,14 @@ export function setupFoundryMock(options = {}) {
       },
       sheets: {
         ActorSheetV2: class MockActorSheetV2 {
+          constructor(options = {}) {
+            this.options = options
+          }
+          render() {
+            /* noop stub */
+          }
+        },
+        ItemSheetV2: class MockItemSheetV2 {
           constructor(options = {}) {
             this.options = options
           }

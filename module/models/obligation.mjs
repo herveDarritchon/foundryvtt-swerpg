@@ -1,5 +1,9 @@
 /**
- * Data schema, attributes, and methods specific to Ancestry type Items.
+ * Data schema, attributes, and methods specific to Obligation type Items.
+ *
+ * An Obligation represents a personal debt or responsibility taken on by a character.
+ * Characters may voluntarily take on extra obligations (isExtra = true) in exchange
+ * for bonus starting credits or experience points, following the Star Wars FFG rules.
  */
 export default class SwerpgObligation extends foundry.abstract.TypeDataModel {
   /* -------------------------------------------- */
@@ -58,6 +62,17 @@ export default class SwerpgObligation extends foundry.abstract.TypeDataModel {
 
   /* -------------------------------------------- */
 
-  /** @inheritdoc */
-  static validateJoint(data) {}
+  /**
+   * Joint validation for the Obligation data model.
+   *
+   * No cross-field constraint is enforced at this level: field-level constraints
+   * (min/max/integer) are already declared in defineSchema(). This override is
+   * intentionally a no-op and is kept to document that joint validation was
+   * considered and found unnecessary for the current rule set.
+   *
+   * @inheritdoc
+   */
+  static validateJoint(data) {
+    // No cross-field invariants to enforce.
+  }
 }

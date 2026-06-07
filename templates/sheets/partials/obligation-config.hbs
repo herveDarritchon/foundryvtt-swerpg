@@ -2,10 +2,14 @@
 
   {{formField @root.fields.value value=source.system.value localize=true rootId=partId}}
 
+  {{formField @root.fields.isExtra value=source.system.isExtra localize=true rootId=partId}}
+
+  {{#if source.system.isExtra}}
   <fieldset>
-    <legend>Extra bonus</legend>
+    <legend>{{localize "OBLIGATION.UI.EXTRA_BONUS_LEGEND"}}</legend>
     {{formField @root.fields.extraXp value=source.system.extraXp localize=true rootId=partId}}
     {{formField @root.fields.extraCredits value=source.system.extraCredits localize=true rootId=partId}}
   </fieldset>
+  {{/if}}
 
 </section>
