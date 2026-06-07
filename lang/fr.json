@@ -711,7 +711,16 @@
       "EDIT_ITEM": "Modifier l'objet",
       "DELETE_ITEM": "Supprimer l'objet",
       "CREATE_ITEM": "Créer un objet",
-      "SIZE": "Taille"
+      "SIZE": "Taille",
+      "OBLIGATIONS_HEADER": "Obligations",
+      "OBLIGATIONS_COLUMN_NAME": "Nom",
+      "OBLIGATIONS_COLUMN_EXTRA": "Extra",
+      "OBLIGATIONS_COLUMN_ACTIONS": "Actions",
+      "OBLIGATIONS_TOGGLE_EXTRA": "Basculer l'état Extra de l'Obligation",
+      "OBLIGATIONS_ICON_XP_ALT": "XP",
+      "OBLIGATIONS_ICON_CREDITS_ALT": "Crédits",
+      "OBLIGATIONS_DELETE_TOOLTIP": "Supprimer l'Obligation",
+      "OBLIGATIONS_EDIT_TOOLTIP": "Modifier l'Obligation"
     }
   },
   "ACTOR.AppliedDetailItem": "Applied the {name} {type} to {actor}.",
@@ -1041,6 +1050,29 @@
   "MOTIVATION_CATEGORY": {
     "Sources": "Sources",
     "SourcesList": "Liste des Sources"
+  },
+  "OBLIGATION": {
+    "FIELDS": {
+      "value": {
+        "label": "Valeur d'Obligation",
+        "hint": "La valeur de l'obligation qui doit être remboursée avant que le personnage puisse progresser en niveau."
+      },
+      "isExtra": {
+        "label": "Obligation Extra",
+        "hint": "S'agit-il d'une obligation supplémentaire que le personnage a contractée en plus de ses obligations normales ?"
+      },
+      "extraCredits": {
+        "label": "Crédits Supplémentaires",
+        "hint": "Le montant de crédits supplémentaires que le personnage reçoit pour avoir contracté cette obligation."
+      },
+      "extraXp": {
+        "label": "Expérience Supplémentaire",
+        "hint": "Le montant d'expérience supplémentaire que le personnage reçoit pour avoir contracté cette obligation."
+      }
+    },
+    "UI": {
+      "EXTRA_BONUS_LEGEND": "Bonus Extra"
+    }
   },
   "RESOURCES": {
     "HEALTH": "Health",

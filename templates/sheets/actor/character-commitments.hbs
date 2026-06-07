@@ -1,27 +1,27 @@
 <section class="tab flexcol scrollable {{tabs.commitments.id}} {{tabs.commitments.cssClass}}"
          data-tab="{{tabs.commitments.id}}" data-group="{{tabs.commitments.group}}">
     <div class="sheet-section obligations">
-        <h3>Obligations ({{obligationPoints}})</h3>
+        <h3>{{localize "ACTOR.LABELS.OBLIGATIONS_HEADER"}} ({{obligationPoints}})</h3>
 
         <div class="header flexrow">
             <div class="column principal">
-                <span class="title shifted">name</span>
+                <span class="title shifted">{{localize "ACTOR.LABELS.OBLIGATIONS_COLUMN_NAME"}}</span>
             </div>
 
             <div class="column">
-                <span class="title" title="Toggle Extra Obligation">extra</span>
+                <span class="title" title="{{localize "ACTOR.LABELS.OBLIGATIONS_TOGGLE_EXTRA"}}">{{localize "ACTOR.LABELS.OBLIGATIONS_COLUMN_EXTRA"}}</span>
             </div>
 
             <div class="column slim">
-                <img class="header-icon" src="/systems/swerpg/ui/symbols/xp.webp" alt="Xp"/>
+                <img class="header-icon" src="/systems/swerpg/ui/symbols/xp.webp" alt="{{localize "ACTOR.LABELS.OBLIGATIONS_ICON_XP_ALT"}}"/>
             </div>
 
             <div class="column slim">
-                <img class="header-icon" src="/systems/swerpg/ui/symbols/credits.webp" alt="Credits"/>
+                <img class="header-icon" src="/systems/swerpg/ui/symbols/credits.webp" alt="{{localize "ACTOR.LABELS.OBLIGATIONS_ICON_CREDITS_ALT"}}"/>
             </div>
 
             <div class="column slim">
-                <span class="title">actions</span>
+                <span class="title">{{localize "ACTOR.LABELS.OBLIGATIONS_COLUMN_ACTIONS"}}</span>
             </div>
         </div>
 
@@ -36,8 +36,8 @@
                     <div class="sw-toggle {{#if obligation.isExtra}}active{{/if}}"
                          data-item-id="{{obligation.id}}"
                          data-action="toggleObligationExtraState"
-                         title="Toggle Extra Obligation"
-                         data-tooltip="Toggle Extra Obligation State">
+                         title="{{localize "ACTOR.LABELS.OBLIGATIONS_TOGGLE_EXTRA"}}"
+                         data-tooltip="{{localize "ACTOR.LABELS.OBLIGATIONS_TOGGLE_EXTRA"}}">
                     </div>
                 </div>
 
@@ -51,9 +51,9 @@
 
                 <div class="controls column slim">
                     <a class="button icon fa-solid fa-trash" data-action="itemDelete"
-                       data-tooltip="Delete Obligation"></a>
+                       data-tooltip="{{localize "ACTOR.LABELS.OBLIGATIONS_DELETE_TOOLTIP"}}"></a>
                     <a class="button icon fa-solid fa-edit" data-action="itemEdit"
-                       data-tooltip="Edit Obligation"></a>
+                       data-tooltip="{{localize "ACTOR.LABELS.OBLIGATIONS_EDIT_TOOLTIP"}}"></a>
                 </div>
             </div>
         {{/each}}
