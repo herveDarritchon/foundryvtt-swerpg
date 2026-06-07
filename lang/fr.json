@@ -686,13 +686,14 @@
       }
     },
     "TABS": {
-      "ATTRIBUTES": "Attributes",
+      "ATTRIBUTES": "Attributs",
       "ACTIONS": "Actions",
-      "EFFECTS": "Effects",
-      "SKILLS": "Skills",
+      "EFFECTS": "Effets",
+      "SKILLS": "Compétences",
       "TALENTS": "Talents",
-      "INVENTORY": "Inventory",
-      "BIOGRAPHY": "Biography"
+      "INVENTORY": "Inventaire",
+      "BIOGRAPHY": "Biographie",
+      "COMMITMENTS": "Engagements"
     },
     "LABELS": {
       "CURRENT_EQUIPMENT": "Équipement actuel",
