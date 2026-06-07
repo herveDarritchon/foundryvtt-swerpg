@@ -7,6 +7,17 @@
   {{#if source.system.isExtra}}
   <fieldset>
     <legend>{{localize "OBLIGATION.UI.EXTRA_BONUS_LEGEND"}}</legend>
+
+    <div class="obligation-official-options" aria-label="{{localize "OBLIGATION.UI.OFFICIAL_OPTIONS_LABEL"}}">
+      <p class="obligation-official-options__hint">{{localize "OBLIGATION.UI.OFFICIAL_OPTIONS_HINT"}}</p>
+      <ul class="obligation-official-options__list">
+        <li>+{{localize "OBLIGATION.UI.OFFICIAL_OPTION_XP_5"}}</li>
+        <li>+{{localize "OBLIGATION.UI.OFFICIAL_OPTION_XP_10"}}</li>
+        <li>+{{localize "OBLIGATION.UI.OFFICIAL_OPTION_CREDITS_1000"}}</li>
+        <li>+{{localize "OBLIGATION.UI.OFFICIAL_OPTION_CREDITS_2500"}}</li>
+      </ul>
+    </div>
+
     {{formField @root.fields.extraXp value=source.system.extraXp localize=true rootId=partId}}
     {{formField @root.fields.extraCredits value=source.system.extraCredits localize=true rootId=partId}}
   </fieldset>

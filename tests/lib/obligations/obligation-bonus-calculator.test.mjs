@@ -78,4 +78,197 @@ describe('ObligationBonusCalculator', () => {
       expect(ObligationBonusCalculator.STARTING_CREDITS).toBe(500)
     })
   })
+
+  describe('OFFICIAL_OPTIONS static getter', () => {
+    test('exposes a frozen array of 4 official options', () => {
+      expect(ObligationBonusCalculator.OFFICIAL_OPTIONS).toHaveLength(4)
+    })
+
+    test('contains xp_5 option with xp=5 and obligationCost=5', () => {
+      const opt = ObligationBonusCalculator.OFFICIAL_OPTIONS.find((o) => o.key === 'xp_5')
+      expect(opt).toBeDefined()
+      expect(opt.xp).toBe(5)
+      expect(opt.credits).toBe(0)
+      expect(opt.obligationCost).toBe(5)
+    })
+
+    test('contains xp_10 option with xp=10 and obligationCost=10', () => {
+      const opt = ObligationBonusCalculator.OFFICIAL_OPTIONS.find((o) => o.key === 'xp_10')
+      expect(opt).toBeDefined()
+      expect(opt.xp).toBe(10)
+      expect(opt.credits).toBe(0)
+      expect(opt.obligationCost).toBe(10)
+    })
+
+    test('contains credits_1000 option with credits=1000 and obligationCost=5', () => {
+      const opt = ObligationBonusCalculator.OFFICIAL_OPTIONS.find((o) => o.key === 'credits_1000')
+      expect(opt).toBeDefined()
+      expect(opt.xp).toBe(0)
+      expect(opt.credits).toBe(1000)
+      expect(opt.obligationCost).toBe(5)
+    })
+
+    test('contains credits_2500 option with credits=2500 and obligationCost=10', () => {
+      const opt = ObligationBonusCalculator.OFFICIAL_OPTIONS.find((o) => o.key === 'credits_2500')
+      expect(opt).toBeDefined()
+      expect(opt.xp).toBe(0)
+      expect(opt.credits).toBe(2500)
+      expect(opt.obligationCost).toBe(10)
+    })
+  })
+
+  describe('computeCreationSummary', () => {
+    describe('empty / no extra obligations', () => {
+      test('returns zero totals and isConformant=true for empty array', () => {
+        const result = ObligationBonusCalculator.computeCreationSummary([])
+        expect(result.totalXp).toBe(0)
+        expect(result.totalCredits).toBe(0)
+        expect(result.totalObligationConsumed).toBe(0)
+        expect(result.recognizedOptions).toHaveLength(0)
+        expect(result.errors).toHaveLength(0)
+        expect(result.isConformant).toBe(true)
+      })
+
+      test('returns isConformant=true when only non-extra obligations are present', () => {
+        const obligations = [
+          { isExtra: false, extraXp: 0, extraCredits: 0, value: 10 },
+          { isExtra: false, extraXp: 0, extraCredits: 0, value: 10 },
+        ]
+        const result = ObligationBonusCalculator.computeCreationSummary(obligations)
+        expect(result.isConformant).toBe(true)
+        expect(result.totalXp).toBe(0)
+        expect(result.totalCredits).toBe(0)
+      })
+    })
+
+    describe('official valid options', () => {
+      test('+5 XP option (xp=5, credits=0) is recognized as xp_5', () => {
+        const obligations = [{ isExtra: true, extraXp: 5, extraCredits: 0, value: 5 }]
+        const result = ObligationBonusCalculator.computeCreationSummary(obligations)
+        expect(result.isConformant).toBe(true)
+        expect(result.totalXp).toBe(5)
+        expect(result.totalCredits).toBe(0)
+        expect(result.totalObligationConsumed).toBe(5)
+        expect(result.recognizedOptions[0].key).toBe('xp_5')
+      })
+
+      test('+10 XP option (xp=10, credits=0) is recognized as xp_10', () => {
+        const obligations = [{ isExtra: true, extraXp: 10, extraCredits: 0, value: 10 }]
+        const result = ObligationBonusCalculator.computeCreationSummary(obligations)
+        expect(result.isConformant).toBe(true)
+        expect(result.totalXp).toBe(10)
+        expect(result.totalCredits).toBe(0)
+        expect(result.totalObligationConsumed).toBe(10)
+        expect(result.recognizedOptions[0].key).toBe('xp_10')
+      })
+
+      test('+1 000 credits option (xp=0, credits=1000) is recognized as credits_1000', () => {
+        const obligations = [{ isExtra: true, extraXp: 0, extraCredits: 1000, value: 5 }]
+        const result = ObligationBonusCalculator.computeCreationSummary(obligations)
+        expect(result.isConformant).toBe(true)
+        expect(result.totalXp).toBe(0)
+        expect(result.totalCredits).toBe(1000)
+        expect(result.totalObligationConsumed).toBe(5)
+        expect(result.recognizedOptions[0].key).toBe('credits_1000')
+      })
+
+      test('+2 500 credits option (xp=0, credits=2500) is recognized as credits_2500', () => {
+        const obligations = [{ isExtra: true, extraXp: 0, extraCredits: 2500, value: 10 }]
+        const result = ObligationBonusCalculator.computeCreationSummary(obligations)
+        expect(result.isConformant).toBe(true)
+        expect(result.totalXp).toBe(0)
+        expect(result.totalCredits).toBe(2500)
+        expect(result.totalObligationConsumed).toBe(10)
+        expect(result.recognizedOptions[0].key).toBe('credits_2500')
+      })
+
+      test('combination +5 XP + +1 000 credits (two extra obligations) is conformant', () => {
+        const obligations = [
+          { isExtra: false, extraXp: 0, extraCredits: 0, value: 10 },
+          { isExtra: true, extraXp: 5, extraCredits: 0, value: 5 },
+          { isExtra: true, extraXp: 0, extraCredits: 1000, value: 5 },
+        ]
+        const result = ObligationBonusCalculator.computeCreationSummary(obligations, 10)
+        expect(result.isConformant).toBe(true)
+        expect(result.totalXp).toBe(5)
+        expect(result.totalCredits).toBe(1000)
+        expect(result.totalObligationConsumed).toBe(10)
+        expect(result.recognizedOptions).toHaveLength(2)
+      })
+    })
+
+    describe('non-official amounts', () => {
+      test('flags an error for a non-official (xp, credits) pair', () => {
+        const obligations = [{ isExtra: true, extraXp: 7, extraCredits: 0, value: 5 }]
+        const result = ObligationBonusCalculator.computeCreationSummary(obligations)
+        expect(result.isConformant).toBe(false)
+        expect(result.errors.length).toBeGreaterThan(0)
+        expect(result.totalXp).toBe(0)
+        expect(result.recognizedOptions).toHaveLength(0)
+      })
+
+      test('flags an error for a non-official credits amount (e.g. 500)', () => {
+        const obligations = [{ isExtra: true, extraXp: 0, extraCredits: 500, value: 5 }]
+        const result = ObligationBonusCalculator.computeCreationSummary(obligations)
+        expect(result.isConformant).toBe(false)
+        expect(result.errors.length).toBeGreaterThan(0)
+      })
+    })
+
+    describe('duplicate official options', () => {
+      test('flags a duplicate when xp_5 is chosen twice', () => {
+        const obligations = [
+          { isExtra: true, extraXp: 5, extraCredits: 0, value: 5 },
+          { isExtra: true, extraXp: 5, extraCredits: 0, value: 5 },
+        ]
+        const result = ObligationBonusCalculator.computeCreationSummary(obligations)
+        expect(result.isConformant).toBe(false)
+        expect(result.errors.some((e) => e.includes('xp_5'))).toBe(true)
+        // Only the first one is counted
+        expect(result.recognizedOptions).toHaveLength(1)
+        expect(result.totalXp).toBe(5)
+      })
+
+      test('flags a duplicate when credits_1000 is chosen twice', () => {
+        const obligations = [
+          { isExtra: true, extraXp: 0, extraCredits: 1000, value: 5 },
+          { isExtra: true, extraXp: 0, extraCredits: 1000, value: 5 },
+        ]
+        const result = ObligationBonusCalculator.computeCreationSummary(obligations)
+        expect(result.isConformant).toBe(false)
+        expect(result.errors.some((e) => e.includes('credits_1000'))).toBe(true)
+        expect(result.recognizedOptions).toHaveLength(1)
+        expect(result.totalCredits).toBe(1000)
+      })
+    })
+
+    describe('obligation cap', () => {
+      test('is conformant when totalObligationConsumed equals the cap', () => {
+        const obligations = [{ isExtra: true, extraXp: 10, extraCredits: 0, value: 10 }]
+        const result = ObligationBonusCalculator.computeCreationSummary(obligations, 10)
+        expect(result.isConformant).toBe(true)
+        expect(result.totalObligationConsumed).toBe(10)
+      })
+
+      test('flags an error when totalObligationConsumed exceeds the cap', () => {
+        // Trying to take +10 XP (+10 obligation) on a character with only 5 base obligation
+        const obligations = [{ isExtra: true, extraXp: 10, extraCredits: 0, value: 10 }]
+        const result = ObligationBonusCalculator.computeCreationSummary(obligations, 5)
+        expect(result.isConformant).toBe(false)
+        expect(result.errors.some((e) => e.includes('cap'))).toBe(true)
+      })
+
+      test('does not flag cap error when no cap is provided (Infinity)', () => {
+        // Two full options (10 + 10 obligation) but no cap set
+        const obligations = [
+          { isExtra: true, extraXp: 10, extraCredits: 0, value: 10 },
+          { isExtra: true, extraXp: 0, extraCredits: 2500, value: 10 },
+        ]
+        const result = ObligationBonusCalculator.computeCreationSummary(obligations)
+        // Both are valid options without duplicate keys (xp_10 and credits_2500)
+        expect(result.errors.filter((e) => e.includes('cap'))).toHaveLength(0)
+        expect(result.totalObligationConsumed).toBe(20)
+      })
+    })
+  })
 })
