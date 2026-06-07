@@ -980,3 +980,233 @@ describe('SwerpgBaseActorSheet #prepareItems — inventory line item metrics (is
     expect(item.price).toBe(1200)
   })
 })
+
+// ---------------------------------------------------------------------------
+// Feature #634: inventory line item controls — declarative contract for
+// accessible equip/unequip label and equipped state fields
+// ---------------------------------------------------------------------------
+
+import { computeFeaturedEquipment as computeFeaturedEquipmentForControlsTests } from '../../../module/lib/featured-equipment.mjs'
+
+describe('SwerpgBaseActorSheet #prepareItems — inventory line item controls contract (issue #634)', () => {
+  let SwerpgBaseActorSheetControls
+
+  function buildMockDocumentControls(itemsArray) {
+    return {
+      id: 'actor-controls',
+      name: 'Controls Actor',
+      system: {
+        characteristics: {
+          brawn: { rank: { base: 2, trained: 0 } },
+          agility: { rank: { base: 2, trained: 0 } },
+          intellect: { rank: { base: 2, trained: 0 } },
+          cunning: { rank: { base: 2, trained: 0 } },
+          willpower: { rank: { base: 2, trained: 0 } },
+          presence: { rank: { base: 2, trained: 0 } },
+        },
+        progression: {
+          experience: { gained: 0, spent: 0 },
+          freeSkillRanks: {
+            career: { gained: 0, spent: 0 },
+            specialization: { gained: 0, spent: 0 },
+          },
+        },
+        details: {
+          biography: { appearance: '', public: '', private: '' },
+          commitments: { motivation: '' },
+        },
+        schema: { fields: {} },
+      },
+      isOwner: true,
+      items: {
+        find: vi.fn((fn) => itemsArray.find(fn) || null),
+        filter: vi.fn((fn) => itemsArray.filter(fn)),
+        get: vi.fn((id) => itemsArray.find((i) => i.id === id) || null),
+        [Symbol.iterator]: function* () {
+          yield* itemsArray
+        },
+      },
+      effects: [],
+      actions: {},
+      canPurchaseCharacteristic: vi.fn(() => false),
+      toObject: vi.fn(() => ({})),
+    }
+  }
+
+  async function buildSheetControls(itemsArray) {
+    const Sheet = SwerpgBaseActorSheetControls
+    const actor = buildMockDocumentControls(itemsArray)
+
+    if (!globalThis.foundry.applications.ux) {
+      globalThis.foundry.applications.ux = {}
+    }
+    if (!globalThis.foundry.applications.ux.TextEditor) {
+      globalThis.foundry.applications.ux.TextEditor = { enrichHTML: vi.fn(async (s) => s || '') }
+    }
+    if (!globalThis.SYSTEM.RESTRICTION_LEVELS) {
+      globalThis.SYSTEM.RESTRICTION_LEVELS = {}
+    }
+
+    const instance = new Sheet({})
+    instance.document = actor
+    instance.actor = actor
+    instance.tabGroups = { sheet: 'attributes' }
+    instance.isEditable = true
+    return instance
+  }
+
+  beforeEach(async () => {
+    vi.clearAllMocks()
+    SwerpgBaseActorSheetControls = (await import('../../../module/applications/sheets/base-actor-sheet.mjs')).default
+    vi.mocked(computeFeaturedEquipmentForControlsTests).mockReturnValue([])
+  })
+
+  test('equipped weapon exposes isEquipped: true', async () => {
+    const weaponItem = {
+      id: 'weapon-ctrl-1',
+      name: 'Blaster Pistol',
+      img: '',
+      type: 'weapon',
+      system: { equipped: true, quantity: 1 },
+      getTags: vi.fn(() => ({})),
+      actions: { at: () => null },
+    }
+    const instance = await buildSheetControls([weaponItem])
+    const ctx = await instance._prepareContext({})
+
+    const item = ctx.inventory.equipment.items.find((i) => i.id === 'weapon-ctrl-1')
+    expect(item).toBeDefined()
+    expect(item.isEquipped).toBe(true)
+  })
+
+  test('unequipped armor exposes isEquipped: false', async () => {
+    const armorItem = {
+      id: 'armor-ctrl-1',
+      name: 'Light Armor',
+      img: '',
+      type: 'armor',
+      system: { equipped: false, quantity: 1 },
+      getTags: vi.fn(() => ({})),
+      actions: { at: () => null },
+    }
+    const instance = await buildSheetControls([armorItem])
+    const ctx = await instance._prepareContext({})
+
+    const item = ctx.inventory.backpack.items.find((i) => i.id === 'armor-ctrl-1')
+    expect(item).toBeDefined()
+    expect(item.isEquipped).toBe(false)
+  })
+
+  test('gear item exposes isEquipped: false', async () => {
+    const gearItem = {
+      id: 'gear-ctrl-1',
+      name: 'Medpac',
+      img: '',
+      type: 'gear',
+      system: { quantity: 2 },
+      getTags: vi.fn(() => ({})),
+      actions: { at: () => null },
+    }
+    const instance = await buildSheetControls([gearItem])
+    const ctx = await instance._prepareContext({})
+
+    const item = ctx.inventory.backpack.items.find((i) => i.id === 'gear-ctrl-1')
+    expect(item).toBeDefined()
+    expect(item.isEquipped).toBe(false)
+  })
+
+  test('equipped weapon exposes dynamic equipActionLabel pointing to unequip key', async () => {
+    // game.i18n.localize returns the key when no translation is registered
+    const weaponItem = {
+      id: 'weapon-ctrl-2',
+      name: 'Heavy Blaster',
+      img: '',
+      type: 'weapon',
+      system: { equipped: true, quantity: 1 },
+      getTags: vi.fn(() => ({})),
+      actions: { at: () => null },
+    }
+    const instance = await buildSheetControls([weaponItem])
+    const ctx = await instance._prepareContext({})
+
+    const item = ctx.inventory.equipment.items.find((i) => i.id === 'weapon-ctrl-2')
+    expect(item).toBeDefined()
+    // When equipped, the action should label the "Unequip" action
+    expect(item.equipActionLabel).toBe('ACTOR.LABELS.UNEQUIP_ITEM')
+  })
+
+  test('unequipped weapon exposes dynamic equipActionLabel pointing to equip key', async () => {
+    const weaponItem = {
+      id: 'weapon-ctrl-3',
+      name: 'Blaster Carbine',
+      img: '',
+      type: 'weapon',
+      system: { equipped: false, quantity: 1 },
+      getTags: vi.fn(() => ({})),
+      actions: { at: () => null },
+    }
+    const instance = await buildSheetControls([weaponItem])
+    const ctx = await instance._prepareContext({})
+
+    const item = ctx.inventory.backpack.items.find((i) => i.id === 'weapon-ctrl-3')
+    expect(item).toBeDefined()
+    expect(item.equipActionLabel).toBe('ACTOR.LABELS.EQUIP_ITEM')
+  })
+
+  test('equipped weapon exposes equippedStateLabel pointing to equipped-state key', async () => {
+    const weaponItem = {
+      id: 'weapon-ctrl-4',
+      name: 'Vibroblade',
+      img: '',
+      type: 'weapon',
+      system: { equipped: true, quantity: 1 },
+      getTags: vi.fn(() => ({})),
+      actions: { at: () => null },
+    }
+    const instance = await buildSheetControls([weaponItem])
+    const ctx = await instance._prepareContext({})
+
+    const item = ctx.inventory.equipment.items.find((i) => i.id === 'weapon-ctrl-4')
+    expect(item).toBeDefined()
+    expect(item.equippedStateLabel).toBe('ACTOR.LABELS.EQUIPPED_STATE')
+  })
+
+  test('unequipped armor exposes equippedStateLabel pointing to unequipped-state key', async () => {
+    const armorItem = {
+      id: 'armor-ctrl-2',
+      name: 'Heavy Armor',
+      img: '',
+      type: 'armor',
+      system: { equipped: false, quantity: 1 },
+      getTags: vi.fn(() => ({})),
+      actions: { at: () => null },
+    }
+    const instance = await buildSheetControls([armorItem])
+    const ctx = await instance._prepareContext({})
+
+    const item = ctx.inventory.backpack.items.find((i) => i.id === 'armor-ctrl-2')
+    expect(item).toBeDefined()
+    expect(item.equippedStateLabel).toBe('ACTOR.LABELS.UNEQUIPPED_STATE')
+  })
+
+  test('gear item has no equipActionLabel (canEquip: false)', async () => {
+    const gearItem = {
+      id: 'gear-ctrl-2',
+      name: 'Stim Pack',
+      img: '',
+      type: 'gear',
+      system: { quantity: 1 },
+      getTags: vi.fn(() => ({})),
+      actions: { at: () => null },
+    }
+    const instance = await buildSheetControls([gearItem])
+    const ctx = await instance._prepareContext({})
+
+    const item = ctx.inventory.backpack.items.find((i) => i.id === 'gear-ctrl-2')
+    expect(item).toBeDefined()
+    expect(item.canEquip).toBe(false)
+    // No equip action label for non-equippable items
+    expect(item.equipActionLabel).toBeUndefined()
+    expect(item.equippedStateLabel).toBeUndefined()
+  })
+})

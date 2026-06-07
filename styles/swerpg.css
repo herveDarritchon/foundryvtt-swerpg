@@ -3643,9 +3643,6 @@ input[type='range'] {
   border-color: var(--color-accent);
   box-shadow: 0 0 6px var(--color-accent);
 }
-.swerpg.sheet.actor .tab.inventory .line-item.equipped {
-  border-left: 3px solid var(--color-accent);
-}
 .swerpg.sheet.actor .tab.inventory .line-item.unequipped {
   border-left: 3px solid var(--color-frame);
 }
@@ -3684,6 +3681,73 @@ input[type='range'] {
 }
 .swerpg.sheet.actor .tab.inventory .line-item .controls {
   flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+.swerpg.sheet.actor .tab.inventory .line-item .controls .control-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 1px solid var(--color-frame);
+  border-radius: 3px;
+  background: var(--color-frame-bg-50);
+  color: var(--color-secondary);
+  cursor: pointer;
+  font-size: var(--font-size-11);
+  line-height: 1;
+  transition: background 120ms ease, border-color 120ms ease, color 120ms ease, box-shadow 120ms ease;
+}
+.swerpg.sheet.actor .tab.inventory .line-item .controls .control-btn i {
+  pointer-events: none;
+}
+.swerpg.sheet.actor .tab.inventory .line-item .controls .control-btn:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  background: var(--color-frame-bg-75);
+  box-shadow: 0 0 4px var(--color-accent);
+}
+.swerpg.sheet.actor .tab.inventory .line-item .controls .control-btn:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 1px;
+}
+.swerpg.sheet.actor .tab.inventory .line-item .controls .control-btn.delete-btn:hover {
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+  box-shadow: 0 0 4px var(--color-danger);
+}
+.swerpg.sheet.actor .tab.inventory .line-item .controls .control-btn.equip-btn.is-equipped {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  background: var(--color-frame-bg-75);
+}
+.swerpg.sheet.actor .tab.inventory .line-item .controls .control-btn.equip-btn:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  box-shadow: 0 0 6px var(--color-accent);
+}
+.swerpg.sheet.actor .tab.inventory .line-item.equipped {
+  border-left: 3px solid var(--color-accent);
+  background: linear-gradient(135deg, var(--color-frame-bg-75) 0%, var(--color-frame-bg-50) 60%);
+}
+.swerpg.sheet.actor .tab.inventory .line-item.equipped .equip-btn {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  background: var(--color-frame-bg-75);
+}
+.swerpg.sheet.actor .tab.inventory .line-item .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 .swerpg.sheet.actor .tab.talents {
   gap: 0.25rem !important;

@@ -413,20 +413,26 @@ export default class SwerpgBaseActorSheet extends HBMixin(BaseActorSheetV2) {
       let section
       switch (i.type) {
         case 'armor':
-        case 'weapon':
+        case 'weapon': {
+          const isEquipped = !!i.system.equipped
           Object.assign(d, {
             canEquip: true,
+            isEquipped,
+            equipActionLabel: isEquipped ? game.i18n.localize('ACTOR.LABELS.UNEQUIP_ITEM') : game.i18n.localize('ACTOR.LABELS.EQUIP_ITEM'),
+            equippedStateLabel: isEquipped ? game.i18n.localize('ACTOR.LABELS.EQUIPPED_STATE') : game.i18n.localize('ACTOR.LABELS.UNEQUIPPED_STATE'),
             quantity: i.system.quantity,
             encumbrance: i.system.encumbrance,
             price: i.system.price,
-            cssClass: i.system.equipped ? 'equipped' : 'unequipped',
+            cssClass: isEquipped ? 'equipped' : 'unequipped',
           })
-          if (i.system.equipped) section = sections.inventory.equipment
+          if (isEquipped) section = sections.inventory.equipment
           else section = sections.inventory.backpack
           break
+        }
         case 'gear':
           Object.assign(d, {
             canEquip: false,
+            isEquipped: false,
             quantity: i.system?.quantity,
             encumbrance: i.system?.encumbrance,
             price: i.system?.price,
