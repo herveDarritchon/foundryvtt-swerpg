@@ -561,36 +561,44 @@ describe('SwerpgBaseActorSheet #prepareItems — inventory section i18n labels',
     expect(ctx.inventory.backpack.label).toBe('Sac à dos')
   })
 
-  test('inventory.equipment.empty hint is resolved via i18n key (English)', async () => {
+  test('inventory.equipment.emptyState message and hint are resolved via i18n keys (English)', async () => {
     setupFoundryMockForI18n({
       translations: {
         'ACTOR.LABELS.EQUIPMENT': 'Equipment',
         'ACTOR.LABELS.BACKPACK': 'Backpack',
-        'ACTOR.LABELS.EQUIPMENT_HINT': 'Equip weapons and armor from your Backpack toggling the shield icon.',
-        'ACTOR.LABELS.BACKPACK_HINT': 'Add Armor, Weapons, or Gear by dropping them from the provided Swerpg system compendium packs.',
+        'ACTOR.LABELS.EQUIPMENT_HINT': 'No equipped items yet.',
+        'ACTOR.LABELS.EQUIPMENT_DROP_HINT': 'Equip weapons or armor from your Backpack using the shield icon.',
+        'ACTOR.LABELS.BACKPACK_HINT': 'Your backpack is empty.',
+        'ACTOR.LABELS.BACKPACK_DROP_HINT': 'Drop items here from the compendiums, the Items directory, or the Market.',
       },
     })
     const instance = await buildSheetI18n()
     const ctx = await instance._prepareContext({})
 
-    expect(ctx.inventory.equipment.empty).toBe('Equip weapons and armor from your Backpack toggling the shield icon.')
-    expect(ctx.inventory.backpack.empty).toBe('Add Armor, Weapons, or Gear by dropping them from the provided Swerpg system compendium packs.')
+    expect(ctx.inventory.equipment.emptyState.message).toBe('No equipped items yet.')
+    expect(ctx.inventory.equipment.emptyState.hint).toBe('Equip weapons or armor from your Backpack using the shield icon.')
+    expect(ctx.inventory.backpack.emptyState.message).toBe('Your backpack is empty.')
+    expect(ctx.inventory.backpack.emptyState.hint).toBe('Drop items here from the compendiums, the Items directory, or the Market.')
   })
 
-  test('inventory.equipment.empty hint is resolved via i18n key (French)', async () => {
+  test('inventory.equipment.emptyState message and hint are resolved via i18n keys (French)', async () => {
     setupFoundryMockForI18n({
       translations: {
         'ACTOR.LABELS.EQUIPMENT': 'Équipement',
         'ACTOR.LABELS.BACKPACK': 'Sac à dos',
-        'ACTOR.LABELS.EQUIPMENT_HINT': "Équipez vos armes et armures depuis votre sac à dos en activant l'icône de bouclier.",
-        'ACTOR.LABELS.BACKPACK_HINT': 'Ajoutez une armure, des armes ou du matériel en les déposant depuis les compendiums du système Swerpg fournis.',
+        'ACTOR.LABELS.EQUIPMENT_HINT': "Aucun objet équipé pour l'instant.",
+        'ACTOR.LABELS.EQUIPMENT_DROP_HINT': "Équipez armes et armures depuis votre sac à dos via l'icône de bouclier.",
+        'ACTOR.LABELS.BACKPACK_HINT': 'Votre sac à dos est vide.',
+        'ACTOR.LABELS.BACKPACK_DROP_HINT': "Déposez des objets ici depuis les compendiums, le répertoire d'objets ou le Marché.",
       },
     })
     const instance = await buildSheetI18n()
     const ctx = await instance._prepareContext({})
 
-    expect(ctx.inventory.equipment.empty).toBe("Équipez vos armes et armures depuis votre sac à dos en activant l'icône de bouclier.")
-    expect(ctx.inventory.backpack.empty).toBe('Ajoutez une armure, des armes ou du matériel en les déposant depuis les compendiums du système Swerpg fournis.')
+    expect(ctx.inventory.equipment.emptyState.message).toBe("Aucun objet équipé pour l'instant.")
+    expect(ctx.inventory.equipment.emptyState.hint).toBe("Équipez armes et armures depuis votre sac à dos via l'icône de bouclier.")
+    expect(ctx.inventory.backpack.emptyState.message).toBe('Votre sac à dos est vide.')
+    expect(ctx.inventory.backpack.emptyState.hint).toBe("Déposez des objets ici depuis les compendiums, le répertoire d'objets ou le Marché.")
   })
 
   test('inventory section labels are not hardcoded English strings', async () => {
@@ -602,6 +610,39 @@ describe('SwerpgBaseActorSheet #prepareItems — inventory section i18n labels',
 
     expect(ctx.inventory.equipment.label).toBe('ACTOR.LABELS.EQUIPMENT')
     expect(ctx.inventory.backpack.label).toBe('ACTOR.LABELS.BACKPACK')
+  })
+
+  test('emptyState contract: equipment section exposes message and hint properties', async () => {
+    setupFoundryMockForI18n({ translations: {} })
+    const instance = await buildSheetI18n()
+    const ctx = await instance._prepareContext({})
+
+    expect(ctx.inventory.equipment.emptyState).toBeDefined()
+    expect(ctx.inventory.equipment.emptyState).toHaveProperty('message')
+    expect(ctx.inventory.equipment.emptyState).toHaveProperty('hint')
+  })
+
+  test('emptyState contract: backpack section exposes message and hint properties', async () => {
+    setupFoundryMockForI18n({ translations: {} })
+    const instance = await buildSheetI18n()
+    const ctx = await instance._prepareContext({})
+
+    expect(ctx.inventory.backpack.emptyState).toBeDefined()
+    expect(ctx.inventory.backpack.emptyState).toHaveProperty('message')
+    expect(ctx.inventory.backpack.emptyState).toHaveProperty('hint')
+  })
+
+  test('emptyState message and hint use distinct i18n keys for equipment and backpack', async () => {
+    // The two sections must have different messages to provide contextual affordance
+    setupFoundryMockForI18n({ translations: {} })
+    const instance = await buildSheetI18n()
+    const ctx = await instance._prepareContext({})
+
+    // Keys fall back to their key strings when no translation is set
+    expect(ctx.inventory.equipment.emptyState.message).toBe('ACTOR.LABELS.EQUIPMENT_HINT')
+    expect(ctx.inventory.equipment.emptyState.hint).toBe('ACTOR.LABELS.EQUIPMENT_DROP_HINT')
+    expect(ctx.inventory.backpack.emptyState.message).toBe('ACTOR.LABELS.BACKPACK_HINT')
+    expect(ctx.inventory.backpack.emptyState.hint).toBe('ACTOR.LABELS.BACKPACK_DROP_HINT')
   })
 })
 

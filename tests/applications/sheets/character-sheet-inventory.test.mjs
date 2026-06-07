@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { setupFoundryMock } from '../../helpers/mock-foundry.mjs'
 
 vi.mock('../../../module/utils/logger.mjs', () => ({
   logger: { debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() },
@@ -232,5 +233,171 @@ describe('CharacterSheet creditBudget context (inventory compact synthesis)', ()
       expect(context.creditBudget.available).toBe(0)
       expect(context.creditBudget.isOverBudget).toBe(false)
     })
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Feature #635: empty inventory sections must expose a dropzone emptyState
+// contract so the template can render an actionable drop affordance.
+// ---------------------------------------------------------------------------
+
+import { computeFeaturedEquipment as computeFeaturedEquipmentForDropzoneTests } from '../../../module/lib/featured-equipment.mjs'
+
+describe('Inventory empty-section dropzone contract (issue #635)', () => {
+  let SwerpgBaseActorSheetDropzone
+
+  function buildMockDocumentDropzone(itemsArray = []) {
+    return {
+      id: 'actor-dropzone',
+      name: 'Dropzone Actor',
+      system: {
+        characteristics: {
+          brawn: { rank: { base: 2, trained: 0 } },
+          agility: { rank: { base: 2, trained: 0 } },
+          intellect: { rank: { base: 2, trained: 0 } },
+          cunning: { rank: { base: 2, trained: 0 } },
+          willpower: { rank: { base: 2, trained: 0 } },
+          presence: { rank: { base: 2, trained: 0 } },
+        },
+        progression: {
+          experience: { gained: 0, spent: 0 },
+          freeSkillRanks: {
+            career: { gained: 0, spent: 0 },
+            specialization: { gained: 0, spent: 0 },
+          },
+        },
+        details: {
+          biography: { appearance: '', public: '', private: '' },
+          commitments: { motivation: '' },
+        },
+        schema: { fields: {} },
+      },
+      isOwner: true,
+      items: {
+        find: vi.fn((fn) => itemsArray.find(fn) || null),
+        filter: vi.fn((fn) => itemsArray.filter(fn)),
+        get: vi.fn((id) => itemsArray.find((i) => i.id === id) || null),
+        [Symbol.iterator]: function* () {
+          yield* itemsArray
+        },
+      },
+      effects: [],
+      actions: {},
+      canPurchaseCharacteristic: vi.fn(() => false),
+      toObject: vi.fn(() => ({})),
+    }
+  }
+
+  async function buildSheetDropzone(itemsArray = []) {
+    const Sheet = SwerpgBaseActorSheetDropzone
+    const actor = buildMockDocumentDropzone(itemsArray)
+
+    if (!globalThis.foundry.applications.ux) {
+      globalThis.foundry.applications.ux = {}
+    }
+    if (!globalThis.foundry.applications.ux.TextEditor) {
+      globalThis.foundry.applications.ux.TextEditor = { enrichHTML: vi.fn(async (s) => s || '') }
+    }
+    if (!globalThis.SYSTEM.RESTRICTION_LEVELS) {
+      globalThis.SYSTEM.RESTRICTION_LEVELS = {}
+    }
+
+    const instance = new Sheet({})
+    instance.document = actor
+    instance.actor = actor
+    instance.tabGroups = { sheet: 'attributes' }
+    instance.isEditable = true
+    return instance
+  }
+
+  beforeEach(async () => {
+    vi.clearAllMocks()
+    SwerpgBaseActorSheetDropzone = (await import('../../../module/applications/sheets/base-actor-sheet.mjs')).default
+    vi.mocked(computeFeaturedEquipmentForDropzoneTests).mockReturnValue([])
+  })
+
+  afterEach(() => {
+    vi.resetModules()
+    vi.clearAllMocks()
+  })
+
+  it('empty equipment section exposes emptyState with message and hint', async () => {
+    setupFoundryMock({
+      translations: {
+        'ACTOR.LABELS.EQUIPMENT_HINT': 'No equipped items yet.',
+        'ACTOR.LABELS.EQUIPMENT_DROP_HINT': 'Equip weapons or armor from your Backpack using the shield icon.',
+        'ACTOR.LABELS.BACKPACK_HINT': 'Your backpack is empty.',
+        'ACTOR.LABELS.BACKPACK_DROP_HINT': 'Drop items here from the compendiums, the Items directory, or the Market.',
+      },
+    })
+    const instance = await buildSheetDropzone([])
+    const ctx = await instance._prepareContext({})
+
+    expect(ctx.inventory.equipment.emptyState).toBeDefined()
+    expect(ctx.inventory.equipment.emptyState.message).toBe('No equipped items yet.')
+    expect(ctx.inventory.equipment.emptyState.hint).toBe('Equip weapons or armor from your Backpack using the shield icon.')
+  })
+
+  it('empty backpack section exposes emptyState with message and hint', async () => {
+    setupFoundryMock({
+      translations: {
+        'ACTOR.LABELS.EQUIPMENT_HINT': 'No equipped items yet.',
+        'ACTOR.LABELS.EQUIPMENT_DROP_HINT': 'Equip weapons or armor from your Backpack using the shield icon.',
+        'ACTOR.LABELS.BACKPACK_HINT': 'Your backpack is empty.',
+        'ACTOR.LABELS.BACKPACK_DROP_HINT': 'Drop items here from the compendiums, the Items directory, or the Market.',
+      },
+    })
+    const instance = await buildSheetDropzone([])
+    const ctx = await instance._prepareContext({})
+
+    expect(ctx.inventory.backpack.emptyState).toBeDefined()
+    expect(ctx.inventory.backpack.emptyState.message).toBe('Your backpack is empty.')
+    expect(ctx.inventory.backpack.emptyState.hint).toBe('Drop items here from the compendiums, the Items directory, or the Market.')
+  })
+
+  it('equipment section with items still carries emptyState for structural consistency', async () => {
+    const weaponItem = {
+      id: 'weapon-dz-1',
+      name: 'Blaster Pistol',
+      img: '',
+      type: 'weapon',
+      system: { equipped: true, quantity: 1 },
+      getTags: vi.fn(() => ({})),
+      actions: { at: () => null },
+    }
+    const instance = await buildSheetDropzone([weaponItem])
+    const ctx = await instance._prepareContext({})
+
+    // The section always carries emptyState so the template can reference it
+    expect(ctx.inventory.equipment.emptyState).toBeDefined()
+    // But it now has items, so the template should render items, not the dropzone
+    expect(ctx.inventory.equipment.items).toHaveLength(1)
+  })
+
+  it('backpack section with gear still carries emptyState for structural consistency', async () => {
+    const gearItem = {
+      id: 'gear-dz-1',
+      name: 'Medpac',
+      img: '',
+      type: 'gear',
+      system: { quantity: 2 },
+      getTags: vi.fn(() => ({})),
+      actions: { at: () => null },
+    }
+    const instance = await buildSheetDropzone([gearItem])
+    const ctx = await instance._prepareContext({})
+
+    expect(ctx.inventory.backpack.emptyState).toBeDefined()
+    expect(ctx.inventory.backpack.items).toHaveLength(1)
+  })
+
+  it('equipment and backpack emptyState messages are distinct', async () => {
+    setupFoundryMock({ translations: {} })
+    const instance = await buildSheetDropzone([])
+    const ctx = await instance._prepareContext({})
+
+    // The two sections must have different hint keys so they provide contextual guidance
+    expect(ctx.inventory.equipment.emptyState.message).not.toBe(ctx.inventory.backpack.emptyState.message)
+    expect(ctx.inventory.equipment.emptyState.hint).not.toBe(ctx.inventory.backpack.emptyState.hint)
   })
 })
