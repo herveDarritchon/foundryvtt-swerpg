@@ -43,41 +43,27 @@
       </ol>
     </div>
   {{/each}}
-  <div class="credits-summary">
-    <h4>{{localize "SWERPG.Character.Credits.Label"}}</h4>
-    <div class="credits-breakdown">
-      <div class="line">
-        <span>{{localize "SWERPG.Character.Credits.Starting"}}:</span>
-        <span class="value">{{creditBudget.starting}}</span>
-      </div>
-      {{#if creditBudget.obligationBonus}}
-      <div class="line bonus">
-        <span>{{localize "SWERPG.Character.Credits.ObligationBonus"}}:</span>
-        <span class="value">+{{creditBudget.obligationBonus}}</span>
-      </div>
-      {{/if}}
-      {{#if creditBudget.manualAdjustment}}
-      <div class="line adjustment {{#if (lt creditBudget.manualAdjustment 0)}}negative{{/if}}">
-        <span>{{localize "SWERPG.Character.Credits.ManualAdjustment"}}:</span>
-        <span class="value">{{#if (gte creditBudget.manualAdjustment 0)}}+{{/if}}{{creditBudget.manualAdjustment}}</span>
-      </div>
-      {{/if}}
-      <div class="line separator"></div>
-      <div class="line total-budget">
-        <span>{{localize "SWERPG.Character.Credits.TotalBudget"}}:</span>
-        <span class="value">{{creditBudget.totalBudget}}</span>
-      </div>
-      <div class="line total-spent">
-        <span>{{localize "SWERPG.Character.Credits.TotalSpent"}}:</span>
-        <span class="value">−{{creditBudget.totalSpent}}</span>
-      </div>
-      <div class="line {{#if creditBudget.isOverBudget}}over-budget{{else}}available{{/if}}">
-        <span>{{localize "SWERPG.Character.Credits.Available"}}:</span>
-        <span class="value">{{creditBudget.available}}</span>
-      </div>
+  <div class="credits-compact {{#if creditBudget.isOverBudget}}is-over-budget{{/if}}" aria-label="{{localize 'SWERPG.Character.Credits.Label'}}">
+    <div class="credits-compact__primary">
+      <i class="credits-compact__icon fa-solid fa-coins" aria-hidden="true"></i>
+      <span class="credits-compact__amount" aria-label="{{localize 'SWERPG.Character.Credits.Available'}}">{{creditBudget.available}}</span>
+      <span class="credits-compact__label">{{localize "SWERPG.Character.Credits.Label"}}</span>
       {{#if creditBudget.isOverBudget}}
-      <div class="warning">{{localize "SWERPG.Character.Credits.OverBudget"}}</div>
+        <span class="credits-compact__alert" aria-live="polite" data-tooltip="{{localize 'SWERPG.Character.Credits.OverBudget'}}">
+          <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+        </span>
       {{/if}}
+    </div>
+    <div class="credits-compact__details">
+      <span class="credits-compact__detail-item">
+        <span class="credits-compact__detail-label">{{localize "SWERPG.Character.Credits.TotalBudget"}}</span>
+        <span class="credits-compact__detail-value">{{creditBudget.totalBudget}}</span>
+      </span>
+      <span class="credits-compact__separator" aria-hidden="true">·</span>
+      <span class="credits-compact__detail-item">
+        <span class="credits-compact__detail-label">{{localize "SWERPG.Character.Credits.TotalSpent"}}</span>
+        <span class="credits-compact__detail-value">{{creditBudget.totalSpent}}</span>
+      </span>
     </div>
   </div>
   <div class="inventory-actions">
