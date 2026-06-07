@@ -75,7 +75,11 @@
             </div>
           </li>
         {{else}}
-          <li class="notes">{{section.empty}}</li>
+          <li class="inventory-dropzone" aria-label="{{section.emptyState.message}}" role="region">
+            <i class="inventory-dropzone__icon fa-solid fa-box-open" aria-hidden="true"></i>
+            <p class="inventory-dropzone__message">{{section.emptyState.message}}</p>
+            <p class="inventory-dropzone__hint">{{section.emptyState.hint}}</p>
+          </li>
         {{/each}}
       </ol>
     </div>
