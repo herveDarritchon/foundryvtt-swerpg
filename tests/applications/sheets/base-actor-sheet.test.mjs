@@ -783,3 +783,200 @@ describe('SwerpgBaseActorSheet #prepareItems — compact tags via getTags("short
     expect(item.restrictionBadge.level).toBe('restricted')
   })
 })
+
+// ---------------------------------------------------------------------------
+// Feature #633: inventory line items must expose quantity, encumbrance, price
+// ---------------------------------------------------------------------------
+
+import { computeFeaturedEquipment as computeFeaturedEquipmentForMetricsTests } from '../../../module/lib/featured-equipment.mjs'
+
+describe('SwerpgBaseActorSheet #prepareItems — inventory line item metrics (issue #633)', () => {
+  let SwerpgBaseActorSheetMetrics
+
+  function buildMockDocumentMetrics(itemsArray) {
+    return {
+      id: 'actor-metrics',
+      name: 'Metrics Actor',
+      system: {
+        characteristics: {
+          brawn: { rank: { base: 2, trained: 0 } },
+          agility: { rank: { base: 2, trained: 0 } },
+          intellect: { rank: { base: 2, trained: 0 } },
+          cunning: { rank: { base: 2, trained: 0 } },
+          willpower: { rank: { base: 2, trained: 0 } },
+          presence: { rank: { base: 2, trained: 0 } },
+        },
+        progression: {
+          experience: { gained: 0, spent: 0 },
+          freeSkillRanks: {
+            career: { gained: 0, spent: 0 },
+            specialization: { gained: 0, spent: 0 },
+          },
+        },
+        details: {
+          biography: { appearance: '', public: '', private: '' },
+          commitments: { motivation: '' },
+        },
+        schema: { fields: {} },
+      },
+      isOwner: true,
+      items: {
+        find: vi.fn((fn) => itemsArray.find(fn) || null),
+        filter: vi.fn((fn) => itemsArray.filter(fn)),
+        get: vi.fn((id) => itemsArray.find((i) => i.id === id) || null),
+        [Symbol.iterator]: function* () {
+          yield* itemsArray
+        },
+      },
+      effects: [],
+      actions: {},
+      canPurchaseCharacteristic: vi.fn(() => false),
+      toObject: vi.fn(() => ({})),
+    }
+  }
+
+  async function buildSheetMetrics(itemsArray) {
+    const Sheet = SwerpgBaseActorSheetMetrics
+    const actor = buildMockDocumentMetrics(itemsArray)
+
+    if (!globalThis.foundry.applications.ux) {
+      globalThis.foundry.applications.ux = {}
+    }
+    if (!globalThis.foundry.applications.ux.TextEditor) {
+      globalThis.foundry.applications.ux.TextEditor = { enrichHTML: vi.fn(async (s) => s || '') }
+    }
+    if (!globalThis.SYSTEM.RESTRICTION_LEVELS) {
+      globalThis.SYSTEM.RESTRICTION_LEVELS = {}
+    }
+
+    const instance = new Sheet({})
+    instance.document = actor
+    instance.actor = actor
+    instance.tabGroups = { sheet: 'attributes' }
+    instance.isEditable = true
+    return instance
+  }
+
+  beforeEach(async () => {
+    vi.clearAllMocks()
+    SwerpgBaseActorSheetMetrics = (await import('../../../module/applications/sheets/base-actor-sheet.mjs')).default
+    vi.mocked(computeFeaturedEquipmentForMetricsTests).mockReturnValue([])
+  })
+
+  test('gear item exposes quantity, encumbrance and price in inventory view-model', async () => {
+    const gearItem = {
+      id: 'gear-metrics-1',
+      name: 'Medpac',
+      img: 'icons/gear.webp',
+      type: 'gear',
+      system: { quantity: 3, encumbrance: 1, price: 25 },
+      getTags: vi.fn(() => ({})),
+      actions: { at: () => null },
+    }
+    const instance = await buildSheetMetrics([gearItem])
+    const ctx = await instance._prepareContext({})
+
+    const item = ctx.inventory.backpack.items.find((i) => i.id === 'gear-metrics-1')
+    expect(item).toBeDefined()
+    expect(item.quantity).toBe(3)
+    expect(item.encumbrance).toBe(1)
+    expect(item.price).toBe(25)
+  })
+
+  test('weapon item exposes quantity, encumbrance and price in inventory view-model', async () => {
+    const weaponItem = {
+      id: 'weapon-metrics-1',
+      name: 'Blaster Pistol',
+      img: 'icons/weapon.webp',
+      type: 'weapon',
+      system: { equipped: false, quantity: 1, encumbrance: 2, price: 400 },
+      getTags: vi.fn(() => ({})),
+      actions: { at: () => null },
+    }
+    const instance = await buildSheetMetrics([weaponItem])
+    const ctx = await instance._prepareContext({})
+
+    const item = ctx.inventory.backpack.items.find((i) => i.id === 'weapon-metrics-1')
+    expect(item).toBeDefined()
+    expect(item.quantity).toBe(1)
+    expect(item.encumbrance).toBe(2)
+    expect(item.price).toBe(400)
+  })
+
+  test('armor item exposes quantity, encumbrance and price in inventory view-model', async () => {
+    const armorItem = {
+      id: 'armor-metrics-1',
+      name: 'Light Armor',
+      img: 'icons/armor.webp',
+      type: 'armor',
+      system: { equipped: false, quantity: 1, encumbrance: 3, price: 500 },
+      getTags: vi.fn(() => ({})),
+      actions: { at: () => null },
+    }
+    const instance = await buildSheetMetrics([armorItem])
+    const ctx = await instance._prepareContext({})
+
+    const item = ctx.inventory.backpack.items.find((i) => i.id === 'armor-metrics-1')
+    expect(item).toBeDefined()
+    expect(item.quantity).toBe(1)
+    expect(item.encumbrance).toBe(3)
+    expect(item.price).toBe(500)
+  })
+
+  test('quantity=1 item still exposes quantity in view-model (no stack suppression)', async () => {
+    const gearItem = {
+      id: 'gear-qty-one',
+      name: 'Stim Pack',
+      img: '',
+      type: 'gear',
+      system: { quantity: 1, encumbrance: 0, price: 10 },
+      getTags: vi.fn(() => ({})),
+      actions: { at: () => null },
+    }
+    const instance = await buildSheetMetrics([gearItem])
+    const ctx = await instance._prepareContext({})
+
+    const item = ctx.inventory.backpack.items.find((i) => i.id === 'gear-qty-one')
+    expect(item).toBeDefined()
+    expect(item.quantity).toBe(1)
+  })
+
+  test('quantity>1 item exposes quantity without a separate showStack flag', async () => {
+    const gearItem = {
+      id: 'gear-qty-stack',
+      name: 'Stim Pack',
+      img: '',
+      type: 'gear',
+      system: { quantity: 5, encumbrance: 0, price: 10 },
+      getTags: vi.fn(() => ({})),
+      actions: { at: () => null },
+    }
+    const instance = await buildSheetMetrics([gearItem])
+    const ctx = await instance._prepareContext({})
+
+    const item = ctx.inventory.backpack.items.find((i) => i.id === 'gear-qty-stack')
+    expect(item).toBeDefined()
+    expect(item.quantity).toBe(5)
+    expect(item.showStack).toBeUndefined()
+  })
+
+  test('equipped weapon also exposes metrics in the equipment section', async () => {
+    const weaponItem = {
+      id: 'weapon-equipped-metrics',
+      name: 'Heavy Blaster',
+      img: '',
+      type: 'weapon',
+      system: { equipped: true, quantity: 1, encumbrance: 4, price: 1200 },
+      getTags: vi.fn(() => ({})),
+      actions: { at: () => null },
+    }
+    const instance = await buildSheetMetrics([weaponItem])
+    const ctx = await instance._prepareContext({})
+
+    const item = ctx.inventory.equipment.items.find((i) => i.id === 'weapon-equipped-metrics')
+    expect(item).toBeDefined()
+    expect(item.quantity).toBe(1)
+    expect(item.encumbrance).toBe(4)
+    expect(item.price).toBe(1200)
+  })
+})

@@ -246,6 +246,7 @@
   "SWERPG.Character.Credits.TotalSpent": "Dépensé (items)",
   "SWERPG.Character.Credits.Available": "Solde disponible",
   "SWERPG.Character.Credits.OverBudget": "Budget dépassé ! (Déficit)",
+  "SWERPG.Inventory.Metrics.Label": "Métriques de l'objet",
   "SWERPG.ERRORS.InvalidEvent": "Événement invalide: impossible de traiter l'interaction.",
   "SWERPG.AUDIT.WRITE_FAILED": "Échec d'écriture du journal d'audit pour l'acteur \"{actor}\". Voir la console pour les détails.",
   "SWERPG.AUDIT.ACTOR": "Acteur",
@@ -961,13 +962,16 @@
         "label": "Category"
       },
       "quantity": {
-        "label": "Quantity"
+        "label": "Quantité"
+      },
+      "encumbrance": {
+        "label": "Encombrement"
       },
       "weight": {
         "label": "Weight"
       },
       "price": {
-        "label": "Base Price"
+        "label": "Prix de base"
       },
       "quality": {
         "label": "Quality"

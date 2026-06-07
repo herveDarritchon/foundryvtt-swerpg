@@ -11,10 +11,7 @@
           <li class="line-item {{item.cssClass}}" data-item-id="{{item.id}}">
             <img class="icon" src="{{item.img}}" alt="{{item.name}}" />
             <div class="title">
-              <h4>
-                {{#if item.showStack}}<span class="stack">({{item.quantity}}) </span>{{/if}}
-                {{~item.name~}}
-              </h4>
+              <h4>{{item.name}}</h4>
               <div class="tags">
                 {{#each item.tags as |label tag|}}
                   {{#if label}}
@@ -28,6 +25,20 @@
                   {{/if}}
                 {{/each}}
               </div>
+            </div>
+            <div class="line-item__metrics" aria-label="{{localize 'SWERPG.Inventory.Metrics.Label'}}">
+              <span class="line-item__metric" data-tooltip="{{localize 'ITEM.FIELDS.quantity.label'}}">
+                <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
+                <span class="line-item__metric-value">{{item.quantity}}</span>
+              </span>
+              <span class="line-item__metric" data-tooltip="{{localize 'ITEM.FIELDS.encumbrance.label'}}">
+                <i class="fa-solid fa-weight-hanging" aria-hidden="true"></i>
+                <span class="line-item__metric-value">{{item.encumbrance}}</span>
+              </span>
+              <span class="line-item__metric" data-tooltip="{{localize 'ITEM.FIELDS.price.label'}}">
+                <i class="fa-solid fa-coins" aria-hidden="true"></i>
+                <span class="line-item__metric-value">{{item.price}}</span>
+              </span>
             </div>
             <div class="controls">
               {{#if item.canEquip}}
