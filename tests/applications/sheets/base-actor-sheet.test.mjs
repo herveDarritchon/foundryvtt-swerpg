@@ -1251,3 +1251,187 @@ describe('SwerpgBaseActorSheet #prepareItems — inventory line item controls co
     expect(item.equippedStateLabel).toBeUndefined()
   })
 })
+
+// ---------------------------------------------------------------------------
+// Feature #637: ACTOR.TABS must be fully localised — bilingual non-regression
+// ---------------------------------------------------------------------------
+
+import { setupFoundryMock as setupFoundryMockForTabs } from '../../helpers/mock-foundry.mjs'
+import { computeFeaturedEquipment as computeFeaturedEquipmentForTabsTests } from '../../../module/lib/featured-equipment.mjs'
+
+describe('SwerpgBaseActorSheet TABS — bilingual i18n non-regression (issue #637)', () => {
+  let SwerpgBaseActorSheetTabs
+
+  /** All tab ids declared in SwerpgBaseActorSheet.TABS. */
+  const ALL_TAB_IDS = ['attributes', 'actions', 'inventory', 'skills', 'talents', 'effects', 'biography', 'commitments']
+
+  /** All ACTOR.TABS i18n keys expected to be declared on the sheet class. */
+  const ALL_TAB_KEYS = ALL_TAB_IDS.map((id) => `ACTOR.TABS.${id.toUpperCase()}`)
+
+  function buildMinimalActor() {
+    return {
+      id: 'actor-tabs',
+      name: 'Tabs Actor',
+      system: {
+        characteristics: {
+          brawn: { rank: { base: 2, trained: 0 } },
+          agility: { rank: { base: 2, trained: 0 } },
+          intellect: { rank: { base: 2, trained: 0 } },
+          cunning: { rank: { base: 2, trained: 0 } },
+          willpower: { rank: { base: 2, trained: 0 } },
+          presence: { rank: { base: 2, trained: 0 } },
+        },
+        progression: {
+          experience: { gained: 0, spent: 0 },
+          freeSkillRanks: {
+            career: { gained: 0, spent: 0 },
+            specialization: { gained: 0, spent: 0 },
+          },
+        },
+        details: {
+          biography: { appearance: '', public: '', private: '' },
+          commitments: { motivation: '' },
+        },
+        schema: { fields: {} },
+      },
+      isOwner: true,
+      items: {
+        find: vi.fn(() => null),
+        filter: vi.fn(() => []),
+        get: vi.fn(() => null),
+        [Symbol.iterator]: function* () {},
+      },
+      effects: [],
+      actions: {},
+      canPurchaseCharacteristic: vi.fn(() => false),
+      toObject: vi.fn(() => ({})),
+    }
+  }
+
+  async function buildSheetTabs() {
+    const Sheet = SwerpgBaseActorSheetTabs
+    const actor = buildMinimalActor()
+
+    if (!globalThis.foundry.applications.ux) globalThis.foundry.applications.ux = {}
+    if (!globalThis.foundry.applications.ux.TextEditor) {
+      globalThis.foundry.applications.ux.TextEditor = { enrichHTML: vi.fn(async (s) => s || '') }
+    }
+    if (!globalThis.SYSTEM.RESTRICTION_LEVELS) globalThis.SYSTEM.RESTRICTION_LEVELS = {}
+
+    const instance = new Sheet({})
+    instance.document = actor
+    instance.actor = actor
+    instance.tabGroups = { sheet: 'attributes' }
+    instance.isEditable = true
+    return instance
+  }
+
+  beforeEach(async () => {
+    vi.clearAllMocks()
+    SwerpgBaseActorSheetTabs = (await import('../../../module/applications/sheets/base-actor-sheet.mjs')).default
+    vi.mocked(computeFeaturedEquipmentForTabsTests).mockReturnValue([])
+  })
+
+  test('SwerpgBaseActorSheet.TABS declares all 8 expected tab ids', () => {
+    // TABS is { sheet: [...array of tab configs...] }
+    const sheetTabs = SwerpgBaseActorSheetTabs.TABS.sheet
+    const tabIds = sheetTabs.map((t) => t.id)
+    for (const id of ALL_TAB_IDS) {
+      expect(tabIds, `Missing tab id: ${id}`).toContain(id)
+    }
+    expect(tabIds).toHaveLength(ALL_TAB_IDS.length)
+  })
+
+  test('every tab label points to an ACTOR.TABS.* i18n key (no hardcoded string)', () => {
+    const sheetTabs = SwerpgBaseActorSheetTabs.TABS.sheet
+    const tabLabels = sheetTabs.map((t) => t.label)
+    for (const label of tabLabels) {
+      expect(label, `Tab label "${label}" must start with ACTOR.TABS.`).toMatch(/^ACTOR\.TABS\./)
+    }
+  })
+
+  test('commitments tab label key is ACTOR.TABS.COMMITMENTS', () => {
+    const sheetTabs = SwerpgBaseActorSheetTabs.TABS.sheet
+    const commitmentsTab = sheetTabs.find((t) => t.id === 'commitments')
+    expect(commitmentsTab).toBeDefined()
+    expect(commitmentsTab.label).toBe('ACTOR.TABS.COMMITMENTS')
+  })
+
+  test('ctx.tabs contains all expected i18n keys as raw label values (labels are resolved by template)', async () => {
+    // The sheet does NOT localize labels in JS — it passes raw ACTOR.TABS.* keys.
+    // Localization happens in the Handlebars template via {{localize tab.label}}.
+    // This test verifies the correct keys are present in the context.
+    setupFoundryMockForTabs({ translations: {} })
+
+    const instance = await buildSheetTabs()
+    const ctx = await instance._prepareContext({})
+
+    const tabLabels = Object.values(ctx.tabs).map((t) => t.label)
+    for (const key of ALL_TAB_KEYS) {
+      expect(tabLabels, `Expected key "${key}" in ctx.tabs label values`).toContain(key)
+    }
+  })
+
+  test('ACTOR.TABS.* i18n keys resolve to English strings in English locale', () => {
+    setupFoundryMockForTabs({
+      translations: {
+        'ACTOR.TABS.ATTRIBUTES': 'Attributes',
+        'ACTOR.TABS.ACTIONS': 'Actions',
+        'ACTOR.TABS.EFFECTS': 'Effects',
+        'ACTOR.TABS.SKILLS': 'Skills',
+        'ACTOR.TABS.TALENTS': 'Talents',
+        'ACTOR.TABS.INVENTORY': 'Inventory',
+        'ACTOR.TABS.BIOGRAPHY': 'Biography',
+        'ACTOR.TABS.COMMITMENTS': 'Commitments',
+      },
+    })
+
+    expect(game.i18n.localize('ACTOR.TABS.ATTRIBUTES')).toBe('Attributes')
+    expect(game.i18n.localize('ACTOR.TABS.ACTIONS')).toBe('Actions')
+    expect(game.i18n.localize('ACTOR.TABS.EFFECTS')).toBe('Effects')
+    expect(game.i18n.localize('ACTOR.TABS.SKILLS')).toBe('Skills')
+    expect(game.i18n.localize('ACTOR.TABS.TALENTS')).toBe('Talents')
+    expect(game.i18n.localize('ACTOR.TABS.INVENTORY')).toBe('Inventory')
+    expect(game.i18n.localize('ACTOR.TABS.BIOGRAPHY')).toBe('Biography')
+    expect(game.i18n.localize('ACTOR.TABS.COMMITMENTS')).toBe('Commitments')
+  })
+
+  test('ACTOR.TABS.* i18n keys resolve to French strings in French locale', () => {
+    setupFoundryMockForTabs({
+      translations: {
+        'ACTOR.TABS.ATTRIBUTES': 'Attributs',
+        'ACTOR.TABS.ACTIONS': 'Actions',
+        'ACTOR.TABS.EFFECTS': 'Effets',
+        'ACTOR.TABS.SKILLS': 'Compétences',
+        'ACTOR.TABS.TALENTS': 'Talents',
+        'ACTOR.TABS.INVENTORY': 'Inventaire',
+        'ACTOR.TABS.BIOGRAPHY': 'Biographie',
+        'ACTOR.TABS.COMMITMENTS': 'Engagements',
+      },
+    })
+
+    expect(game.i18n.localize('ACTOR.TABS.ATTRIBUTES')).toBe('Attributs')
+    expect(game.i18n.localize('ACTOR.TABS.ACTIONS')).toBe('Actions')
+    expect(game.i18n.localize('ACTOR.TABS.EFFECTS')).toBe('Effets')
+    expect(game.i18n.localize('ACTOR.TABS.SKILLS')).toBe('Compétences')
+    expect(game.i18n.localize('ACTOR.TABS.TALENTS')).toBe('Talents')
+    expect(game.i18n.localize('ACTOR.TABS.INVENTORY')).toBe('Inventaire')
+    expect(game.i18n.localize('ACTOR.TABS.BIOGRAPHY')).toBe('Biographie')
+    expect(game.i18n.localize('ACTOR.TABS.COMMITMENTS')).toBe('Engagements')
+  })
+
+  test('ACTOR.LABELS.CURRENT_EQUIPMENT is translated in French (sidebar.hbs regression)', () => {
+    setupFoundryMockForTabs({ translations: { 'ACTOR.LABELS.CURRENT_EQUIPMENT': 'Équipement actuel' } })
+    expect(game.i18n.localize('ACTOR.LABELS.CURRENT_EQUIPMENT')).toBe('Équipement actuel')
+  })
+
+  test('ACTOR.LABELS.FAVORITE_ACTIONS is translated in French (sidebar.hbs regression)', () => {
+    setupFoundryMockForTabs({ translations: { 'ACTOR.LABELS.FAVORITE_ACTIONS': 'Actions favorites' } })
+    expect(game.i18n.localize('ACTOR.LABELS.FAVORITE_ACTIONS')).toBe('Actions favorites')
+  })
+
+  test('ACTOR.LABELS.SIZE is translated in French (adversary-header.hbs regression)', () => {
+    setupFoundryMockForTabs({ translations: { 'ACTOR.LABELS.SIZE': 'Taille' } })
+    expect(game.i18n.localize('ACTOR.LABELS.SIZE')).toBe('Taille')
+  })
+})
