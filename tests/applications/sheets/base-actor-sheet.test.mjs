@@ -604,3 +604,182 @@ describe('SwerpgBaseActorSheet #prepareItems — inventory section i18n labels',
     expect(ctx.inventory.backpack.label).toBe('ACTOR.LABELS.BACKPACK')
   })
 })
+
+// ---------------------------------------------------------------------------
+// Regression: inventory items must use getTags('short') — issue #631
+// ---------------------------------------------------------------------------
+
+import { computeFeaturedEquipment as computeFeaturedEquipmentForTagsTests } from '../../../module/lib/featured-equipment.mjs'
+
+describe('SwerpgBaseActorSheet #prepareItems — compact tags via getTags("short")', () => {
+  let SwerpgBaseActorSheetTags
+
+  function buildMockDocumentTags(itemsArray) {
+    return {
+      id: 'actor-tags',
+      name: 'Tags Actor',
+      system: {
+        characteristics: {
+          brawn: { rank: { base: 2, trained: 0 } },
+          agility: { rank: { base: 2, trained: 0 } },
+          intellect: { rank: { base: 2, trained: 0 } },
+          cunning: { rank: { base: 2, trained: 0 } },
+          willpower: { rank: { base: 2, trained: 0 } },
+          presence: { rank: { base: 2, trained: 0 } },
+        },
+        progression: {
+          experience: { gained: 0, spent: 0 },
+          freeSkillRanks: {
+            career: { gained: 0, spent: 0 },
+            specialization: { gained: 0, spent: 0 },
+          },
+        },
+        details: {
+          biography: { appearance: '', public: '', private: '' },
+          commitments: { motivation: '' },
+        },
+        schema: { fields: {} },
+      },
+      isOwner: true,
+      items: {
+        find: vi.fn((fn) => itemsArray.find(fn) || null),
+        filter: vi.fn((fn) => itemsArray.filter(fn)),
+        get: vi.fn((id) => itemsArray.find((i) => i.id === id) || null),
+        [Symbol.iterator]: function* () {
+          yield* itemsArray
+        },
+      },
+      effects: [],
+      actions: {},
+      canPurchaseCharacteristic: vi.fn(() => false),
+      toObject: vi.fn(() => ({})),
+    }
+  }
+
+  async function buildSheetTags(itemsArray) {
+    const Sheet = SwerpgBaseActorSheetTags
+    const actor = buildMockDocumentTags(itemsArray)
+
+    if (!globalThis.foundry.applications.ux) {
+      globalThis.foundry.applications.ux = {}
+    }
+    if (!globalThis.foundry.applications.ux.TextEditor) {
+      globalThis.foundry.applications.ux.TextEditor = { enrichHTML: vi.fn(async (s) => s || '') }
+    }
+    if (!globalThis.SYSTEM.RESTRICTION_LEVELS) {
+      globalThis.SYSTEM.RESTRICTION_LEVELS = {}
+    }
+
+    const instance = new Sheet({})
+    instance.document = actor
+    instance.actor = actor
+    instance.tabGroups = { sheet: 'attributes' }
+    instance.isEditable = true
+    return instance
+  }
+
+  beforeEach(async () => {
+    vi.clearAllMocks()
+    SwerpgBaseActorSheetTags = (await import('../../../module/applications/sheets/base-actor-sheet.mjs')).default
+    vi.mocked(computeFeaturedEquipmentForTagsTests).mockReturnValue([])
+  })
+
+  test('weapon item getTags is called with "short" scope for inventory', async () => {
+    const getTagsMock = vi.fn(() => ({ damage: '5 Damage', category: 'Ranged' }))
+    const weaponItem = {
+      id: 'weapon-short-1',
+      name: 'Blaster Pistol',
+      img: 'icons/weapon.webp',
+      type: 'weapon',
+      system: { equipped: false, quantity: 1 },
+      getTags: getTagsMock,
+      actions: { at: () => null },
+    }
+    const instance = await buildSheetTags([weaponItem])
+    await instance._prepareContext({})
+
+    expect(getTagsMock).toHaveBeenCalledWith('short')
+  })
+
+  test('armor item getTags is called with "short" scope for inventory', async () => {
+    const getTagsMock = vi.fn(() => ({ category: 'Light Armor', defense: '2 Armor' }))
+    const armorItem = {
+      id: 'armor-short-1',
+      name: 'Light Armor',
+      img: 'icons/armor.webp',
+      type: 'armor',
+      system: { equipped: false, quantity: 1 },
+      getTags: getTagsMock,
+      actions: { at: () => null },
+    }
+    const instance = await buildSheetTags([armorItem])
+    await instance._prepareContext({})
+
+    expect(getTagsMock).toHaveBeenCalledWith('short')
+  })
+
+  test('gear item getTags is called with "short" scope for inventory', async () => {
+    const getTagsMock = vi.fn(() => ({}))
+    const gearItem = {
+      id: 'gear-short-1',
+      name: 'Medpac',
+      img: 'icons/gear.webp',
+      type: 'gear',
+      system: { quantity: 2 },
+      getTags: getTagsMock,
+      actions: { at: () => null },
+    }
+    const instance = await buildSheetTags([gearItem])
+    await instance._prepareContext({})
+
+    expect(getTagsMock).toHaveBeenCalledWith('short')
+  })
+
+  test('inventory item tags object reflects short-scope tags returned by getTags', async () => {
+    // Short scope for weapon omits range, qualities, block, parry — only damage, category, type
+    const shortTags = { damage: '5 Damage', category: 'Ranged' }
+    const weaponItem = {
+      id: 'weapon-tags-1',
+      name: 'Blaster Pistol',
+      img: '',
+      type: 'weapon',
+      system: { equipped: false, quantity: 1 },
+      getTags: vi.fn(() => shortTags),
+      actions: { at: () => null },
+    }
+    const instance = await buildSheetTags([weaponItem])
+    const ctx = await instance._prepareContext({})
+
+    const item = ctx.inventory.backpack.items.find((i) => i.id === 'weapon-tags-1')
+    expect(item).toBeDefined()
+    expect(item.tags).toEqual(shortTags)
+    // Verify no full-scope-only tags leaked through
+    expect(item.tags).not.toHaveProperty('range')
+  })
+
+  test('restriction badge tag is preserved in short scope for weapon with restriction', async () => {
+    const shortTags = { damage: '5 Damage', restricted: 'Restricted' }
+    const weaponItem = {
+      id: 'weapon-restricted-1',
+      name: 'Heavy Repeating Blaster',
+      img: '',
+      type: 'weapon',
+      system: { equipped: false, quantity: 1, restrictionLevel: 'restricted' },
+      getTags: vi.fn(() => shortTags),
+      actions: { at: () => null },
+    }
+
+    globalThis.SYSTEM.RESTRICTION_LEVELS = {
+      restricted: { label: 'SWERPG.Restriction.Restricted' },
+    }
+    globalThis.game.i18n.localize = (key) => key
+
+    const instance = await buildSheetTags([weaponItem])
+    const ctx = await instance._prepareContext({})
+
+    const item = ctx.inventory.backpack.items.find((i) => i.id === 'weapon-restricted-1')
+    expect(item).toBeDefined()
+    expect(item.restrictionBadge).toBeDefined()
+    expect(item.restrictionBadge.level).toBe('restricted')
+  })
+})

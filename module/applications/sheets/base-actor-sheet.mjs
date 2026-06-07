@@ -400,7 +400,7 @@ export default class SwerpgBaseActorSheet extends HBMixin(BaseActorSheetV2) {
 
     // Iterate over items and organize them
     for (let i of this.document.items) {
-      const d = { id: i.id, name: i.name, img: i.img, tags: i.getTags() }
+      const d = { id: i.id, name: i.name, img: i.img, tags: i.getTags('short') }
       // restriction badge for inventory lists
       const rl = i.system?.restrictionLevel
       if (rl && rl !== 'none') {
