@@ -393,8 +393,8 @@ export default class SwerpgBaseActorSheet extends HBMixin(BaseActorSheetV2) {
         passive: { label: 'Passive Talents', items: [] },
       },
       inventory: {
-        equipment: { label: 'Equipment', items: [], empty: game.i18n.localize('ACTOR.LABELS.EQUIPMENT_HINT') },
-        backpack: { label: 'Backpack', items: [], empty: game.i18n.localize('ACTOR.LABELS.BACKPACK_HINT') },
+        equipment: { label: game.i18n.localize('ACTOR.LABELS.EQUIPMENT'), items: [], empty: game.i18n.localize('ACTOR.LABELS.EQUIPMENT_HINT') },
+        backpack: { label: game.i18n.localize('ACTOR.LABELS.BACKPACK'), items: [], empty: game.i18n.localize('ACTOR.LABELS.BACKPACK_HINT') },
       },
     }
 

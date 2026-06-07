@@ -31,10 +31,10 @@
             </div>
             <div class="controls">
               {{#if item.canEquip}}
-                <a class="button icon equipped-state fa-solid fa-shield-alt" data-action="itemEquip" data-tooltip="Equip Item"></a>
+                <a class="button icon equipped-state fa-solid fa-shield-alt" data-action="itemEquip" data-tooltip="{{localize 'ACTOR.LABELS.EQUIP_ITEM'}}"></a>
               {{/if}}
-              <a class="button icon fa-solid fa-edit" data-action="itemEdit" data-tooltip="Edit Item"></a>
-              <a class="button icon fa-solid fa-trash" data-action="itemDelete" data-tooltip="Delete Item"></a>
+              <a class="button icon fa-solid fa-edit" data-action="itemEdit" data-tooltip="{{localize 'ACTOR.LABELS.EDIT_ITEM'}}"></a>
+              <a class="button icon fa-solid fa-trash" data-action="itemDelete" data-tooltip="{{localize 'ACTOR.LABELS.DELETE_ITEM'}}"></a>
             </div>
           </li>
         {{else}}
@@ -81,7 +81,7 @@
     </div>
   </div>
   <div class="inventory-actions">
-    <button type="button" class="icon frame-brown fa-solid fa-plus inventory-create" data-action="itemCreate" data-tooltip="Create Item"></button>
+    <button type="button" class="icon frame-brown fa-solid fa-plus inventory-create" data-action="itemCreate" data-tooltip="{{localize 'ACTOR.LABELS.CREATE_ITEM'}}"></button>
     {{#if showMarketButton}}
       <button
         type="button"

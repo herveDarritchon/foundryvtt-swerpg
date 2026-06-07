@@ -446,3 +446,161 @@ describe('SwerpgBaseActorSheet #prepareItems — gear inventory classification',
     expect(armorEntry.canEquip).toBe(true)
   })
 })
+
+// ---------------------------------------------------------------------------
+// Regression: inventory section labels must come from i18n keys (issue #630)
+// ---------------------------------------------------------------------------
+
+import { setupFoundryMock as setupFoundryMockForI18n } from '../../helpers/mock-foundry.mjs'
+import { computeFeaturedEquipment as computeFeaturedEquipmentForI18nTests } from '../../../module/lib/featured-equipment.mjs'
+
+describe('SwerpgBaseActorSheet #prepareItems — inventory section i18n labels', () => {
+  let SwerpgBaseActorSheetI18n
+
+  function buildMockDocumentI18n(itemsArray = []) {
+    return {
+      id: 'actor-i18n',
+      name: 'I18n Actor',
+      system: {
+        characteristics: {
+          brawn: { rank: { base: 2, trained: 0 } },
+          agility: { rank: { base: 2, trained: 0 } },
+          intellect: { rank: { base: 2, trained: 0 } },
+          cunning: { rank: { base: 2, trained: 0 } },
+          willpower: { rank: { base: 2, trained: 0 } },
+          presence: { rank: { base: 2, trained: 0 } },
+        },
+        progression: {
+          experience: { gained: 0, spent: 0 },
+          freeSkillRanks: {
+            career: { gained: 0, spent: 0 },
+            specialization: { gained: 0, spent: 0 },
+          },
+        },
+        details: {
+          biography: { appearance: '', public: '', private: '' },
+          commitments: { motivation: '' },
+        },
+        schema: { fields: {} },
+      },
+      isOwner: true,
+      items: {
+        find: vi.fn((fn) => itemsArray.find(fn) || null),
+        filter: vi.fn((fn) => itemsArray.filter(fn)),
+        get: vi.fn((id) => itemsArray.find((i) => i.id === id) || null),
+        [Symbol.iterator]: function* () {
+          yield* itemsArray
+        },
+      },
+      effects: [],
+      actions: {},
+      canPurchaseCharacteristic: vi.fn(() => false),
+      toObject: vi.fn(() => ({})),
+    }
+  }
+
+  async function buildSheetI18n() {
+    const Sheet = SwerpgBaseActorSheetI18n
+    const actor = buildMockDocumentI18n([])
+
+    if (!globalThis.foundry.applications.ux) {
+      globalThis.foundry.applications.ux = {}
+    }
+    if (!globalThis.foundry.applications.ux.TextEditor) {
+      globalThis.foundry.applications.ux.TextEditor = { enrichHTML: vi.fn(async (s) => s || '') }
+    }
+    if (!globalThis.SYSTEM.RESTRICTION_LEVELS) {
+      globalThis.SYSTEM.RESTRICTION_LEVELS = {}
+    }
+
+    const instance = new Sheet({})
+    instance.document = actor
+    instance.actor = actor
+    instance.tabGroups = { sheet: 'attributes' }
+    instance.isEditable = true
+    return instance
+  }
+
+  beforeEach(async () => {
+    vi.clearAllMocks()
+    SwerpgBaseActorSheetI18n = (await import('../../../module/applications/sheets/base-actor-sheet.mjs')).default
+    vi.mocked(computeFeaturedEquipmentForI18nTests).mockReturnValue([])
+  })
+
+  test('inventory.equipment.label is resolved via i18n key ACTOR.LABELS.EQUIPMENT (English)', async () => {
+    // Override translations with English values to verify the key is used
+    setupFoundryMockForI18n({
+      translations: {
+        'ACTOR.LABELS.EQUIPMENT': 'Equipment',
+        'ACTOR.LABELS.BACKPACK': 'Backpack',
+        'ACTOR.LABELS.EQUIPMENT_HINT': 'Equip weapons and armor from your Backpack toggling the shield icon.',
+        'ACTOR.LABELS.BACKPACK_HINT': 'Add Armor, Weapons, or Gear by dropping them from the provided Swerpg system compendium packs.',
+      },
+    })
+    const instance = await buildSheetI18n()
+    const ctx = await instance._prepareContext({})
+
+    expect(ctx.inventory.equipment.label).toBe('Equipment')
+    expect(ctx.inventory.backpack.label).toBe('Backpack')
+  })
+
+  test('inventory.equipment.label is resolved via i18n key ACTOR.LABELS.EQUIPMENT (French)', async () => {
+    // Simulate French locale by overriding translations with French values
+    setupFoundryMockForI18n({
+      translations: {
+        'ACTOR.LABELS.EQUIPMENT': 'Équipement',
+        'ACTOR.LABELS.BACKPACK': 'Sac à dos',
+        'ACTOR.LABELS.EQUIPMENT_HINT': "Équipez vos armes et armures depuis votre sac à dos en activant l'icône de bouclier.",
+        'ACTOR.LABELS.BACKPACK_HINT': 'Ajoutez une armure, des armes ou du matériel en les déposant depuis les compendiums du système Swerpg fournis.',
+      },
+    })
+    const instance = await buildSheetI18n()
+    const ctx = await instance._prepareContext({})
+
+    expect(ctx.inventory.equipment.label).toBe('Équipement')
+    expect(ctx.inventory.backpack.label).toBe('Sac à dos')
+  })
+
+  test('inventory.equipment.empty hint is resolved via i18n key (English)', async () => {
+    setupFoundryMockForI18n({
+      translations: {
+        'ACTOR.LABELS.EQUIPMENT': 'Equipment',
+        'ACTOR.LABELS.BACKPACK': 'Backpack',
+        'ACTOR.LABELS.EQUIPMENT_HINT': 'Equip weapons and armor from your Backpack toggling the shield icon.',
+        'ACTOR.LABELS.BACKPACK_HINT': 'Add Armor, Weapons, or Gear by dropping them from the provided Swerpg system compendium packs.',
+      },
+    })
+    const instance = await buildSheetI18n()
+    const ctx = await instance._prepareContext({})
+
+    expect(ctx.inventory.equipment.empty).toBe('Equip weapons and armor from your Backpack toggling the shield icon.')
+    expect(ctx.inventory.backpack.empty).toBe('Add Armor, Weapons, or Gear by dropping them from the provided Swerpg system compendium packs.')
+  })
+
+  test('inventory.equipment.empty hint is resolved via i18n key (French)', async () => {
+    setupFoundryMockForI18n({
+      translations: {
+        'ACTOR.LABELS.EQUIPMENT': 'Équipement',
+        'ACTOR.LABELS.BACKPACK': 'Sac à dos',
+        'ACTOR.LABELS.EQUIPMENT_HINT': "Équipez vos armes et armures depuis votre sac à dos en activant l'icône de bouclier.",
+        'ACTOR.LABELS.BACKPACK_HINT': 'Ajoutez une armure, des armes ou du matériel en les déposant depuis les compendiums du système Swerpg fournis.',
+      },
+    })
+    const instance = await buildSheetI18n()
+    const ctx = await instance._prepareContext({})
+
+    expect(ctx.inventory.equipment.empty).toBe("Équipez vos armes et armures depuis votre sac à dos en activant l'icône de bouclier.")
+    expect(ctx.inventory.backpack.empty).toBe('Ajoutez une armure, des armes ou du matériel en les déposant depuis les compendiums du système Swerpg fournis.')
+  })
+
+  test('inventory section labels are not hardcoded English strings', async () => {
+    // When i18n returns the key (no translation found), the label must equal the key, not a hardcoded English word
+    // This guards against regression where labels were inlined as 'Equipment' / 'Backpack' in JS
+    setupFoundryMockForI18n({ translations: {} })
+    const instance = await buildSheetI18n()
+    const ctx = await instance._prepareContext({})
+
+    expect(ctx.inventory.equipment.label).toBe('ACTOR.LABELS.EQUIPMENT')
+    expect(ctx.inventory.backpack.label).toBe('ACTOR.LABELS.BACKPACK')
+  })
+})

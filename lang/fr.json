@@ -694,11 +694,17 @@
       "BIOGRAPHY": "Biography"
     },
     "LABELS": {
-      "CURRENT_EQUIPMENT": "Current Equipment",
-      "FAVORITE_ACTIONS": "Favorite Actions",
-      "EQUIPMENT_HINT": "Equip weapons and armor from your Backpack toggling the shield icon.",
+      "CURRENT_EQUIPMENT": "Équipement actuel",
+      "FAVORITE_ACTIONS": "Actions favorites",
+      "EQUIPMENT": "Équipement",
+      "EQUIPMENT_HINT": "Équipez vos armes et armures depuis votre sac à dos en activant l'icône de bouclier.",
+      "BACKPACK": "Sac à dos",
       "BACKPACK_HINT": "Ajoutez une armure, des armes ou du matériel en les déposant depuis les compendiums du système Swerpg fournis.",
-      "SIZE": "Size"
+      "EQUIP_ITEM": "Équiper l'objet",
+      "EDIT_ITEM": "Modifier l'objet",
+      "DELETE_ITEM": "Supprimer l'objet",
+      "CREATE_ITEM": "Créer un objet",
+      "SIZE": "Taille"
     }
   },
   "ACTOR.AppliedDetailItem": "Applied the {name} {type} to {actor}.",
