@@ -417,7 +417,8 @@ export default class SwerpgBaseActorSheet extends HBMixin(BaseActorSheetV2) {
           Object.assign(d, {
             canEquip: true,
             quantity: i.system.quantity,
-            showStack: i.system?.quantity && i.system.quantity !== 1,
+            encumbrance: i.system.encumbrance,
+            price: i.system.price,
             cssClass: i.system.equipped ? 'equipped' : 'unequipped',
           })
           if (i.system.equipped) section = sections.inventory.equipment
@@ -427,7 +428,8 @@ export default class SwerpgBaseActorSheet extends HBMixin(BaseActorSheetV2) {
           Object.assign(d, {
             canEquip: false,
             quantity: i.system?.quantity,
-            showStack: i.system?.quantity && i.system.quantity !== 1,
+            encumbrance: i.system?.encumbrance,
+            price: i.system?.price,
             cssClass: 'unequipped',
           })
           section = sections.inventory.backpack
