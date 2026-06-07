@@ -1917,10 +1917,6 @@
         box-shadow: 0 0 6px var(--color-accent);
       }
 
-      &.equipped {
-        border-left: 3px solid var(--color-accent);
-      }
-
       &.unequipped {
         border-left: 3px solid var(--color-frame);
       }
@@ -1966,6 +1962,87 @@
 
       .controls {
         flex: 0 0 auto;
+        display: flex;
+        align-items: center;
+        gap: 0.2rem;
+
+        .control-btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 22px;
+          height: 22px;
+          padding: 0;
+          border: 1px solid var(--color-frame);
+          border-radius: 3px;
+          background: var(--color-frame-bg-50);
+          color: var(--color-secondary);
+          cursor: pointer;
+          font-size: var(--font-size-11);
+          line-height: 1;
+          transition:
+            background 120ms ease,
+            border-color 120ms ease,
+            color 120ms ease,
+            box-shadow 120ms ease;
+
+          i {
+            pointer-events: none;
+          }
+
+          &:hover {
+            border-color: var(--color-accent);
+            color: var(--color-accent);
+            background: var(--color-frame-bg-75);
+            box-shadow: 0 0 4px var(--color-accent);
+          }
+
+          &:focus-visible {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 1px;
+          }
+
+          &.delete-btn:hover {
+            border-color: var(--color-danger);
+            color: var(--color-danger);
+            box-shadow: 0 0 4px var(--color-danger);
+          }
+
+          &.equip-btn.is-equipped {
+            border-color: var(--color-accent);
+            color: var(--color-accent);
+            background: var(--color-frame-bg-75);
+          }
+
+          &.equip-btn:hover {
+            border-color: var(--color-accent);
+            color: var(--color-accent);
+            box-shadow: 0 0 6px var(--color-accent);
+          }
+        }
+      }
+
+      &.equipped {
+        border-left: 3px solid var(--color-accent);
+        background: linear-gradient(135deg, var(--color-frame-bg-75) 0%, var(--color-frame-bg-50) 60%);
+
+        .equip-btn {
+          border-color: var(--color-accent);
+          color: var(--color-accent);
+          background: var(--color-frame-bg-75);
+        }
+      }
+
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        padding: 0;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
       }
     }
   }

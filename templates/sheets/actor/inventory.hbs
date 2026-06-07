@@ -40,12 +40,38 @@
                 <span class="line-item__metric-value">{{item.price}}</span>
               </span>
             </div>
-            <div class="controls">
+            <div class="controls" role="group" aria-label="{{item.name}}">
               {{#if item.canEquip}}
-                <a class="button icon equipped-state fa-solid fa-shield-alt" data-action="itemEquip" data-tooltip="{{localize 'ACTOR.LABELS.EQUIP_ITEM'}}"></a>
+                <button
+                  type="button"
+                  class="control-btn equip-btn {{#if item.isEquipped}}is-equipped{{/if}}"
+                  data-action="itemEquip"
+                  data-tooltip="{{item.equipActionLabel}}"
+                  aria-label="{{item.equipActionLabel}}"
+                  aria-pressed="{{item.isEquipped}}"
+                >
+                  <i class="fa-solid fa-shield-alt" aria-hidden="true"></i>
+                  <span class="sr-only">{{item.equippedStateLabel}}</span>
+                </button>
               {{/if}}
-              <a class="button icon fa-solid fa-edit" data-action="itemEdit" data-tooltip="{{localize 'ACTOR.LABELS.EDIT_ITEM'}}"></a>
-              <a class="button icon fa-solid fa-trash" data-action="itemDelete" data-tooltip="{{localize 'ACTOR.LABELS.DELETE_ITEM'}}"></a>
+              <button
+                type="button"
+                class="control-btn edit-btn"
+                data-action="itemEdit"
+                data-tooltip="{{localize 'ACTOR.LABELS.EDIT_ITEM'}}"
+                aria-label="{{localize 'ACTOR.LABELS.EDIT_ITEM'}}"
+              >
+                <i class="fa-solid fa-edit" aria-hidden="true"></i>
+              </button>
+              <button
+                type="button"
+                class="control-btn delete-btn"
+                data-action="itemDelete"
+                data-tooltip="{{localize 'ACTOR.LABELS.DELETE_ITEM'}}"
+                aria-label="{{localize 'ACTOR.LABELS.DELETE_ITEM'}}"
+              >
+                <i class="fa-solid fa-trash" aria-hidden="true"></i>
+              </button>
             </div>
           </li>
         {{else}}
