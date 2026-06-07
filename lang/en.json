@@ -575,8 +575,14 @@
     "LABELS": {
       "CURRENT_EQUIPMENT": "Current Equipment",
       "FAVORITE_ACTIONS": "Favorite Actions",
+      "EQUIPMENT": "Equipment",
       "EQUIPMENT_HINT": "Equip weapons and armor from your Backpack toggling the shield icon.",
+      "BACKPACK": "Backpack",
       "BACKPACK_HINT": "Add Armor, Weapons, or Gear by dropping them from the provided Swerpg system compendium packs.",
+      "EQUIP_ITEM": "Equip Item",
+      "EDIT_ITEM": "Edit Item",
+      "DELETE_ITEM": "Delete Item",
+      "CREATE_ITEM": "Create Item",
       "SIZE": "Size"
     }
   },
