@@ -289,8 +289,9 @@ export default class SwerpgWeapon extends SwerpgCombatItem {
   getTags(scope = 'full') {
     const tags = {}
 
-    // Damage
-    tags.damage = `${this.damage.weapon} Damage`
+    // Damage — guard against NaN from uninitialized or partially-prepared damage object
+    const weaponDamage = this.damage?.weapon
+    if (Number.isFinite(weaponDamage)) tags.damage = `${weaponDamage} Damage`
 
     // Canonical category (mechanical family)
     if (this.config?.category?.label) tags.category = game.i18n.localize(this.config.category.label)

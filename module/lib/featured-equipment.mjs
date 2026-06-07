@@ -36,7 +36,7 @@ export function computeFeaturedEquipment({ armor = null, weapons = [] } = {}) {
       // Défensif: ne jamais casser l'affichage
       tagsObj = {}
     }
-    let tags = Object.values(tagsObj).filter((t) => typeof t === 'string' && t.trim())
+    let tags = Object.values(tagsObj).filter((t) => typeof t === 'string' && t.trim() && !t.includes('NaN'))
     // Fallbacks si absence
     if (!tags.length) {
       tags = type === 'armor' ? ['Armor', 'Soak'] : ['Dmg', 'Range']
