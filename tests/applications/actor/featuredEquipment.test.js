@@ -91,6 +91,64 @@ describe('computeFeaturedEquipment', () => {
     expect(dt).toBeLessThan(50)
   })
 
+  it('tags contenant NaN sont filtrés (régression #629)', () => {
+    // Simule un item dont getTags retourne une valeur NaN interpolée (ex: damage non initialisé)
+    const weapon = mockItem({
+      id: 'w-nan',
+      name: 'Blaster NaN',
+      type: 'weapon',
+      system: { equipped: true, slot: 'mainhand' },
+      tags: { damage: 'NaN Damage', category: 'Blaster' },
+    })
+    const out = computeFeaturedEquipment({ weapons: [weapon] })
+    expect(out).toHaveLength(1)
+    const tags = out[0].tags
+    const hasNaN = tags.some((t) => t.includes('NaN'))
+    expect(hasNaN).toBe(false)
+  })
+
+  it('tags partiellement invalides: les tags valides restent présents (régression #629)', () => {
+    // Seul le tag "NaN Damage" est filtré — "Blaster" doit rester
+    const weapon = mockItem({
+      id: 'w-partial',
+      name: 'Blaster Partiel',
+      type: 'weapon',
+      system: { equipped: true, slot: 'mainhand' },
+      tags: { damage: 'NaN Damage', category: 'Blaster', range: 'NaN Range' },
+    })
+    const out = computeFeaturedEquipment({ weapons: [weapon] })
+    expect(out[0].tags).toContain('Blaster')
+    expect(out[0].tags).not.toContain('NaN Damage')
+    expect(out[0].tags).not.toContain('NaN Range')
+  })
+
+  it('tous les tags sont NaN: fallback appliqué (régression #629)', () => {
+    // Quand tous les tags sont invalides, le fallback ['Dmg','Range'] est utilisé
+    const weapon = mockItem({
+      id: 'w-allnan',
+      name: 'Blaster Tout NaN',
+      type: 'weapon',
+      system: { equipped: true, slot: 'mainhand' },
+      tags: { damage: 'NaN Damage', range: 'NaN Range' },
+    })
+    const out = computeFeaturedEquipment({ weapons: [weapon] })
+    expect(out[0].tags).toEqual(['Dmg', 'Range'])
+  })
+
+  it('armure avec tags NaN: tag invalide filtré (régression #629)', () => {
+    const armor = mockItem({
+      id: 'a-nan',
+      name: 'Armure NaN',
+      type: 'armor',
+      system: { equipped: true },
+      tags: { defense: 'NaN Armor', category: 'Légère' },
+    })
+    const out = computeFeaturedEquipment({ armor, weapons: [] })
+    expect(out).toHaveLength(1)
+    expect(out[0].tags).not.toContain('NaN Armor')
+    expect(out[0].tags).toContain('Légère')
+  })
+
   it('immutabilité: sources non modifiés', () => {
     const armor = mockItem({ id: 'a1', name: 'Armure', type: 'armor', system: { equipped: true, soak: 2 } })
     const weapons = [mockItem({ id: 'w1', name: 'Blaster', type: 'weapon', system: { equipped: true, slot: 'mainhand', damage: 5 } })]

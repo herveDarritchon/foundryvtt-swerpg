@@ -120,13 +120,22 @@ export default class SwerpgArmor extends SwerpgCombatItem {
       const prop = SYSTEM.ARMOR.PROPERTIES[q.key]
       if (prop) tags[q.key] = prop.label
     }
-    tags.defense = `${this.defense.base + this.defense.bonus} Armor`
-    const actor = this.parent.parent
-    if (!actor) tags.soak = `${this.soak.base}+ Dodge`
-    else {
-      const soakBonus = Math.max(actor.system.characteristics.agility.value - this.soak.start, 0)
-      tags.soak = `${this.soak.base + soakBonus} Dodge`
-      tags.total = `${this.defense.base + this.defense.bonus + this.soak.base + soakBonus} Defense`
+    // Defense — guard against NaN from uninitialized or partially-prepared armor data
+    const defenseValue = (this.defense?.base ?? 0) + (this.defense?.bonus ?? 0)
+    if (Number.isFinite(defenseValue)) tags.defense = `${defenseValue} Armor`
+
+    const actor = this.parent?.parent
+    const soakBase = this.soak?.base ?? 0
+    if (!actor) {
+      if (Number.isFinite(soakBase)) tags.soak = `${soakBase}+ Dodge`
+    } else {
+      const agilityValue = actor.system?.characteristics?.agility?.value ?? 0
+      const soakStart = this.soak?.start ?? 0
+      const soakBonus = Math.max(agilityValue - soakStart, 0)
+      const soakTotal = soakBase + soakBonus
+      const total = defenseValue + soakTotal
+      if (Number.isFinite(soakTotal)) tags.soak = `${soakTotal} Dodge`
+      if (Number.isFinite(total)) tags.total = `${total} Defense`
     }
     return tags
   }
