@@ -544,6 +544,18 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
       return
     }
 
+    // Guard: reject a key that does not correspond to an available option, even if the
+    // disabled attribute was bypassed via external DOM manipulation.
+    const selectedOption = options.find((opt) => opt.key === selectedKey)
+    if (!selectedOption || !selectedOption.isAvailable) {
+      logger.warn('[CharacterSheet] creationBonusObligationCreate — selected option is unavailable, aborting', {
+        selectedKey,
+        isAlreadyTaken: selectedOption?.isAlreadyTaken ?? null,
+        isExceedsCap: selectedOption?.isExceedsCap ?? null,
+      })
+      return
+    }
+
     const chosen = ObligationBonusCalculator.OFFICIAL_OPTIONS.find((opt) => opt.key === selectedKey)
     if (!chosen) {
       logger.warn('[CharacterSheet] creationBonusObligationCreate — unknown option key selected', { selectedKey })

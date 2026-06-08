@@ -254,6 +254,149 @@ describe('CharacterSheet — creationBonusObligationCreate action (guided select
   })
 })
 
+/**
+ * Build a promptMock that simulates the user selecting a given bonus key via the ok callback.
+ * The callback receives (event, button, dialog); the implementation reads from button.form.
+ * @param {string} selectedKey
+ * @returns {import('vitest').Mock}
+ */
+function buildPromptMockWithSelection(selectedKey) {
+  return vi.fn().mockImplementation(async (options) => {
+    if (options?.ok?.callback) {
+      const fakeChecked = { value: selectedKey }
+      const fakeForm = { querySelector: vi.fn(() => fakeChecked) }
+      const fakeButton = { form: fakeForm }
+      options.ok.callback({}, fakeButton, null)
+    }
+  })
+}
+
+describe('CharacterSheet — creationBonusObligationCreate availability guard', () => {
+  let CharacterSheet
+  let logger
+
+  beforeEach(async () => {
+    setupFoundryMock()
+    CharacterSheet = (await import('../../../module/applications/sheets/character-sheet.mjs')).default
+    logger = (await import('../../../module/utils/logger.mjs')).logger
+  })
+
+  afterEach(() => {
+    vi.resetModules()
+    vi.clearAllMocks()
+    teardownFoundryMock()
+  })
+
+  it('creates the obligation when the selected key is available', async () => {
+    globalThis.foundry.applications.api.DialogV2.prompt = buildPromptMockWithSelection('xp_5')
+    const cls = { create: vi.fn().mockResolvedValue(undefined) }
+    globalThis.getDocumentClass = vi.fn(() => cls)
+
+    const sheet = {
+      actor: {
+        items: {
+          filter: vi.fn(() => []),
+        },
+        system: { obligationCreationState: { remainingObligationCap: Infinity } },
+      },
+      document: {},
+    }
+
+    await CharacterSheet.DEFAULT_OPTIONS.actions.creationBonusObligationCreate.call(sheet, {})
+
+    expect(cls.create).toHaveBeenCalledOnce()
+    expect(cls.create.mock.calls[0][0].system.extraXp).toBe(5)
+  })
+
+  it('does not create the obligation when the selected key is already taken (bypass attempt)', async () => {
+    // xp_5 is already taken by an existing obligation
+    const existingObligation = buildObligationItem({ id: 'obl-taken', isExtra: true, extraXp: 5, extraCredits: 0, value: 5 })
+
+    globalThis.foundry.applications.api.DialogV2.prompt = buildPromptMockWithSelection('xp_5')
+    const cls = { create: vi.fn().mockResolvedValue(undefined) }
+    globalThis.getDocumentClass = vi.fn(() => cls)
+
+    const sheet = {
+      actor: {
+        items: {
+          filter: vi.fn(() => [existingObligation]),
+        },
+        system: { obligationCreationState: { remainingObligationCap: Infinity } },
+      },
+      document: {},
+    }
+
+    await CharacterSheet.DEFAULT_OPTIONS.actions.creationBonusObligationCreate.call(sheet, {})
+
+    expect(cls.create).not.toHaveBeenCalled()
+    expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining('unavailable'), expect.objectContaining({ selectedKey: 'xp_5', isAlreadyTaken: true }))
+  })
+
+  it('does not create the obligation when the selected key exceeds the remaining cap (bypass attempt)', async () => {
+    // remainingObligationCap = 5, so xp_10 (cost=10) exceeds it
+    globalThis.foundry.applications.api.DialogV2.prompt = buildPromptMockWithSelection('xp_10')
+    const cls = { create: vi.fn().mockResolvedValue(undefined) }
+    globalThis.getDocumentClass = vi.fn(() => cls)
+
+    const sheet = {
+      actor: {
+        items: {
+          filter: vi.fn(() => []),
+        },
+        system: { obligationCreationState: { remainingObligationCap: 5 } },
+      },
+      document: {},
+    }
+
+    await CharacterSheet.DEFAULT_OPTIONS.actions.creationBonusObligationCreate.call(sheet, {})
+
+    expect(cls.create).not.toHaveBeenCalled()
+    expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining('unavailable'), expect.objectContaining({ selectedKey: 'xp_10', isExceedsCap: true }))
+  })
+
+  it('does not create the obligation when the selected key is entirely unknown', async () => {
+    globalThis.foundry.applications.api.DialogV2.prompt = buildPromptMockWithSelection('unknown_key')
+    const cls = { create: vi.fn().mockResolvedValue(undefined) }
+    globalThis.getDocumentClass = vi.fn(() => cls)
+
+    const sheet = {
+      actor: {
+        items: {
+          filter: vi.fn(() => []),
+        },
+        system: { obligationCreationState: { remainingObligationCap: Infinity } },
+      },
+      document: {},
+    }
+
+    await CharacterSheet.DEFAULT_OPTIONS.actions.creationBonusObligationCreate.call(sheet, {})
+
+    expect(cls.create).not.toHaveBeenCalled()
+    expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining('unavailable'), expect.objectContaining({ selectedKey: 'unknown_key' }))
+  })
+
+  it('does not create when cap is 0 (all options exceed cap)', async () => {
+    // All four options have obligationCost >= 5, so with cap=0 none is available
+    globalThis.foundry.applications.api.DialogV2.prompt = buildPromptMockWithSelection('credits_1000')
+    const cls = { create: vi.fn().mockResolvedValue(undefined) }
+    globalThis.getDocumentClass = vi.fn(() => cls)
+
+    const sheet = {
+      actor: {
+        items: {
+          filter: vi.fn(() => []),
+        },
+        system: { obligationCreationState: { remainingObligationCap: 0 } },
+      },
+      document: {},
+    }
+
+    await CharacterSheet.DEFAULT_OPTIONS.actions.creationBonusObligationCreate.call(sheet, {})
+
+    expect(cls.create).not.toHaveBeenCalled()
+  })
+})
+
 describe('CharacterSheet — obligation partitioning (narrativeObligations / creationBonusObligations)', () => {
   /**
    * These tests verify the partitioning logic that splits the obligation list into
