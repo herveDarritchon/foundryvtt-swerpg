@@ -601,7 +601,12 @@
       "OBLIGATIONS_EDIT_TOOLTIP": "Edit Obligation",
       "OBLIGATIONS_ADD_TOOLTIP": "Add a narrative Obligation",
       "OBLIGATIONS_ADD_CTA": "Add a narrative Obligation",
-      "OBLIGATIONS_EMPTY_MESSAGE": "No obligations yet. Narrative obligations represent debts, secrets, or bonds that drive the story."
+      "OBLIGATIONS_EMPTY_MESSAGE": "No obligations yet. Narrative obligations represent debts, secrets, or bonds that drive the story.",
+      "NARRATIVE_OBLIGATIONS_HEADER": "Narrative Obligations",
+      "CREATION_BONUS_OBLIGATIONS_HEADER": "Creation Bonuses (Obligation)",
+      "CREATION_BONUS_OBLIGATIONS_ADD_TOOLTIP": "Add a creation-bonus Obligation",
+      "CREATION_BONUS_OBLIGATIONS_ADD_CTA": "Add a creation-bonus Obligation",
+      "CREATION_BONUS_OBLIGATIONS_EMPTY_MESSAGE": "No creation-bonus obligations yet. A creation-bonus obligation trades a higher obligation value for extra XP or starting credits."
     }
   },
   "ACTOR.AppliedDetailItem": "Applied the {name} {type} to {actor}.",

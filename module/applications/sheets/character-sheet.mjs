@@ -81,6 +81,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
       skillSelect: CharacterSheet.#onSkillSelect,
       toggleObligationExtraState: CharacterSheet.#onToggleObligationExtraState,
       obligationCreate: CharacterSheet.#onObligationCreate,
+      creationBonusObligationCreate: CharacterSheet.#onCreationBonusObligationCreate,
     },
     form: {
       submitOnChange: true,
@@ -152,8 +153,10 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
 
     context.talents = this.#buildConsolidatedTalentList()
 
-    context.obligations = this.#buildObligationList()
-    context.obligationPoints = this.#computeObligationPoints(context.obligations)
+    const allObligations = this.#buildObligationList()
+    context.narrativeObligations = allObligations.filter((o) => !o.isExtra)
+    context.creationBonusObligations = allObligations.filter((o) => o.isExtra)
+    context.obligationPoints = this.#computeObligationPoints(allObligations)
     context.obligationCreationState = a.system.obligationCreationState ?? null
 
     context.creditsInfo = {
@@ -438,6 +441,22 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
     logger.debug('[CharacterSheet] obligationCreate — opening obligation creation dialog')
     const cls = getDocumentClass('Item')
     await cls.createDialog({ type: 'obligation' }, { parent: this.document, pack: this.document.pack })
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Handle click action to create a new creation-bonus Obligation (isExtra = true) directly on the actor.
+   * Creates the obligation pre-configured as a creation bonus so the user lands directly on the
+   * creation-bonus flow without having to toggle isExtra manually.
+   * @this {CharacterSheet}
+   * @param {PointerEvent} event
+   * @returns {Promise<void>}
+   */
+  static async #onCreationBonusObligationCreate(event) {
+    logger.debug('[CharacterSheet] creationBonusObligationCreate — opening creation-bonus obligation dialog')
+    const cls = getDocumentClass('Item')
+    await cls.createDialog({ type: 'obligation', 'system.isExtra': true }, { parent: this.document, pack: this.document.pack })
   }
 
   /* -------------------------------------------- */
