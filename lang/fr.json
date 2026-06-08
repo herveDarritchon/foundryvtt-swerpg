@@ -728,7 +728,8 @@
       "CREATION_BONUS_OBLIGATIONS_HEADER": "Bonus de création (Obligation)",
       "CREATION_BONUS_OBLIGATIONS_ADD_TOOLTIP": "Ajouter une Obligation de bonus de création",
       "CREATION_BONUS_OBLIGATIONS_ADD_CTA": "Ajouter une Obligation de bonus de création",
-      "CREATION_BONUS_OBLIGATIONS_EMPTY_MESSAGE": "Aucun bonus de création pour l'instant. Une Obligation de bonus de création échange une valeur d'obligation plus élevée contre des XP ou des crédits de départ supplémentaires."
+      "CREATION_BONUS_OBLIGATIONS_EMPTY_MESSAGE": "Aucun bonus de création pour l'instant. Une Obligation de bonus de création échange une valeur d'obligation plus élevée contre des XP ou des crédits de départ supplémentaires.",
+      "CREATION_BONUS_OBLIGATIONS_DELETE_TOOLTIP": "Retirer ce bonus de création"
     }
   },
   "ACTOR.AppliedDetailItem": "Applied the {name} {type} to {actor}.",
@@ -1122,7 +1123,11 @@
       "SELECTOR_CONFIRM": "Confirmer",
       "SELECTOR_OPTION_TAKEN": "(déjà prise)",
       "SELECTOR_OPTION_EXCEEDS_CAP": "(dépasse le plafond restant)",
-      "SELECTOR_NO_OPTIONS": "Toutes les options disponibles ont déjà été prises ou dépassent votre plafond d'Obligation actuel."
+      "SELECTOR_NO_OPTIONS": "Toutes les options disponibles ont déjà été prises ou dépassent votre plafond d'Obligation actuel.",
+      "CREATION_BONUS_DELETE_TITLE": "Retirer le bonus de création — {name}",
+      "CREATION_BONUS_DELETE_CONTENT": "Retirer le bonus de création <strong>{name}</strong> ? Cela réduira également votre Obligation totale et annulera le bonus de XP ou de crédits associé.",
+      "CREATION_BONUS_DELETE_CONFIRM": "Retirer",
+      "CREATION_BONUS_DELETE_CANCEL": "Annuler"
     }
   },
   "RESOURCES": {
