@@ -16,6 +16,14 @@ vi.mock('../../../module/lib/featured-equipment.mjs', () => ({
 }))
 
 /**
+ * Build a minimal mock for the Item document class.
+ * Captures the arguments passed to createDialog.
+ */
+function buildItemClassMock() {
+  return { createDialog: vi.fn().mockResolvedValue(undefined) }
+}
+
+/**
  * Build a minimal obligation item mock.
  * @param {object} [overrides]
  * @returns {object}
@@ -114,5 +122,64 @@ describe('CharacterSheet — toggleObligationExtraState action', () => {
 
       expect(logger.debug).toHaveBeenCalledWith(expect.stringContaining('Medical Debt'))
     })
+  })
+})
+
+describe('CharacterSheet — obligationCreate action', () => {
+  let CharacterSheet
+  let logger
+
+  beforeEach(async () => {
+    setupFoundryMock()
+    CharacterSheet = (await import('../../../module/applications/sheets/character-sheet.mjs')).default
+    logger = (await import('../../../module/utils/logger.mjs')).logger
+  })
+
+  afterEach(() => {
+    vi.resetModules()
+    vi.clearAllMocks()
+    teardownFoundryMock()
+  })
+
+  it('is registered in DEFAULT_OPTIONS actions', () => {
+    expect(typeof CharacterSheet.DEFAULT_OPTIONS.actions.obligationCreate).toBe('function')
+  })
+
+  it('calls createDialog with type obligation, not the generic weapon default', async () => {
+    const itemCls = buildItemClassMock()
+    globalThis.getDocumentClass = vi.fn(() => itemCls)
+
+    const document = { pack: null }
+    const sheet = { document }
+    const event = {}
+
+    await CharacterSheet.DEFAULT_OPTIONS.actions.obligationCreate.call(sheet, event)
+
+    expect(itemCls.createDialog).toHaveBeenCalledWith(expect.objectContaining({ type: 'obligation' }), expect.objectContaining({ parent: document }))
+  })
+
+  it('does not call createDialog with type weapon', async () => {
+    const itemCls = buildItemClassMock()
+    globalThis.getDocumentClass = vi.fn(() => itemCls)
+
+    const sheet = { document: { pack: null } }
+    const event = {}
+
+    await CharacterSheet.DEFAULT_OPTIONS.actions.obligationCreate.call(sheet, event)
+
+    const [defaults] = itemCls.createDialog.mock.calls[0]
+    expect(defaults.type).not.toBe('weapon')
+  })
+
+  it('logs a debug message when triggered', async () => {
+    const itemCls = buildItemClassMock()
+    globalThis.getDocumentClass = vi.fn(() => itemCls)
+
+    const sheet = { document: { pack: null } }
+    const event = {}
+
+    await CharacterSheet.DEFAULT_OPTIONS.actions.obligationCreate.call(sheet, event)
+
+    expect(logger.debug).toHaveBeenCalledWith(expect.stringContaining('obligationCreate'))
   })
 })

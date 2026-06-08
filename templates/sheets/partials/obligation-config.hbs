@@ -1,8 +1,15 @@
 <section class="tab sheet-body flexcol {{tabs.config.cssClass}}" data-tab="{{tabs.config.id}}" data-group="{{tabs.config.group}}">
 
+  <p class="obligation-narrative-hint">{{localize "OBLIGATION.UI.NARRATIVE_HINT"}}</p>
+
   {{formField @root.fields.value value=source.system.value localize=true rootId=partId}}
 
-  {{formField @root.fields.isExtra value=source.system.isExtra localize=true rootId=partId}}
+  <div class="obligation-extra-section">
+    {{formField @root.fields.isExtra value=source.system.isExtra localize=true rootId=partId}}
+    {{#unless source.system.isExtra}}
+    <p class="obligation-extra-section__hint">{{localize "OBLIGATION.UI.EXTRA_SECONDARY_HINT"}}</p>
+    {{/unless}}
+  </div>
 
   {{#if source.system.isExtra}}
   <fieldset>

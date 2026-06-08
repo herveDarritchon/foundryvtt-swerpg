@@ -23,7 +23,29 @@
             <div class="column slim">
                 <span class="title">{{localize "ACTOR.LABELS.OBLIGATIONS_COLUMN_ACTIONS"}}</span>
             </div>
+
+            <div class="column slim">
+                <button type="button"
+                        class="button icon fa-solid fa-plus obligation-add-btn"
+                        data-action="obligationCreate"
+                        data-tooltip="{{localize "ACTOR.LABELS.OBLIGATIONS_ADD_TOOLTIP"}}"
+                        aria-label="{{localize "ACTOR.LABELS.OBLIGATIONS_ADD_TOOLTIP"}}">
+                </button>
+            </div>
         </div>
+
+        {{#unless obligations.length}}
+        <div class="obligation-empty-state">
+            <p class="obligation-empty-state__message">{{localize "ACTOR.LABELS.OBLIGATIONS_EMPTY_MESSAGE"}}</p>
+            <button type="button"
+                    class="button obligation-empty-state__cta"
+                    data-action="obligationCreate"
+                    aria-label="{{localize "ACTOR.LABELS.OBLIGATIONS_ADD_TOOLTIP"}}">
+                <i class="fa-solid fa-plus" aria-hidden="true"></i>
+                {{localize "ACTOR.LABELS.OBLIGATIONS_ADD_CTA"}}
+            </button>
+        </div>
+        {{/unless}}
 
         {{#each obligations as |obligation s|}}
             <div class="line-item {{obligation.cssClass}} obligation" data-item-id="{{obligation.id}}">
