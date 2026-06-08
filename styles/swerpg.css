@@ -3403,6 +3403,9 @@ input[type='range'] {
 }
 .swerpg.sheet.actor .tab.commitments {
   /* ----------------------------------------- */
+  /*  Obligation — section header row           */
+  /* ----------------------------------------- */
+  /* ----------------------------------------- */
   /*  Obligation — creation bonus summary       */
   /* ----------------------------------------- */
   /* ----------------------------------------- */
@@ -3463,6 +3466,25 @@ input[type='range'] {
   align-content: center;
   justify-content: center;
   text-align: center;
+}
+.swerpg.sheet.actor .tab.commitments .obligations__section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.25rem 0.25rem 0.15rem;
+  border-bottom: 2px solid var(--color-frame);
+}
+.swerpg.sheet.actor .tab.commitments .obligations__section-header .obligations__section-title {
+  margin: 0;
+  font-size: var(--font-size-13);
+  color: var(--color-h1);
+  font-family: var(--font-h1);
+  font-weight: normal;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.swerpg.sheet.actor .tab.commitments .obligations--creation-bonus {
+  margin-top: 0.75rem;
 }
 .swerpg.sheet.actor .tab.commitments .obligation-creation-summary {
   margin-top: 0.5rem;

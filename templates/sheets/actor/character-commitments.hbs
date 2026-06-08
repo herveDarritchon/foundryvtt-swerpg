@@ -1,40 +1,36 @@
 <section class="tab flexcol scrollable {{tabs.commitments.id}} {{tabs.commitments.cssClass}}"
          data-tab="{{tabs.commitments.id}}" data-group="{{tabs.commitments.group}}">
-    <div class="sheet-section obligations">
-        <h3>{{localize "ACTOR.LABELS.OBLIGATIONS_HEADER"}} ({{obligationPoints}})</h3>
+
+    {{!-- ==========================================
+         Section 1 — Narrative Obligations
+         Tracks story-driven debts, secrets, bonds.
+         No creation-bonus columns shown here.
+    ========================================== --}}
+    <div class="sheet-section obligations obligations--narrative">
+        <div class="obligations__section-header flexrow">
+            <h3 class="obligations__section-title">
+                {{localize "ACTOR.LABELS.NARRATIVE_OBLIGATIONS_HEADER"}}
+                ({{obligationPoints}})
+            </h3>
+            <button type="button"
+                    class="button icon fa-solid fa-plus obligation-add-btn"
+                    data-action="obligationCreate"
+                    data-tooltip="{{localize "ACTOR.LABELS.OBLIGATIONS_ADD_TOOLTIP"}}"
+                    aria-label="{{localize "ACTOR.LABELS.OBLIGATIONS_ADD_TOOLTIP"}}">
+            </button>
+        </div>
 
         <div class="header flexrow">
             <div class="column principal">
                 <span class="title shifted">{{localize "ACTOR.LABELS.OBLIGATIONS_COLUMN_NAME"}}</span>
             </div>
 
-            <div class="column">
-                <span class="title" title="{{localize "ACTOR.LABELS.OBLIGATIONS_TOGGLE_EXTRA"}}">{{localize "ACTOR.LABELS.OBLIGATIONS_COLUMN_EXTRA"}}</span>
-            </div>
-
-            <div class="column slim">
-                <img class="header-icon" src="/systems/swerpg/ui/symbols/xp.webp" alt="{{localize "ACTOR.LABELS.OBLIGATIONS_ICON_XP_ALT"}}"/>
-            </div>
-
-            <div class="column slim">
-                <img class="header-icon" src="/systems/swerpg/ui/symbols/credits.webp" alt="{{localize "ACTOR.LABELS.OBLIGATIONS_ICON_CREDITS_ALT"}}"/>
-            </div>
-
             <div class="column slim">
                 <span class="title">{{localize "ACTOR.LABELS.OBLIGATIONS_COLUMN_ACTIONS"}}</span>
             </div>
-
-            <div class="column slim">
-                <button type="button"
-                        class="button icon fa-solid fa-plus obligation-add-btn"
-                        data-action="obligationCreate"
-                        data-tooltip="{{localize "ACTOR.LABELS.OBLIGATIONS_ADD_TOOLTIP"}}"
-                        aria-label="{{localize "ACTOR.LABELS.OBLIGATIONS_ADD_TOOLTIP"}}">
-                </button>
-            </div>
         </div>
 
-        {{#unless obligations.length}}
+        {{#unless narrativeObligations.length}}
         <div class="obligation-empty-state">
             <p class="obligation-empty-state__message">{{localize "ACTOR.LABELS.OBLIGATIONS_EMPTY_MESSAGE"}}</p>
             <button type="button"
@@ -47,29 +43,12 @@
         </div>
         {{/unless}}
 
-        {{#each obligations as |obligation s|}}
-            <div class="line-item {{obligation.cssClass}} obligation" data-item-id="{{obligation.id}}">
+        {{#each narrativeObligations as |obligation|}}
+            <div class="line-item obligation" data-item-id="{{obligation.id}}">
                 <div class="title column principal">
                     <img class="icon" src="{{obligation.img}}" alt="{{obligation.name}}">
                     <h4 class="item-header">{{obligation.name}} ({{obligation.value}})</h4>
                 </div>
-
-                <div class="column centered">
-                    <div class="sw-toggle {{#if obligation.isExtra}}active{{/if}}"
-                         data-item-id="{{obligation.id}}"
-                         data-action="toggleObligationExtraState"
-                         title="{{localize "ACTOR.LABELS.OBLIGATIONS_TOGGLE_EXTRA"}}"
-                         data-tooltip="{{localize "ACTOR.LABELS.OBLIGATIONS_TOGGLE_EXTRA"}}">
-                    </div>
-                </div>
-
-                {{#if obligation.isExtra}}
-                    <div class="column slim">{{obligation.extraXp}}</div>
-                    <div class="column slim">{{obligation.extraCredits}}</div>
-                {{else}}
-                    <div class="column slim">-</div>
-                    <div class="column slim">-</div>
-                {{/if}}
 
                 <div class="controls column slim">
                     <a class="button icon fa-solid fa-trash" data-action="itemDelete"
@@ -96,11 +75,27 @@
             </div>
             {{/if}}
         {{/each}}
+    </div>
+
+    {{!-- ==========================================
+         Section 2 — Creation Bonuses (isExtra obligations)
+         XP/credits bonus lines taken during character creation.
+    ========================================== --}}
+    <div class="sheet-section obligations obligations--creation-bonus">
+        <div class="obligations__section-header flexrow">
+            <h3 class="obligations__section-title">
+                {{localize "ACTOR.LABELS.CREATION_BONUS_OBLIGATIONS_HEADER"}}
+            </h3>
+            <button type="button"
+                    class="button icon fa-solid fa-plus obligation-add-btn"
+                    data-action="creationBonusObligationCreate"
+                    data-tooltip="{{localize "ACTOR.LABELS.CREATION_BONUS_OBLIGATIONS_ADD_TOOLTIP"}}"
+                    aria-label="{{localize "ACTOR.LABELS.CREATION_BONUS_OBLIGATIONS_ADD_TOOLTIP"}}">
+            </button>
+        </div>
 
         {{#if obligationCreationState}}
         <div class="obligation-creation-summary {{#unless obligationCreationState.isConformant}}obligation-creation-summary--invalid{{/unless}}">
-            <h4>{{localize "OBLIGATION.UI.CREATION_BONUS_SUMMARY_TITLE"}}</h4>
-
             <div class="obligation-creation-summary__bonuses flexrow">
                 <span class="obligation-creation-summary__bonus-xp" title="{{localize "OBLIGATION.UI.CREATION_BONUS_XP_TOOLTIP"}}">
                     <img src="/systems/swerpg/ui/symbols/xp.webp" alt="{{localize "ACTOR.LABELS.OBLIGATIONS_ICON_XP_ALT"}}" aria-hidden="true"/>
@@ -135,13 +130,64 @@
         </div>
         {{/if}}
 
+        <div class="header flexrow">
+            <div class="column principal">
+                <span class="title shifted">{{localize "ACTOR.LABELS.OBLIGATIONS_COLUMN_NAME"}}</span>
+            </div>
+
+            <div class="column slim">
+                <img class="header-icon" src="/systems/swerpg/ui/symbols/xp.webp" alt="{{localize "ACTOR.LABELS.OBLIGATIONS_ICON_XP_ALT"}}"/>
+            </div>
+
+            <div class="column slim">
+                <img class="header-icon" src="/systems/swerpg/ui/symbols/credits.webp" alt="{{localize "ACTOR.LABELS.OBLIGATIONS_ICON_CREDITS_ALT"}}"/>
+            </div>
+
+            <div class="column slim">
+                <span class="title">{{localize "ACTOR.LABELS.OBLIGATIONS_COLUMN_ACTIONS"}}</span>
+            </div>
+        </div>
+
+        {{#unless creationBonusObligations.length}}
+        <div class="obligation-empty-state">
+            <p class="obligation-empty-state__message">{{localize "ACTOR.LABELS.CREATION_BONUS_OBLIGATIONS_EMPTY_MESSAGE"}}</p>
+            <button type="button"
+                    class="button obligation-empty-state__cta"
+                    data-action="creationBonusObligationCreate"
+                    aria-label="{{localize "ACTOR.LABELS.CREATION_BONUS_OBLIGATIONS_ADD_TOOLTIP"}}">
+                <i class="fa-solid fa-plus" aria-hidden="true"></i>
+                {{localize "ACTOR.LABELS.CREATION_BONUS_OBLIGATIONS_ADD_CTA"}}
+            </button>
+        </div>
+        {{/unless}}
+
+        {{#each creationBonusObligations as |obligation|}}
+            <div class="line-item extra obligation" data-item-id="{{obligation.id}}">
+                <div class="title column principal">
+                    <img class="icon" src="{{obligation.img}}" alt="{{obligation.name}}">
+                    <h4 class="item-header">{{obligation.name}} ({{obligation.value}})</h4>
+                </div>
+
+                <div class="column slim">{{obligation.extraXp}}</div>
+                <div class="column slim">{{obligation.extraCredits}}</div>
+
+                <div class="controls column slim">
+                    <a class="button icon fa-solid fa-trash" data-action="itemDelete"
+                       data-tooltip="{{localize "ACTOR.LABELS.OBLIGATIONS_DELETE_TOOLTIP"}}"></a>
+                    <a class="button icon fa-solid fa-edit" data-action="itemEdit"
+                       data-tooltip="{{localize "ACTOR.LABELS.OBLIGATIONS_EDIT_TOOLTIP"}}"></a>
+                </div>
+            </div>
+        {{/each}}
     </div>
 
+    {{!-- ==========================================
+         Section 3 — Motivation (rich text)
+    ========================================== --}}
     <div class="sheet-section flexcol">
         <h3>{{fields.details.fields.commitments.fields.motivation.label}}</h3>
         {{formInput fields.details.fields.commitments.fields.motivation value=source.system.details.commitments.motivation
                     enriched=commitments.motivation toggled=true}}
-
     </div>
 
 </section>

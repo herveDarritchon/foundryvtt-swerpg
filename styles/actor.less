@@ -1685,6 +1685,32 @@
     }
 
     /* ----------------------------------------- */
+    /*  Obligation — section header row           */
+    /* ----------------------------------------- */
+
+    .obligations__section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.25rem 0.25rem 0.15rem;
+      border-bottom: 2px solid var(--color-frame);
+
+      .obligations__section-title {
+        margin: 0;
+        font-size: var(--font-size-13);
+        color: var(--color-h1);
+        font-family: var(--font-h1);
+        font-weight: normal;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+    }
+
+    .obligations--creation-bonus {
+      margin-top: 0.75rem;
+    }
+
+    /* ----------------------------------------- */
     /*  Obligation — creation bonus summary       */
     /* ----------------------------------------- */
 
@@ -2064,7 +2090,6 @@
       font-size: var(--font-size-11);
       user-select: none;
     }
-
     /* ----------------------------------------- */
     /*  Inventory line-item metrics zone         */
     /* ----------------------------------------- */
