@@ -23,4 +23,13 @@
   </fieldset>
   {{/if}}
 
+  <fieldset class="obligation-campaign-evolution">
+    <legend>{{localize "OBLIGATION.UI.CAMPAIGN_EVOLUTION_LEGEND"}}</legend>
+    <p class="obligation-campaign-evolution__hint">{{localize "OBLIGATION.UI.CAMPAIGN_EVOLUTION_HINT"}}</p>
+
+    {{formField @root.fields.campaignDelta value=source.system.campaignDelta localize=true rootId=partId}}
+    {{formField @root.fields.campaignNote value=source.system.campaignNote localize=true rootId=partId}}
+    {{formField @root.fields.transformedTo value=source.system.transformedTo localize=true rootId=partId}}
+  </fieldset>
+
 </section>

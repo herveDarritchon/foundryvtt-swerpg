@@ -1068,6 +1068,18 @@
       "extraXp": {
         "label": "Expérience Supplémentaire",
         "hint": "Le montant d'expérience supplémentaire que le personnage reçoit pour avoir contracté cette obligation."
+      },
+      "campaignDelta": {
+        "label": "Ajustement Campagne",
+        "hint": "Variation nette appliquée pendant la campagne (négatif = réduction, positif = aggravation). Ne remplace pas la valeur de création."
+      },
+      "campaignNote": {
+        "label": "Note d'évolution",
+        "hint": "Contexte narratif de la dernière évolution : raison, événement en jeu, décision du MJ."
+      },
+      "transformedTo": {
+        "label": "Transformée en",
+        "hint": "Quand l'obligation change de nature plutôt que de disparaître, consignez ici le nouveau type narratif."
       }
     },
     "UI": {
@@ -1086,7 +1098,13 @@
       "CREATION_BONUS_OBLIGATION_LABEL": "Obligation supplémentaire",
       "CREATION_BONUS_OBLIGATION_TOOLTIP": "Obligation supplémentaire consommée / autorisée (basée sur la valeur d'obligation de départ)",
       "CREATION_ERRORS_LABEL": "Problèmes de conformité des Obligations",
-      "CREATION_CONFORMANT_LABEL": "Toutes les obligations supplémentaires respectent les règles officielles."
+      "CREATION_CONFORMANT_LABEL": "Toutes les obligations supplémentaires respectent les règles officielles.",
+      "CAMPAIGN_EVOLUTION_LEGEND": "Évolution en Campagne",
+      "CAMPAIGN_EVOLUTION_HINT": "Suivez les réductions, aggravations ou transformations survenues pendant la campagne. Ces données sont séparées du bonus de création.",
+      "CAMPAIGN_CURRENT_VALUE_LABEL": "Valeur actuelle (ajustée)",
+      "CAMPAIGN_CURRENT_VALUE_TOOLTIP": "Valeur de création de base + ajustements de campagne",
+      "CAMPAIGN_TRANSFORMED_LABEL": "Transformée en :",
+      "CAMPAIGN_NO_EVOLUTION": "Aucune évolution de campagne enregistrée pour l'instant."
     }
   },
   "RESOURCES": {

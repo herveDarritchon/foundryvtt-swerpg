@@ -66,3 +66,29 @@ describe('ObligationSheet — isExtra rendering contract', () => {
     expect(schema.isExtra.config.initial).toBe(false)
   })
 })
+
+describe('ObligationSheet — campaign evolution schema contract', () => {
+  it('schema exposes campaignDelta field', async () => {
+    const SwerpgObligation = (await import('../../../module/models/obligation.mjs')).default
+    const schema = SwerpgObligation.defineSchema()
+    expect(schema).toHaveProperty('campaignDelta')
+  })
+
+  it('schema exposes campaignNote field', async () => {
+    const SwerpgObligation = (await import('../../../module/models/obligation.mjs')).default
+    const schema = SwerpgObligation.defineSchema()
+    expect(schema).toHaveProperty('campaignNote')
+  })
+
+  it('schema exposes transformedTo field', async () => {
+    const SwerpgObligation = (await import('../../../module/models/obligation.mjs')).default
+    const schema = SwerpgObligation.defineSchema()
+    expect(schema).toHaveProperty('transformedTo')
+  })
+
+  it('campaignDelta has initial value of 0', async () => {
+    const SwerpgObligation = (await import('../../../module/models/obligation.mjs')).default
+    const schema = SwerpgObligation.defineSchema()
+    expect(schema.campaignDelta.config.initial).toBe(0)
+  })
+})
