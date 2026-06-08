@@ -720,7 +720,10 @@
       "OBLIGATIONS_ICON_XP_ALT": "XP",
       "OBLIGATIONS_ICON_CREDITS_ALT": "Crédits",
       "OBLIGATIONS_DELETE_TOOLTIP": "Supprimer l'Obligation",
-      "OBLIGATIONS_EDIT_TOOLTIP": "Modifier l'Obligation"
+      "OBLIGATIONS_EDIT_TOOLTIP": "Modifier l'Obligation",
+      "OBLIGATIONS_ADD_TOOLTIP": "Ajouter une Obligation narrative",
+      "OBLIGATIONS_ADD_CTA": "Ajouter une Obligation narrative",
+      "OBLIGATIONS_EMPTY_MESSAGE": "Aucune obligation pour l'instant. Les Obligations narratives représentent des dettes, des secrets ou des liens qui font avancer l'histoire."
     }
   },
   "ACTOR.AppliedDetailItem": "Applied the {name} {type} to {actor}.",
@@ -1104,7 +1107,9 @@
       "CAMPAIGN_CURRENT_VALUE_LABEL": "Valeur actuelle (ajustée)",
       "CAMPAIGN_CURRENT_VALUE_TOOLTIP": "Valeur de création de base + ajustements de campagne",
       "CAMPAIGN_TRANSFORMED_LABEL": "Transformée en :",
-      "CAMPAIGN_NO_EVOLUTION": "Aucune évolution de campagne enregistrée pour l'instant."
+      "CAMPAIGN_NO_EVOLUTION": "Aucune évolution de campagne enregistrée pour l'instant.",
+      "NARRATIVE_HINT": "Une Obligation narrative représente une dette, un secret ou un lien qui fait avancer l'histoire. Renseignez le nom et la valeur de base pour commencer.",
+      "EXTRA_SECONDARY_HINT": "L'option Obligation Extra accorde des XP ou des crédits supplémentaires à la création du personnage. Activez-la uniquement si vous avez accepté une obligation plus élevée que la valeur de base lors de la création."
     }
   },
   "RESOURCES": {

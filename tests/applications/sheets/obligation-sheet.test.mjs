@@ -92,3 +92,26 @@ describe('ObligationSheet — campaign evolution schema contract', () => {
     expect(schema.campaignDelta.config.initial).toBe(0)
   })
 })
+
+describe('ObligationSheet — narrative vs extra creation distinction (schema contract)', () => {
+  it('isExtra defaults to false so a new obligation is a standard narrative obligation', async () => {
+    const SwerpgObligation = (await import('../../../module/models/obligation.mjs')).default
+    const schema = SwerpgObligation.defineSchema()
+    // A brand-new obligation should be a narrative obligation by default.
+    // Enabling isExtra is an explicit secondary choice, not the default entry point.
+    expect(schema.isExtra.config.initial).toBe(false)
+  })
+
+  it('schema exposes isExtra field to allow explicit opting-in to the creation bonus', async () => {
+    const SwerpgObligation = (await import('../../../module/models/obligation.mjs')).default
+    const schema = SwerpgObligation.defineSchema()
+    expect(schema).toHaveProperty('isExtra')
+  })
+
+  it('schema exposes extraXp and extraCredits as creation-bonus fields separate from the narrative value', async () => {
+    const SwerpgObligation = (await import('../../../module/models/obligation.mjs')).default
+    const schema = SwerpgObligation.defineSchema()
+    expect(schema).toHaveProperty('extraXp')
+    expect(schema).toHaveProperty('extraCredits')
+  })
+})

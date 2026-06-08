@@ -80,6 +80,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
       skillRefund: CharacterSheet.#onSkillRefund,
       skillSelect: CharacterSheet.#onSkillSelect,
       toggleObligationExtraState: CharacterSheet.#onToggleObligationExtraState,
+      obligationCreate: CharacterSheet.#onObligationCreate,
     },
     form: {
       submitOnChange: true,
@@ -424,6 +425,20 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
   }
 
   /* -------------------------------------------- */
+
+  /**
+   * Handle click action to create a new narrative Obligation directly on the actor.
+   * Bypasses the generic item-creation dialog and targets the obligation type so the
+   * user lands on the correct form without any intermediate type-selection step.
+   * @this {CharacterSheet}
+   * @param {PointerEvent} event
+   * @returns {Promise<void>}
+   */
+  static async #onObligationCreate(event) {
+    logger.debug('[CharacterSheet] obligationCreate — opening obligation creation dialog')
+    const cls = getDocumentClass('Item')
+    await cls.createDialog({ type: 'obligation' }, { parent: this.document, pack: this.document.pack })
+  }
 
   /* -------------------------------------------- */
 
