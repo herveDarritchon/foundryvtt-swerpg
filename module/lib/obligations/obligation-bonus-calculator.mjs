@@ -30,6 +30,20 @@ import {
  */
 
 /**
+ * @typedef {Object} ObligationBonusSelectOption
+ * UI-ready annotated bonus option for a guided selector.
+ *
+ * @property {'xp_5'|'xp_10'|'credits_1000'|'credits_2500'} key      - Canonical key for the option.
+ * @property {number}  xp                 - XP bonus granted by this option (0 if none).
+ * @property {number}  credits            - Credits bonus granted by this option (0 if none).
+ * @property {number}  obligationCost     - Extra Obligation points consumed.
+ * @property {boolean} isAlreadyTaken     - True when the character has already selected this option.
+ * @property {boolean} isExceedsCap       - True when selecting this option would exceed the remaining cap.
+ * @property {boolean} isAvailable        - True when the option can be chosen right now.
+ * @property {string|null} unavailableReason - Human-readable reason why the option is unavailable, or null.
+ */
+
+/**
  * @typedef {Object} ObligationCreationSummary
  * Canonical result of analysing the extra-obligation bonus selections for a character.
  *
@@ -180,5 +194,61 @@ export default class ObligationBonusCalculator {
    */
   static get OFFICIAL_OPTIONS() {
     return OFFICIAL_OPTIONS
+  }
+
+  /* -------------------------------------------- */
+  /*  Guided selector helpers                      */
+  /* -------------------------------------------- */
+
+  /**
+   * Build a UI-ready annotated list of official bonus options for a guided selector.
+   *
+   * Each option is annotated with:
+   * - `isAlreadyTaken`  — the character already has this option selected;
+   * - `isExceedsCap`    — selecting it would exceed the remaining obligation cap;
+   * - `isAvailable`     — the option can be chosen (not taken and within cap);
+   * - `unavailableReason` — a short English reason key when unavailable, or `null`.
+   *
+   * The method is pure: callers must map their Foundry Items to `ObligationBonusInput[]`
+   * before calling, and must pass the creation state summary separately so no Foundry
+   * dependency leaks into this layer.
+   *
+   * @param {ObligationBonusInput[]} obligations        All obligation items for the character.
+   * @param {number}                 remainingObligationCap Remaining obligation cap after existing selections.
+   * @returns {ObligationBonusSelectOption[]}
+   */
+  static buildObligationBonusOptions(obligations, remainingObligationCap) {
+    const extraObligations = obligations.filter((o) => o.isExtra === true)
+
+    const takenKeys = new Set()
+    for (const obl of extraObligations) {
+      const xp = obl.extraXp || 0
+      const credits = obl.extraCredits || 0
+      const match = OFFICIAL_OPTIONS.find((opt) => opt.xp === xp && opt.credits === credits)
+      if (match) takenKeys.add(match.key)
+    }
+
+    const cap = Number.isFinite(remainingObligationCap) ? remainingObligationCap : Infinity
+
+    return OFFICIAL_OPTIONS.map((opt) => {
+      const isAlreadyTaken = takenKeys.has(opt.key)
+      const isExceedsCap = !isAlreadyTaken && opt.obligationCost > cap
+      const isAvailable = !isAlreadyTaken && !isExceedsCap
+
+      let unavailableReason = null
+      if (isAlreadyTaken) unavailableReason = 'already-taken'
+      else if (isExceedsCap) unavailableReason = 'exceeds-cap'
+
+      return {
+        key: opt.key,
+        xp: opt.xp,
+        credits: opt.credits,
+        obligationCost: opt.obligationCost,
+        isAlreadyTaken,
+        isExceedsCap,
+        isAvailable,
+        unavailableReason,
+      }
+    })
   }
 }

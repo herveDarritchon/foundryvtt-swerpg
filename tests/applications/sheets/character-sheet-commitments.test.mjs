@@ -184,12 +184,16 @@ describe('CharacterSheet — obligationCreate action', () => {
   })
 })
 
-describe('CharacterSheet — creationBonusObligationCreate action', () => {
+describe('CharacterSheet — creationBonusObligationCreate action (guided selector)', () => {
   let CharacterSheet
   let logger
+  let promptMock
 
   beforeEach(async () => {
     setupFoundryMock()
+    // Patch DialogV2.prompt on the foundry mock installed by setupFoundryMock
+    promptMock = vi.fn().mockResolvedValue(null)
+    globalThis.foundry.applications.api.DialogV2.prompt = promptMock
     CharacterSheet = (await import('../../../module/applications/sheets/character-sheet.mjs')).default
     logger = (await import('../../../module/utils/logger.mjs')).logger
   })
@@ -204,40 +208,47 @@ describe('CharacterSheet — creationBonusObligationCreate action', () => {
     expect(typeof CharacterSheet.DEFAULT_OPTIONS.actions.creationBonusObligationCreate).toBe('function')
   })
 
-  it('calls createDialog with type obligation', async () => {
-    const itemCls = buildItemClassMock()
-    globalThis.getDocumentClass = vi.fn(() => itemCls)
+  it('opens the DialogV2.prompt guided selector when triggered', async () => {
+    const sheet = {
+      actor: {
+        items: { filter: vi.fn(() => []) },
+        system: { obligationCreationState: { remainingObligationCap: Infinity } },
+      },
+      document: {},
+    }
 
-    const document = { pack: null }
-    const sheet = { document }
-    const event = {}
+    await CharacterSheet.DEFAULT_OPTIONS.actions.creationBonusObligationCreate.call(sheet, {})
 
-    await CharacterSheet.DEFAULT_OPTIONS.actions.creationBonusObligationCreate.call(sheet, event)
-
-    expect(itemCls.createDialog).toHaveBeenCalledWith(expect.objectContaining({ type: 'obligation' }), expect.objectContaining({ parent: document }))
+    expect(promptMock).toHaveBeenCalled()
   })
 
-  it('passes system.isExtra = true to createDialog so the item starts as a creation-bonus obligation', async () => {
-    const itemCls = buildItemClassMock()
-    globalThis.getDocumentClass = vi.fn(() => itemCls)
+  it('does not call Item.create when DialogV2 resolves without selection', async () => {
+    const cls = { create: vi.fn().mockResolvedValue(undefined) }
+    globalThis.getDocumentClass = vi.fn(() => cls)
 
-    const sheet = { document: { pack: null } }
-    const event = {}
+    const sheet = {
+      actor: {
+        items: { filter: vi.fn(() => []) },
+        system: { obligationCreationState: { remainingObligationCap: Infinity } },
+      },
+      document: {},
+    }
 
-    await CharacterSheet.DEFAULT_OPTIONS.actions.creationBonusObligationCreate.call(sheet, event)
+    await CharacterSheet.DEFAULT_OPTIONS.actions.creationBonusObligationCreate.call(sheet, {})
 
-    const [defaults] = itemCls.createDialog.mock.calls[0]
-    expect(defaults['system.isExtra']).toBe(true)
+    expect(cls.create).not.toHaveBeenCalled()
   })
 
   it('logs a debug message when triggered', async () => {
-    const itemCls = buildItemClassMock()
-    globalThis.getDocumentClass = vi.fn(() => itemCls)
+    const sheet = {
+      actor: {
+        items: { filter: vi.fn(() => []) },
+        system: { obligationCreationState: { remainingObligationCap: Infinity } },
+      },
+      document: {},
+    }
 
-    const sheet = { document: { pack: null } }
-    const event = {}
-
-    await CharacterSheet.DEFAULT_OPTIONS.actions.creationBonusObligationCreate.call(sheet, event)
+    await CharacterSheet.DEFAULT_OPTIONS.actions.creationBonusObligationCreate.call(sheet, {})
 
     expect(logger.debug).toHaveBeenCalledWith(expect.stringContaining('creationBonusObligationCreate'))
   })

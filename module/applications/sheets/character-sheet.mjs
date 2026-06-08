@@ -12,6 +12,7 @@ import { getPositiveDicePoolPreview } from '../../utils/skill-costs.mjs'
 import SkillCostCalculator from '../../lib/skills/skill-cost-calculator.mjs'
 import { evaluateSpecializationPurchase } from '../../lib/specializations/specialization-purchase-flow.mjs'
 import { computeEffectiveValue } from '../../lib/obligations/obligation-evolution.mjs'
+import ObligationBonusCalculator from '../../lib/obligations/obligation-bonus-calculator.mjs'
 
 /**
  * @typedef {Object} DefenseDisplayData
@@ -446,17 +447,126 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
   /* -------------------------------------------- */
 
   /**
-   * Handle click action to create a new creation-bonus Obligation (isExtra = true) directly on the actor.
-   * Creates the obligation pre-configured as a creation bonus so the user lands directly on the
-   * creation-bonus flow without having to toggle isExtra manually.
+   * Build the i18n label for a guided bonus selector option.
+   * @param {import('../../lib/obligations/obligation-bonus-calculator.mjs').ObligationBonusSelectOption} opt
+   * @returns {string}
+   */
+  static #getOptionLabel(opt) {
+    const i18n = game.i18n
+    if (opt.key === 'xp_5') return i18n.localize('OBLIGATION.UI.OFFICIAL_OPTION_XP_5')
+    if (opt.key === 'xp_10') return i18n.localize('OBLIGATION.UI.OFFICIAL_OPTION_XP_10')
+    if (opt.key === 'credits_1000') return i18n.localize('OBLIGATION.UI.OFFICIAL_OPTION_CREDITS_1000')
+    if (opt.key === 'credits_2500') return i18n.localize('OBLIGATION.UI.OFFICIAL_OPTION_CREDITS_2500')
+    return opt.key
+  }
+
+  /**
+   * Handle click action to select an official creation-bonus Obligation from a guided selector.
+   *
+   * Opens a DialogV2 prompt listing the four official FFG/Edge bonus options with each option
+   * disabled when already taken or when selecting it would exceed the remaining obligation cap.
+   * On confirmation, creates an Obligation item pre-filled with the official values
+   * (isExtra=true, value, extraXp, extraCredits) so no free-text editing is needed on the nominal path.
+   *
    * @this {CharacterSheet}
    * @param {PointerEvent} event
    * @returns {Promise<void>}
    */
   static async #onCreationBonusObligationCreate(event) {
-    logger.debug('[CharacterSheet] creationBonusObligationCreate — opening creation-bonus obligation dialog')
+    logger.debug('[CharacterSheet] creationBonusObligationCreate — opening guided bonus selector')
+
+    const obligationData = this.actor.items
+      .filter((item) => item.type === 'obligation')
+      .map((item) => ({
+        isExtra: item.system.isExtra,
+        extraXp: item.system.extraXp || 0,
+        extraCredits: item.system.extraCredits || 0,
+        value: item.system.value || 0,
+      }))
+
+    const remainingCap = this.actor.system.obligationCreationState?.remainingObligationCap ?? Infinity
+    const options = ObligationBonusCalculator.buildObligationBonusOptions(obligationData, remainingCap)
+
+    const i18n = game.i18n
+    const anyAvailable = options.some((opt) => opt.isAvailable)
+
+    const optionRows = options
+      .map((opt) => {
+        const label = CharacterSheet.#getOptionLabel(opt)
+        const disabled = !opt.isAvailable
+
+        let reasonHtml = ''
+        if (opt.isAlreadyTaken) {
+          reasonHtml = `<span class="obligation-selector__reason">${i18n.localize('OBLIGATION.UI.SELECTOR_OPTION_TAKEN')}</span>`
+        } else if (opt.isExceedsCap) {
+          reasonHtml = `<span class="obligation-selector__reason">${i18n.localize('OBLIGATION.UI.SELECTOR_OPTION_EXCEEDS_CAP')}</span>`
+        }
+
+        return `<label class="obligation-selector__option${disabled ? ' obligation-selector__option--disabled' : ''}">
+  <input type="radio" name="bonusKey" value="${opt.key}"${disabled ? ' disabled' : ''}/>
+  <span class="obligation-selector__label">${label}</span>
+  ${reasonHtml}
+</label>`
+      })
+      .join('\n')
+
+    const noOptionsHtml = anyAvailable ? '' : `<p class="obligation-selector__no-options">${i18n.localize('OBLIGATION.UI.SELECTOR_NO_OPTIONS')}</p>`
+
+    const content = `<form class="obligation-selector">
+  <p class="obligation-selector__hint">${i18n.localize('OBLIGATION.UI.SELECTOR_HINT')}</p>
+  <fieldset class="obligation-selector__list">
+    <legend>${i18n.localize('OBLIGATION.UI.SELECTOR_LEGEND')}</legend>
+    ${optionRows}
+    ${noOptionsHtml}
+  </fieldset>
+</form>`
+
+    let selectedKey = null
+
+    await foundry.applications.api.DialogV2.prompt({
+      window: { title: i18n.localize('OBLIGATION.UI.SELECTOR_TITLE') },
+      content,
+      ok: {
+        label: i18n.localize('OBLIGATION.UI.SELECTOR_CONFIRM'),
+        icon: 'fa-solid fa-check',
+        callback: (event, button, dialog) => {
+          const form = button.form ?? dialog.querySelector('form')
+          if (!form) return
+          const checked = form.querySelector('input[name="bonusKey"]:checked')
+          if (checked) selectedKey = checked.value
+        },
+      },
+      rejectClose: false,
+    })
+
+    if (!selectedKey) {
+      logger.debug('[CharacterSheet] creationBonusObligationCreate — no option selected, aborting')
+      return
+    }
+
+    const chosen = ObligationBonusCalculator.OFFICIAL_OPTIONS.find((opt) => opt.key === selectedKey)
+    if (!chosen) {
+      logger.warn('[CharacterSheet] creationBonusObligationCreate — unknown option key selected', { selectedKey })
+      return
+    }
+
+    logger.debug('[CharacterSheet] creationBonusObligationCreate — creating obligation for option', { selectedKey, chosen })
+
     const cls = getDocumentClass('Item')
-    await cls.createDialog({ type: 'obligation', 'system.isExtra': true }, { parent: this.document, pack: this.document.pack })
+    const name = CharacterSheet.#getOptionLabel({ key: selectedKey })
+    await cls.create(
+      {
+        name,
+        type: 'obligation',
+        system: {
+          isExtra: true,
+          value: chosen.obligationCost,
+          extraXp: chosen.xp,
+          extraCredits: chosen.credits,
+        },
+      },
+      { parent: this.document },
+    )
   }
 
   /* -------------------------------------------- */
