@@ -56,6 +56,23 @@
                        data-tooltip="{{localize "ACTOR.LABELS.OBLIGATIONS_EDIT_TOOLTIP"}}"></a>
                 </div>
             </div>
+
+            {{#if obligation.hasCampaignEvolution}}
+            <div class="obligation-campaign-summary" data-item-id="{{obligation.id}}">
+                <span class="obligation-campaign-summary__current"
+                      title="{{localize "OBLIGATION.UI.CAMPAIGN_CURRENT_VALUE_TOOLTIP"}}">
+                    {{localize "OBLIGATION.UI.CAMPAIGN_CURRENT_VALUE_LABEL"}}: <strong>{{obligation.currentValue}}</strong>
+                </span>
+                {{#if obligation.transformedTo}}
+                <span class="obligation-campaign-summary__transformed">
+                    {{localize "OBLIGATION.UI.CAMPAIGN_TRANSFORMED_LABEL"}} <em>{{obligation.transformedTo}}</em>
+                </span>
+                {{/if}}
+                {{#if obligation.campaignNote}}
+                <span class="obligation-campaign-summary__note">{{obligation.campaignNote}}</span>
+                {{/if}}
+            </div>
+            {{/if}}
         {{/each}}
 
         {{#if obligationCreationState}}

@@ -113,7 +113,15 @@ export async function triggerOggDudeImport(page: Page): Promise<void> {
  * @param timeout en ms (défaut: 120s — l'import complet peut être long)
  */
 export async function waitForOggDudeImportComplete(page: Page, timeout = 120_000): Promise<void> {
-  await page.waitForFunction(() => (window as unknown as Record<string, unknown>).__oggdudeImportDone === true, undefined, { timeout })
+  try {
+    await page.waitForFunction(() => (window as unknown as Record<string, unknown>).__oggdudeImportDone === true, undefined, { timeout })
+  } catch (e) {
+    const currentUrl = page.url()
+    if (!currentUrl.includes('/game')) {
+      throw new Error(`[oggdude-import] Import timed out — page is at ${currentUrl} (expected /game). Foundry session lost or crashed during import.`)
+    }
+    throw e
+  }
   await page.evaluate(() => {
     delete (window as unknown as Record<string, unknown>).__oggdudeImportDone
   })

@@ -965,6 +965,18 @@
       "extraXp": {
         "label": "Extra Experience",
         "hint": "The amount of extra experience which the character receives for taking on this obligation."
+      },
+      "campaignDelta": {
+        "label": "Campaign Adjustment",
+        "hint": "Net change applied during the campaign (negative = reduction, positive = aggravation). Does not overwrite the creation value."
+      },
+      "campaignNote": {
+        "label": "Evolution Note",
+        "hint": "Narrative context for the latest evolution: reason, in-game event, GM decision."
+      },
+      "transformedTo": {
+        "label": "Transformed To",
+        "hint": "When the obligation changes nature rather than disappearing, record the new narrative type here."
       }
     },
     "UI": {
@@ -983,7 +995,13 @@
       "CREATION_BONUS_OBLIGATION_LABEL": "extra Obligation",
       "CREATION_BONUS_OBLIGATION_TOOLTIP": "Extra Obligation consumed / allowed (based on starting obligation value)",
       "CREATION_ERRORS_LABEL": "Obligation conformance issues",
-      "CREATION_CONFORMANT_LABEL": "All extra obligations follow official rules."
+      "CREATION_CONFORMANT_LABEL": "All extra obligations follow official rules.",
+      "CAMPAIGN_EVOLUTION_LEGEND": "Campaign Evolution",
+      "CAMPAIGN_EVOLUTION_HINT": "Track reductions, aggravations, or transformations that happen during the campaign. These are separate from the character-creation bonus.",
+      "CAMPAIGN_CURRENT_VALUE_LABEL": "Current value (adjusted)",
+      "CAMPAIGN_CURRENT_VALUE_TOOLTIP": "Base creation value + campaign adjustments",
+      "CAMPAIGN_TRANSFORMED_LABEL": "Transformed into:",
+      "CAMPAIGN_NO_EVOLUTION": "No campaign evolution recorded yet."
     }
   },
   "RESOURCES": {

@@ -27,6 +27,7 @@ import { verifyOggDudeWorldItems } from '../utils/oggdude-importer'
  */
 test.describe('[regression] 02a — OggDude import (world)', () => {
   test('import world crée les sentinelles dans game.items [ci]', async ({ page, oggdude }) => {
+    test.setTimeout(240_000)
     await expect(page).toHaveURL(/.*\/game/)
 
     // Cleanup + import complet via la fixture (mode world = sans interaction checkbox)

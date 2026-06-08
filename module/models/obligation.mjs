@@ -54,6 +54,33 @@ export default class SwerpgObligation extends foundry.abstract.TypeDataModel {
       step: 500,
     })
 
+    // Campaign evolution fields — distinct from character-creation bonuses.
+    // campaignDelta: net change applied in campaign (negative = reduction, positive = aggravation).
+    schema.campaignDelta = new fields.NumberField({
+      required: true,
+      integer: true,
+      nullable: false,
+      min: -50,
+      max: 50,
+      initial: 0,
+    })
+
+    // campaignNote: narrative justification for the latest evolution (GM/player note).
+    schema.campaignNote = new fields.StringField({
+      required: false,
+      nullable: true,
+      initial: null,
+      blank: false,
+    })
+
+    // transformedTo: when an Obligation changes nature, this stores the new narrative type.
+    schema.transformedTo = new fields.StringField({
+      required: false,
+      nullable: true,
+      initial: null,
+      blank: false,
+    })
+
     return schema
   }
 

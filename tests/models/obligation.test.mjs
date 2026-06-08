@@ -18,11 +18,30 @@ describe('SwerpgObligation — schema contract', () => {
     expect(schema).toHaveProperty('isExtra')
     expect(schema).toHaveProperty('extraXp')
     expect(schema).toHaveProperty('extraCredits')
+    // Campaign evolution fields
+    expect(schema).toHaveProperty('campaignDelta')
+    expect(schema).toHaveProperty('campaignNote')
+    expect(schema).toHaveProperty('transformedTo')
   })
 
-  it('defines exactly five fields — no accidental field added or removed', () => {
+  it('defines exactly eight fields — no accidental field added or removed', () => {
     const schema = SwerpgObligation.defineSchema()
-    expect(Object.keys(schema)).toHaveLength(5)
+    expect(Object.keys(schema)).toHaveLength(8)
+  })
+
+  it('campaignDelta defaults to 0', () => {
+    const schema = SwerpgObligation.defineSchema()
+    expect(schema.campaignDelta.config.initial).toBe(0)
+  })
+
+  it('campaignNote defaults to null', () => {
+    const schema = SwerpgObligation.defineSchema()
+    expect(schema.campaignNote.config.initial).toBeNull()
+  })
+
+  it('transformedTo defaults to null', () => {
+    const schema = SwerpgObligation.defineSchema()
+    expect(schema.transformedTo.config.initial).toBeNull()
   })
 
   it('LOCALIZATION_PREFIXES includes OBLIGATION', () => {

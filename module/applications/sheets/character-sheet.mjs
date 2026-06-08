@@ -11,6 +11,7 @@ import { logger } from '../../utils/logger.mjs'
 import { getPositiveDicePoolPreview } from '../../utils/skill-costs.mjs'
 import SkillCostCalculator from '../../lib/skills/skill-cost-calculator.mjs'
 import { evaluateSpecializationPurchase } from '../../lib/specializations/specialization-purchase-flow.mjs'
+import { computeEffectiveValue } from '../../lib/obligations/obligation-evolution.mjs'
 
 /**
  * @typedef {Object} DefenseDisplayData
@@ -29,11 +30,16 @@ import { evaluateSpecializationPurchase } from '../../lib/specializations/specia
  * @property {string} id - Unique ID of the Obligation Item.
  * @property {string} name - Name of the Obligation.
  * @property {string} img - Image path used for the Obligation icon.
- * @property {number} value - A value representing the Obligation.
+ * @property {number} value - Base creation value of the Obligation.
+ * @property {number} currentValue - Effective campaign value (base + campaignDelta, clamped to 0).
  * @property {string} [cssClass] - Optional CSS class applied to the container (e.g., "highlighted", "disabled").
  * @property {boolean} isExtra - Indicates if the Obligation is an extra obligation by any mean.
  * @property {number} extraXp - Optional extra experience points associated with the Obligation.
  * @property {number} extraCredits - Optional extra credits associated with the Obligation.
+ * @property {number} campaignDelta - Net campaign adjustment (negative = reduced, positive = aggravated).
+ * @property {string|null} campaignNote - Narrative note for the last campaign evolution.
+ * @property {string|null} transformedTo - Narrative type label when the obligation was transformed.
+ * @property {boolean} hasCampaignEvolution - True when at least one campaign evolution field is set.
  */
 
 /**
@@ -1161,24 +1167,38 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
   }
 
   #buildObligationDisplayData(obligation) {
+    const sys = obligation.system
+    const campaignDelta = sys.campaignDelta ?? 0
+    const campaignNote = sys.campaignNote ?? null
+    const transformedTo = sys.transformedTo ?? null
+    const currentValue = computeEffectiveValue({ value: sys.value, campaignDelta })
+    const hasCampaignEvolution = campaignDelta !== 0 || campaignNote !== null || transformedTo !== null
+
     return {
       id: obligation.id,
       name: obligation.name,
       img: obligation.img,
-      cssClass: obligation.system.isExtra ? 'extra' : '',
-      value: obligation.system.value,
-      isExtra: obligation.system.isExtra,
-      extraXp: obligation.system.extraXp || 0,
-      extraCredits: obligation.system.extraCredits || 0,
+      cssClass: sys.isExtra ? 'extra' : '',
+      value: sys.value,
+      currentValue,
+      isExtra: sys.isExtra,
+      extraXp: sys.extraXp || 0,
+      extraCredits: sys.extraCredits || 0,
+      campaignDelta,
+      campaignNote,
+      transformedTo,
+      hasCampaignEvolution,
     }
   }
 
   /**
    * Compute obligation points for the character sheet.
-   * @param obligations {MotivationDisplayData[]}
-   * @returns {number} The total obligation points.
+   * Uses the effective campaign value (base + delta, clamped to 0) so that
+   * reductions/aggravations applied during the campaign are reflected in the total.
+   * @param {ObligationDisplayData[]} obligations
+   * @returns {number} The total effective obligation points.
    */
   #computeObligationPoints(obligations) {
-    return obligations.reduce((total, obligation) => total + obligation.value, 0)
+    return obligations.reduce((total, obligation) => total + obligation.currentValue, 0)
   }
 }
