@@ -203,3 +203,29 @@ export const OBLIGATION_EXTRA_CREDITS_5 = 1000
  * @type {number}
  */
 export const OBLIGATION_EXTRA_CREDITS_10 = 2500
+
+/**
+ * Extra XP bonus for +5 Obligation during character creation.
+ * @type {number}
+ */
+export const OBLIGATION_EXTRA_XP_5 = 5
+
+/**
+ * Extra XP bonus for +10 Obligation during character creation.
+ * @type {number}
+ */
+export const OBLIGATION_EXTRA_XP_10 = 10
+
+/**
+ * The obligation cost (in extra Obligation points) associated with a +5-point
+ * optional bonus tier (+5 XP or +1 000 credits).
+ * @type {number}
+ */
+export const OBLIGATION_EXTRA_COST_5 = 5
+
+/**
+ * The obligation cost (in extra Obligation points) associated with a +10-point
+ * optional bonus tier (+10 XP or +2 500 credits).
+ * @type {number}
+ */
+export const OBLIGATION_EXTRA_COST_10 = 10

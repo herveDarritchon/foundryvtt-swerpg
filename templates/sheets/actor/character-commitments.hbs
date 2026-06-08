@@ -58,6 +58,44 @@
             </div>
         {{/each}}
 
+        {{#if obligationCreationState}}
+        <div class="obligation-creation-summary {{#unless obligationCreationState.isConformant}}obligation-creation-summary--invalid{{/unless}}">
+            <h4>{{localize "OBLIGATION.UI.CREATION_BONUS_SUMMARY_TITLE"}}</h4>
+
+            <div class="obligation-creation-summary__bonuses flexrow">
+                <span class="obligation-creation-summary__bonus-xp" title="{{localize "OBLIGATION.UI.CREATION_BONUS_XP_TOOLTIP"}}">
+                    <img src="/systems/swerpg/ui/symbols/xp.webp" alt="{{localize "ACTOR.LABELS.OBLIGATIONS_ICON_XP_ALT"}}" aria-hidden="true"/>
+                    {{obligationCreationState.totalXp}} {{localize "OBLIGATION.UI.CREATION_BONUS_XP_LABEL"}}
+                </span>
+                <span class="obligation-creation-summary__bonus-credits" title="{{localize "OBLIGATION.UI.CREATION_BONUS_CREDITS_TOOLTIP"}}">
+                    <img src="/systems/swerpg/ui/symbols/credits.webp" alt="{{localize "ACTOR.LABELS.OBLIGATIONS_ICON_CREDITS_ALT"}}" aria-hidden="true"/>
+                    {{obligationCreationState.totalCredits}} {{localize "OBLIGATION.UI.CREATION_BONUS_CREDITS_LABEL"}}
+                </span>
+                <span class="obligation-creation-summary__bonus-obligation" title="{{localize "OBLIGATION.UI.CREATION_BONUS_OBLIGATION_TOOLTIP"}}">
+                    {{obligationCreationState.totalObligationConsumed}} / {{obligationCreationState.baseObligationValue}} {{localize "OBLIGATION.UI.CREATION_BONUS_OBLIGATION_LABEL"}}
+                </span>
+            </div>
+
+            {{#if obligationCreationState.errors.length}}
+            <ul class="obligation-creation-summary__errors" aria-label="{{localize "OBLIGATION.UI.CREATION_ERRORS_LABEL"}}">
+                {{#each obligationCreationState.errors as |error|}}
+                <li class="obligation-creation-summary__error">
+                    <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+                    {{error}}
+                </li>
+                {{/each}}
+            </ul>
+            {{/if}}
+
+            {{#if obligationCreationState.isConformant}}
+            <p class="obligation-creation-summary__ok">
+                <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+                {{localize "OBLIGATION.UI.CREATION_CONFORMANT_LABEL"}}
+            </p>
+            {{/if}}
+        </div>
+        {{/if}}
+
     </div>
 
     <div class="sheet-section flexcol">

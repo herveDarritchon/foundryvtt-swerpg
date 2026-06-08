@@ -968,7 +968,22 @@
       }
     },
     "UI": {
-      "EXTRA_BONUS_LEGEND": "Extra Bonus"
+      "EXTRA_BONUS_LEGEND": "Extra Bonus",
+      "OFFICIAL_OPTIONS_LABEL": "Official creation bonus options",
+      "OFFICIAL_OPTIONS_HINT": "Only the following combinations are official (FFG/Edge rules). Each option may be chosen at most once.",
+      "OFFICIAL_OPTION_XP_5": "5 XP — +5 Obligation",
+      "OFFICIAL_OPTION_XP_10": "10 XP — +10 Obligation",
+      "OFFICIAL_OPTION_CREDITS_1000": "1 000 credits — +5 Obligation",
+      "OFFICIAL_OPTION_CREDITS_2500": "2 500 credits — +10 Obligation",
+      "CREATION_BONUS_SUMMARY_TITLE": "Creation Bonuses (Obligation)",
+      "CREATION_BONUS_XP_LABEL": "XP",
+      "CREATION_BONUS_XP_TOOLTIP": "Extra XP granted by official extra obligations",
+      "CREATION_BONUS_CREDITS_LABEL": "credits",
+      "CREATION_BONUS_CREDITS_TOOLTIP": "Extra starting credits granted by official extra obligations",
+      "CREATION_BONUS_OBLIGATION_LABEL": "extra Obligation",
+      "CREATION_BONUS_OBLIGATION_TOOLTIP": "Extra Obligation consumed / allowed (based on starting obligation value)",
+      "CREATION_ERRORS_LABEL": "Obligation conformance issues",
+      "CREATION_CONFORMANT_LABEL": "All extra obligations follow official rules."
     }
   },
   "RESOURCES": {

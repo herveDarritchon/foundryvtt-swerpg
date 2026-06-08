@@ -339,7 +339,7 @@ export default class SwerpgCharacter extends SwerpgActorType {
    * that the pure domain ObligationBonusCalculator can consume without Foundry dependencies.
    *
    * @param {SwerpgActor} actor The parent actor whose items are searched.
-   * @returns {{ isExtra: boolean, extraCredits: number, extraXp: number }[]} Plain obligation data.
+   * @returns {{ isExtra: boolean, extraCredits: number, extraXp: number, value: number }[]} Plain obligation data.
    */
   static #extractObligationData(actor) {
     return actor.items
@@ -348,7 +348,52 @@ export default class SwerpgCharacter extends SwerpgActorType {
         isExtra: item.system.isExtra,
         extraCredits: item.system.extraCredits,
         extraXp: item.system.extraXp,
+        value: item.system.value,
       }))
+  }
+
+  /**
+   * Prepare the canonical creation-bonus state derived from extra obligation items.
+   *
+   * All fields written here are derived (not persisted). They expose a single source of
+   * truth for the character sheet and other consumers without scattering bonus calculations
+   * across the UI layer.
+   *
+   * The base Obligation value used for the cap check is the sum of the non-extra obligation
+   * `value` fields. When no non-extra obligations exist the cap is set to `Infinity` (no cap).
+   *
+   * Derived field set on `this.obligationCreationState`:
+   * - `totalXp`                — official XP bonus from recognized extra obligations
+   * - `totalCredits`           — official credits bonus from recognized extra obligations
+   * - `totalObligationConsumed`— total extra Obligation points consumed by recognized options
+   * - `baseObligationValue`    — sum of non-extra obligation values (used as the cap)
+   * - `remainingObligationCap` — baseObligationValue − totalObligationConsumed (can be 0 or negative)
+   * - `recognizedOptions`      — array of matched official option descriptors
+   * - `errors`                 — array of diagnostic strings for non-conformant obligations
+   * - `isConformant`           — true when all extra obligations are official and within the cap
+   */
+  _prepareObligationCreationState() {
+    const obligationData = SwerpgCharacter.#extractObligationData(this.parent)
+
+    // Compute the base Obligation value as the sum of non-extra obligation values.
+    const baseObligationValue = obligationData.filter((o) => o.isExtra !== true).reduce((sum, o) => sum + (o.value || 0), 0)
+
+    const cap = baseObligationValue > 0 ? baseObligationValue : Infinity
+
+    const summary = ObligationBonusCalculator.computeCreationSummary(obligationData, cap)
+
+    this.obligationCreationState = {
+      totalXp: summary.totalXp,
+      totalCredits: summary.totalCredits,
+      totalObligationConsumed: summary.totalObligationConsumed,
+      baseObligationValue,
+      remainingObligationCap: Number.isFinite(cap) ? cap - summary.totalObligationConsumed : Infinity,
+      recognizedOptions: summary.recognizedOptions,
+      errors: summary.errors,
+      isConformant: summary.isConformant,
+    }
+
+    logger.debug(`[SwerpgCharacter] _prepareObligationCreationState - state for ${this.parent.name}:`, this.obligationCreationState)
   }
 
   /**
@@ -447,12 +492,13 @@ export default class SwerpgCharacter extends SwerpgActorType {
 
   /**
    * Extend the base derived data preparation with Character-specific computations.
-   * Adds `_prepareCredits()` after the base pass so that obligation items (available
-   * only during `prepareDerivedData`) can be accessed.
+   * Adds `_prepareObligationCreationState()` and `_prepareCredits()` after the base pass
+   * so that obligation items (available only during `prepareDerivedData`) can be accessed.
    * @override
    */
   prepareDerivedData() {
     super.prepareDerivedData()
+    this._prepareObligationCreationState()
     this._prepareCredits()
   }
 

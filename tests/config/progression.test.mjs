@@ -18,6 +18,10 @@ import {
   STARTING_CREDITS,
   OBLIGATION_EXTRA_CREDITS_5,
   OBLIGATION_EXTRA_CREDITS_10,
+  OBLIGATION_EXTRA_XP_5,
+  OBLIGATION_EXTRA_XP_10,
+  OBLIGATION_EXTRA_COST_5,
+  OBLIGATION_EXTRA_COST_10,
   TALENT_PURCHASE_DEFAULT_COST,
   TALENT_PURCHASE_DEFAULT_RANKS,
 } from '../../module/config/progression.mjs'
@@ -227,6 +231,34 @@ describe('Progression config — contractual constants (ADR-0018)', () => {
     test('STARTING_CREDITS + OBLIGATION_EXTRA_CREDITS_10 yields 3000 (500 + 2500)', () => {
       expect(STARTING_CREDITS + OBLIGATION_EXTRA_CREDITS_10).toBe(3000)
     })
+
+    test('OBLIGATION_EXTRA_XP_5 is 5 (+5 Obligation XP tier)', () => {
+      expect(OBLIGATION_EXTRA_XP_5).toBe(5)
+    })
+
+    test('OBLIGATION_EXTRA_XP_10 is 10 (+10 Obligation XP tier)', () => {
+      expect(OBLIGATION_EXTRA_XP_10).toBe(10)
+    })
+
+    test('OBLIGATION_EXTRA_XP_5 is strictly less than OBLIGATION_EXTRA_XP_10', () => {
+      expect(OBLIGATION_EXTRA_XP_5).toBeLessThan(OBLIGATION_EXTRA_XP_10)
+    })
+
+    test('OBLIGATION_EXTRA_COST_5 is 5 (obligation cost for +5 tier)', () => {
+      expect(OBLIGATION_EXTRA_COST_5).toBe(5)
+    })
+
+    test('OBLIGATION_EXTRA_COST_10 is 10 (obligation cost for +10 tier)', () => {
+      expect(OBLIGATION_EXTRA_COST_10).toBe(10)
+    })
+
+    test('OBLIGATION_EXTRA_COST_5 equals OBLIGATION_EXTRA_XP_5 (symmetric tier definition)', () => {
+      expect(OBLIGATION_EXTRA_COST_5).toBe(OBLIGATION_EXTRA_XP_5)
+    })
+
+    test('OBLIGATION_EXTRA_COST_10 equals OBLIGATION_EXTRA_XP_10 (symmetric tier definition)', () => {
+      expect(OBLIGATION_EXTRA_COST_10).toBe(OBLIGATION_EXTRA_XP_10)
+    })
   })
 
   /* -------------------------------------------- */
@@ -328,6 +360,22 @@ describe('Progression config — contractual constants (ADR-0018)', () => {
 
     test('SYSTEM.PROGRESSION.OBLIGATION_EXTRA_CREDITS_10 equals OBLIGATION_EXTRA_CREDITS_10', () => {
       expect(SYSTEM.PROGRESSION.OBLIGATION_EXTRA_CREDITS_10).toBe(OBLIGATION_EXTRA_CREDITS_10)
+    })
+
+    test('SYSTEM.PROGRESSION.OBLIGATION_EXTRA_XP_5 equals OBLIGATION_EXTRA_XP_5', () => {
+      expect(SYSTEM.PROGRESSION.OBLIGATION_EXTRA_XP_5).toBe(OBLIGATION_EXTRA_XP_5)
+    })
+
+    test('SYSTEM.PROGRESSION.OBLIGATION_EXTRA_XP_10 equals OBLIGATION_EXTRA_XP_10', () => {
+      expect(SYSTEM.PROGRESSION.OBLIGATION_EXTRA_XP_10).toBe(OBLIGATION_EXTRA_XP_10)
+    })
+
+    test('SYSTEM.PROGRESSION.OBLIGATION_EXTRA_COST_5 equals OBLIGATION_EXTRA_COST_5', () => {
+      expect(SYSTEM.PROGRESSION.OBLIGATION_EXTRA_COST_5).toBe(OBLIGATION_EXTRA_COST_5)
+    })
+
+    test('SYSTEM.PROGRESSION.OBLIGATION_EXTRA_COST_10 equals OBLIGATION_EXTRA_COST_10', () => {
+      expect(SYSTEM.PROGRESSION.OBLIGATION_EXTRA_COST_10).toBe(OBLIGATION_EXTRA_COST_10)
     })
 
     test('SYSTEM.PROGRESSION.TALENT_PURCHASE_DEFAULT_COST equals TALENT_PURCHASE_DEFAULT_COST', () => {

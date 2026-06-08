@@ -1071,7 +1071,22 @@
       }
     },
     "UI": {
-      "EXTRA_BONUS_LEGEND": "Bonus Extra"
+      "EXTRA_BONUS_LEGEND": "Bonus Extra",
+      "OFFICIAL_OPTIONS_LABEL": "Options de bonus de création officielles",
+      "OFFICIAL_OPTIONS_HINT": "Seules les combinaisons suivantes sont officielles (règles FFG/Edge). Chaque option ne peut être choisie qu'une seule fois.",
+      "OFFICIAL_OPTION_XP_5": "5 XP — +5 Obligation",
+      "OFFICIAL_OPTION_XP_10": "10 XP — +10 Obligation",
+      "OFFICIAL_OPTION_CREDITS_1000": "1 000 crédits — +5 Obligation",
+      "OFFICIAL_OPTION_CREDITS_2500": "2 500 crédits — +10 Obligation",
+      "CREATION_BONUS_SUMMARY_TITLE": "Bonus de création (Obligation)",
+      "CREATION_BONUS_XP_LABEL": "XP",
+      "CREATION_BONUS_XP_TOOLTIP": "XP supplémentaire accordé par les obligations supplémentaires officielles",
+      "CREATION_BONUS_CREDITS_LABEL": "crédits",
+      "CREATION_BONUS_CREDITS_TOOLTIP": "Crédits de départ supplémentaires accordés par les obligations supplémentaires officielles",
+      "CREATION_BONUS_OBLIGATION_LABEL": "Obligation supplémentaire",
+      "CREATION_BONUS_OBLIGATION_TOOLTIP": "Obligation supplémentaire consommée / autorisée (basée sur la valeur d'obligation de départ)",
+      "CREATION_ERRORS_LABEL": "Problèmes de conformité des Obligations",
+      "CREATION_CONFORMANT_LABEL": "Toutes les obligations supplémentaires respectent les règles officielles."
     }
   },
   "RESOURCES": {
