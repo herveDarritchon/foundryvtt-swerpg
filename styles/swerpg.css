@@ -3401,6 +3401,14 @@ input[type='range'] {
 .swerpg.sheet.actor .tab.biography .appearance > div {
   padding: 0 1rem;
 }
+.swerpg.sheet.actor .tab.commitments {
+  /* ----------------------------------------- */
+  /*  Obligation — creation bonus summary       */
+  /* ----------------------------------------- */
+  /* ----------------------------------------- */
+  /*  Obligation — campaign evolution summary   */
+  /* ----------------------------------------- */
+}
 .swerpg.sheet.actor .tab.commitments .header {
   display: flex;
   align-items: center;
@@ -3449,6 +3457,87 @@ input[type='range'] {
   align-content: center;
   justify-content: center;
   text-align: center;
+}
+.swerpg.sheet.actor .tab.commitments .obligation-creation-summary {
+  margin-top: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--color-glow-25);
+  border-radius: 4px;
+  background: var(--color-holo-bg-40);
+  font-size: var(--font-size-11);
+}
+.swerpg.sheet.actor .tab.commitments .obligation-creation-summary h4 {
+  margin: 0 0 0.35rem;
+  font-size: var(--font-size-12);
+  color: var(--color-h1);
+  text-transform: uppercase;
+}
+.swerpg.sheet.actor .tab.commitments .obligation-creation-summary img {
+  width: 18px;
+  height: 18px;
+  vertical-align: middle;
+}
+.swerpg.sheet.actor .tab.commitments .obligation-creation-summary--invalid {
+  border-color: var(--color-danger-30);
+  background: var(--color-danger-08);
+}
+.swerpg.sheet.actor .tab.commitments .obligation-creation-summary__bonuses {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+.swerpg.sheet.actor .tab.commitments .obligation-creation-summary__bonus-xp,
+.swerpg.sheet.actor .tab.commitments .obligation-creation-summary__bonus-credits,
+.swerpg.sheet.actor .tab.commitments .obligation-creation-summary__bonus-obligation {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  white-space: nowrap;
+}
+.swerpg.sheet.actor .tab.commitments .obligation-creation-summary__errors {
+  margin: 0.35rem 0 0;
+  padding-left: 1.25rem;
+  list-style: none;
+}
+.swerpg.sheet.actor .tab.commitments .obligation-creation-summary__error {
+  font-size: var(--font-size-11);
+  color: var(--color-danger-text);
+}
+.swerpg.sheet.actor .tab.commitments .obligation-creation-summary__error i {
+  margin-right: 0.25rem;
+}
+.swerpg.sheet.actor .tab.commitments .obligation-creation-summary__ok {
+  margin: 0.35rem 0 0;
+  font-size: var(--font-size-11);
+  color: var(--color-success-text);
+}
+.swerpg.sheet.actor .tab.commitments .obligation-creation-summary__ok i {
+  margin-right: 0.25rem;
+}
+.swerpg.sheet.actor .tab.commitments .obligation-campaign-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  padding: 0.25rem 0.5rem 0.25rem 3.5rem;
+  margin-bottom: 0.25rem;
+  font-size: var(--font-size-10);
+  color: var(--color-secondary);
+  border-left: 2px solid var(--color-glow-25);
+}
+.swerpg.sheet.actor .tab.commitments .obligation-campaign-summary strong {
+  font-weight: 600;
+}
+.swerpg.sheet.actor .tab.commitments .obligation-campaign-summary em {
+  font-style: italic;
+  color: var(--color-accent-blue-text-light);
+}
+.swerpg.sheet.actor .tab.commitments .obligation-campaign-summary__note {
+  width: 100%;
+  padding: 0.15rem 0.35rem;
+  border-radius: 3px;
+  background: var(--color-frame-bg);
+  font-style: italic;
 }
 .swerpg.sheet.actor .tab.secondary {
   /* ----------------------------------------- */
