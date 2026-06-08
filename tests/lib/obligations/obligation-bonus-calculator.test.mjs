@@ -271,4 +271,135 @@ describe('ObligationBonusCalculator', () => {
       })
     })
   })
+
+  describe('buildObligationBonusOptions', () => {
+    describe('with no obligations', () => {
+      test('returns 4 options all available when no obligations exist', () => {
+        const result = ObligationBonusCalculator.buildObligationBonusOptions([], Infinity)
+        expect(result).toHaveLength(4)
+        expect(result.every((opt) => opt.isAvailable)).toBe(true)
+      })
+
+      test('all options have unavailableReason null when all available', () => {
+        const result = ObligationBonusCalculator.buildObligationBonusOptions([], Infinity)
+        expect(result.every((opt) => opt.unavailableReason === null)).toBe(true)
+      })
+
+      test('all options have isAlreadyTaken=false when no obligations exist', () => {
+        const result = ObligationBonusCalculator.buildObligationBonusOptions([], Infinity)
+        expect(result.every((opt) => opt.isAlreadyTaken === false)).toBe(true)
+      })
+
+      test('all options have isExceedsCap=false when remainingCap is Infinity', () => {
+        const result = ObligationBonusCalculator.buildObligationBonusOptions([], Infinity)
+        expect(result.every((opt) => opt.isExceedsCap === false)).toBe(true)
+      })
+    })
+
+    describe('with an already-taken option', () => {
+      test('marks xp_5 as already taken when it is in obligations', () => {
+        const obligations = [{ isExtra: true, extraXp: 5, extraCredits: 0, value: 5 }]
+        const result = ObligationBonusCalculator.buildObligationBonusOptions(obligations, Infinity)
+        const xp5 = result.find((opt) => opt.key === 'xp_5')
+        expect(xp5.isAlreadyTaken).toBe(true)
+        expect(xp5.isAvailable).toBe(false)
+        expect(xp5.unavailableReason).toBe('already-taken')
+      })
+
+      test('marks credits_1000 as already taken and other options still available', () => {
+        const obligations = [{ isExtra: true, extraXp: 0, extraCredits: 1000, value: 5 }]
+        const result = ObligationBonusCalculator.buildObligationBonusOptions(obligations, Infinity)
+        const credits1000 = result.find((opt) => opt.key === 'credits_1000')
+        expect(credits1000.isAlreadyTaken).toBe(true)
+        const others = result.filter((opt) => opt.key !== 'credits_1000')
+        expect(others.every((opt) => opt.isAvailable)).toBe(true)
+      })
+
+      test('marks two taken options as unavailable and two others as available', () => {
+        const obligations = [
+          { isExtra: true, extraXp: 5, extraCredits: 0, value: 5 },
+          { isExtra: true, extraXp: 0, extraCredits: 1000, value: 5 },
+        ]
+        const result = ObligationBonusCalculator.buildObligationBonusOptions(obligations, Infinity)
+        const taken = result.filter((opt) => opt.isAlreadyTaken)
+        const available = result.filter((opt) => opt.isAvailable)
+        expect(taken).toHaveLength(2)
+        expect(available).toHaveLength(2)
+      })
+    })
+
+    describe('with remaining cap constraints', () => {
+      test('marks options exceeding remainingCap as isExceedsCap=true', () => {
+        // remainingCap = 5 so only options with obligationCost <= 5 are within cap
+        const result = ObligationBonusCalculator.buildObligationBonusOptions([], 5)
+        const exceedsCap = result.filter((opt) => opt.isExceedsCap)
+        // xp_10 (cost=10) and credits_2500 (cost=10) exceed cap=5
+        expect(exceedsCap.every((opt) => opt.obligationCost > 5)).toBe(true)
+        expect(exceedsCap.every((opt) => opt.unavailableReason === 'exceeds-cap')).toBe(true)
+      })
+
+      test('marks options within cap as available', () => {
+        const result = ObligationBonusCalculator.buildObligationBonusOptions([], 5)
+        const available = result.filter((opt) => opt.isAvailable)
+        // xp_5 (cost=5) and credits_1000 (cost=5) are within cap
+        expect(available.every((opt) => opt.obligationCost <= 5)).toBe(true)
+      })
+
+      test('returns all options as isExceedsCap when remainingCap is 0', () => {
+        const result = ObligationBonusCalculator.buildObligationBonusOptions([], 0)
+        expect(result.every((opt) => opt.isExceedsCap)).toBe(true)
+        expect(result.every((opt) => !opt.isAvailable)).toBe(true)
+      })
+
+      test('does not mark taken options as isExceedsCap even when cost would exceed cap', () => {
+        // xp_5 is taken; remainingCap=0 — taken takes priority over cap check
+        const obligations = [{ isExtra: true, extraXp: 5, extraCredits: 0, value: 5 }]
+        const result = ObligationBonusCalculator.buildObligationBonusOptions(obligations, 0)
+        const xp5 = result.find((opt) => opt.key === 'xp_5')
+        expect(xp5.isAlreadyTaken).toBe(true)
+        expect(xp5.isExceedsCap).toBe(false)
+        expect(xp5.unavailableReason).toBe('already-taken')
+      })
+    })
+
+    describe('option shape', () => {
+      test('each option has key, xp, credits, obligationCost fields', () => {
+        const result = ObligationBonusCalculator.buildObligationBonusOptions([], Infinity)
+        for (const opt of result) {
+          expect(opt).toHaveProperty('key')
+          expect(opt).toHaveProperty('xp')
+          expect(opt).toHaveProperty('credits')
+          expect(opt).toHaveProperty('obligationCost')
+        }
+      })
+
+      test('each option has availability annotation fields', () => {
+        const result = ObligationBonusCalculator.buildObligationBonusOptions([], Infinity)
+        for (const opt of result) {
+          expect(opt).toHaveProperty('isAlreadyTaken')
+          expect(opt).toHaveProperty('isExceedsCap')
+          expect(opt).toHaveProperty('isAvailable')
+          expect(opt).toHaveProperty('unavailableReason')
+        }
+      })
+
+      test('returns options in the same order as OFFICIAL_OPTIONS', () => {
+        const result = ObligationBonusCalculator.buildObligationBonusOptions([], Infinity)
+        const resultKeys = result.map((opt) => opt.key)
+        const officialKeys = ObligationBonusCalculator.OFFICIAL_OPTIONS.map((opt) => opt.key)
+        expect(resultKeys).toEqual(officialKeys)
+      })
+    })
+
+    describe('non-extra obligations are ignored', () => {
+      test('non-extra obligations do not affect availability', () => {
+        const obligations = [
+          { isExtra: false, extraXp: 5, extraCredits: 0, value: 10 },
+          { isExtra: false, extraXp: 0, extraCredits: 1000, value: 10 },
+        ]
+        const result = ObligationBonusCalculator.buildObligationBonusOptions(obligations, Infinity)
+        expect(result.every((opt) => opt.isAvailable)).toBe(true)
+      })
+    })
+  })
 })

@@ -1114,7 +1114,15 @@
       "CAMPAIGN_TRANSFORMED_LABEL": "Transformée en :",
       "CAMPAIGN_NO_EVOLUTION": "Aucune évolution de campagne enregistrée pour l'instant.",
       "NARRATIVE_HINT": "Une Obligation narrative représente une dette, un secret ou un lien qui fait avancer l'histoire. Renseignez le nom et la valeur de base pour commencer.",
-      "EXTRA_SECONDARY_HINT": "L'option Obligation Extra accorde des XP ou des crédits supplémentaires à la création du personnage. Activez-la uniquement si vous avez accepté une obligation plus élevée que la valeur de base lors de la création."
+      "EXTRA_SECONDARY_HINT": "L'option Obligation Extra accorde des XP ou des crédits supplémentaires à la création du personnage. Activez-la uniquement si vous avez accepté une obligation plus élevée que la valeur de base lors de la création.",
+      "EXTRA_EXPERT_FALLBACK_HINT": "Mode expert — modification directe. Préférez le sélecteur guidé dans l'onglet Engagements pour éviter les combinaisons invalides.",
+      "SELECTOR_TITLE": "Choisir un bonus de création",
+      "SELECTOR_HINT": "Chaque option ne peut être choisie qu'une seule fois. Les options déjà prises ou dépassant votre plafond d'Obligation restant sont désactivées.",
+      "SELECTOR_LEGEND": "Options officielles (FFG / Edge Studio)",
+      "SELECTOR_CONFIRM": "Confirmer",
+      "SELECTOR_OPTION_TAKEN": "(déjà prise)",
+      "SELECTOR_OPTION_EXCEEDS_CAP": "(dépasse le plafond restant)",
+      "SELECTOR_NO_OPTIONS": "Toutes les options disponibles ont déjà été prises ou dépassent votre plafond d'Obligation actuel."
     }
   },
   "RESOURCES": {
