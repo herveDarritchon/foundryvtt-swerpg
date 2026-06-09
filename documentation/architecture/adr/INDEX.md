@@ -12,6 +12,7 @@ Avant de modifier une architecture, une convention transverse, un modele de donn
 
 | ADR                                                                                         | Domaine                          | But en 1 phrase                                                                                                                                        |
 | ------------------------------------------------------------------------------------------- | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| [ADR-0026](./adr-0026-gm-override-principle.md)                                             | Produit / UX / TTRPG             | Pose le principe que toute regle contraignante doit offrir un mecanisme de contournement MJ (toggle, parametre, exception ponctuelle).                 |
 | [ADR-0025](./adr-0025-obligation-item-narratif-minimal-sans-enrichissement-du-datamodel.md) | Obligations / DataModel          | Definit que l'item `obligation` reste un item narratif minimal et que son modele de donnees actuel ne doit pas etre enrichi sans besoin metier prouve. |
 | [ADR-0001](./adr-0001-foundry-applicationv2-adoption.md)                                    | Architecture Foundry / DataModel | Definit l'adoption de `ApplicationV2` et `TypeDataModel` comme socle technique principal pour l'UI et les donnees du systeme.                          |
 | [ADR-0002](./adr-0002-yaml-leveldb-build-system.md)                                         | Build compendiums                | Definit le pipeline source YAML vers compendiums LevelDB comme mecanisme canonique de construction et maintenance des packs.                           |
@@ -40,6 +41,7 @@ Avant de modifier une architecture, une convention transverse, un modele de donn
 
 ## Usage rapide par contexte
 
+- **Si la demande implemente une regle contraignante (validation, limite, calcul automatique)** : commencer par `ADR-0026` (principe de souverainete MJ) avant tout autre ADR.
 - Si la demande touche Foundry UI, DataModel ou structure d'application : commencer par `ADR-0001`, `ADR-0015`, `ADR-0016`, `ADR-0021`.
 - Si la demande touche les conventions de code et de configuration : commencer par `ADR-0018`, `ADR-0022`, `ADR-0013`.
 - Si la demande touche les tests : commencer par `ADR-0004`, `ADR-0012`, `ADR-0017`, `ADR-0023`, `ADR-0024`.
