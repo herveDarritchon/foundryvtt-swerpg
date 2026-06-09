@@ -606,7 +606,8 @@
       "CREATION_BONUS_OBLIGATIONS_HEADER": "Creation Bonuses (Obligation)",
       "CREATION_BONUS_OBLIGATIONS_ADD_TOOLTIP": "Add a creation-bonus Obligation",
       "CREATION_BONUS_OBLIGATIONS_ADD_CTA": "Add a creation-bonus Obligation",
-      "CREATION_BONUS_OBLIGATIONS_EMPTY_MESSAGE": "No creation-bonus obligations yet. A creation-bonus obligation trades a higher obligation value for extra XP or starting credits."
+      "CREATION_BONUS_OBLIGATIONS_EMPTY_MESSAGE": "No creation-bonus obligations yet. A creation-bonus obligation trades a higher obligation value for extra XP or starting credits.",
+      "CREATION_BONUS_OBLIGATIONS_DELETE_TOOLTIP": "Remove this creation bonus"
     }
   },
   "ACTOR.AppliedDetailItem": "Applied the {name} {type} to {actor}.",
@@ -1019,7 +1020,11 @@
       "SELECTOR_CONFIRM": "Confirm",
       "SELECTOR_OPTION_TAKEN": "(already taken)",
       "SELECTOR_OPTION_EXCEEDS_CAP": "(exceeds remaining cap)",
-      "SELECTOR_NO_OPTIONS": "All available options have already been taken or exceed your current obligation cap."
+      "SELECTOR_NO_OPTIONS": "All available options have already been taken or exceed your current obligation cap.",
+      "CREATION_BONUS_DELETE_TITLE": "Remove creation bonus — {name}",
+      "CREATION_BONUS_DELETE_CONTENT": "Remove the creation bonus <strong>{name}</strong>? This will also reduce your total obligation and cancel the associated XP or credit bonus.",
+      "CREATION_BONUS_DELETE_CONFIRM": "Remove",
+      "CREATION_BONUS_DELETE_CANCEL": "Cancel"
     }
   },
   "RESOURCES": {

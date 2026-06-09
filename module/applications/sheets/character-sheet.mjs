@@ -83,6 +83,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
       toggleObligationExtraState: CharacterSheet.#onToggleObligationExtraState,
       obligationCreate: CharacterSheet.#onObligationCreate,
       creationBonusObligationCreate: CharacterSheet.#onCreationBonusObligationCreate,
+      creationBonusObligationDelete: CharacterSheet.#onCreationBonusObligationDelete,
     },
     form: {
       submitOnChange: true,
@@ -579,6 +580,60 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
       },
       { parent: this.document },
     )
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Handle click action to delete a creation-bonus Obligation with a contextualized confirmation.
+   *
+   * Unlike the generic `itemDelete` action, this handler identifies itself as a creation-bonus
+   * removal so the confirmation dialog names the targeted bonus and makes the destructive action
+   * unambiguous for the player.
+   *
+   * @this {CharacterSheet}
+   * @param {PointerEvent} event
+   * @returns {Promise<void>}
+   */
+  static async #onCreationBonusObligationDelete(event) {
+    const element = event.target.closest('.line-item[data-item-id]')
+    if (!element) {
+      logger.warn('[CharacterSheet] creationBonusObligationDelete — line-item element not found in DOM')
+      return
+    }
+
+    const itemId = element.dataset.itemId
+    const item = this.actor.items.get(itemId)
+    if (!item) {
+      logger.warn('[CharacterSheet] creationBonusObligationDelete — creation-bonus obligation item not found', { itemId })
+      return
+    }
+
+    logger.debug('[CharacterSheet] creationBonusObligationDelete — requesting confirmation for', { itemId, name: item.name })
+
+    const i18n = game.i18n
+    const confirmed = await foundry.applications.api.DialogV2.confirm({
+      window: {
+        title: i18n.format('OBLIGATION.UI.CREATION_BONUS_DELETE_TITLE', { name: item.name }),
+      },
+      content: `<p>${i18n.format('OBLIGATION.UI.CREATION_BONUS_DELETE_CONTENT', { name: item.name })}</p>`,
+      yes: {
+        label: i18n.localize('OBLIGATION.UI.CREATION_BONUS_DELETE_CONFIRM'),
+        icon: 'fa-solid fa-trash',
+      },
+      no: {
+        label: i18n.localize('OBLIGATION.UI.CREATION_BONUS_DELETE_CANCEL'),
+        icon: 'fa-solid fa-xmark',
+      },
+    })
+
+    if (!confirmed) {
+      logger.debug('[CharacterSheet] creationBonusObligationDelete — cancelled by user', { itemId })
+      return
+    }
+
+    logger.debug('[CharacterSheet] creationBonusObligationDelete — confirmed, deleting item', { itemId, name: item.name })
+    await item.delete()
   }
 
   /* -------------------------------------------- */
