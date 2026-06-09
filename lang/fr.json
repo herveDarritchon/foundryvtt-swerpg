@@ -1127,7 +1127,12 @@
       "CREATION_BONUS_DELETE_TITLE": "Retirer le bonus de création — {name}",
       "CREATION_BONUS_DELETE_CONTENT": "Retirer le bonus de création <strong>{name}</strong> ? Cela réduira également votre Obligation totale et annulera le bonus de XP ou de crédits associé.",
       "CREATION_BONUS_DELETE_CONFIRM": "Retirer",
-      "CREATION_BONUS_DELETE_CANCEL": "Annuler"
+      "CREATION_BONUS_DELETE_CANCEL": "Annuler",
+      "OFFICIAL_BONUS_LABEL": "Bonus officiel",
+      "OFFICIAL_BONUS_HINT": "Cette obligation utilise un bonus de création officiel. Pour le modifier, utilisez le sélecteur guidé dans l'onglet Engagements.",
+      "LEGACY_WARNING": "Combinaison non officielle détectée",
+      "LEGACY_WARNING_HINT": "Les montants de XP / crédits ne correspondent à aucune option de création officielle. Utilisez le sélecteur guidé dans l'onglet Engagements pour remplacer cette option par une valeur valide.",
+      "EXPERT_EDIT_LABEL": "Modification expert (avancé)"
     }
   },
   "RESOURCES": {
