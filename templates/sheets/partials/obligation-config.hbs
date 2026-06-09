@@ -1,14 +1,14 @@
 <section class="tab sheet-body flexcol {{tabs.config.cssClass}}" data-tab="{{tabs.config.id}}" data-group="{{tabs.config.group}}">
 
   {{!-- Narrative hint — always visible, primary entry point --}}
-  <p class="obligation-narrative-hint">{{localize "OBLIGATION.UI.NARRATIVE_HINT"}}</p>
+  <p class="obligation-narrative-hint" role="note">{{localize "OBLIGATION.UI.NARRATIVE_HINT"}}</p>
 
   {{formField @root.fields.value value=source.system.value localize=true rootId=partId}}
 
   <div class="obligation-extra-section">
     {{formField @root.fields.isExtra value=source.system.isExtra localize=true rootId=partId}}
     {{#unless source.system.isExtra}}
-    <p class="obligation-extra-section__hint">{{localize "OBLIGATION.UI.EXTRA_SECONDARY_HINT"}}</p>
+    <p class="obligation-extra-section__hint" role="note">{{localize "OBLIGATION.UI.EXTRA_SECONDARY_HINT"}}</p>
     {{/unless}}
   </div>
 
@@ -18,24 +18,33 @@
 
     {{!-- Official bonus: show what the current bonus is, read-only display --}}
     {{#if obligationBonus.isOfficialBonus}}
-    <div class="obligation-official-bonus" role="status" aria-label="{{localize "OBLIGATION.UI.OFFICIAL_BONUS_LABEL"}}">
-      <p class="obligation-official-bonus__label">{{localize "OBLIGATION.UI.OFFICIAL_BONUS_LABEL"}}</p>
+    <div class="obligation-official-bonus" role="status"
+         aria-label="{{localize "OBLIGATION.UI.OFFICIAL_BONUS_LABEL"}}">
+      <p class="obligation-official-bonus__label">
+        <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+        {{localize "OBLIGATION.UI.OFFICIAL_BONUS_LABEL"}}
+      </p>
       <p class="obligation-official-bonus__hint">{{localize "OBLIGATION.UI.OFFICIAL_BONUS_HINT"}}</p>
     </div>
     {{/if}}
 
     {{!-- Legacy warning: amounts do not match any official option --}}
     {{#if obligationBonus.isLegacyBonus}}
-    <div class="obligation-legacy-warning" role="alert" aria-label="{{localize "OBLIGATION.UI.LEGACY_WARNING"}}">
-      <p class="obligation-legacy-warning__title">{{localize "OBLIGATION.UI.LEGACY_WARNING"}}</p>
+    <div class="obligation-legacy-warning" role="alert"
+         aria-label="{{localize "OBLIGATION.UI.LEGACY_WARNING"}}">
+      <p class="obligation-legacy-warning__title">
+        <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+        {{localize "OBLIGATION.UI.LEGACY_WARNING"}}
+      </p>
       <p class="obligation-legacy-warning__hint">{{localize "OBLIGATION.UI.LEGACY_WARNING_HINT"}}</p>
     </div>
     {{/if}}
 
     {{!-- Official options reference list --}}
-    <div class="obligation-official-options" aria-label="{{localize "OBLIGATION.UI.OFFICIAL_OPTIONS_LABEL"}}">
+    <div class="obligation-official-options"
+         aria-label="{{localize "OBLIGATION.UI.OFFICIAL_OPTIONS_LABEL"}}">
       <p class="obligation-official-options__hint">{{localize "OBLIGATION.UI.EXTRA_EXPERT_FALLBACK_HINT"}}</p>
-      <ul class="obligation-official-options__list">
+      <ul class="obligation-official-options__list" role="list">
         <li>{{localize "OBLIGATION.UI.OFFICIAL_OPTION_XP_5"}}</li>
         <li>{{localize "OBLIGATION.UI.OFFICIAL_OPTION_XP_10"}}</li>
         <li>{{localize "OBLIGATION.UI.OFFICIAL_OPTION_CREDITS_1000"}}</li>
@@ -45,7 +54,10 @@
 
     {{!-- Expert edit inputs: always present but clearly labelled as advanced --}}
     <details class="obligation-expert-edit">
-      <summary class="obligation-expert-edit__label">{{localize "OBLIGATION.UI.EXPERT_EDIT_LABEL"}}</summary>
+      <summary class="obligation-expert-edit__label">
+        <i class="fa-solid fa-screwdriver-wrench" aria-hidden="true"></i>
+        {{localize "OBLIGATION.UI.EXPERT_EDIT_LABEL"}}
+      </summary>
       {{formField @root.fields.extraXp value=source.system.extraXp localize=true rootId=partId}}
       {{formField @root.fields.extraCredits value=source.system.extraCredits localize=true rootId=partId}}
     </details>
@@ -54,7 +66,7 @@
 
   <fieldset class="obligation-campaign-evolution">
     <legend>{{localize "OBLIGATION.UI.CAMPAIGN_EVOLUTION_LEGEND"}}</legend>
-    <p class="obligation-campaign-evolution__hint">{{localize "OBLIGATION.UI.CAMPAIGN_EVOLUTION_HINT"}}</p>
+    <p class="obligation-campaign-evolution__hint" role="note">{{localize "OBLIGATION.UI.CAMPAIGN_EVOLUTION_HINT"}}</p>
 
     {{formField @root.fields.campaignDelta value=source.system.campaignDelta localize=true rootId=partId}}
     {{formField @root.fields.campaignNote value=source.system.campaignNote localize=true rootId=partId}}

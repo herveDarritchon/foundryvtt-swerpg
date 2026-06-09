@@ -1029,7 +1029,20 @@
       "OFFICIAL_BONUS_HINT": "This obligation uses an official creation bonus. To change it, use the guided selector on the Commitments tab.",
       "LEGACY_WARNING": "Non-official combination detected",
       "LEGACY_WARNING_HINT": "The XP / credits amounts do not match any official creation option. Use the guided selector on the Commitments tab to replace this with a valid option.",
-      "EXPERT_EDIT_LABEL": "Expert edit (advanced)"
+      "EXPERT_EDIT_LABEL": "Expert edit (advanced)",
+      "CREATION_STATE_EMPTY_LABEL": "No creation bonuses configured",
+      "CREATION_STATE_EMPTY_HINT": "Add a creation bonus to receive extra XP or starting credits in exchange for a higher obligation.",
+      "CREATION_STATE_CONFORMANT_DETAIL": "Your creation bonuses are valid: {xp} XP and {credits} credits granted, {consumed} obligation consumed.",
+      "CREATION_STATE_CONFORMANT_ARIA": "Creation bonuses valid: {xp} XP and {credits} credits granted.",
+      "CREATION_STATE_ERROR_ARIA": "Creation bonuses have {count} conformance issue(s).",
+      "CREATION_SUMMARY_REGION_LABEL": "Creation bonus summary",
+      "OBLIGATION_LIST_REGION_LABEL": "Obligation list",
+      "OBLIGATION_DELETE_ARIA": "Delete obligation {name}",
+      "OBLIGATION_EDIT_ARIA": "Edit obligation {name}",
+      "CREATION_BONUS_DELETE_ARIA": "Remove creation bonus {name}",
+      "CREATION_BONUS_EDIT_ARIA": "Edit creation bonus {name}",
+      "SELECTOR_OPTION_UNAVAILABLE_TAKEN": "Option {label} is unavailable: already taken",
+      "SELECTOR_OPTION_UNAVAILABLE_CAP": "Option {label} is unavailable: exceeds remaining cap"
     }
   },
   "RESOURCES": {
