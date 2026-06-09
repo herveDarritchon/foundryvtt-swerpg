@@ -1132,7 +1132,20 @@
       "OFFICIAL_BONUS_HINT": "Cette obligation utilise un bonus de création officiel. Pour le modifier, utilisez le sélecteur guidé dans l'onglet Engagements.",
       "LEGACY_WARNING": "Combinaison non officielle détectée",
       "LEGACY_WARNING_HINT": "Les montants de XP / crédits ne correspondent à aucune option de création officielle. Utilisez le sélecteur guidé dans l'onglet Engagements pour remplacer cette option par une valeur valide.",
-      "EXPERT_EDIT_LABEL": "Modification expert (avancé)"
+      "EXPERT_EDIT_LABEL": "Modification expert (avancé)",
+      "CREATION_STATE_EMPTY_LABEL": "Aucun bonus de création configuré",
+      "CREATION_STATE_EMPTY_HINT": "Ajoutez un bonus de création pour recevoir des XP ou des crédits de départ supplémentaires en échange d'une obligation plus élevée.",
+      "CREATION_STATE_CONFORMANT_DETAIL": "Vos bonus de création sont valides : {xp} XP et {credits} crédits accordés, {consumed} obligation consommée.",
+      "CREATION_STATE_CONFORMANT_ARIA": "Bonus de création valides : {xp} XP et {credits} crédits accordés.",
+      "CREATION_STATE_ERROR_ARIA": "Les bonus de création présentent {count} problème(s) de conformité.",
+      "CREATION_SUMMARY_REGION_LABEL": "Résumé des bonus de création",
+      "OBLIGATION_LIST_REGION_LABEL": "Liste des obligations",
+      "OBLIGATION_DELETE_ARIA": "Supprimer l'obligation {name}",
+      "OBLIGATION_EDIT_ARIA": "Modifier l'obligation {name}",
+      "CREATION_BONUS_DELETE_ARIA": "Retirer le bonus de création {name}",
+      "CREATION_BONUS_EDIT_ARIA": "Modifier le bonus de création {name}",
+      "SELECTOR_OPTION_UNAVAILABLE_TAKEN": "Option {label} indisponible : déjà prise",
+      "SELECTOR_OPTION_UNAVAILABLE_CAP": "Option {label} indisponible : dépasse le plafond restant"
     }
   },
   "RESOURCES": {

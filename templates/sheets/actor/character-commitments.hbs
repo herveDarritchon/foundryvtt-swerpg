@@ -20,7 +20,7 @@
             </button>
         </div>
 
-        <div class="header flexrow">
+        <div class="header flexrow" aria-hidden="true">
             <div class="column principal">
                 <span class="title shifted">{{localize "ACTOR.LABELS.OBLIGATIONS_COLUMN_NAME"}}</span>
             </div>
@@ -30,8 +30,10 @@
             </div>
         </div>
 
+        <div role="list"
+             aria-label="{{localize "OBLIGATION.UI.OBLIGATION_LIST_REGION_LABEL"}}">
         {{#unless narrativeObligations.length}}
-        <div class="obligation-empty-state">
+        <div class="obligation-empty-state" role="listitem">
             <p class="obligation-empty-state__message">{{localize "ACTOR.LABELS.OBLIGATIONS_EMPTY_MESSAGE"}}</p>
             <button type="button"
                     class="button obligation-empty-state__cta"
@@ -44,22 +46,31 @@
         {{/unless}}
 
         {{#each narrativeObligations as |obligation|}}
-            <div class="line-item obligation" data-item-id="{{obligation.id}}">
+            <div class="line-item obligation" data-item-id="{{obligation.id}}" role="listitem">
                 <div class="title column principal">
-                    <img class="icon" src="{{obligation.img}}" alt="{{obligation.name}}">
+                    <img class="icon" src="{{obligation.img}}" alt="" aria-hidden="true">
                     <h4 class="item-header">{{obligation.name}} ({{obligation.value}})</h4>
                 </div>
 
                 <div class="controls column slim">
-                    <a class="button icon fa-solid fa-trash" data-action="itemDelete"
-                       data-tooltip="{{localize "ACTOR.LABELS.OBLIGATIONS_DELETE_TOOLTIP"}}"></a>
-                    <a class="button icon fa-solid fa-edit" data-action="itemEdit"
-                       data-tooltip="{{localize "ACTOR.LABELS.OBLIGATIONS_EDIT_TOOLTIP"}}"></a>
+                    <button type="button"
+                            class="button icon fa-solid fa-trash"
+                            data-action="itemDelete"
+                            data-tooltip="{{localize "ACTOR.LABELS.OBLIGATIONS_DELETE_TOOLTIP"}}"
+                            aria-label="{{obligation.ariaDelete}}">
+                    </button>
+                    <button type="button"
+                            class="button icon fa-solid fa-edit"
+                            data-action="itemEdit"
+                            data-tooltip="{{localize "ACTOR.LABELS.OBLIGATIONS_EDIT_TOOLTIP"}}"
+                            aria-label="{{obligation.ariaEdit}}">
+                    </button>
                 </div>
             </div>
 
             {{#if obligation.hasCampaignEvolution}}
-            <div class="obligation-campaign-summary" data-item-id="{{obligation.id}}">
+            <div class="obligation-campaign-summary" data-item-id="{{obligation.id}}" role="note"
+                 aria-label="{{localize "OBLIGATION.UI.CAMPAIGN_CURRENT_VALUE_LABEL"}}">
                 <span class="obligation-campaign-summary__current"
                       title="{{localize "OBLIGATION.UI.CAMPAIGN_CURRENT_VALUE_TOOLTIP"}}">
                     {{localize "OBLIGATION.UI.CAMPAIGN_CURRENT_VALUE_LABEL"}}: <strong>{{obligation.currentValue}}</strong>
@@ -75,6 +86,7 @@
             </div>
             {{/if}}
         {{/each}}
+        </div>
     </div>
 
     {{!-- ==========================================
@@ -95,8 +107,25 @@
         </div>
 
         {{#if obligationCreationState}}
-        <div class="obligation-creation-summary {{#unless obligationCreationState.isConformant}}obligation-creation-summary--invalid{{/unless}}">
-            <div class="obligation-creation-summary__bonuses flexrow">
+        <div class="obligation-creation-summary obligation-creation-summary--{{obligationCreationState.feedbackState}}
+                    {{#unless obligationCreationState.isConformant}}{{#if creationBonusObligations.length}}obligation-creation-summary--invalid{{/if}}{{/unless}}"
+             role="region"
+             aria-label="{{localize "OBLIGATION.UI.CREATION_SUMMARY_REGION_LABEL"}}"
+             {{#if obligationCreationState.errorAria}}aria-describedby="obligation-creation-errors"{{/if}}>
+
+            {{!-- Empty state: no creation bonus configured yet --}}
+            {{#if (eq obligationCreationState.feedbackState "empty")}}
+            <p class="obligation-creation-summary__empty-hint">
+                <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+                {{localize "OBLIGATION.UI.CREATION_STATE_EMPTY_HINT"}}
+            </p>
+            {{/if}}
+
+            {{!-- Summary bonuses row: shown when at least one creation bonus is configured --}}
+            {{#unless (eq obligationCreationState.feedbackState "empty")}}
+            <div class="obligation-creation-summary__bonuses flexrow"
+                 {{#if obligationCreationState.conformantAria}}aria-label="{{obligationCreationState.conformantAria}}"{{/if}}
+                 {{#if obligationCreationState.errorAria}}aria-label="{{obligationCreationState.errorAria}}"{{/if}}>
                 <span class="obligation-creation-summary__bonus-xp" title="{{localize "OBLIGATION.UI.CREATION_BONUS_XP_TOOLTIP"}}">
                     <img src="/systems/swerpg/ui/symbols/xp.webp" alt="{{localize "ACTOR.LABELS.OBLIGATIONS_ICON_XP_ALT"}}" aria-hidden="true"/>
                     {{obligationCreationState.totalXp}} {{localize "OBLIGATION.UI.CREATION_BONUS_XP_LABEL"}}
@@ -109,9 +138,14 @@
                     {{obligationCreationState.totalObligationConsumed}} / {{obligationCreationState.baseObligationValue}} {{localize "OBLIGATION.UI.CREATION_BONUS_OBLIGATION_LABEL"}}
                 </span>
             </div>
+            {{/unless}}
 
+            {{!-- Error list: conformance issues --}}
             {{#if obligationCreationState.errors.length}}
-            <ul class="obligation-creation-summary__errors" aria-label="{{localize "OBLIGATION.UI.CREATION_ERRORS_LABEL"}}">
+            <ul class="obligation-creation-summary__errors"
+                id="obligation-creation-errors"
+                role="alert"
+                aria-label="{{localize "OBLIGATION.UI.CREATION_ERRORS_LABEL"}}">
                 {{#each obligationCreationState.errors as |error|}}
                 <li class="obligation-creation-summary__error">
                     <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
@@ -121,16 +155,18 @@
             </ul>
             {{/if}}
 
+            {{!-- Conformant success: shown when configuration is valid --}}
             {{#if obligationCreationState.isConformant}}
-            <p class="obligation-creation-summary__ok">
+            <p class="obligation-creation-summary__ok" role="status"
+               aria-label="{{obligationCreationState.conformantAria}}">
                 <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
-                {{localize "OBLIGATION.UI.CREATION_CONFORMANT_LABEL"}}
+                {{obligationCreationState.conformantDetail}}
             </p>
             {{/if}}
         </div>
         {{/if}}
 
-        <div class="header flexrow">
+        <div class="header flexrow" aria-hidden="true">
             <div class="column principal">
                 <span class="title shifted">{{localize "ACTOR.LABELS.OBLIGATIONS_COLUMN_NAME"}}</span>
             </div>
@@ -148,8 +184,10 @@
             </div>
         </div>
 
+        <div role="list"
+             aria-label="{{localize "OBLIGATION.UI.OBLIGATION_LIST_REGION_LABEL"}}">
         {{#unless creationBonusObligations.length}}
-        <div class="obligation-empty-state">
+        <div class="obligation-empty-state" role="listitem">
             <p class="obligation-empty-state__message">{{localize "ACTOR.LABELS.CREATION_BONUS_OBLIGATIONS_EMPTY_MESSAGE"}}</p>
             <button type="button"
                     class="button obligation-empty-state__cta"
@@ -162,24 +200,32 @@
         {{/unless}}
 
         {{#each creationBonusObligations as |obligation|}}
-            <div class="line-item extra obligation" data-item-id="{{obligation.id}}">
+            <div class="line-item extra obligation" data-item-id="{{obligation.id}}" role="listitem">
                 <div class="title column principal">
-                    <img class="icon" src="{{obligation.img}}" alt="{{obligation.name}}">
+                    <img class="icon" src="{{obligation.img}}" alt="" aria-hidden="true">
                     <h4 class="item-header">{{obligation.name}} ({{obligation.value}})</h4>
                 </div>
 
-                <div class="column slim">{{obligation.extraXp}}</div>
-                <div class="column slim">{{obligation.extraCredits}}</div>
+                <div class="column slim" aria-label="{{localize "ACTOR.LABELS.OBLIGATIONS_ICON_XP_ALT"}}">{{obligation.extraXp}}</div>
+                <div class="column slim" aria-label="{{localize "ACTOR.LABELS.OBLIGATIONS_ICON_CREDITS_ALT"}}">{{obligation.extraCredits}}</div>
 
                 <div class="controls column slim">
-                    <a class="button icon fa-solid fa-trash" data-action="creationBonusObligationDelete"
-                       data-tooltip="{{localize "ACTOR.LABELS.CREATION_BONUS_OBLIGATIONS_DELETE_TOOLTIP"}}"
-                       aria-label="{{localize "ACTOR.LABELS.CREATION_BONUS_OBLIGATIONS_DELETE_TOOLTIP"}}"></a>
-                    <a class="button icon fa-solid fa-edit" data-action="itemEdit"
-                       data-tooltip="{{localize "ACTOR.LABELS.OBLIGATIONS_EDIT_TOOLTIP"}}"></a>
+                    <button type="button"
+                            class="button icon fa-solid fa-trash"
+                            data-action="creationBonusObligationDelete"
+                            data-tooltip="{{localize "ACTOR.LABELS.CREATION_BONUS_OBLIGATIONS_DELETE_TOOLTIP"}}"
+                            aria-label="{{obligation.ariaDelete}}">
+                    </button>
+                    <button type="button"
+                            class="button icon fa-solid fa-edit"
+                            data-action="itemEdit"
+                            data-tooltip="{{localize "ACTOR.LABELS.OBLIGATIONS_EDIT_TOOLTIP"}}"
+                            aria-label="{{obligation.ariaEdit}}">
+                    </button>
                 </div>
             </div>
         {{/each}}
+        </div>
     </div>
 
     {{!-- ==========================================

@@ -3417,6 +3417,12 @@ input[type='range'] {
   /* ----------------------------------------- */
   /*  Obligation — empty state                  */
   /* ----------------------------------------- */
+  /* ----------------------------------------- */
+  /*  Obligation — line-item control buttons    */
+  /* ----------------------------------------- */
+  /* ----------------------------------------- */
+  /*  Obligation — guided selector dialog       */
+  /* ----------------------------------------- */
 }
 .swerpg.sheet.actor .tab.commitments .header {
   display: flex;
@@ -3505,9 +3511,28 @@ input[type='range'] {
   height: 18px;
   vertical-align: middle;
 }
-.swerpg.sheet.actor .tab.commitments .obligation-creation-summary--invalid {
+.swerpg.sheet.actor .tab.commitments .obligation-creation-summary--invalid,
+.swerpg.sheet.actor .tab.commitments .obligation-creation-summary--error {
   border-color: var(--color-danger-30);
   background: var(--color-danger-08);
+}
+.swerpg.sheet.actor .tab.commitments .obligation-creation-summary--conformant {
+  border-color: var(--color-success-25);
+  background: var(--color-success-10);
+}
+.swerpg.sheet.actor .tab.commitments .obligation-creation-summary--empty {
+  border-color: var(--color-glow-15);
+  background: var(--color-holo-bg-20);
+}
+.swerpg.sheet.actor .tab.commitments .obligation-creation-summary__empty-hint {
+  margin: 0;
+  font-size: var(--font-size-11);
+  color: var(--color-secondary);
+  font-style: italic;
+}
+.swerpg.sheet.actor .tab.commitments .obligation-creation-summary__empty-hint i {
+  margin-right: 0.25rem;
+  color: var(--color-h1);
 }
 .swerpg.sheet.actor .tab.commitments .obligation-creation-summary__bonuses {
   display: flex;
@@ -3579,6 +3604,11 @@ input[type='range'] {
 .swerpg.sheet.actor .tab.commitments .obligation-add-btn:hover {
   color: var(--color-glow);
 }
+.swerpg.sheet.actor .tab.commitments .obligation-add-btn:focus-visible {
+  outline: 2px solid var(--color-glow);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
 .swerpg.sheet.actor .tab.commitments .obligation-empty-state {
   display: flex;
   flex-direction: column;
@@ -3608,6 +3638,22 @@ input[type='range'] {
   background: var(--color-frame-bg-25);
   color: var(--color-glow);
   border-color: var(--color-glow);
+}
+.swerpg.sheet.actor .tab.commitments .obligation-empty-state__cta:focus-visible {
+  outline: 2px solid var(--color-glow);
+  outline-offset: 2px;
+}
+.swerpg.sheet.actor .tab.commitments .line-item.obligation .controls button.button:focus-visible {
+  outline: 2px solid var(--color-glow);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+.swerpg.sheet.actor .tab.commitments .obligation-selector__option--disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.swerpg.sheet.actor .tab.commitments .obligation-selector__option--disabled input[type='radio'] {
+  cursor: not-allowed;
 }
 .swerpg.sheet.actor .tab.secondary {
   /* ----------------------------------------- */
@@ -4724,6 +4770,17 @@ input[type='range'] {
 /* ----------------------------------------- */
 /*  Obligation item sheet                    */
 /* ----------------------------------------- */
+.swerpg.item.obligation {
+  /* ----------------------------------------- */
+  /*  Official bonus state                      */
+  /* ----------------------------------------- */
+  /* ----------------------------------------- */
+  /*  Legacy warning state                      */
+  /* ----------------------------------------- */
+  /* ----------------------------------------- */
+  /*  Expert edit details/summary               */
+  /* ----------------------------------------- */
+}
 .swerpg.item.obligation .obligation-narrative-hint {
   margin: 0 0 0.75rem;
   padding: 0.5rem 0.75rem;
@@ -4744,6 +4801,71 @@ input[type='range'] {
   font-size: var(--font-size-11);
   color: var(--color-secondary);
   font-style: italic;
+}
+.swerpg.item.obligation .obligation-official-bonus {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.4rem 0.6rem;
+  border-left: 3px solid var(--color-success-30);
+  background: var(--color-success-10);
+  border-radius: 0 4px 4px 0;
+  font-size: var(--font-size-11);
+  margin-bottom: 0.5rem;
+}
+.swerpg.item.obligation .obligation-official-bonus__label {
+  margin: 0;
+  color: var(--color-success-text);
+  font-weight: 600;
+}
+.swerpg.item.obligation .obligation-official-bonus__label i {
+  margin-right: 0.25rem;
+}
+.swerpg.item.obligation .obligation-official-bonus__hint {
+  margin: 0;
+  color: var(--color-secondary);
+  font-style: italic;
+}
+.swerpg.item.obligation .obligation-legacy-warning {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.4rem 0.6rem;
+  border-left: 3px solid var(--color-warning-text);
+  background: var(--color-danger-08);
+  border-radius: 0 4px 4px 0;
+  font-size: var(--font-size-11);
+  margin-bottom: 0.5rem;
+}
+.swerpg.item.obligation .obligation-legacy-warning__title {
+  margin: 0;
+  color: var(--color-warning-text);
+  font-weight: 600;
+}
+.swerpg.item.obligation .obligation-legacy-warning__title i {
+  margin-right: 0.25rem;
+}
+.swerpg.item.obligation .obligation-legacy-warning__hint {
+  margin: 0;
+  color: var(--color-secondary);
+  font-style: italic;
+}
+.swerpg.item.obligation .obligation-expert-edit {
+  margin-top: 0.5rem;
+}
+.swerpg.item.obligation .obligation-expert-edit__label {
+  cursor: pointer;
+  font-size: var(--font-size-11);
+  color: var(--color-secondary);
+  user-select: none;
+}
+.swerpg.item.obligation .obligation-expert-edit__label i {
+  margin-right: 0.25rem;
+}
+.swerpg.item.obligation .obligation-expert-edit__label:focus-visible {
+  outline: 2px solid var(--color-glow);
+  outline-offset: 2px;
+  border-radius: 2px;
 }
 /** ----------------------------------------- *
  *  Journal Sheet                             *

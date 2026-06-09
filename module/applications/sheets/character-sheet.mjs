@@ -159,7 +159,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
     context.narrativeObligations = allObligations.filter((o) => !o.isExtra)
     context.creationBonusObligations = allObligations.filter((o) => o.isExtra)
     context.obligationPoints = this.#computeObligationPoints(allObligations)
-    context.obligationCreationState = a.system.obligationCreationState ?? null
+    context.obligationCreationState = CharacterSheet._enrichObligationCreationState(a.system.obligationCreationState ?? null, context.creationBonusObligations)
 
     context.creditsInfo = {
       starting: a.system.progression.credits?.starting ?? 0,
@@ -496,15 +496,21 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
         const label = CharacterSheet.#getOptionLabel(opt)
         const disabled = !opt.isAvailable
 
-        let reasonHtml = ''
+        let reasonText = ''
+        let ariaDisabledReason = ''
         if (opt.isAlreadyTaken) {
-          reasonHtml = `<span class="obligation-selector__reason">${i18n.localize('OBLIGATION.UI.SELECTOR_OPTION_TAKEN')}</span>`
+          reasonText = i18n.localize('OBLIGATION.UI.SELECTOR_OPTION_TAKEN')
+          ariaDisabledReason = i18n.format('OBLIGATION.UI.SELECTOR_OPTION_UNAVAILABLE_TAKEN', { label })
         } else if (opt.isExceedsCap) {
-          reasonHtml = `<span class="obligation-selector__reason">${i18n.localize('OBLIGATION.UI.SELECTOR_OPTION_EXCEEDS_CAP')}</span>`
+          reasonText = i18n.localize('OBLIGATION.UI.SELECTOR_OPTION_EXCEEDS_CAP')
+          ariaDisabledReason = i18n.format('OBLIGATION.UI.SELECTOR_OPTION_UNAVAILABLE_CAP', { label })
         }
 
-        return `<label class="obligation-selector__option${disabled ? ' obligation-selector__option--disabled' : ''}">
-  <input type="radio" name="bonusKey" value="${opt.key}"${disabled ? ' disabled' : ''}/>
+        const reasonHtml = reasonText ? `<span class="obligation-selector__reason" aria-hidden="true">${reasonText}</span>` : ''
+        const labelAttrs = disabled ? ` aria-disabled="true" title="${ariaDisabledReason}"` : ''
+
+        return `<label class="obligation-selector__option${disabled ? ' obligation-selector__option--disabled' : ''}"${labelAttrs}>
+  <input type="radio" name="bonusKey" value="${opt.key}"${disabled ? ' disabled aria-disabled="true"' : ''}/>
   <span class="obligation-selector__label">${label}</span>
   ${reasonHtml}
 </label>`
@@ -1370,6 +1376,62 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
   }
 
   /**
+   * Enrich the raw obligationCreationState from the data model with UI-layer feedback fields.
+   *
+   * Adds an explicit `feedbackState` string ('empty' | 'conformant' | 'error') and a
+   * pre-formatted `conformantDetail` string for the success message so the template does
+   * not need to compute these values inline.
+   *
+   * @param {object|null} rawState The raw state from `actor.system.obligationCreationState`.
+   * @param {ObligationDisplayData[]} creationBonusObligations The list of creation-bonus obligations.
+   * @returns {object|null} Enriched state object, or null when rawState is null.
+   */
+  static _enrichObligationCreationState(rawState, creationBonusObligations) {
+    if (rawState === null) return null
+
+    let feedbackState
+    if (creationBonusObligations.length === 0) {
+      feedbackState = 'empty'
+    } else if (rawState.isConformant) {
+      feedbackState = 'conformant'
+    } else {
+      feedbackState = 'error'
+    }
+
+    const conformantDetail =
+      feedbackState === 'conformant'
+        ? game.i18n.format('OBLIGATION.UI.CREATION_STATE_CONFORMANT_DETAIL', {
+            xp: rawState.totalXp,
+            credits: rawState.totalCredits,
+            consumed: rawState.totalObligationConsumed,
+          })
+        : null
+
+    const conformantAria =
+      feedbackState === 'conformant'
+        ? game.i18n.format('OBLIGATION.UI.CREATION_STATE_CONFORMANT_ARIA', {
+            xp: rawState.totalXp,
+            credits: rawState.totalCredits,
+          })
+        : null
+
+    const errorAria =
+      feedbackState === 'error'
+        ? game.i18n.format('OBLIGATION.UI.CREATION_STATE_ERROR_ARIA', {
+            count: rawState.errors?.length ?? 0,
+          })
+        : null
+
+    return {
+      ...rawState,
+      feedbackState,
+      conformantDetail,
+      conformantAria,
+      errorAria,
+    }
+  }
+
+  /**
    * Builds a list of obligations for the character sheet.
    * @returns {ObligationDisplayData[]}
    */
@@ -1385,6 +1447,14 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
     const currentValue = computeEffectiveValue({ value: sys.value, campaignDelta })
     const hasCampaignEvolution = campaignDelta !== 0 || campaignNote !== null || transformedTo !== null
 
+    const i18n = game.i18n
+    const ariaDelete = sys.isExtra
+      ? i18n.format('OBLIGATION.UI.CREATION_BONUS_DELETE_ARIA', { name: obligation.name })
+      : i18n.format('OBLIGATION.UI.OBLIGATION_DELETE_ARIA', { name: obligation.name })
+    const ariaEdit = sys.isExtra
+      ? i18n.format('OBLIGATION.UI.CREATION_BONUS_EDIT_ARIA', { name: obligation.name })
+      : i18n.format('OBLIGATION.UI.OBLIGATION_EDIT_ARIA', { name: obligation.name })
+
     return {
       id: obligation.id,
       name: obligation.name,
@@ -1399,6 +1469,8 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
       campaignNote,
       transformedTo,
       hasCampaignEvolution,
+      ariaDelete,
+      ariaEdit,
     }
   }
 
