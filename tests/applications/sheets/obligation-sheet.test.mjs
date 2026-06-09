@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { setupFoundryMock, teardownFoundryMock } from '../../helpers/mock-foundry.mjs'
+import ObligationBonusCalculator from '../../../module/lib/obligations/obligation-bonus-calculator.mjs'
 
 vi.mock('../../../module/utils/logger.mjs', () => ({
   logger: { debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() },
@@ -113,5 +114,70 @@ describe('ObligationSheet — narrative vs extra creation distinction (schema co
     const schema = SwerpgObligation.defineSchema()
     expect(schema).toHaveProperty('extraXp')
     expect(schema).toHaveProperty('extraCredits')
+  })
+})
+
+describe('ObligationSheet — obligationBonus context derivation (pure contract via calculator)', () => {
+  // These tests drive the logic that _prepareObligationBonusContext delegates to
+  // ObligationBonusCalculator.resolveObligationState. They verify the three rendering
+  // branches the template depends on are correctly derived from system data.
+
+  it('narrative obligation: isNarrative=true, isOfficialBonus=false, isLegacyBonus=false', () => {
+    const system = { isExtra: false, extraXp: 0, extraCredits: 0 }
+    const { state, officialOption } = ObligationBonusCalculator.resolveObligationState(system)
+
+    expect(state).toBe('narrative')
+    expect(officialOption).toBeNull()
+    // Derived booleans that ObligationSheet builds from this result:
+    expect(state === 'narrative').toBe(true)
+    expect(state === 'official').toBe(false)
+    expect(state === 'legacy').toBe(false)
+  })
+
+  it('official bonus obligation: isOfficialBonus=true, officialOption is the matched entry', () => {
+    const system = { isExtra: true, extraXp: 5, extraCredits: 0 }
+    const { state, officialOption } = ObligationBonusCalculator.resolveObligationState(system)
+
+    expect(state).toBe('official')
+    expect(officialOption).not.toBeNull()
+    expect(officialOption.key).toBe('xp_5')
+    // Derived booleans:
+    expect(state === 'official').toBe(true)
+    expect(state === 'narrative').toBe(false)
+    expect(state === 'legacy').toBe(false)
+  })
+
+  it('legacy bonus obligation: isLegacyBonus=true, officialOption=null', () => {
+    const system = { isExtra: true, extraXp: 3, extraCredits: 0 }
+    const { state, officialOption } = ObligationBonusCalculator.resolveObligationState(system)
+
+    expect(state).toBe('legacy')
+    expect(officialOption).toBeNull()
+    // Derived booleans:
+    expect(state === 'legacy').toBe(true)
+    expect(state === 'narrative').toBe(false)
+    expect(state === 'official').toBe(false)
+  })
+
+  it('obligationBonus context shape has the three exclusive boolean keys', () => {
+    // Verify that the shape produced matches the template expectations.
+    const cases = [
+      { system: { isExtra: false, extraXp: 0, extraCredits: 0 }, expected: { isNarrative: true, isOfficialBonus: false, isLegacyBonus: false } },
+      { system: { isExtra: true, extraXp: 10, extraCredits: 0 }, expected: { isNarrative: false, isOfficialBonus: true, isLegacyBonus: false } },
+      { system: { isExtra: true, extraXp: 0, extraCredits: 500 }, expected: { isNarrative: false, isOfficialBonus: false, isLegacyBonus: true } },
+    ]
+
+    for (const { system, expected } of cases) {
+      const { state, officialOption } = ObligationBonusCalculator.resolveObligationState(system)
+      const derived = {
+        isNarrative: state === 'narrative',
+        isOfficialBonus: state === 'official',
+        isLegacyBonus: state === 'legacy',
+        officialOption,
+      }
+      expect(derived.isNarrative).toBe(expected.isNarrative)
+      expect(derived.isOfficialBonus).toBe(expected.isOfficialBonus)
+      expect(derived.isLegacyBonus).toBe(expected.isLegacyBonus)
+    }
   })
 })

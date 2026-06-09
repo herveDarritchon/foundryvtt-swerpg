@@ -402,4 +402,92 @@ describe('ObligationBonusCalculator', () => {
       })
     })
   })
+
+  describe('resolveObligationState', () => {
+    describe('narrative obligations (isExtra=false)', () => {
+      test('returns state=narrative and officialOption=null when isExtra is false', () => {
+        const result = ObligationBonusCalculator.resolveObligationState({ isExtra: false, extraXp: 0, extraCredits: 0 })
+        expect(result.state).toBe('narrative')
+        expect(result.officialOption).toBeNull()
+      })
+
+      test('returns state=narrative even when extraXp and extraCredits are non-zero but isExtra is false', () => {
+        const result = ObligationBonusCalculator.resolveObligationState({ isExtra: false, extraXp: 5, extraCredits: 1000 })
+        expect(result.state).toBe('narrative')
+        expect(result.officialOption).toBeNull()
+      })
+
+      test('returns state=narrative when isExtra is missing (falsy)', () => {
+        const result = ObligationBonusCalculator.resolveObligationState({ extraXp: 5, extraCredits: 0 })
+        expect(result.state).toBe('narrative')
+        expect(result.officialOption).toBeNull()
+      })
+    })
+
+    describe('official bonus obligations', () => {
+      test('returns state=official and matching officialOption for xp=5, credits=0', () => {
+        const result = ObligationBonusCalculator.resolveObligationState({ isExtra: true, extraXp: 5, extraCredits: 0 })
+        expect(result.state).toBe('official')
+        expect(result.officialOption).not.toBeNull()
+        expect(result.officialOption.key).toBe('xp_5')
+      })
+
+      test('returns state=official and matching officialOption for xp=10, credits=0', () => {
+        const result = ObligationBonusCalculator.resolveObligationState({ isExtra: true, extraXp: 10, extraCredits: 0 })
+        expect(result.state).toBe('official')
+        expect(result.officialOption.key).toBe('xp_10')
+      })
+
+      test('returns state=official and matching officialOption for xp=0, credits=1000', () => {
+        const result = ObligationBonusCalculator.resolveObligationState({ isExtra: true, extraXp: 0, extraCredits: 1000 })
+        expect(result.state).toBe('official')
+        expect(result.officialOption.key).toBe('credits_1000')
+      })
+
+      test('returns state=official and matching officialOption for xp=0, credits=2500', () => {
+        const result = ObligationBonusCalculator.resolveObligationState({ isExtra: true, extraXp: 0, extraCredits: 2500 })
+        expect(result.state).toBe('official')
+        expect(result.officialOption.key).toBe('credits_2500')
+      })
+
+      test('officialOption includes obligationCost for the matched option', () => {
+        const result = ObligationBonusCalculator.resolveObligationState({ isExtra: true, extraXp: 5, extraCredits: 0 })
+        expect(result.officialOption.obligationCost).toBe(5)
+      })
+    })
+
+    describe('legacy (non-official) bonus obligations', () => {
+      test('returns state=legacy and officialOption=null for non-official xp amount', () => {
+        const result = ObligationBonusCalculator.resolveObligationState({ isExtra: true, extraXp: 7, extraCredits: 0 })
+        expect(result.state).toBe('legacy')
+        expect(result.officialOption).toBeNull()
+      })
+
+      test('returns state=legacy for non-official credits amount', () => {
+        const result = ObligationBonusCalculator.resolveObligationState({ isExtra: true, extraXp: 0, extraCredits: 500 })
+        expect(result.state).toBe('legacy')
+        expect(result.officialOption).toBeNull()
+      })
+
+      test('returns state=legacy for mixed non-official xp+credits combo', () => {
+        const result = ObligationBonusCalculator.resolveObligationState({ isExtra: true, extraXp: 5, extraCredits: 1000 })
+        expect(result.state).toBe('legacy')
+        expect(result.officialOption).toBeNull()
+      })
+
+      test('returns state=legacy when isExtra is true but both values are 0 (ambiguous zero bonus)', () => {
+        const result = ObligationBonusCalculator.resolveObligationState({ isExtra: true, extraXp: 0, extraCredits: 0 })
+        expect(result.state).toBe('legacy')
+        expect(result.officialOption).toBeNull()
+      })
+    })
+
+    describe('result shape', () => {
+      test('result always has state and officialOption keys', () => {
+        const result = ObligationBonusCalculator.resolveObligationState({ isExtra: false, extraXp: 0, extraCredits: 0 })
+        expect(result).toHaveProperty('state')
+        expect(result).toHaveProperty('officialOption')
+      })
+    })
+  })
 })

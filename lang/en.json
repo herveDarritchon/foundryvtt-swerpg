@@ -1024,7 +1024,12 @@
       "CREATION_BONUS_DELETE_TITLE": "Remove creation bonus — {name}",
       "CREATION_BONUS_DELETE_CONTENT": "Remove the creation bonus <strong>{name}</strong>? This will also reduce your total obligation and cancel the associated XP or credit bonus.",
       "CREATION_BONUS_DELETE_CONFIRM": "Remove",
-      "CREATION_BONUS_DELETE_CANCEL": "Cancel"
+      "CREATION_BONUS_DELETE_CANCEL": "Cancel",
+      "OFFICIAL_BONUS_LABEL": "Official bonus",
+      "OFFICIAL_BONUS_HINT": "This obligation uses an official creation bonus. To change it, use the guided selector on the Commitments tab.",
+      "LEGACY_WARNING": "Non-official combination detected",
+      "LEGACY_WARNING_HINT": "The XP / credits amounts do not match any official creation option. Use the guided selector on the Commitments tab to replace this with a valid option.",
+      "EXPERT_EDIT_LABEL": "Expert edit (advanced)"
     }
   },
   "RESOURCES": {

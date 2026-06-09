@@ -30,6 +30,23 @@ import {
  */
 
 /**
+ * @typedef {'narrative'|'official'|'legacy'} ObligationBonusState
+ * Classification of a single obligation item for expert-fallback rendering.
+ *
+ * - `narrative`  — isExtra is false; standard narrative obligation, no bonus.
+ * - `official`   — isExtra is true and the (extraXp, extraCredits) pair matches an official option exactly.
+ * - `legacy`     — isExtra is true but the amounts do not match any official option (non-official combination).
+ */
+
+/**
+ * @typedef {Object} ObligationStateResult
+ * Resolution of a single obligation's bonus state.
+ *
+ * @property {ObligationBonusState}        state          - Classification of the obligation.
+ * @property {ObligationCreationOption|null} officialOption - The matched official option, or null for narrative/legacy.
+ */
+
+/**
  * @typedef {Object} ObligationBonusSelectOption
  * UI-ready annotated bonus option for a guided selector.
  *
@@ -194,6 +211,41 @@ export default class ObligationBonusCalculator {
    */
   static get OFFICIAL_OPTIONS() {
     return OFFICIAL_OPTIONS
+  }
+
+  /* -------------------------------------------- */
+  /*  Expert-fallback state resolution             */
+  /* -------------------------------------------- */
+
+  /**
+   * Resolve the bonus state of a single obligation item.
+   *
+   * This is the canonical classifier used by the item sheet to determine which rendering
+   * mode to apply:
+   * - `narrative`  → isExtra is false; show only description and value.
+   * - `official`   → isExtra is true and amounts match an official option.
+   * - `legacy`     → isExtra is true but amounts are non-official; display an expert warning.
+   *
+   * The function is pure: it accepts a plain obligation object and returns a plain result.
+   * No Foundry APIs are used.
+   *
+   * @param {ObligationBonusInput} obligation Plain obligation data object.
+   * @returns {ObligationStateResult}
+   */
+  static resolveObligationState(obligation) {
+    if (!obligation.isExtra) {
+      return { state: 'narrative', officialOption: null }
+    }
+
+    const xp = obligation.extraXp || 0
+    const credits = obligation.extraCredits || 0
+    const match = OFFICIAL_OPTIONS.find((opt) => opt.xp === xp && opt.credits === credits)
+
+    if (match) {
+      return { state: 'official', officialOption: match }
+    }
+
+    return { state: 'legacy', officialOption: null }
   }
 
   /* -------------------------------------------- */

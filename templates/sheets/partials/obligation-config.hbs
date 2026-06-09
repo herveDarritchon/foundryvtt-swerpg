@@ -1,5 +1,6 @@
 <section class="tab sheet-body flexcol {{tabs.config.cssClass}}" data-tab="{{tabs.config.id}}" data-group="{{tabs.config.group}}">
 
+  {{!-- Narrative hint — always visible, primary entry point --}}
   <p class="obligation-narrative-hint">{{localize "OBLIGATION.UI.NARRATIVE_HINT"}}</p>
 
   {{formField @root.fields.value value=source.system.value localize=true rootId=partId}}
@@ -12,9 +13,26 @@
   </div>
 
   {{#if source.system.isExtra}}
-  <fieldset>
+  <fieldset class="obligation-extra-bonus">
     <legend>{{localize "OBLIGATION.UI.EXTRA_BONUS_LEGEND"}}</legend>
 
+    {{!-- Official bonus: show what the current bonus is, read-only display --}}
+    {{#if obligationBonus.isOfficialBonus}}
+    <div class="obligation-official-bonus" role="status" aria-label="{{localize "OBLIGATION.UI.OFFICIAL_BONUS_LABEL"}}">
+      <p class="obligation-official-bonus__label">{{localize "OBLIGATION.UI.OFFICIAL_BONUS_LABEL"}}</p>
+      <p class="obligation-official-bonus__hint">{{localize "OBLIGATION.UI.OFFICIAL_BONUS_HINT"}}</p>
+    </div>
+    {{/if}}
+
+    {{!-- Legacy warning: amounts do not match any official option --}}
+    {{#if obligationBonus.isLegacyBonus}}
+    <div class="obligation-legacy-warning" role="alert" aria-label="{{localize "OBLIGATION.UI.LEGACY_WARNING"}}">
+      <p class="obligation-legacy-warning__title">{{localize "OBLIGATION.UI.LEGACY_WARNING"}}</p>
+      <p class="obligation-legacy-warning__hint">{{localize "OBLIGATION.UI.LEGACY_WARNING_HINT"}}</p>
+    </div>
+    {{/if}}
+
+    {{!-- Official options reference list --}}
     <div class="obligation-official-options" aria-label="{{localize "OBLIGATION.UI.OFFICIAL_OPTIONS_LABEL"}}">
       <p class="obligation-official-options__hint">{{localize "OBLIGATION.UI.EXTRA_EXPERT_FALLBACK_HINT"}}</p>
       <ul class="obligation-official-options__list">
@@ -25,8 +43,12 @@
       </ul>
     </div>
 
-    {{formField @root.fields.extraXp value=source.system.extraXp localize=true rootId=partId}}
-    {{formField @root.fields.extraCredits value=source.system.extraCredits localize=true rootId=partId}}
+    {{!-- Expert edit inputs: always present but clearly labelled as advanced --}}
+    <details class="obligation-expert-edit">
+      <summary class="obligation-expert-edit__label">{{localize "OBLIGATION.UI.EXPERT_EDIT_LABEL"}}</summary>
+      {{formField @root.fields.extraXp value=source.system.extraXp localize=true rootId=partId}}
+      {{formField @root.fields.extraCredits value=source.system.extraCredits localize=true rootId=partId}}
+    </details>
   </fieldset>
   {{/if}}
 
