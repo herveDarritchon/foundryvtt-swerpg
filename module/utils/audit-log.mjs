@@ -3,6 +3,7 @@ import { composeEntries, makeEntry, captureSnapshot } from './audit-diff.mjs'
 import { buildAuditLogDescriptionFromRegistry, getAuditLogTypeLabelKey } from '../lib/audit/taxonomy.mjs'
 import { buildNextSegmentedState, computeAuditLogMetrics } from '../lib/audit/storage.mjs'
 import { TALENT_PURCHASE_DEFAULT_COST, TALENT_PURCHASE_DEFAULT_RANKS } from '../config/progression.mjs'
+import { normalizeObligationItem, diffObligationNormalized } from '../lib/audit/obligation-events.mjs'
 
 /* -------------------------------------------- */
 /*  Constantes                                  */
@@ -16,6 +17,8 @@ const MAX_PENDING = 50
 const MAX_RETRIES = 1
 const RETRY_DELAY_MS = 1000
 const pendingOldStates = new Map()
+/** @type {Map<string, object>} Pending obligation normalized snapshots keyed by `item.uuid:userId`. */
+const pendingObligationStates = new Map()
 const sleep = (ms) =>
   new Promise((resolve) => {
     setTimeout(resolve, ms)
@@ -144,6 +147,23 @@ function evictOldestIfNeeded(incomingCount = 1) {
  */
 function getPendingKey(actor, userId) {
   return `${actor.uuid}:${userId}`
+}
+
+/**
+ * Build the composite map key for an obligation item pending entry keyed by item UUID and user ID.
+ * @param {object} item
+ * @param {string} userId
+ */
+function getObligationPendingKey(item, userId) {
+  return `${item.uuid}:${userId}`
+}
+
+/**
+ * Return true when the item is an obligation embedded in a character actor.
+ * @param {object} item
+ */
+function isObligationOnCharacter(item) {
+  return item?.type === 'obligation' && item?.parent?.type === 'character'
 }
 
 /**
@@ -381,6 +401,10 @@ export {
   readAuditChatSummaryEnabled,
   sendChatForAuditEntries,
   onCreateItem,
+  onDeleteItem,
+  onPreUpdateItem,
+  onUpdateItem,
+  flushObligationPending,
   recordTalentNodePurchase,
   recordTalentNodeOperation,
   recordItemPurchase,
@@ -459,7 +483,8 @@ export function onUpdateActor(actor, changes, options, userId) {
 /* -------------------------------------------- */
 
 /**
- * Record a talent purchase audit entry when a talent item is created on a character actor.
+ * Record audit entries when an item is created on a character actor.
+ * Handles talent.purchase and obligation.create event types.
  * @param {object} item
  * @param {object} data
  * @param {object} options
@@ -468,23 +493,174 @@ export function onUpdateActor(actor, changes, options, userId) {
 function onCreateItem(item, data, options, userId) {
   if (!isInitiatingClient(userId)) return
   if (item.parent?.type !== 'character') return
-  if (item.type !== 'talent') return
+  if (options?.swerpgAuditLog === false) return
+
+  if (item.type === 'talent') {
+    const ts = Date.now()
+    const snapshot = captureSnapshot(item.parent)
+    const user = game.users?.get(userId) ?? null
+    const cost = item.system?.cost ?? TALENT_PURCHASE_DEFAULT_COST
+    const ranks = item.system?.ranks ?? TALENT_PURCHASE_DEFAULT_RANKS
+
+    const entry = makeEntry({
+      type: 'talent.purchase',
+      data: {
+        talentId: item.id,
+        talentName: item.name,
+        cost,
+        ranks,
+      },
+      xpDelta: -cost,
+      ts,
+      userId,
+      user,
+      snapshot,
+    })
+
+    writeLogEntries(item.parent, [entry])
+    return
+  }
+
+  if (item.type === 'obligation') {
+    const ts = Date.now()
+    const snapshot = captureSnapshot(item.parent)
+    const user = game.users?.get(userId) ?? null
+    const s = item.system ?? {}
+
+    const entry = makeEntry({
+      type: 'obligation.create',
+      data: {
+        obligationId: item.id,
+        obligationName: item.name,
+        value: s.value ?? 0,
+        isExtra: s.isExtra ?? false,
+        extraXp: s.extraXp ?? 0,
+        extraCredits: s.extraCredits ?? 0,
+      },
+      xpDelta: 0,
+      ts,
+      userId,
+      user,
+      snapshot,
+    })
+
+    writeLogEntries(item.parent, [entry])
+  }
+}
+
+/* -------------------------------------------- */
+/*  deleteItem handler (obligation)              */
+/* -------------------------------------------- */
+
+/**
+ * Record an obligation.delete audit entry when an obligation item is deleted from a character actor.
+ * @param {object} item
+ * @param {object} options
+ * @param {string} userId
+ */
+function onDeleteItem(item, options, userId) {
+  if (!isInitiatingClient(userId)) return
+  if (!isObligationOnCharacter(item)) return
+  if (options?.swerpgAuditLog === false) return
 
   const ts = Date.now()
   const snapshot = captureSnapshot(item.parent)
   const user = game.users?.get(userId) ?? null
-  const cost = item.system?.cost ?? TALENT_PURCHASE_DEFAULT_COST
-  const ranks = item.system?.ranks ?? TALENT_PURCHASE_DEFAULT_RANKS
+  const s = item.system ?? {}
 
   const entry = makeEntry({
-    type: 'talent.purchase',
+    type: 'obligation.delete',
     data: {
-      talentId: item.id,
-      talentName: item.name,
-      cost,
-      ranks,
+      obligationId: item.id,
+      obligationName: item.name,
+      value: s.value ?? 0,
+      isExtra: s.isExtra ?? false,
+      extraXp: s.extraXp ?? 0,
+      extraCredits: s.extraCredits ?? 0,
     },
-    xpDelta: -cost,
+    xpDelta: 0,
+    ts,
+    userId,
+    user,
+    snapshot,
+  })
+
+  writeLogEntries(item.parent, [entry])
+}
+
+/* -------------------------------------------- */
+/*  preUpdateItem / updateItem handlers         */
+/*  (obligation update with old-state capture)  */
+/* -------------------------------------------- */
+
+/**
+ * Capture the normalized obligation state before an update so that onUpdateItem can diff it.
+ * @param {object} item
+ * @param {object} changes
+ * @param {object} options
+ * @param {string} userId
+ */
+function onPreUpdateItem(item, changes, options, userId) {
+  if (!isInitiatingClient(userId)) return
+  if (!isObligationOnCharacter(item)) return
+  if (options?.swerpgAuditLog === false) return
+
+  const key = getObligationPendingKey(item, userId)
+  pendingObligationStates.set(key, {
+    norm: normalizeObligationItem(item),
+    timestamp: Date.now(),
+  })
+}
+
+/**
+ * Compare old and new obligation state after an update and write an obligation.update entry
+ * only when business-relevant fields changed.
+ * @param {object} item
+ * @param {object} changes
+ * @param {object} options
+ * @param {string} userId
+ */
+function onUpdateItem(item, changes, options, userId) {
+  if (!isInitiatingClient(userId)) return
+  if (!isObligationOnCharacter(item)) return
+  if (options?.swerpgAuditLog === false) return
+
+  const key = getObligationPendingKey(item, userId)
+  const pending = pendingObligationStates.get(key)
+  pendingObligationStates.delete(key)
+
+  if (!pending) return
+  if (Date.now() - pending.timestamp > PENDING_TTL_MS) return
+
+  const newNorm = normalizeObligationItem(item)
+  const diff = diffObligationNormalized(pending.norm, newNorm)
+
+  if (!diff.hasBusinessChange) return
+
+  const ts = Date.now()
+  const snapshot = captureSnapshot(item.parent)
+  const user = game.users?.get(userId) ?? null
+
+  const entryData = {
+    obligationId: item.id,
+    obligationName: item.name,
+    descriptionChanged: diff.descriptionChanged,
+  }
+
+  if (diff.valueChanged) {
+    entryData.oldValue = pending.norm.value
+    entryData.newValue = newNorm.value
+  }
+
+  if (diff.campaignDeltaChanged) {
+    entryData.oldCampaignDelta = pending.norm.campaignDelta
+    entryData.newCampaignDelta = newNorm.campaignDelta
+  }
+
+  const entry = makeEntry({
+    type: 'obligation.update',
+    data: entryData,
+    xpDelta: 0,
     ts,
     userId,
     user,
@@ -1114,6 +1290,9 @@ export function registerAuditLogHooks() {
   Hooks.on('preUpdateActor', onPreUpdateActor)
   Hooks.on('updateActor', onUpdateActor)
   Hooks.on('createItem', onCreateItem)
+  Hooks.on('deleteItem', onDeleteItem)
+  Hooks.on('preUpdateItem', onPreUpdateItem)
+  Hooks.on('updateItem', onUpdateItem)
 }
 
 /* -------------------------------------------- */
@@ -1181,6 +1360,13 @@ function _setProperty(object, path, value) {
  */
 function flushPending() {
   pendingOldStates.clear()
+}
+
+/**
+ * Clear all pending obligation pre-update snapshots (used for testing and reset scenarios).
+ */
+function flushObligationPending() {
+  pendingObligationStates.clear()
 }
 
 /* -------------------------------------------- */
