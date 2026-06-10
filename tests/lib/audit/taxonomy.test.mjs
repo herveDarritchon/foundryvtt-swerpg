@@ -46,6 +46,7 @@ describe('AUDIT_LOG_FAMILIES', () => {
     expect(AUDIT_LOG_FAMILIES.advancement).toBe('advancement')
     expect(AUDIT_LOG_FAMILIES.purchases).toBe('purchases')
     expect(AUDIT_LOG_FAMILIES.sales).toBe('sales')
+    expect(AUDIT_LOG_FAMILIES.obligations).toBe('obligations')
     expect(AUDIT_LOG_FAMILIES.other).toBe('other')
   })
 
@@ -94,6 +95,9 @@ describe('AUDIT_TAXONOMY registry', () => {
       'advancement.level',
       'item.purchase',
       'item.sale',
+      'obligation.create',
+      'obligation.update',
+      'obligation.delete',
     ]
     for (const type of expectedTypes) {
       expect(AUDIT_TAXONOMY[type], `Type '${type}' should be in AUDIT_TAXONOMY`).toBeDefined()
@@ -150,6 +154,9 @@ describe('getAuditLogFamilyFromType', () => {
     ['advancement.level', 'advancement'],
     ['item.purchase', 'purchases'],
     ['item.sale', 'sales'],
+    ['obligation.create', 'obligations'],
+    ['obligation.update', 'obligations'],
+    ['obligation.delete', 'obligations'],
   ]
 
   for (const [type, expectedFamily] of familyMap) {
@@ -322,6 +329,38 @@ describe('buildAuditLogDescriptionFromRegistry', () => {
     expect(result).toContain('3')
   })
 
+  it('obligation.create — uses obligationName and value', () => {
+    const result = buildAuditLogDescriptionFromRegistry({ type: 'obligation.create', data: { obligationName: 'Dark Past', value: 10 } }, i18n)
+    expect(result).toContain('Dark Past')
+    expect(result).toContain('10')
+  })
+
+  it('obligation.create — falls back to UNKNOWN_OBLIGATION when obligationName is absent', () => {
+    const result = buildAuditLogDescriptionFromRegistry({ type: 'obligation.create', data: { value: 5 } }, i18n)
+    expect(result).toContain('SWERPG.AUDIT_LOG.UNKNOWN_OBLIGATION')
+  })
+
+  it('obligation.update — uses obligationName', () => {
+    const result = buildAuditLogDescriptionFromRegistry({ type: 'obligation.update', data: { obligationName: 'Dark Past' } }, i18n)
+    expect(result).toContain('Dark Past')
+  })
+
+  it('obligation.update — falls back to UNKNOWN_OBLIGATION when obligationName is absent', () => {
+    const result = buildAuditLogDescriptionFromRegistry({ type: 'obligation.update', data: {} }, i18n)
+    expect(result).toContain('SWERPG.AUDIT_LOG.UNKNOWN_OBLIGATION')
+  })
+
+  it('obligation.delete — uses obligationName and value', () => {
+    const result = buildAuditLogDescriptionFromRegistry({ type: 'obligation.delete', data: { obligationName: 'Dark Past', value: 10 } }, i18n)
+    expect(result).toContain('Dark Past')
+    expect(result).toContain('10')
+  })
+
+  it('obligation.delete — falls back to UNKNOWN_OBLIGATION when obligationName is absent', () => {
+    const result = buildAuditLogDescriptionFromRegistry({ type: 'obligation.delete', data: { value: 5 } }, i18n)
+    expect(result).toContain('SWERPG.AUDIT_LOG.UNKNOWN_OBLIGATION')
+  })
+
   it('unknown type — falls back to DESCRIPTION.UNKNOWN with type included', () => {
     const result = buildAuditLogDescriptionFromRegistry({ type: 'mystery.event', data: {} }, i18n)
     expect(result).toContain('mystery.event')
@@ -365,6 +404,9 @@ describe('AUDIT_TAXONOMY describe() functions run without throwing', () => {
     'advancement.level': { type: 'advancement.level', data: {} },
     'item.purchase': { type: 'item.purchase', data: {} },
     'item.sale': { type: 'item.sale', data: {} },
+    'obligation.create': { type: 'obligation.create', data: {} },
+    'obligation.update': { type: 'obligation.update', data: {} },
+    'obligation.delete': { type: 'obligation.delete', data: {} },
   }
 
   for (const [type, entry] of Object.entries(minimalEntries)) {

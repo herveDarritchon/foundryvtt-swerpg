@@ -27,6 +27,7 @@ export const AUDIT_LOG_FAMILIES = Object.freeze({
   advancement: 'advancement',
   purchases: 'purchases',
   sales: 'sales',
+  obligations: 'obligations',
   other: 'other',
 })
 
@@ -351,6 +352,44 @@ export const AUDIT_TAXONOMY = Object.freeze({
         itemType: data.itemType ?? '',
         resalePrice: data.resalePrice ?? 0,
         fraction: Math.round((data.fraction ?? 0) * 100),
+      })
+    },
+  },
+
+  'obligation.create': {
+    label: 'SWERPG.AUDIT_LOG.TYPE.OBLIGATION_CREATE',
+    family: AUDIT_LOG_FAMILIES.obligations,
+    chatVariant: 'add',
+    describe(entry, { localize, format }) {
+      const data = entry?.data ?? {}
+      return format('SWERPG.AUDIT_LOG.DESCRIPTION.OBLIGATION_CREATE', {
+        obligationName: resolveNameOr(data.obligationName, 'SWERPG.AUDIT_LOG.UNKNOWN_OBLIGATION', localize),
+        value: data.value ?? 0,
+      })
+    },
+  },
+
+  'obligation.update': {
+    label: 'SWERPG.AUDIT_LOG.TYPE.OBLIGATION_UPDATE',
+    family: AUDIT_LOG_FAMILIES.obligations,
+    chatVariant: 'change',
+    describe(entry, { localize, format }) {
+      const data = entry?.data ?? {}
+      return format('SWERPG.AUDIT_LOG.DESCRIPTION.OBLIGATION_UPDATE', {
+        obligationName: resolveNameOr(data.obligationName, 'SWERPG.AUDIT_LOG.UNKNOWN_OBLIGATION', localize),
+      })
+    },
+  },
+
+  'obligation.delete': {
+    label: 'SWERPG.AUDIT_LOG.TYPE.OBLIGATION_DELETE',
+    family: AUDIT_LOG_FAMILIES.obligations,
+    chatVariant: 'remove',
+    describe(entry, { localize, format }) {
+      const data = entry?.data ?? {}
+      return format('SWERPG.AUDIT_LOG.DESCRIPTION.OBLIGATION_DELETE', {
+        obligationName: resolveNameOr(data.obligationName, 'SWERPG.AUDIT_LOG.UNKNOWN_OBLIGATION', localize),
+        value: data.value ?? 0,
       })
     },
   },

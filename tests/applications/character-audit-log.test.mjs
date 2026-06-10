@@ -3300,3 +3300,242 @@ describe('buildCsvContent — segmented storage transparency', () => {
     expect(rows).toHaveLength(6)
   })
 })
+
+/* ============================================ */
+/*  obligation.* family and visual rendering   */
+/* ============================================ */
+
+describe('audit log obligation entries', () => {
+  let buildAuditLogEntries
+  let buildAuditLogEntryVisual
+
+  const baseTranslations = {
+    'SWERPG.AUDIT_LOG.FILTER.ALL': 'All',
+    'SWERPG.AUDIT_LOG.FILTER.OBLIGATIONS': 'Obligations',
+    'SWERPG.AUDIT_LOG.FILTER.SKILLS': 'Skills',
+    'SWERPG.AUDIT_LOG.FILTER.TALENTS': 'Talents',
+    'SWERPG.AUDIT_LOG.FILTER.XP': 'XP',
+    'SWERPG.AUDIT_LOG.FILTER.CHARACTERISTICS': 'Characteristics',
+    'SWERPG.AUDIT_LOG.FILTER.DETAILS': 'Core choices',
+    'SWERPG.AUDIT_LOG.FILTER.ADVANCEMENT': 'Advancement',
+    'SWERPG.AUDIT_LOG.FILTER.PURCHASES': 'Purchases',
+    'SWERPG.AUDIT_LOG.FILTER.SALES': 'Sales',
+    'SWERPG.AUDIT_LOG.TYPE.OBLIGATION_CREATE': 'Obligation added',
+    'SWERPG.AUDIT_LOG.TYPE.OBLIGATION_UPDATE': 'Obligation updated',
+    'SWERPG.AUDIT_LOG.TYPE.OBLIGATION_DELETE': 'Obligation removed',
+    'SWERPG.AUDIT_LOG.TYPE.UNKNOWN': 'Unknown event',
+    'SWERPG.AUDIT_LOG.UNKNOWN_OBLIGATION': 'Unknown obligation',
+    'SWERPG.AUDIT_LOG.UNKNOWN_VALUE': 'Unknown value',
+    'SWERPG.AUDIT_LOG.DESCRIPTION.OBLIGATION_CREATE': 'Added obligation {obligationName} (value: {value})',
+    'SWERPG.AUDIT_LOG.DESCRIPTION.OBLIGATION_UPDATE': 'Updated obligation {obligationName}',
+    'SWERPG.AUDIT_LOG.DESCRIPTION.OBLIGATION_DELETE': 'Removed obligation {obligationName} (value: {value})',
+    'SWERPG.AUDIT_LOG.DESCRIPTION.UNKNOWN': 'Unknown event ({type})',
+    'SWERPG.AUDIT_LOG.NONE': 'None',
+    'SWERPG.AUDIT_LOG.VARIANT.ADD': 'Added',
+    'SWERPG.AUDIT_LOG.VARIANT.REMOVE': 'Removed',
+    'SWERPG.AUDIT_LOG.VARIANT.GAIN': 'Gained',
+    'SWERPG.AUDIT_LOG.VARIANT.CHANGE': 'Changed',
+    'SWERPG.AUDIT_LOG.VARIANT.FAIL': 'Failed',
+  }
+
+  const actor = {
+    id: 'actor-obl',
+    name: 'Vara Kesh',
+    img: 'systems/swerpg/assets/vara.webp',
+    type: 'character',
+    isOwner: true,
+    system: {},
+    flags: { swerpg: { logs: [] } },
+    testUserPermission: vi.fn(() => true),
+  }
+
+  beforeEach(async () => {
+    setupFoundryMock({ translations: baseTranslations })
+    ;({ buildAuditLogEntries, buildAuditLogEntryVisual } = await import('../../module/applications/character-audit-log.mjs'))
+  })
+
+  afterEach(() => {
+    vi.resetModules()
+    vi.clearAllMocks()
+    teardownFoundryMock()
+  })
+
+  it('obligation.create maps to obligations family', () => {
+    const actorWithLogs = {
+      ...actor,
+      flags: {
+        swerpg: {
+          logs: [{ id: 'o1', timestamp: 100, type: 'obligation.create', xpDelta: 0, creditDelta: 0, data: { obligationName: 'Dark Past', value: 10 } }],
+        },
+      },
+    }
+
+    const { entries } = buildAuditLogEntries(actorWithLogs, 'obligations')
+    expect(entries).toHaveLength(1)
+    expect(entries[0].family).toBe('obligations')
+  })
+
+  it('obligation.update maps to obligations family', () => {
+    const actorWithLogs = {
+      ...actor,
+      flags: {
+        swerpg: {
+          logs: [{ id: 'o2', timestamp: 200, type: 'obligation.update', xpDelta: 0, creditDelta: 0, data: { obligationName: 'Dark Past' } }],
+        },
+      },
+    }
+
+    const { entries } = buildAuditLogEntries(actorWithLogs, 'obligations')
+    expect(entries).toHaveLength(1)
+    expect(entries[0].family).toBe('obligations')
+  })
+
+  it('obligation.delete maps to obligations family', () => {
+    const actorWithLogs = {
+      ...actor,
+      flags: {
+        swerpg: {
+          logs: [{ id: 'o3', timestamp: 300, type: 'obligation.delete', xpDelta: 0, creditDelta: 0, data: { obligationName: 'Dark Past', value: 10 } }],
+        },
+      },
+    }
+
+    const { entries } = buildAuditLogEntries(actorWithLogs, 'obligations')
+    expect(entries).toHaveLength(1)
+    expect(entries[0].family).toBe('obligations')
+  })
+
+  it('obligation entries are excluded from skills filter', () => {
+    const actorWithLogs = {
+      ...actor,
+      flags: {
+        swerpg: {
+          logs: [{ id: 'o1', timestamp: 100, type: 'obligation.create', xpDelta: 0, creditDelta: 0, data: { obligationName: 'Dark Past', value: 10 } }],
+        },
+      },
+    }
+
+    const { entries } = buildAuditLogEntries(actorWithLogs, 'skills')
+    expect(entries).toHaveLength(0)
+  })
+
+  it('obligation entries appear in all filter', () => {
+    const actorWithLogs = {
+      ...actor,
+      flags: {
+        swerpg: {
+          logs: [
+            { id: 'o1', timestamp: 100, type: 'obligation.create', xpDelta: 0, creditDelta: 0, data: { obligationName: 'Dark Past', value: 10 } },
+            { id: 'o2', timestamp: 200, type: 'obligation.update', xpDelta: 0, creditDelta: 0, data: { obligationName: 'Dark Past' } },
+            { id: 'o3', timestamp: 300, type: 'obligation.delete', xpDelta: 0, creditDelta: 0, data: { obligationName: 'Dark Past', value: 10 } },
+          ],
+        },
+      },
+    }
+
+    const { entries } = buildAuditLogEntries(actorWithLogs, 'all')
+    expect(entries).toHaveLength(3)
+    entries.forEach((e) => expect(e.family).toBe('obligations'))
+  })
+
+  it('obligation entries have is-neutral deltaClass and hasDelta false (xpDelta: 0, creditDelta: 0)', () => {
+    const actorWithLogs = {
+      ...actor,
+      flags: {
+        swerpg: {
+          logs: [{ id: 'o1', timestamp: 100, type: 'obligation.create', xpDelta: 0, creditDelta: 0, data: { obligationName: 'Dark Past', value: 10 } }],
+        },
+      },
+    }
+
+    const { entries } = buildAuditLogEntries(actorWithLogs, 'all')
+    expect(entries[0].deltaClass).toBe('is-neutral')
+    expect(entries[0].hasDelta).toBe(false)
+  })
+
+  it('obligation.create visual — variant add, nextValue includes name and value, hasPreviousValue false', () => {
+    const entry = { type: 'obligation.create', data: { obligationName: 'Dark Past', value: 10 } }
+    const visual = buildAuditLogEntryVisual(actor, entry)
+
+    expect(visual.variant).toBe('add')
+    expect(visual.eventLabel).toBe('Obligation added')
+    expect(visual.nextValue).toContain('Dark Past')
+    expect(visual.nextValue).toContain('10')
+    expect(visual.hasPreviousValue).toBe(false)
+  })
+
+  it('obligation.create visual — falls back to UNKNOWN_OBLIGATION when obligationName is absent', () => {
+    const entry = { type: 'obligation.create', data: { value: 5 } }
+    const visual = buildAuditLogEntryVisual(actor, entry)
+
+    expect(visual.nextValue).toContain('Unknown obligation')
+  })
+
+  it('obligation.update visual — variant change, eventLabel correct', () => {
+    const entry = { type: 'obligation.update', data: { obligationName: 'Dark Past', oldValue: 10, newValue: 15 } }
+    const visual = buildAuditLogEntryVisual(actor, entry)
+
+    expect(visual.variant).toBe('change')
+    expect(visual.eventLabel).toBe('Obligation updated')
+    expect(visual.previousValue).toBe('10')
+    expect(visual.hasPreviousValue).toBe(true)
+  })
+
+  it('obligation.update visual — no previousValue when oldValue is absent', () => {
+    const entry = { type: 'obligation.update', data: { obligationName: 'Dark Past' } }
+    const visual = buildAuditLogEntryVisual(actor, entry)
+
+    expect(visual.variant).toBe('change')
+    expect(visual.previousValue).toBeNull()
+    expect(visual.hasPreviousValue).toBe(false)
+  })
+
+  it('obligation.delete visual — variant remove, nextValue includes name and value', () => {
+    const entry = { type: 'obligation.delete', data: { obligationName: 'Dark Past', value: 10 } }
+    const visual = buildAuditLogEntryVisual(actor, entry)
+
+    expect(visual.variant).toBe('remove')
+    expect(visual.eventLabel).toBe('Obligation removed')
+    expect(visual.nextValue).toContain('Dark Past')
+    expect(visual.nextValue).toContain('10')
+    expect(visual.hasPreviousValue).toBe(false)
+  })
+
+  it('typeLabel for obligation types is not the unknown fallback', () => {
+    const actorWithLogs = {
+      ...actor,
+      flags: {
+        swerpg: {
+          logs: [
+            { id: 'o1', timestamp: 100, type: 'obligation.create', xpDelta: 0, data: { obligationName: 'X', value: 5 } },
+            { id: 'o2', timestamp: 200, type: 'obligation.update', xpDelta: 0, data: { obligationName: 'X' } },
+            { id: 'o3', timestamp: 300, type: 'obligation.delete', xpDelta: 0, data: { obligationName: 'X', value: 5 } },
+          ],
+        },
+      },
+    }
+
+    const { entries } = buildAuditLogEntries(actorWithLogs, 'all')
+    for (const entry of entries) {
+      expect(entry.typeLabel).not.toBe('Unknown event')
+    }
+  })
+
+  it('familyCounts includes obligations count after adding obligation entries', () => {
+    const actorWithLogs = {
+      ...actor,
+      flags: {
+        swerpg: {
+          logs: [
+            { id: 'o1', timestamp: 100, type: 'obligation.create', xpDelta: 0, data: { obligationName: 'Dark Past', value: 10 } },
+            { id: 's1', timestamp: 200, type: 'skill.train', xpDelta: -10, data: { skillName: 'Piloting', oldRank: 0, newRank: 1 } },
+          ],
+        },
+      },
+    }
+
+    const { familyCounts } = buildAuditLogEntries(actorWithLogs, 'all')
+    expect(familyCounts.obligations).toBe(1)
+    expect(familyCounts.skills).toBe(1)
+  })
+})
