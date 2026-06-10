@@ -10,7 +10,7 @@ superseded_by: ''
 
 ## Status
 
-**Accepted** — Validée le 2026-06-08. Cette ADR formalise que l'item `obligation` reste volontairement simple, principalement narratif, et que son modèle de données actuel ne doit pas être enrichi sans besoin métier nouveau, explicite et validé.
+**Accepted** — Validée le 2026-06-08. Mise à jour documentaire le 2026-06-10 pour aligner le contrat sur les 8 champs réels du modèle et noter que l'intégration Audit Log consomme ces champs sans en ajouter de nouveaux. Cette ADR formalise que l'item `obligation` reste volontairement simple, principalement narratif, et que son modèle de données actuel ne doit pas être enrichi sans besoin métier nouveau, explicite et validé.
 
 ## Context
 
@@ -32,13 +32,18 @@ Le modèle actuel de `module/models/obligation.mjs` est le suivant :
 
 ```js
 {
-  description: HTMLField,
-  value: NumberField,
-  isExtra: BooleanField,
-  extraXp: NumberField,
-  extraCredits: NumberField,
+  description:   HTMLField,
+  value:         NumberField,
+  isExtra:       BooleanField,
+  extraXp:       NumberField,
+  extraCredits:  NumberField,
+  campaignDelta: NumberField,   // évolution nette en campagne
+  campaignNote:  StringField,   // justification narrative de la dernière évolution
+  transformedTo: StringField,   // nouveau type narratif si l'obligation change de nature
 }
 ```
+
+Les cinq premiers champs (`description`, `value`, `isExtra`, `extraXp`, `extraCredits`) couvrent la création de personnage et les bonus initiaux. Les trois suivants (`campaignDelta`, `campaignNote`, `transformedTo`) ont été ajoutés pour soutenir l'évolution narrative en campagne — ils sont déjà présents dans le code, les tests et les feuilles de personnage avant l'introduction de l'Audit Log.
 
 Plus précisément, le contrat actuel est :
 
@@ -80,9 +85,33 @@ extraCredits: new fields.NumberField({
   initial: 0,
   step: 500,
 })
+
+// Champs d'évolution en campagne — distincts des bonus de création.
+campaignDelta: new fields.NumberField({
+  required: true,
+  integer: true,
+  nullable: false,
+  min: -50,
+  max: 50,
+  initial: 0,
+})
+
+campaignNote: new fields.StringField({
+  required: false,
+  nullable: true,
+  initial: null,
+  blank: false,
+})
+
+transformedTo: new fields.StringField({
+  required: false,
+  nullable: true,
+  initial: null,
+  blank: false,
+})
 ```
 
-Les tests verrouillent déjà ce contrat en imposant explicitement que le schéma comporte exactement cinq champs.
+Les tests verrouillent ce contrat en imposant explicitement que le schéma comporte exactement huit champs.
 
 ## Decision
 
@@ -94,19 +123,26 @@ Les tests verrouillent déjà ce contrat en imposant explicitement que le schém
 
 Aucun nouveau champ n'est ajouté au `TypeDataModel` `SwerpgObligation`.
 
-Le schéma canonique reste strictement :
+Le schéma canonique comporte exactement huit champs :
 
 - `description`
 - `value`
 - `isExtra`
 - `extraXp`
 - `extraCredits`
+- `campaignDelta`
+- `campaignNote`
+- `transformedTo`
+
+Les trois derniers champs (`campaignDelta`, `campaignNote`, `transformedTo`) ont été introduits avant cette ADR pour soutenir l'évolution narrative en campagne. Leur présence ne remet pas en cause le principe de minimalisme : ils couvrent un besoin métier déjà prouvé (tracer les évolutions d'obligation en cours de campagne) sans ouvrir la voie à une modélisation structurée plus riche.
 
 ### D3 — Les champs non textuels existants sont conservés uniquement parce qu'ils servent déjà un besoin métier réel
 
 Les champs `value`, `isExtra`, `extraXp` et `extraCredits` restent autorisés car ils supportent un comportement métier déjà implémenté autour des bonus de création de personnage liés aux obligations "extra".
 
-Ils ne constituent pas un signal d'ouverture à une modélisation plus riche des obligations.
+Les champs `campaignDelta`, `campaignNote` et `transformedTo` sont conservés car ils tracent l'évolution narrative d'une obligation en campagne — un besoin opérationnel déjà présent dans le code, les feuilles de personnage et les tests.
+
+Aucun de ces champs ne constitue un signal d'ouverture à une modélisation plus riche des obligations.
 
 ### D4 — Aucun enrichissement structurel sans besoin métier prouvé
 
@@ -135,6 +171,14 @@ L'objectif recherché est un item simple, souple et maintenable :
 - peu coûteux en maintenance ;
 - sans migration de schéma inutile ;
 - sans rigidifier prématurément un contenu d'abord narratif.
+
+### D6 — L'intégration Audit Log consomme les champs existants sans en ajouter de nouveaux
+
+L'intégration du sous-système Audit Log pour les obligations (voir `module/lib/audit/obligation-events.mjs` et `module/utils/audit-log.mjs`) trace les créations, modifications et suppressions d'obligations en lisant les 8 champs existants du modèle.
+
+Elle n'ajoute aucun champ au `TypeDataModel` `SwerpgObligation` et ne stocke pas d'historique dans `system.*`. Les entrées de journal sont stockées dans les `flags` de l'acteur conformément à `ADR-0011`.
+
+Cette décision confirme que le principe de minimalisme est préservé même après l'ajout de la traçabilité : l'Audit Log est un consommateur du contrat, pas un moteur d'évolution de celui-ci.
 
 ## Options écartées
 
@@ -191,12 +235,15 @@ La description reste le support principal du contenu narratif libre.
 
 ### `templates/sheets/partials/obligation-config.hbs`
 
-La configuration reste limitée aux champs actuels :
+La configuration reste limitée aux champs du modèle :
 
 - `value`
 - `isExtra`
 - `extraXp`
 - `extraCredits`
+- `campaignDelta`
+- `campaignNote`
+- `transformedTo`
 
 Aucun nouveau bloc métier ne doit être ajouté sans nouvelle ADR.
 
@@ -217,10 +264,22 @@ Les tests existants qui verrouillent le schéma minimal deviennent le garde-fou 
 ```js
 const schema = SwerpgObligation.defineSchema()
 
-expect(Object.keys(schema)).toEqual(['description', 'value', 'isExtra', 'extraXp', 'extraCredits'])
+// Champs de création de personnage
+expect(schema).toHaveProperty('description')
+expect(schema).toHaveProperty('value')
+expect(schema).toHaveProperty('isExtra')
+expect(schema).toHaveProperty('extraXp')
+expect(schema).toHaveProperty('extraCredits')
 
-expect(Object.keys(schema)).toHaveLength(5)
+// Champs d'évolution en campagne (déjà présents avant l'intégration Audit Log)
+expect(schema).toHaveProperty('campaignDelta')
+expect(schema).toHaveProperty('campaignNote')
+expect(schema).toHaveProperty('transformedTo')
 
+// Exactement huit champs — aucun enrichissement accidentel
+expect(Object.keys(schema)).toHaveLength(8)
+
+// Champs explicitement exclus (enrichissement structurel non demandé)
 expect(schema.category).toBeUndefined()
 expect(schema.status).toBeUndefined()
 expect(schema.severity).toBeUndefined()
@@ -250,3 +309,5 @@ En l'absence d'un tel besoin, la règle reste : **ne pas enrichir le modèle**.
 - Enregistrement du DataModel : `swerpg.mjs`
 - Tests modèle : `tests/models/obligation.test.mjs`
 - Tests import : `tests/importer/obligation-import.integration.spec.mjs`
+- Intégration Audit Log (consommateur) : `module/lib/audit/obligation-events.mjs`, `module/utils/audit-log.mjs`
+- ADR stockage journal : `ADR-0011`
