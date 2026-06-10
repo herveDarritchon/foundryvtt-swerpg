@@ -929,6 +929,43 @@ const CHAT_HANDLERS = {
     }
     context.hasMeta = true
   },
+
+  'obligation.create'(context, entry, data) {
+    context.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.OBLIGATION_CREATE')
+    const name = data.obligationName ?? game.i18n.localize('SWERPG.AUDIT_LOG.UNKNOWN_OBLIGATION')
+    context.nextValue = `${name} (${data.value ?? 0})`
+    context.variant = 'add'
+    // Bonus XP/credits from obligation creation are descriptive metadata only — not progression deltas.
+    const metaParts = []
+    if (data.extraXp) metaParts.push(`+${data.extraXp} XP`)
+    if (data.extraCredits) metaParts.push(`+${data.extraCredits} cr`)
+    if (metaParts.length > 0) {
+      context.metaLeft = metaParts.join(' / ')
+      context.hasMeta = true
+    }
+  },
+
+  'obligation.update'(context, entry, data) {
+    context.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.OBLIGATION_UPDATE')
+    const name = data.obligationName ?? game.i18n.localize('SWERPG.AUDIT_LOG.UNKNOWN_OBLIGATION')
+    context.nextValue = name
+    context.variant = 'change'
+    if (data.oldValue !== undefined && data.newValue !== undefined) {
+      context.previousValue = String(data.oldValue)
+      context.nextValue = `${name}: ${data.oldValue} → ${data.newValue}`
+    }
+    // Description changed is signalled without exposing the HTML content.
+    if (data.descriptionChanged) {
+      context.description = game.i18n.localize('SWERPG.AUDIT_LOG.OBLIGATION_DESCRIPTION_CHANGED')
+    }
+  },
+
+  'obligation.delete'(context, entry, data) {
+    context.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.OBLIGATION_DELETE')
+    const name = data.obligationName ?? game.i18n.localize('SWERPG.AUDIT_LOG.UNKNOWN_OBLIGATION')
+    context.nextValue = `${name} (${data.value ?? 0})`
+    context.variant = 'remove'
+  },
 }
 
 /**

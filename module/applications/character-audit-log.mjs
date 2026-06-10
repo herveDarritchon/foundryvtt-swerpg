@@ -18,6 +18,7 @@ const AUDIT_LOG_FILTER_ORDER = Object.freeze([
   AUDIT_LOG_FAMILIES.advancement,
   AUDIT_LOG_FAMILIES.purchases,
   AUDIT_LOG_FAMILIES.sales,
+  AUDIT_LOG_FAMILIES.obligations,
 ])
 
 const AUDIT_LOG_FILTER_LABELS = Object.freeze({
@@ -30,6 +31,7 @@ const AUDIT_LOG_FILTER_LABELS = Object.freeze({
   [AUDIT_LOG_FAMILIES.advancement]: 'SWERPG.AUDIT_LOG.FILTER.ADVANCEMENT',
   [AUDIT_LOG_FAMILIES.purchases]: 'SWERPG.AUDIT_LOG.FILTER.PURCHASES',
   [AUDIT_LOG_FAMILIES.sales]: 'SWERPG.AUDIT_LOG.FILTER.SALES',
+  [AUDIT_LOG_FAMILIES.obligations]: 'SWERPG.AUDIT_LOG.FILTER.OBLIGATIONS',
 })
 
 /**
@@ -46,6 +48,7 @@ const AUDIT_LOG_FAMILY_ICONS = Object.freeze({
   [AUDIT_LOG_FAMILIES.advancement]: 'fa-solid fa-arrow-up',
   [AUDIT_LOG_FAMILIES.purchases]: 'fa-solid fa-cart-shopping',
   [AUDIT_LOG_FAMILIES.sales]: 'fa-solid fa-coins',
+  [AUDIT_LOG_FAMILIES.obligations]: 'fa-solid fa-scale-balanced',
   [AUDIT_LOG_FAMILIES.other]: 'fa-solid fa-circle-question',
 })
 
@@ -487,6 +490,29 @@ export function buildAuditLogEntryVisual(actor, entry) {
       visual.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.ITEM_SALE')
       visual.nextValue = `${data.itemName ?? ''} (${data.itemType ?? ''})`
       visual.variant = 'gain'
+      break
+    }
+
+    case 'obligation.create': {
+      visual.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.OBLIGATION_CREATE')
+      visual.nextValue = `${data.obligationName ?? game.i18n.localize('SWERPG.AUDIT_LOG.UNKNOWN_OBLIGATION')} (${data.value ?? 0})`
+      visual.variant = 'add'
+      break
+    }
+
+    case 'obligation.update': {
+      visual.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.OBLIGATION_UPDATE')
+      visual.previousValue = data.oldValue !== undefined ? String(data.oldValue) : null
+      visual.nextValue =
+        data.newValue !== undefined ? String(data.newValue) : (data.obligationName ?? game.i18n.localize('SWERPG.AUDIT_LOG.UNKNOWN_OBLIGATION'))
+      visual.variant = 'change'
+      break
+    }
+
+    case 'obligation.delete': {
+      visual.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.OBLIGATION_DELETE')
+      visual.nextValue = `${data.obligationName ?? game.i18n.localize('SWERPG.AUDIT_LOG.UNKNOWN_OBLIGATION')} (${data.value ?? 0})`
+      visual.variant = 'remove'
       break
     }
 
