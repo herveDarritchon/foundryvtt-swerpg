@@ -57,7 +57,7 @@ Les obligations sont des `Item` embarqués. Leur création, édition ou suppress
 
 ## Point D'attention ADR-0025
 
-`ADR-0025` indique que le modèle `obligation` reste limité à cinq champs, mais le code actuel et les tests verrouillent huit champs :
+`ADR-0025` a été mise à jour (2026-06-10) pour documenter les huit champs réels du modèle :
 
 - `description`
 - `value`
@@ -68,7 +68,7 @@ Les obligations sont des `Item` embarqués. Leur création, édition ou suppress
 - `campaignNote`
 - `transformedTo`
 
-Le chantier Audit Log ne doit pas ajouter de champ, mais il devrait signaler ou corriger cette incohérence documentaire. Recommandation : mettre à jour `ADR-0025` ou créer un addendum court indiquant que les champs de campagne existent déjà et que l'audit ne les enrichit pas.
+L'ADR précise désormais que les trois champs de campagne (`campaignDelta`, `campaignNote`, `transformedTo`) étaient déjà présents avant l'intégration Audit Log et que l'Audit Log consomme ces champs existants sans en ajouter de nouveaux. L'incohérence documentaire est résolue.
 
 ## Périmètre Inclus
 
