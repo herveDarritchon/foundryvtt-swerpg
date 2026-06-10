@@ -785,13 +785,16 @@ describe('onCreateItem', () => {
 /* ============================================ */
 
 describe('registerAuditLogHooks', () => {
-  test('registers three hooks via Hooks.on', async () => {
+  test('registers six hooks via Hooks.on', async () => {
     const { registerAuditLogHooks } = await import('../../module/utils/audit-log.mjs')
     registerAuditLogHooks()
-    expect(globalThis.Hooks.on).toHaveBeenCalledTimes(3)
+    expect(globalThis.Hooks.on).toHaveBeenCalledTimes(6)
     expect(globalThis.Hooks.on).toHaveBeenCalledWith('preUpdateActor', expect.any(Function))
     expect(globalThis.Hooks.on).toHaveBeenCalledWith('updateActor', expect.any(Function))
     expect(globalThis.Hooks.on).toHaveBeenCalledWith('createItem', expect.any(Function))
+    expect(globalThis.Hooks.on).toHaveBeenCalledWith('deleteItem', expect.any(Function))
+    expect(globalThis.Hooks.on).toHaveBeenCalledWith('preUpdateItem', expect.any(Function))
+    expect(globalThis.Hooks.on).toHaveBeenCalledWith('updateItem', expect.any(Function))
   })
 })
 
@@ -2639,5 +2642,475 @@ describe('onCreateItem — mono-writer guard', () => {
     expect(logs).toHaveLength(1)
     expect(logs[0].type).toBe('talent.purchase')
     expect(logs[0].userId).toBe('user-1')
+  })
+})
+
+/* ============================================ */
+/*  onCreateItem — obligation.create            */
+/* ============================================ */
+
+describe('onCreateItem — obligation.create', () => {
+  function makeCharacterActorWithSystem(overrides = {}) {
+    return {
+      type: 'character',
+      id: 'actor-001',
+      uuid: 'Actor.actor-001',
+      name: 'Test Character',
+      _source: {
+        system: { skills: {}, characteristics: {}, progression: { totalXP: 0, spentXP: 0 }, details: {}, advancement: {} },
+        flags: {},
+      },
+      system: {
+        progression: {
+          experience: { spent: 0, gained: 0, available: 0, total: 0 },
+          freeSkillRanks: {
+            career: { spent: 0, gained: 0, available: 0 },
+            specialization: { spent: 0, gained: 0, available: 0 },
+          },
+        },
+      },
+      update: vi.fn(),
+      ...overrides,
+    }
+  }
+
+  function makeObligationItem(actor, overrides = {}) {
+    return {
+      type: 'obligation',
+      id: 'obl-001',
+      name: 'Debt',
+      parent: actor,
+      system: { value: 10, isExtra: false, extraXp: 0, extraCredits: 0 },
+      ...overrides,
+    }
+  }
+
+  test('creates obligation.create entry for obligation on character', async () => {
+    const { onCreateItem } = await import('../../module/utils/audit-log.mjs')
+    globalThis.foundry.utils.deepClone = vi.fn((o) => structuredClone(o))
+    globalThis.game.userId = 'gm-1'
+
+    const actor = makeCharacterActorWithSystem()
+    const item = makeObligationItem(actor)
+
+    await onCreateItem(item, {}, {}, 'gm-1')
+
+    expect(actor.update).toHaveBeenCalledTimes(1)
+    const logs = getWrittenLogs(actor.update.mock.calls[0][0])
+    expect(logs).toHaveLength(1)
+    expect(logs[0].type).toBe('obligation.create')
+    expect(logs[0].data).toMatchObject({
+      obligationId: 'obl-001',
+      obligationName: 'Debt',
+      value: 10,
+      isExtra: false,
+      extraXp: 0,
+      extraCredits: 0,
+    })
+    expect(logs[0].xpDelta).toBe(0)
+    expect(logs[0].userId).toBe('gm-1')
+  })
+
+  test('includes extra bonus metadata for creation-bonus obligation', async () => {
+    const { onCreateItem } = await import('../../module/utils/audit-log.mjs')
+    globalThis.foundry.utils.deepClone = vi.fn((o) => structuredClone(o))
+    globalThis.game.userId = 'gm-1'
+
+    const actor = makeCharacterActorWithSystem()
+    const item = makeObligationItem(actor, { system: { value: 5, isExtra: true, extraXp: 5, extraCredits: 1000 } })
+
+    await onCreateItem(item, {}, {}, 'gm-1')
+
+    const logs = getWrittenLogs(actor.update.mock.calls[0][0])
+    expect(logs[0].data.extraXp).toBe(5)
+    expect(logs[0].data.extraCredits).toBe(1000)
+    expect(logs[0].data.isExtra).toBe(true)
+  })
+
+  test('does not write obligation.create when swerpgAuditLog option is false', async () => {
+    const { onCreateItem } = await import('../../module/utils/audit-log.mjs')
+    globalThis.game.userId = 'gm-1'
+
+    const actor = makeCharacterActorWithSystem()
+    const item = makeObligationItem(actor)
+
+    await onCreateItem(item, {}, { swerpgAuditLog: false }, 'gm-1')
+
+    expect(actor.update).not.toHaveBeenCalled()
+  })
+
+  test('does not write obligation.create when not the initiating client', async () => {
+    const { onCreateItem } = await import('../../module/utils/audit-log.mjs')
+    globalThis.game.userId = 'user-1'
+
+    const actor = makeCharacterActorWithSystem()
+    const item = makeObligationItem(actor)
+
+    await onCreateItem(item, {}, {}, 'user-2')
+
+    expect(actor.update).not.toHaveBeenCalled()
+  })
+
+  test('does not write obligation.create for obligation on non-character actor', async () => {
+    const { onCreateItem } = await import('../../module/utils/audit-log.mjs')
+    globalThis.game.userId = 'gm-1'
+
+    const npc = { type: 'npc', id: 'npc-001', name: 'NPC', update: vi.fn(), system: {} }
+    const item = makeObligationItem(npc, { parent: npc })
+
+    await onCreateItem(item, {}, {}, 'gm-1')
+
+    expect(npc.update).not.toHaveBeenCalled()
+  })
+
+  test('does not write obligation.create when item type is neither talent nor obligation', async () => {
+    const { onCreateItem } = await import('../../module/utils/audit-log.mjs')
+    globalThis.game.userId = 'gm-1'
+
+    const actor = makeCharacterActorWithSystem()
+    const item = makeObligationItem(actor, { type: 'weapon' })
+
+    await onCreateItem(item, {}, {}, 'gm-1')
+
+    expect(actor.update).not.toHaveBeenCalled()
+  })
+
+  test('talent.purchase still works after obligation.create changes (backward compat)', async () => {
+    const { onCreateItem } = await import('../../module/utils/audit-log.mjs')
+    globalThis.foundry.utils.deepClone = vi.fn((o) => structuredClone(o))
+    globalThis.game.userId = 'gm-1'
+
+    const actor = makeCharacterActorWithSystem()
+    const talent = { type: 'talent', id: 'talent-001', name: 'Parry', parent: actor, system: { cost: 5, ranks: 1 } }
+
+    await onCreateItem(talent, {}, {}, 'gm-1')
+
+    const logs = getWrittenLogs(actor.update.mock.calls[0][0])
+    expect(logs[0].type).toBe('talent.purchase')
+  })
+})
+
+/* ============================================ */
+/*  onDeleteItem — obligation.delete            */
+/* ============================================ */
+
+describe('onDeleteItem — obligation.delete', () => {
+  function makeCharacterActorWithSystem(overrides = {}) {
+    return {
+      type: 'character',
+      id: 'actor-001',
+      uuid: 'Actor.actor-001',
+      name: 'Test Character',
+      _source: {
+        system: { skills: {}, characteristics: {}, progression: { totalXP: 0, spentXP: 0 }, details: {}, advancement: {} },
+        flags: {},
+      },
+      system: {
+        progression: {
+          experience: { spent: 0, gained: 0, available: 0, total: 0 },
+          freeSkillRanks: {
+            career: { spent: 0, gained: 0, available: 0 },
+            specialization: { spent: 0, gained: 0, available: 0 },
+          },
+        },
+      },
+      update: vi.fn(),
+      ...overrides,
+    }
+  }
+
+  function makeObligationItem(actor, overrides = {}) {
+    return {
+      type: 'obligation',
+      id: 'obl-001',
+      name: 'Debt',
+      parent: actor,
+      system: { value: 10, isExtra: false, extraXp: 0, extraCredits: 0 },
+      ...overrides,
+    }
+  }
+
+  test('creates obligation.delete entry for obligation on character', async () => {
+    const { onDeleteItem } = await import('../../module/utils/audit-log.mjs')
+    globalThis.foundry.utils.deepClone = vi.fn((o) => structuredClone(o))
+    globalThis.game.userId = 'gm-1'
+
+    const actor = makeCharacterActorWithSystem()
+    const item = makeObligationItem(actor)
+
+    await onDeleteItem(item, {}, 'gm-1')
+
+    expect(actor.update).toHaveBeenCalledTimes(1)
+    const logs = getWrittenLogs(actor.update.mock.calls[0][0])
+    expect(logs).toHaveLength(1)
+    expect(logs[0].type).toBe('obligation.delete')
+    expect(logs[0].data).toMatchObject({
+      obligationId: 'obl-001',
+      obligationName: 'Debt',
+      value: 10,
+      isExtra: false,
+    })
+    expect(logs[0].xpDelta).toBe(0)
+    expect(logs[0].userId).toBe('gm-1')
+  })
+
+  test('does not write obligation.delete when not the initiating client', async () => {
+    const { onDeleteItem } = await import('../../module/utils/audit-log.mjs')
+    globalThis.game.userId = 'user-1'
+
+    const actor = makeCharacterActorWithSystem()
+    const item = makeObligationItem(actor)
+
+    await onDeleteItem(item, {}, 'user-2')
+
+    expect(actor.update).not.toHaveBeenCalled()
+  })
+
+  test('does not write obligation.delete when swerpgAuditLog option is false', async () => {
+    const { onDeleteItem } = await import('../../module/utils/audit-log.mjs')
+    globalThis.game.userId = 'gm-1'
+
+    const actor = makeCharacterActorWithSystem()
+    const item = makeObligationItem(actor)
+
+    await onDeleteItem(item, { swerpgAuditLog: false }, 'gm-1')
+
+    expect(actor.update).not.toHaveBeenCalled()
+  })
+
+  test('does not write obligation.delete for non-obligation items', async () => {
+    const { onDeleteItem } = await import('../../module/utils/audit-log.mjs')
+    globalThis.game.userId = 'gm-1'
+
+    const actor = makeCharacterActorWithSystem()
+    const item = makeObligationItem(actor, { type: 'talent' })
+
+    await onDeleteItem(item, {}, 'gm-1')
+
+    expect(actor.update).not.toHaveBeenCalled()
+  })
+
+  test('does not write obligation.delete for obligation on non-character actor', async () => {
+    const { onDeleteItem } = await import('../../module/utils/audit-log.mjs')
+    globalThis.game.userId = 'gm-1'
+
+    const npc = { type: 'npc', id: 'npc-001', name: 'NPC', update: vi.fn(), system: {} }
+    const item = makeObligationItem(npc, { parent: npc })
+
+    await onDeleteItem(item, {}, 'gm-1')
+
+    expect(npc.update).not.toHaveBeenCalled()
+  })
+
+  test('includes extra bonus metadata in delete entry', async () => {
+    const { onDeleteItem } = await import('../../module/utils/audit-log.mjs')
+    globalThis.foundry.utils.deepClone = vi.fn((o) => structuredClone(o))
+    globalThis.game.userId = 'gm-1'
+
+    const actor = makeCharacterActorWithSystem()
+    const item = makeObligationItem(actor, { system: { value: 5, isExtra: true, extraXp: 5, extraCredits: 1000 } })
+
+    await onDeleteItem(item, {}, 'gm-1')
+
+    const logs = getWrittenLogs(actor.update.mock.calls[0][0])
+    expect(logs[0].data.extraXp).toBe(5)
+    expect(logs[0].data.extraCredits).toBe(1000)
+    expect(logs[0].data.isExtra).toBe(true)
+  })
+})
+
+/* ============================================ */
+/*  onPreUpdateItem / onUpdateItem              */
+/*  obligation.update                           */
+/* ============================================ */
+
+describe('onPreUpdateItem / onUpdateItem — obligation.update', () => {
+  function makeCharacterActorWithSystem(overrides = {}) {
+    return {
+      type: 'character',
+      id: 'actor-001',
+      uuid: 'Actor.actor-001',
+      name: 'Test Character',
+      _source: {
+        system: { skills: {}, characteristics: {}, progression: { totalXP: 0, spentXP: 0 }, details: {}, advancement: {} },
+        flags: {},
+      },
+      system: {
+        progression: {
+          experience: { spent: 0, gained: 0, available: 0, total: 0 },
+          freeSkillRanks: {
+            career: { spent: 0, gained: 0, available: 0 },
+            specialization: { spent: 0, gained: 0, available: 0 },
+          },
+        },
+      },
+      update: vi.fn(),
+      ...overrides,
+    }
+  }
+
+  function makeObligationItem(actor, systemOverrides = {}) {
+    return {
+      type: 'obligation',
+      id: 'obl-001',
+      uuid: 'Item.obl-001',
+      name: 'Debt',
+      parent: actor,
+      system: {
+        value: 10,
+        isExtra: false,
+        extraXp: 0,
+        extraCredits: 0,
+        campaignDelta: 0,
+        description: '',
+        campaignNote: null,
+        transformedTo: null,
+        ...systemOverrides,
+      },
+    }
+  }
+
+  test('writes obligation.update entry when value changes', async () => {
+    const { onPreUpdateItem, onUpdateItem, flushObligationPending } = await import('../../module/utils/audit-log.mjs')
+    flushObligationPending()
+    globalThis.foundry.utils.deepClone = vi.fn((o) => structuredClone(o))
+    globalThis.game.userId = 'gm-1'
+
+    const actor = makeCharacterActorWithSystem()
+    const itemBefore = makeObligationItem(actor, { value: 10 })
+    const itemAfter = makeObligationItem(actor, { value: 15 })
+
+    onPreUpdateItem(itemBefore, { 'system.value': 15 }, {}, 'gm-1')
+    await onUpdateItem(itemAfter, { 'system.value': 15 }, {}, 'gm-1')
+
+    expect(actor.update).toHaveBeenCalledTimes(1)
+    const logs = getWrittenLogs(actor.update.mock.calls[0][0])
+    expect(logs).toHaveLength(1)
+    expect(logs[0].type).toBe('obligation.update')
+    expect(logs[0].data.oldValue).toBe(10)
+    expect(logs[0].data.newValue).toBe(15)
+    expect(logs[0].data.obligationId).toBe('obl-001')
+    expect(logs[0].data.obligationName).toBe('Debt')
+    flushObligationPending()
+  })
+
+  test('writes obligation.update entry when campaignDelta changes', async () => {
+    const { onPreUpdateItem, onUpdateItem, flushObligationPending } = await import('../../module/utils/audit-log.mjs')
+    flushObligationPending()
+    globalThis.foundry.utils.deepClone = vi.fn((o) => structuredClone(o))
+    globalThis.game.userId = 'gm-1'
+
+    const actor = makeCharacterActorWithSystem()
+    const itemBefore = makeObligationItem(actor, { campaignDelta: 0 })
+    const itemAfter = makeObligationItem(actor, { campaignDelta: 5 })
+
+    onPreUpdateItem(itemBefore, { 'system.campaignDelta': 5 }, {}, 'gm-1')
+    await onUpdateItem(itemAfter, { 'system.campaignDelta': 5 }, {}, 'gm-1')
+
+    const logs = getWrittenLogs(actor.update.mock.calls[0][0])
+    expect(logs[0].type).toBe('obligation.update')
+    expect(logs[0].data.oldCampaignDelta).toBe(0)
+    expect(logs[0].data.newCampaignDelta).toBe(5)
+    flushObligationPending()
+  })
+
+  test('does NOT write an entry when no business field changes', async () => {
+    const { onPreUpdateItem, onUpdateItem, flushObligationPending } = await import('../../module/utils/audit-log.mjs')
+    flushObligationPending()
+    globalThis.game.userId = 'gm-1'
+
+    const actor = makeCharacterActorWithSystem()
+    // Same system state before and after — only a non-tracked field would differ
+    const item = makeObligationItem(actor, { value: 10, campaignDelta: 0 })
+
+    onPreUpdateItem(item, {}, {}, 'gm-1')
+    await onUpdateItem(item, {}, {}, 'gm-1')
+
+    expect(actor.update).not.toHaveBeenCalled()
+    flushObligationPending()
+  })
+
+  test('signals descriptionChanged without exposing HTML content', async () => {
+    const { onPreUpdateItem, onUpdateItem, flushObligationPending } = await import('../../module/utils/audit-log.mjs')
+    flushObligationPending()
+    globalThis.foundry.utils.deepClone = vi.fn((o) => structuredClone(o))
+    globalThis.game.userId = 'gm-1'
+
+    const actor = makeCharacterActorWithSystem()
+    const itemBefore = makeObligationItem(actor, { description: '' })
+    const itemAfter = makeObligationItem(actor, { description: '<p>Long narrative text that should not appear in the log</p>' })
+
+    onPreUpdateItem(itemBefore, { 'system.description': '<p>...</p>' }, {}, 'gm-1')
+    await onUpdateItem(itemAfter, { 'system.description': '<p>...</p>' }, {}, 'gm-1')
+
+    const logs = getWrittenLogs(actor.update.mock.calls[0][0])
+    expect(logs[0].type).toBe('obligation.update')
+    expect(logs[0].data.descriptionChanged).toBe(true)
+    // Ensure HTML is not present in any data field
+    const serialized = JSON.stringify(logs[0])
+    expect(serialized).not.toContain('<p>')
+    flushObligationPending()
+  })
+
+  test('does not write obligation.update when not the initiating client', async () => {
+    const { onPreUpdateItem, onUpdateItem, flushObligationPending } = await import('../../module/utils/audit-log.mjs')
+    flushObligationPending()
+    globalThis.game.userId = 'user-1'
+
+    const actor = makeCharacterActorWithSystem()
+    const itemBefore = makeObligationItem(actor, { value: 10 })
+    const itemAfter = makeObligationItem(actor, { value: 15 })
+
+    onPreUpdateItem(itemBefore, { 'system.value': 15 }, {}, 'user-2')
+    await onUpdateItem(itemAfter, { 'system.value': 15 }, {}, 'user-2')
+
+    expect(actor.update).not.toHaveBeenCalled()
+    flushObligationPending()
+  })
+
+  test('does not write obligation.update when swerpgAuditLog option is false', async () => {
+    const { onPreUpdateItem, onUpdateItem, flushObligationPending } = await import('../../module/utils/audit-log.mjs')
+    flushObligationPending()
+    globalThis.game.userId = 'gm-1'
+
+    const actor = makeCharacterActorWithSystem()
+    const itemBefore = makeObligationItem(actor, { value: 10 })
+    const itemAfter = makeObligationItem(actor, { value: 15 })
+
+    onPreUpdateItem(itemBefore, { 'system.value': 15 }, { swerpgAuditLog: false }, 'gm-1')
+    await onUpdateItem(itemAfter, { 'system.value': 15 }, { swerpgAuditLog: false }, 'gm-1')
+
+    expect(actor.update).not.toHaveBeenCalled()
+    flushObligationPending()
+  })
+
+  test('does not write obligation.update for non-obligation items', async () => {
+    const { onPreUpdateItem, onUpdateItem, flushObligationPending } = await import('../../module/utils/audit-log.mjs')
+    flushObligationPending()
+    globalThis.game.userId = 'gm-1'
+
+    const actor = makeCharacterActorWithSystem()
+    const item = { type: 'talent', id: 'talent-001', uuid: 'Item.talent-001', name: 'Parry', parent: actor, system: { cost: 5 } }
+
+    onPreUpdateItem(item, { 'system.cost': 10 }, {}, 'gm-1')
+    await onUpdateItem({ ...item, system: { cost: 10 } }, { 'system.cost': 10 }, {}, 'gm-1')
+
+    expect(actor.update).not.toHaveBeenCalled()
+    flushObligationPending()
+  })
+
+  test('does not write obligation.update when no preUpdateItem snapshot was captured', async () => {
+    const { onUpdateItem, flushObligationPending } = await import('../../module/utils/audit-log.mjs')
+    flushObligationPending()
+    globalThis.game.userId = 'gm-1'
+
+    const actor = makeCharacterActorWithSystem()
+    const itemAfter = makeObligationItem(actor, { value: 15 })
+
+    // Call onUpdateItem without a preceding onPreUpdateItem
+    await onUpdateItem(itemAfter, { 'system.value': 15 }, {}, 'gm-1')
+
+    expect(actor.update).not.toHaveBeenCalled()
+    flushObligationPending()
   })
 })
